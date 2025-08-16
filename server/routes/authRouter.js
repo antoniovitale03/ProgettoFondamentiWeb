@@ -4,7 +4,8 @@ const authMiddleware = require('../middlewares/AuthMiddleware');
 const authController = require('../controllers/authController');
 
 //   /api
-router.post("/registration", authController.registration);
+router.post("/registration/data", authController.registerdata);
+router.post("/registration/verify", authController.verifycode)
 router.post("/login", authController.login);
 router.post("/logout", authController.logout);
 router.get("/me", authMiddleware.verifyJWT, authController.checkUser);

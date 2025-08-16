@@ -1,9 +1,31 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
-// Funzione che gestisce la logica di registrazione
-exports.registration = async (req, res) => {
+//codice di verifica casuale a 6 cifre
+const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+async function sendMail(username, email, code) {
+    //uso Mailtrap.io che simula un server SMTP che invia la mail
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: "av71556371@gmail.com",
+            pass: "nlnx xsyy qbyb vpsv",
+        },
+    });
+    await transporter.sendMail({
+        from: '"av71556371@gmail.com',
+        to: email,
+        subject: `CODICE DI VERIFICA`,
+        text: `Ciao ${username}, grazie per esserti registrato! Il codice di verifica è: ${code}`,
+        html: `<p>Ciao ${username}, grazie per esserti registrato!</p><p>Il tuo codice di verifica è: <strong>${code}</strong></p>`
+    });
+}
+
+//registro i dati temporaneamente in DB e poi verifico il codice, se è errato elimino i dati dal DB
+exports.registerdata = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
@@ -19,6 +41,9 @@ exports.registration = async (req, res) => {
         const newUser = new User({ username, email, password: hashedPassword });
         await newUser.save();
 
+        await sendMail(username, email, code);
+
+
         res.status(201).json({ message: 'Utente registrato con successo!' });
 
     } catch (error) {
@@ -26,6 +51,20 @@ exports.registration = async (req, res) => {
     }
 };
 
+exports.verifycode = async (req, res) => {
+    try{
+        const {email, verificationCode } = req.body;
+
+        if (verificationCode !== code) {
+            await User.deleteOne({ email: email });
+            return res.status(500).json({ message: 'Codice di verifica errato.'});
+        }
+        return res.status(200).json({message: "Codice corretto. Ora sarai reindirizzato alla pagina di login."})
+        }
+    catch(error){
+        res.status(500).json({ message: 'Errore del server.' })
+        }
+}
 
 exports.login = async (req, res) => {
     try {
