@@ -34,9 +34,9 @@ function RegistrationPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password }),
             });
-            setButtonState(1);
             const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
+            if (!response.ok) throw new Error(data.message)
+            setButtonState(1);
             // Se la chiamata ha successo, mostra il messaggio e passa al secondo step
             await sleep(1500);
             setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");

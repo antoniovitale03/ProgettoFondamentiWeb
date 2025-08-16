@@ -7,7 +7,7 @@ require('dotenv').config();
 const code = Math.floor(100000 + Math.random() * 900000).toString();
 
 async function sendMail(username, email, code) {
-    //uso Mailtrap.io che simula un server SMTP che invia la mail
+    //attivo la password per le app nell'account google per poter inviare mail da av715... con nodemailer
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -42,7 +42,6 @@ exports.registerdata = async (req, res) => {
         await newUser.save();
 
         await sendMail(username, email, code);
-
 
         res.status(201).json({ message: 'Utente registrato con successo!' });
 
