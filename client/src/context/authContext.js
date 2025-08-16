@@ -44,8 +44,6 @@ export function AuthProvider({ children }) {
 
             if (!response.ok) { //l'oggetto response sarà tipo {message: "Descrizione errore"}
                 const error = data.message;
-                console.log(error.message)
-                console.log("ciao")
                 // Se c'è un errore, lancialo per farlo gestire dal componente che ha chiamato
                 throw new Error(error);
             }
