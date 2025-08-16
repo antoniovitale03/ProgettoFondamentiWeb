@@ -6,6 +6,7 @@ import RegistrationPage from "./components/RegistrationPage"
 import {useAuth} from "./context/authContext";
 // la componente principale App gestisce solo il routing per il percorso protetto dell'app (accessibile solo dopo il login)
 //per gestire il login uso localStorage in modo da salvare lo stato di login anche dopo aver chiuso il browser
+//questa è una modfica
 function App() {
     const {isLoggedIn} = useAuth() // Leggi lo stato di login direttamente dal contesto
     //verifica della sessione solo al primo re-rendering dell'App, cioè dopo che eseguo il login (dipendenza da array vuoto)
