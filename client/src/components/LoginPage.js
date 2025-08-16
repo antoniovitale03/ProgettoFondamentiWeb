@@ -13,7 +13,7 @@ function LoginPage() {
     const [error, setError] = useState('');
     const {login} = useAuth() //ottieni la funzione login dal contesto
 
-    useDocumentTitle("Accedi")
+    useDocumentTitle("Login")
 
     // Funzione che verifica la correttezza delle credenziali inserite durante il login
     const handleSubmit = async (event) => {

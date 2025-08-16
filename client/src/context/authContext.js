@@ -19,26 +19,20 @@ export function AuthProvider({ children }) {
     // Funzione per aggiornare lo stato e localStorage al login
 
     const registration = async (username, email, password) => {
-        try{
             const response = await fetch('http://localhost:5001/api/registration', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })  //i dati nel corpo della richiesta http devono essere in formato JSON, non JS
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, email, password}),  //i dati nel corpo della richiesta http devono essere in formato JSON, non JS
+                credentials: "include"
             });
-
-            const data = await response.json()
+            const data = await response.json();
             if (!response.ok) {
-                const error = await response.json()
-                throw new Error(error.message || 'Registrazione fallita');
+                const error = data.message;
+                throw new Error(error);
             }
-            return data
-        }
-        catch(error){
-            throw error}
     }
 
     const login = async (username, password) => {
-        try {
             const response = await fetch('http://localhost:5001/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,10 +40,12 @@ export function AuthProvider({ children }) {
                 credentials: 'include'
             });
 
-            const data = await response.json(); //data è JSON, data.user è JS
+            const data = await response.json(); //data è JSON, response è JS
 
-            if (!response.ok) {
+            if (!response.ok) { //l'oggetto response sarà tipo {message: "Descrizione errore"}
                 const error = data.message;
+                console.log(error.message)
+                console.log("ciao")
                 // Se c'è un errore, lancialo per farlo gestire dal componente che ha chiamato
                 throw new Error(error);
             }
@@ -60,11 +56,6 @@ export function AuthProvider({ children }) {
 
             // Esegui il reindirizzamento
             navigate('/');
-
-        } catch (error) {
-            // Rilancia l'errore in modo che il form di login possa catturarlo e mostrare un messaggio
-            throw error;
-        }
     };
 
     // Funzione per pulire lo stato e localStorage al logout

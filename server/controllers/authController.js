@@ -22,7 +22,7 @@ exports.registration = async (req, res) => {
         res.status(201).json({ message: 'Utente registrato con successo!' });
 
     } catch (error) {
-        res.status(500).json({ message: 'Errore del server.', error: error.message });
+        res.status(500).json({ message: 'Errore del server.'});
     }
 };
 
@@ -34,8 +34,11 @@ exports.login = async (req, res) => {
         // Trova l'utente nel DB tramite il suo username e confronta la password fornita dall'utente con quella hashata nel DB
 
         const user = await User.findOne({username});
+        if (!user) {
+            return res.status(400).json({ message: 'Credenziali non valide.' })
+        }
         const isMatch = await bcrypt.compare(password, user.password);
-        if ((!user) || (!isMatch)){
+        if (!isMatch){
             return res.status(400).json({ message: 'Credenziali non valide.' })
         }
 
@@ -73,7 +76,7 @@ exports.login = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Errore del server.', error: error.message });
+        res.status(500).json({ message: 'Errore del server.' });
     }
 };
 
@@ -86,7 +89,7 @@ exports.logout = async (req, res) => { //cancella il cookie
         res.status(200).json({ message: 'Logout effettuato con successo.' });
     }
     catch (error) {
-        res.status(500).json({ message: 'Errore del server.', error: error.message });
+        res.status(500).json({ message: 'Errore del server.' });
     }
 
 }

@@ -22,7 +22,7 @@ function RegistrationPage() {
         event.preventDefault();
         setError(" ")
     try{
-        registration(username, email, password)
+        await registration(username, email, password)
         //Non salvo nessun token come nel caso di login
         setSuccessMessage(<>
             Registrazione avvenuta con successo!
@@ -36,7 +36,6 @@ function RegistrationPage() {
             replace: true,
             state: { message: 'Registrazione completata con successo! Ora puoi accedere.' }
         });
-
     } catch (error) {
         setError(error.message)
     }
