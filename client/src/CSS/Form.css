@@ -67,7 +67,7 @@
     padding: 0;
 }
 
-.success-message {
+.registration-success-message {
     color: #155724; /* Verde scuro */
     background-color: #d4edda; /* Verde chiaro */
     border: 1px solid #c3e6cb; /* Bordo verde */
@@ -76,6 +76,7 @@
     border-radius: 4px;
     text-align: center;
     font-weight: bold;
+    white-space: pre-wrap;
 }
 
 .page-container {

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, {createContext, useState, useContext} from 'react';
 import {useNavigate} from "react-router-dom";
 // Crea il contesto. Ogni componente figlio di App dovrà esportare una o più variabili/funzioni usando il contesto
 //appena creato (inizialmente nullo), a patto che il componente sia incapsulato in App e qui in AuthProvider che fornisce
@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
             setUser(null);
             localStorage.removeItem('user');
 
-            navigate('/login', {
+            navigate('/', {
                 replace: true,
                 state: { message: 'Logout effettuato con successo.' }
             });
@@ -92,6 +92,7 @@ export function AuthProvider({ children }) {
         catch(error){
             console.log(error)}
     };
+
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
     const value = { user, registration, login, logout, isLoggedIn: !!user };

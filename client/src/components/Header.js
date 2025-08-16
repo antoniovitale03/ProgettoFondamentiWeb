@@ -5,7 +5,6 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 // isActive è true se l'URL corrente corrisponde al to del NavLink.
 // Usiamo un operatore ternario per restituire la classe 'nav-link active' se il link è attivo, altrimenti solo 'nav-link'
 
-
 import "../CSS/header.css"
 import {useAuth} from "../context/authContext";
 

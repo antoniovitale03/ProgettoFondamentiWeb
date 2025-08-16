@@ -3,7 +3,7 @@ import '../CSS/Form.css';
 import {NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
-
+import useDocumentTitle from "./useDocumentTitle";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
 function LoginPage() {
@@ -13,7 +13,7 @@ function LoginPage() {
     const [error, setError] = useState('');
     const {login} = useAuth() //ottieni la funzione login dal contesto
 
-
+    useDocumentTitle("Accedi")
 
     // Funzione che verifica la correttezza delle credenziali inserite durante il login
     const handleSubmit = async (event) => {

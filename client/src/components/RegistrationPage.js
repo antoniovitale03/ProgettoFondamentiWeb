@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import "../CSS/Form.css"
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
+import useDocumentTitle from "./useDocumentTitle";
 function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -15,13 +16,19 @@ function RegistrationPage() {
     const navigate = useNavigate();
     const {registration} = useAuth()
 
+    useDocumentTitle("Registrazione");
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError(" ")
     try{
         registration(username, email, password)
         //Non salvo nessun token come nel caso di login
-        setSuccessMessage("Registrazione avvenuta con successo! Ora verrai reindirizzato alla pagina di login.")
+        setSuccessMessage(<>
+            Registrazione avvenuta con successo!
+            <br />
+            Ora verrai reindirizzato alla pagina di login.
+        </>)
         await sleep(3500)
 
         // Reindirizzo l'utente alla pagina di login
@@ -78,7 +85,7 @@ function RegistrationPage() {
                 </div>
 
                 <button type="submit">Registrati</button>
-                {successMessage && <p className="success-message">{successMessage}</p>}
+                {successMessage && <p className="registration-success-message">{successMessage}</p>}
             </form>
         </div>
         <Footer />
