@@ -1,0 +1,86 @@
+/* src/components/LoginPage/Form.css */
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column; /* Mette gli elementi in colonna */
+    gap: 1rem; /* Spazio tra i gruppi del form */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    min-width: 350px;
+    max-width: 350px;
+    width: 100%;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-container button {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.form-container button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: #d93025;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.success-message {
+    color: #155724; /* Verde scuro */
+    background-color: #d4edda; /* Verde chiaro */
+    border: 1px solid #c3e6cb; /* Bordo verde */
+    padding: 0.75rem;
+    margin-top: 1rem; /* Aggiunge spazio sopra il messaggio */
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Altezza minima = 100% dell'altezza della Viewport (finestra) */
+    flex-grow: 1
+}

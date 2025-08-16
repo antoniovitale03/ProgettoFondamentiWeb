@@ -1,0 +1,14 @@
+.mainLayout{
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; /* Usa 100% invece di 100vh perché ora il genitore (#root) ha un'altezza definita */
+}
+
+/*
+  LA REGOLA PIÙ IMPORTANTE:
+  Questa dice all'area <main> di crescere e occupare tutto lo spazio verticale
+  vuoto, spingendo il footer verso il basso.
+*/
+.content-page {
+    flex-grow: 1;
+}

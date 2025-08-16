@@ -1,0 +1,39 @@
+// barra di navigazione
+import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invece che l'anchor tag <a>
+// className={({ isActive }) => ...}: Questa è la magia di NavLink. Invece di una semplice stringa, passiamo una funzione all'attributo className.
+// React Router chiama questa funzione e le passa un oggetto con una proprietà booleana: isActive.
+// isActive è true se l'URL corrente corrisponde al to del NavLink.
+// Usiamo un operatore ternario per restituire la classe 'nav-link active' se il link è attivo, altrimenti solo 'nav-link'
+
+
+import "../CSS/header.css"
+import {useAuth} from "../context/authContext";
+
+function Header() {
+    const {logout} = useAuth();
+    return (
+        <header className="navigation-bar">
+            <div className="logo">
+                Mia App
+            </div>
+            <nav>
+                <ul>
+                    <li>
+                        <NavLink to="/" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Home </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Profilo </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Chi Siamo </NavLink>
+                    </li>
+                    <li>
+                        <button onClick={logout} className="logout-button">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    )
+}
+
+export default Header;
