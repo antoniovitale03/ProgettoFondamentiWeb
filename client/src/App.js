@@ -24,7 +24,6 @@ function App() {
          checkUserSession()
      }, []);
 
-
    return(
         <Routes>
             <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/" />} />

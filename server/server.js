@@ -13,6 +13,7 @@ app.use(cors({
     origin: 'http://localhost:3000', // È una buona pratica specificare l'origine
     credentials: true                // 2. Permette l'invio di cookie cross-origin
 }));
+
 app.use(express.json());  // Questo è FONDAMENTALE. Permette al server di capire i dati in formato JSON inviati dal frontend. Senza questo, req.body sarebbe indefinito.
 // in questo modo impostiamo le regole generali per tutte le richieste in arrivo.
 
