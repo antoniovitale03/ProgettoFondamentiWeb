@@ -117,6 +117,27 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.forgotPassword = async (req, res) => {
+    const {username, password, confirmPassword} = req.body;
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: 'Le password non corrispondono.' });
+    }
+
+    //trovo l'utente con quel username
+    const user = await User.findOne({ username: username })
+    if (!user) {
+        return res.status(400).json({ message: "L'utente non esiste" })
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password aggiornata con successo.' });
+    }
+
 exports.logout = async (req, res) => { //cancella il cookie
     try {
         res.cookie('token', '', {

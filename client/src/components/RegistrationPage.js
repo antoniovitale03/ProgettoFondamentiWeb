@@ -14,8 +14,8 @@ function RegistrationPage() {
     // Stato per controllare lo stato di registrazione (1 = dati, 2 = codice di verifica)
     const [step, setStep] = useState(1);
     const [verificationCode, setVerificationCode] = useState('');
-    const [buttonState, setButtonState] = useState(0)
-    //il bottone del form ha tre stati: 0 (registrati), 1 (verifica in corso...) e 2 (invia)
+    const [buttonState, setButtonState] = useState(1)
+    //il bottone del form ha tre stati: 1 (registrati), 2 (verifica in corso...) e 3 (invia)
 
     const navigate = useNavigate();
     const {registerData, verifyCode, sleep} = useAuth()
@@ -29,13 +29,13 @@ function RegistrationPage() {
         setError('');
         try {
             await registerData(username, email, password);
-            setButtonState(1);
+            setButtonState(2);
             // Se la chiamata ha successo, mostra il messaggio e passa al secondo step
             await sleep(1000);
             setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");
             await sleep(2000);
             setStep(2);
-            setButtonState(2)
+            setButtonState(3)
         } catch (error) {
             setError(error.message);
         }
@@ -61,8 +61,6 @@ function RegistrationPage() {
             setError(err.message);
         }
     };
-
-
 
 
 //il form cambia in base al valore di step (1 o 2)
@@ -91,9 +89,9 @@ function RegistrationPage() {
                         <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
                     <button type="submit">
-                        {buttonState === 0 ? "Registrati" :
-                            buttonState === 1 ? 'Verifica in corso...':
-                                buttonState === 2 ? 'Registrati' :
+                        {buttonState === 1 ? "Registrati" :
+                            buttonState === 2 ? 'Verifica in corso...':
+                                buttonState === 3 ? 'Registrati' :
                                     "Registrati"}
                     </button>
                     {successMessage && <p className="registration-success-message">{successMessage}</p>}
@@ -105,9 +103,9 @@ function RegistrationPage() {
                                 <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
                         </div>
                         <button type="submit">
-                            {buttonState === 0 ? "Registrati" :
-                                buttonState === 1 ? 'Verifica in corso...':
-                                    buttonState === 2 ? 'Invia' :
+                            {buttonState === 1 ? "Registrati" :
+                                buttonState === 2 ? 'Verifica in corso...':
+                                    buttonState === 3 ? 'Invia' :
                                         "Registrati"
                             }
                             </button>

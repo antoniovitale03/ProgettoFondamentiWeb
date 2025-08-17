@@ -68,6 +68,18 @@ export function AuthProvider({ children }) {
             navigate('/');
     };
 
+    const forgotPassword = async (username, password, confirmPassword) => {
+        const response = await fetch('http://localhost:5001/api/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, confirmPassword })
+        })
+        const data = await response.json();
+        if (!response.ok) {
+            const error = data.message;
+            throw new Error(error)
+        }
+    };
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
         try {
@@ -98,7 +110,7 @@ export function AuthProvider({ children }) {
 
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, registerData, verifyCode, login, logout, isLoggedIn: !!user, sleep};
+    const value = { user, registerData, verifyCode, login, logout, forgotPassword, isLoggedIn: !!user, sleep};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

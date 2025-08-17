@@ -85,3 +85,46 @@
     min-height: 100vh; /* Altezza minima = 100% dell'altezza della Viewport (finestra) */
     flex-grow: 1
 }
+
+.registration-link{
+    margin-top: 100px;
+}
+
+/*classe creata per gestire l'allineamento a destra */
+.forgot-password-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.forgot-password-link{
+    color: #007bff;
+    font-size: 0.85rem; /*85% più piccolo del testo normale (1rem)*/
+    text-decoration: none; /*rimuovo la sottolineatura*/
+}
+
+/* Aggiunge di nuovo la sottolineatura quando il mouse è sopra */
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+.link-style-button {
+    /* Resetta l'aspetto del pulsante */
+    background: none;
+    border: none;
+    padding: 0;
+
+    /* Applica l'aspetto di un link */
+    color: #007bff; /* Blu */
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 0.85rem; /* Più piccolo */
+
+    /* Comportamento interattivo */
+    cursor: pointer;
+}
+
+/* Aggiunge la sottolineatura al passaggio del mouse */
+.link-style-button:hover {
+    text-decoration: underline;
+}

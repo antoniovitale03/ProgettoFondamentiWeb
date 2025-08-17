@@ -7,6 +7,7 @@ const authController = require('../controllers/authController');
 router.post("/registration/data", authController.registerdata); //registrazione dati
 router.post("/registration/verify", authController.verifycode); //verifica codice
 router.post("/login", authController.login);
+router.post("/forgot-password", authController.forgotPassword) //imposto nuova password
 router.post("/logout", authController.logout);
 router.get("/me", authMiddleware.verifyJWT, authController.checkUser);
 //  /api/me è l'API che serve per verificare il token inviato e la correttezza dei dati dell'utente nel DB. Viene eseguita

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../CSS/Form.css';
-import {NavLink} from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
@@ -10,8 +10,15 @@ function LoginPage() {
     // Stato per memorizzare l'input dell'utente
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const {login} = useAuth() //ottieni la funzione login dal contesto
+    const [successMessage, setSuccessMessage] = useState('');
+
+    // Stato per controllare se lo stato è di login (1), oppure di impostazione della nuova password (2)
+    const [step, setStep] = useState(1);
+
+    const {login, forgotPassword, sleep} = useAuth() //ottieni la funzione login dal contesto
+    const navigate = useNavigate();
 
     useDocumentTitle("Login")
 
@@ -21,44 +28,82 @@ function LoginPage() {
         setError(" ")
         try{
             await login(username, password);
+            console.log("cioa")
+            sleep(1500);
+            setSuccessMessage("Login effettuato correttamente")
+            sleep(3000)
+            //navigate("/");
         } catch (error) {
             setError(error.message)
         }
     };
 
+    const handleForgotPassword = async (event) => {
+        event.preventDefault();
+        setStep(2);
+        try{
+            await forgotPassword(username, password, confirmPassword);
+        } catch(error){
+            setError(error.message)
+        }
+        sleep(5000);
+        setSuccessMessage(<>
+            Password modificata correttamente!
+            <br />
+            Ora verrai reindirizzato alla pagina di login.
+        </>);
+        sleep(3000);
+        //setStep(1); //cosi si renderizza il form di login
+    }
+
+
     return (
         <div className="page-container">
         <div className="form-container">
-            <form onSubmit={handleSubmit}>
-                <h2>Login</h2>
+            <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
+                <h2>{step === 1 ? "Login" : "Imposta una nuova password"}</h2>
                 {/* Mostra il messaggio di errore solo se esiste */}
                 {error && <p className="error-message">{error}</p>}
 
-                <div className="form-group">
-                    <label htmlFor="username">Nome Utente</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
+                {/*  Fase di login */}
+                {step === 1 && (<>
+                    <div className="form-group">
+                        <label htmlFor="username">Nome Utente</label>
+                        <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    </div>
 
-                <button type="submit">Accedi</button>
+                    <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
+                    <div className="forgot-password-container">
+                        <button
+                            type="button" // 'type="button"' è importante per non inviare il form
+                            className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
+                            onClick={handleForgotPassword} // Assegna la tua funzione all'evento onClick
+                        >
+                            Hai dimenticato la password?
+                        </button>
+                    </div>
+                    <p className="registration-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti </p>
+                    {successMessage && <p className="registration-success-message">{successMessage}</p>}
+                    </>)}
+
+                {/* --- Step 2: Fase di impostazione nuova password --- */}
+                {step === 2 && (<>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="confirmPassword">Conferma Password</label>
+                            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                        </div>
+                        <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
+                        </>)}
             </form>
-            <p className="registration-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti </p>
         </div>
         <Footer />
         </div>
