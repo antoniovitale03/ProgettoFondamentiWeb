@@ -11,12 +11,12 @@ async function sendMail(username, email, code) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: "av71556371@gmail.com",
-            pass: "nlnx xsyy qbyb vpsv",
+            user: process.env.email,
+            pass: process.env.passw,
         },
     });
     await transporter.sendMail({
-        from: '"av71556371@gmail.com',
+        from: process.env.email,
         to: email,
         subject: `CODICE DI VERIFICA`,
         text: `Ciao ${username}, grazie per esserti registrato! Il codice di verifica è: ${code}`,
@@ -54,8 +54,7 @@ exports.verifycode = async (req, res) => {
     try{
         const {email, verificationCode } = req.body;
 
-        if (verificationCode !== code) {
-            await User.deleteOne({ email: email });
+        if (verificationCode !== code) { //codice errato
             return res.status(500).json({ message: 'Codice di verifica errato.'});
         }
         return res.status(200).json({message: "Codice corretto. Ora sarai reindirizzato alla pagina di login."})

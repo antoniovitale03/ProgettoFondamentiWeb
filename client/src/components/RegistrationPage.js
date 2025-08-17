@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import "../CSS/Form.css"
 import Footer from "./Footer";
 import useDocumentTitle from "./useDocumentTitle";
+import {useAuth} from "../context/authContext"
 function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -16,10 +17,8 @@ function RegistrationPage() {
     const [buttonState, setButtonState] = useState(0)
     //il bottone del form ha tre stati: 0 (registrati), 1 (verifica in corso...) e 2 (invia)
 
-    const sleep = (t) => new Promise(res => setTimeout(res, t))
-
     const navigate = useNavigate();
-    //const {registration} = useAuth()
+    const {registerData, verifyCode, sleep} = useAuth()
 
     useDocumentTitle("Registrazione");
 
@@ -29,40 +28,24 @@ function RegistrationPage() {
         event.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:5001/api/registration/data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password }),
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message)
+            await registerData(username, email, password);
             setButtonState(1);
             // Se la chiamata ha successo, mostra il messaggio e passa al secondo step
-            await sleep(1500);
+            await sleep(1000);
             setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");
-            await sleep(2500);
+            await sleep(2000);
             setStep(2);
             setButtonState(2)
-        } catch (err) {
-            setError(err.message);
+        } catch (error) {
+            setError(error.message);
         }
-    };
+    }
 
     const handleVerify = async (event) => {
         event.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:5001/api/registration/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, verificationCode }), // Invia l'email per identificare l'utente
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                const error = data.message;
-                throw new Error(error);
-            }
-
+            await verifyCode(email, verificationCode);
             // Se il codice è corretto, mostra il messaggio finale e reindirizza
             setSuccessMessage(<>
                 Registrazione avvenuta con successo!
@@ -95,24 +78,17 @@ function RegistrationPage() {
                     {step === 1 && (<>
                     <div className="form-group">
                         <label htmlFor="username">Nome Utente</label>
-                        <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required disabled={step === 2}/>
+                        <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="email">E-mail</label>
-                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={step === 2}/>
+                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            disabled={step === 2}
-                        />
+                        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
                     <button type="submit">
                         {buttonState === 0 ? "Registrati" :

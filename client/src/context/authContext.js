@@ -18,19 +18,31 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user'))) //converte l'oggetto JSON in JS
     // Funzione per aggiornare lo stato e localStorage al login
 
-    const registration = async (username, email, password) => {
-            const response = await fetch('http://localhost:5001/api/registration', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, email, password}),  //i dati nel corpo della richiesta http devono essere in formato JSON, non JS
-                credentials: "include"
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                const error = data.message;
-                throw new Error(error);
-            }
-    }
+     const registerData = async (username, email, password) => {
+         const response = await fetch('http://localhost:5001/api/registration/data', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ username, email, password }),
+         });
+         const data = await response.json();
+         if (!response.ok) {
+             const error = data.message;
+             throw new Error(error);
+         }
+     }
+
+     const verifyCode = async (email, verificationCode) => {
+         const response = await fetch('http://localhost:5001/api/registration/verify', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ email, verificationCode }), // Invia l'email per identificare l'utente
+         });
+         const data = await response.json();
+         if (!response.ok) {
+             const error = data.message;
+             throw new Error(error);
+         }
+     }
 
     const login = async (username, password) => {
             const response = await fetch('http://localhost:5001/api/login', {
@@ -82,9 +94,11 @@ export function AuthProvider({ children }) {
             console.log(error)}
     };
 
+    const sleep = (t) => new Promise(res => setTimeout(res, t))
+
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, registration, login, logout, isLoggedIn: !!user };
+    const value = { user, registerData, verifyCode, login, logout, isLoggedIn: !!user, sleep};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

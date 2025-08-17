@@ -1,5 +1,7 @@
 import {useAuth} from "../context/authContext"
+import useDocumentTitle from "./useDocumentTitle";
 function Home(){
+    useDocumentTitle("Home")
     const {user} = useAuth();
     return (
         <div>
