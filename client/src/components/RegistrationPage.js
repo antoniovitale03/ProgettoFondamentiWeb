@@ -13,7 +13,8 @@ function RegistrationPage() {
 
     // Stato per controllare lo stato di registrazione (1 = dati, 2 = codice di verifica)
     const [step, setStep] = useState(1);
-    const [verificationCode, setVerificationCode] = useState('');
+    const [verificationCode, setVerificationCode] = useState(''); // -> codice inserito dall'utente (il server controllerà se corrisponde a quello inviato via mail)
+
     const [buttonState, setButtonState] = useState(1)
     //il bottone del form ha tre stati: 1 (registrati), 2 (verifica in corso...) e 3 (invia)
 
@@ -22,22 +23,25 @@ function RegistrationPage() {
 
     useDocumentTitle("Registrazione");
 
-
     //gestisce l'invio dei dati iniziali
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError('');
         try {
-            await registerData(username, email, password);
             setButtonState(2);
+            await registerData(username, email, password);
             // Se la chiamata ha successo, mostra il messaggio e passa al secondo step
-            await sleep(1000);
             setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");
             await sleep(2000);
             setStep(2);
             setButtonState(3)
+            setSuccessMessage("");
         } catch (error) {
             setError(error.message);
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setButtonState(1);
         }
     }
 
@@ -53,12 +57,10 @@ function RegistrationPage() {
                 Ora verrai reindirizzato alla pagina di login.
             </>);
             await sleep(3000); // Pausa per far leggere il messaggio
-            navigate('/login', {
-                replace: true,
-                state: { message: 'Ora puoi effettuare il login.' }
-            });
-        } catch (err) {
-            setError(err.message);
+            navigate('/login');
+        } catch (error) {
+            setVerificationCode("");
+            setError(error.message);
         }
     };
 
@@ -68,7 +70,7 @@ function RegistrationPage() {
         <div className="page-container">
             <div className="form-container">
                 <form onSubmit={step === 1 ? handleSubmit : handleVerify}>
-                    <h2>Registration</h2>
+                    <h2>{step === 1 ? "Registrazione" : "Verifica la tua identità"}</h2>
                     {/* Mostra il messaggio di errore solo se esiste */}
                     {error && <p className="error-message">{error}</p>}
 
@@ -88,13 +90,6 @@ function RegistrationPage() {
                         <label htmlFor="password">Password</label>
                         <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
-                    <button type="submit">
-                        {buttonState === 1 ? "Registrati" :
-                            buttonState === 2 ? 'Verifica in corso...':
-                                buttonState === 3 ? 'Registrati' :
-                                    "Registrati"}
-                    </button>
-                    {successMessage && <p className="registration-success-message">{successMessage}</p>}
                         </>)}
                     {/* --- Step 2: Inserimento Codice di Verifica --- */}
                     {step === 2 && (<>
@@ -102,15 +97,15 @@ function RegistrationPage() {
                                 <label htmlFor="verificationCode">Codice di Verifica</label>
                                 <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
                         </div>
-                        <button type="submit">
-                            {buttonState === 1 ? "Registrati" :
-                                buttonState === 2 ? 'Verifica in corso...':
-                                    buttonState === 3 ? 'Invia' :
-                                        "Registrati"
-                            }
-                            </button>
-                        {successMessage && <p className="registration-success-message">{successMessage}</p>}
                             </>)}
+                    <button type="submit">
+                        {buttonState === 1 ? "Registrati" :
+                            buttonState === 2 ? 'Verifica in corso...':
+                                buttonState === 3 ? 'Invia' :
+                                    "Registrati"
+                        }
+                    </button>
+                    {successMessage && <p className="registration-success-message">{successMessage}</p>}
                 </form>
             </div>
             <Footer />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../CSS/Form.css';
-import { NavLink, useNavigate} from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
@@ -14,48 +14,48 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Stato per controllare se lo stato è di login (1), oppure di impostazione della nuova password (2)
+    // Variabile usata per fare rendering condizionale del form di login(1) o di impostazione della nuova password (2)
     const [step, setStep] = useState(1);
 
     const {login, forgotPassword, sleep} = useAuth() //ottieni la funzione login dal contesto
-    const navigate = useNavigate();
 
     useDocumentTitle("Login")
 
     // Funzione che verifica la correttezza delle credenziali inserite durante il login
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(" ")
+        setError(" ");
         try{
             await login(username, password);
-            console.log("cioa")
-            sleep(1500);
-            setSuccessMessage("Login effettuato correttamente")
-            sleep(3000)
-            //navigate("/");
         } catch (error) {
-            setError(error.message)
+            setError(error.message);
+            setUsername("");
+            setPassword("");
         }
     };
 
     const handleForgotPassword = async (event) => {
         event.preventDefault();
-        setStep(2);
+        setError(" ");
         try{
             await forgotPassword(username, password, confirmPassword);
+            setSuccessMessage(<>
+                Password modificata correttamente!
+                <br />
+                Ora verrai reindirizzato alla pagina di login.
+            </>);
+            await sleep(3000);
+            //ri-renderizzo la pagina di login con le variabili di stato iniziali
+            setSuccessMessage("");
+            setUsername("");
+            setPassword("");
+            setStep(1); //renderizzo il form di login
         } catch(error){
             setError(error.message)
+            setPassword("");
+            setConfirmPassword("");
         }
-        sleep(5000);
-        setSuccessMessage(<>
-            Password modificata correttamente!
-            <br />
-            Ora verrai reindirizzato alla pagina di login.
-        </>);
-        sleep(3000);
-        //setStep(1); //cosi si renderizza il form di login
     }
-
 
     return (
         <div className="page-container">
@@ -78,17 +78,6 @@ function LoginPage() {
                     </div>
 
                     <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
-                    <div className="forgot-password-container">
-                        <button
-                            type="button" // 'type="button"' è importante per non inviare il form
-                            className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
-                            onClick={handleForgotPassword} // Assegna la tua funzione all'evento onClick
-                        >
-                            Hai dimenticato la password?
-                        </button>
-                    </div>
-                    <p className="registration-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti </p>
-                    {successMessage && <p className="registration-success-message">{successMessage}</p>}
                     </>)}
 
                 {/* --- Step 2: Fase di impostazione nuova password --- */}
@@ -104,6 +93,20 @@ function LoginPage() {
                         <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
                         </>)}
             </form>
+            {/* Il bottone "Hai dimenticato la password" e il link di registrazione sono fuori dal form di login */}
+            {step === 1 && (<>
+                    <div className="forgot-password-container">
+                        <button
+                            type="button" // 'type="button"' è importante per non inviare il form
+                            className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
+                            onClick={() => setStep(2)} // Assegna la tua funzione all'evento onClick
+                        >
+                            Hai dimenticato la password?
+                        </button>
+                    </div>
+                    <p className="registration-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
+                </>)}
+            {successMessage && <p className="registration-success-message">{successMessage}</p>}
         </div>
         <Footer />
         </div>

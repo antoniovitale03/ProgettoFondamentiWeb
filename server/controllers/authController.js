@@ -29,10 +29,16 @@ exports.registerdata = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        //controllo utente esistente
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
+        //controllo email esistente
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
             return res.status(400).json({ message: 'Email già in uso.' });
+        }
+
+        //controllo username esistente
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ message: 'Username già in uso.' });
         }
 
         //eseguo hash with salt della password
@@ -43,10 +49,10 @@ exports.registerdata = async (req, res) => {
 
         await sendMail(username, email, code);
 
-        res.status(201).json({ message: 'Utente registrato con successo!' });
+        return res.status(201).json({ message: 'Utente registrato con successo!' });
 
     } catch (error) {
-        res.status(500).json({ message: 'Errore del server.'});
+        return res.status(500).json({ message: 'Errore del server.'});
     }
 };
 
@@ -57,10 +63,10 @@ exports.verifycode = async (req, res) => {
         if (verificationCode !== code) { //codice errato
             return res.status(500).json({ message: 'Codice di verifica errato.'});
         }
-        return res.status(200).json({message: "Codice corretto. Ora sarai reindirizzato alla pagina di login."})
+        return res.status(200).json({message: "Codice di verifica corretto. Ora sarai reindirizzato alla pagina di login."})
         }
     catch(error){
-        res.status(500).json({ message: 'Errore del server.' })
+        return res.status(500).json({ message: 'Errore del server.' })
         }
 }
 

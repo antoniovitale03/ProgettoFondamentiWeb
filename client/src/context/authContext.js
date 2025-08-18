@@ -1,10 +1,8 @@
 import React, {createContext, useState, useContext} from 'react';
-import {useNavigate} from "react-router-dom";
 // Crea il contesto. Ogni componente figlio di App dovrà esportare una o più variabili/funzioni usando il contesto
 //appena creato (inizialmente nullo), a patto che il componente sia incapsulato in App e qui in AuthProvider che fornisce
 //le variabili e funzioni
 const AuthContext = createContext(null);
-
 
 //usiamo la variabile di stato user per verificare lo stato di login durante la sessione di uso dell'app, ma per rendere
 //persistente lo  stato anche dopo la chiusura del browser si usa localStorage
@@ -13,7 +11,6 @@ const AuthContext = createContext(null);
 
 // Crea il componente Provider che incapsula tutti le funzioni e variabili da condividere tra i componenti figli
 export function AuthProvider({ children }) {
-    const navigate = useNavigate();
     // Stato "user"
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user'))) //converte l'oggetto JSON in JS
     // Funzione per aggiornare lo stato e localStorage al login
@@ -64,8 +61,6 @@ export function AuthProvider({ children }) {
             setUser(data.user);
             localStorage.setItem('user', JSON.stringify(data.user));
 
-            // Esegui il reindirizzamento
-            navigate('/');
     };
 
     const forgotPassword = async (username, password, confirmPassword) => {
@@ -82,29 +77,21 @@ export function AuthProvider({ children }) {
     };
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
-        try {
-            const response = await fetch('http://localhost:5001/api/logout', {
-                method:"POST",
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            })
-            if (!response.ok){
-                throw new Error("Logout fallito")
-            }
-
-            //il server invierà un messaggio con cookie già scaduto, quindi viene scartato dal client
-
-            setUser(null);
-            localStorage.removeItem('user');
-
-            navigate('/', {
-                replace: true,
-                state: { message: 'Logout effettuato con successo.' }
-            });
+        const response = await fetch('http://localhost:5001/api/logout', {
+            method:"POST",
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        })
+        if (!response.ok){
+            throw new Error("Logout fallito")
         }
-        catch(error){
-            console.log(error)}
+
+        //il server invierà un messaggio con cookie già scaduto, quindi viene scartato dal client
+
+        setUser(null);
+        localStorage.removeItem('user');
     };
+
 
     const sleep = (t) => new Promise(res => setTimeout(res, t))
 
