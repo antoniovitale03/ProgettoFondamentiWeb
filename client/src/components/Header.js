@@ -30,6 +30,9 @@ function Header() {
                             <li>
                                 <button onClick={logout} className="logout-button">Logout</button>
                             </li>
+                            <li>
+                                <NavLink to="/delete-account" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Elimina Account</NavLink>
+                            </li>
                         </ul>
                     </nav>
                 </>

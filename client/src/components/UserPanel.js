@@ -2,9 +2,10 @@ import {Routes, Route } from 'react-router-dom';
 import Profile from "./Profile"
 import Home from "./Home";
 import About from "./About";
+import DeleteAccount from "./DeleteAccount";
 import Header from "./Header";
 import Footer from "./Footer";
-import "../CSS/UserPanel.css"
+import "../CSS/UserPanel.css";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
   return (
@@ -15,6 +16,7 @@ function UserPanel() {
                   <Route path="/" element={<Home/>} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="about" element={<About />} />
+                  <Route path="delete-account" element={<DeleteAccount />} />
               </Routes>
           </div>
           <Footer />

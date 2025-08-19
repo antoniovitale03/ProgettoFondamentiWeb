@@ -161,6 +161,20 @@ exports.logout = async (req, res) => { //cancella il cookie
 
 }
 
+exports.deleteAccount = async (req, res) => {
+    try{
+        userID = req.user.id; //prendo l'id dell'utente dall'oggetto user che ricevo dal middleware verifyJWT (essendo l'utente loggato possiamo prelevare i suoi dati dal token contenuto nel cookie della richiesta)
+        await User.findByIdAndDelete(userID);
+
+        // 3. Cancella anche il cookie di sessione per completare il logout
+        res.cookie('token', '', { httpOnly: true, expires: new Date(0) });
+
+        res.status(200).json({ message: "Account eliminato con successo." });
+    } catch(error){
+        res.status(500).json({ message: 'Errore del server.' });
+    }
+}
+
 exports.checkUser = async(req, res) => {
     try {
         // Grazie al middleware, 'req.user' ora esiste e contiene { id: '...' }

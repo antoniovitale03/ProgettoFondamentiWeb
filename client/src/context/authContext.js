@@ -97,7 +97,7 @@ export function AuthProvider({ children }) {
 
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, registerData, verifyCode, login, logout, forgotPassword, isLoggedIn: !!user, sleep};
+    const value = { user, setUser, registerData, verifyCode, login, logout, forgotPassword, isLoggedIn: !!user, sleep};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
