@@ -24,4 +24,4 @@ yarn-error.log*
 
 # webstorm
 .idea/
-server/.env
+.env
