@@ -1,7 +1,6 @@
 import {useEffect} from "react";
 import LoginPage from "./components/LoginPage";
 import UserPanel from "./components/UserPanel";
-import DefaultPanel from "./components/DefaultPanel";
 import {Route, Routes, Navigate} from "react-router-dom";
 import RegistrationPage from "./components/RegistrationPage"
 import {useAuth} from "./context/authContext";
@@ -29,10 +28,9 @@ function App() {
         <Routes>
             <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/" />} />
             <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
-            <Route path="/*" element={isLoggedIn ? <UserPanel /> : <DefaultPanel />} />
+            <Route path="/*" element={<UserPanel /> } />
         </Routes>
     )
-
 }
 
 export default App;
