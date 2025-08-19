@@ -104,7 +104,7 @@ function LoginPage() {
                             Hai dimenticato la password?
                         </button>
                     </div>
-                    <p className="registration-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
+                    <p className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
                 </>)}
             {successMessage && <p className="success-message">{successMessage}</p>}
         </div>

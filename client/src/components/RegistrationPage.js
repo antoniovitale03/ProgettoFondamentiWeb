@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import React, {useState} from "react";
 import "../CSS/Form.css"
 import Footer from "./Footer";
@@ -111,6 +111,10 @@ function RegistrationPage() {
                     </button>
                     {successMessage && <p className="success-message">{successMessage}</p>}
                 </form>
+                {step === 1 && (<>
+                        <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p>
+                    </>
+                )}
             </div>
             <Footer />
             </div>

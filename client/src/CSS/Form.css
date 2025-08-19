@@ -30,6 +30,9 @@
 .form-group {
     display: flex;
     flex-direction: column;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
 }
 
 .form-group label {
@@ -45,6 +48,7 @@
 }
 
 .form-container button {
+    margin-top: 2rem;
     padding: 0.75rem;
     border: none;
     border-radius: 4px;
@@ -86,7 +90,7 @@
     flex-grow: 1
 }
 
-.registration-link{
+.registration-login-link{
     margin-top: 100px;
 }
 
