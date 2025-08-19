@@ -15,11 +15,11 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user'))) //converte l'oggetto JSON in JS
     // Funzione per aggiornare lo stato e localStorage al login
 
-     const registerData = async (username, email, password) => {
+     const registerData = async (username, email) => {
          const response = await fetch('http://localhost:5001/api/registration/data', {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ username, email, password }),
+             body: JSON.stringify({ username, email }),
          });
          const data = await response.json();
          if (!response.ok) {
@@ -28,11 +28,11 @@ export function AuthProvider({ children }) {
          }
      }
 
-     const verifyCode = async (email, verificationCode) => {
+     const verifyCode = async (username, email, password, verificationCode) => {
          const response = await fetch('http://localhost:5001/api/registration/verify', {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ email, verificationCode }), // Invia l'email per identificare l'utente
+             body: JSON.stringify({ username, email, password, verificationCode }), // Invia l'email per identificare l'utente
          });
          const data = await response.json();
          if (!response.ok) {

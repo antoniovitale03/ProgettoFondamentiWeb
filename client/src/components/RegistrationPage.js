@@ -13,10 +13,13 @@ function RegistrationPage() {
 
     // Stato per controllare lo stato di registrazione (1 = dati, 2 = codice di verifica)
     const [step, setStep] = useState(1);
-    const [verificationCode, setVerificationCode] = useState(''); // -> codice inserito dall'utente (il server controllerà se corrisponde a quello inviato via mail)
 
-    const [buttonState, setButtonState] = useState(1)
+    // codice inserito dall'utente (il server controllerà se corrisponde a quello inviato via mail)
+    const [verificationCode, setVerificationCode] = useState('');
+
     //il bottone del form ha tre stati: 1 (registrati), 2 (verifica in corso...) e 3 (invia)
+    const [buttonState, setButtonState] = useState(1)
+
 
     const navigate = useNavigate();
     const {registerData, verifyCode, sleep} = useAuth()
@@ -28,15 +31,16 @@ function RegistrationPage() {
         event.preventDefault();
         setError('');
         try {
-            setButtonState(2);
-            await registerData(username, email, password);
+            setButtonState(2); //-> "Verifica in corso..."
+            await registerData(username, email); //controllo se l'username o l'email già esistono.
             // Se la chiamata ha successo, mostra il messaggio e passa al secondo step
             setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");
             await sleep(2000);
-            setStep(2);
-            setButtonState(3)
+            setStep(2); // -> Form di verifica del codice
+            setButtonState(3) // -> "Invia"
             setSuccessMessage("");
         } catch (error) {
+            //in caso di errore (email o username già esistenti), mostro l'errore e resetto i dati di input
             setError(error.message);
             setUsername("");
             setEmail("");
@@ -49,14 +53,14 @@ function RegistrationPage() {
         event.preventDefault();
         setError('');
         try {
-            await verifyCode(email, verificationCode);
+            await verifyCode(username, email, password, verificationCode);
             // Se il codice è corretto, mostra il messaggio finale e reindirizza
             setSuccessMessage(<>
                 Registrazione avvenuta con successo!
                 <br />
                 Ora verrai reindirizzato alla pagina di login.
             </>);
-            await sleep(3000); // Pausa per far leggere il messaggio
+            await sleep(2500);
             navigate('/login');
         } catch (error) {
             setVerificationCode("");
@@ -105,7 +109,7 @@ function RegistrationPage() {
                                     "Registrati"
                         }
                     </button>
-                    {successMessage && <p className="registration-success-message">{successMessage}</p>}
+                    {successMessage && <p className="success-message">{successMessage}</p>}
                 </form>
             </div>
             <Footer />

@@ -106,7 +106,7 @@ function LoginPage() {
                     </div>
                     <p className="registration-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
                 </>)}
-            {successMessage && <p className="registration-success-message">{successMessage}</p>}
+            {successMessage && <p className="success-message">{successMessage}</p>}
         </div>
         <Footer />
         </div>

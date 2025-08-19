@@ -27,7 +27,7 @@ async function sendMail(username, email, code) {
 //registro i dati temporaneamente in DB e poi verifico il codice, se è errato elimino i dati dal DB
 exports.registerdata = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email } = req.body;
 
         //controllo email esistente
         const existingEmail = await User.findOne({ email });
@@ -41,11 +41,6 @@ exports.registerdata = async (req, res) => {
             return res.status(400).json({ message: 'Username già in uso.' });
         }
 
-        //eseguo hash with salt della password
-        const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
-        const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
-        const newUser = new User({ username, email, password: hashedPassword });
-        await newUser.save();
 
         await sendMail(username, email, code);
 
@@ -58,11 +53,19 @@ exports.registerdata = async (req, res) => {
 
 exports.verifycode = async (req, res) => {
     try{
-        const {email, verificationCode } = req.body;
+        const {username,email, password, verificationCode } = req.body;
 
+        //controlla se il codice inserito dall'utente(verificationCode) corrisponde a quello inviato via mail(code)
         if (verificationCode !== code) { //codice errato
             return res.status(500).json({ message: 'Codice di verifica errato.'});
         }
+        //se il codice di verifica è corretto, puoi salvare l'utente nel DB
+        //eseguo hash with salt della password
+        const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
+        const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
+        const newUser = new User({ username, email, password: hashedPassword });
+        await newUser.save();
+
         return res.status(200).json({message: "Codice di verifica corretto. Ora sarai reindirizzato alla pagina di login."})
         }
     catch(error){
