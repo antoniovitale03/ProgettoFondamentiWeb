@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useAuth} from "../context/authContext";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, NavLink} from "react-router-dom";
 
 function DeleteAccount() {
 
@@ -28,7 +28,6 @@ function DeleteAccount() {
     }
 
 
-
     return (
         <div className="page-container">
             <div className="form-container">
@@ -36,11 +35,15 @@ function DeleteAccount() {
                     <h2>Elimina il tuo account</h2>
                     {error && <p className="error-message">{error}</p>}
                     <p>Per confermare l'eliminazione del tuo account, inserisci la tua mail</p>
-                    <input type="email" id="email" value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} required />
+                    <div className="form-group">
+                        <input type="email" id="email" value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} required />
+                    </div>
                     <button type="submit">Conferma</button>
                 </form>
+                <p>Se non desideri più eliminare il tuo account, clicca <NavLink to="/">qui</NavLink> per tornare alla home</p>
                 {successMessage && <p className="success-message">{successMessage}</p>}
             </div>
+
         </div>
 
     )

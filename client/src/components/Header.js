@@ -9,7 +9,7 @@ import "../CSS/header.css"
 import {useAuth} from "../context/authContext";
 
 function Header() {
-    const {logout, isLoggedIn} = useAuth();
+    const {user, logout, isLoggedIn} = useAuth();
     return (
         <header className="navigation-bar">
             <div className="logo">
@@ -22,7 +22,7 @@ function Header() {
                                 <NavLink to="/" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Home </NavLink>
                             </li>
                             <li>
-                                <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Profilo </NavLink>
+                                <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> {user.username} </NavLink>
                             </li>
                             <li>
                                 <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Chi Siamo </NavLink>

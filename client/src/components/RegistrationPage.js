@@ -33,7 +33,7 @@ function RegistrationPage() {
         try {
             setButtonState(2); //-> "Verifica in corso..."
             await registerData(username, email); //controllo se l'username o l'email già esistono.
-            // Se la chiamata ha successo, mostra il messaggio e passa al secondo step
+            // Se la chiamata ha successo, mostra il messaggio di successo e passa al secondo step
             setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");
             await sleep(2000);
             setStep(2); // -> Form di verifica del codice
@@ -109,8 +109,8 @@ function RegistrationPage() {
                                     "Registrati"
                         }
                     </button>
-                    {successMessage && <p className="success-message">{successMessage}</p>}
                 </form>
+                {successMessage && <p className="success-message">{successMessage}</p>}
                 {step === 1 && (<>
                         <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p>
                     </>

@@ -41,10 +41,11 @@ exports.registerdata = async (req, res) => {
             return res.status(400).json({ message: 'Username già in uso.' });
         }
 
+        //se l'email e l'username non esistono ancora, invia alla mail il codice di verifica
 
         await sendMail(username, email, code);
 
-        return res.status(201).json({ message: 'Utente registrato con successo!' });
+        res.status(201).json({ message: 'Utente registrato con successo!' });
 
     } catch (error) {
         return res.status(500).json({ message: 'Errore del server.'});
@@ -66,7 +67,7 @@ exports.verifycode = async (req, res) => {
         const newUser = new User({ username, email, password: hashedPassword });
         await newUser.save();
 
-        return res.status(200).json({message: "Codice di verifica corretto. Ora sarai reindirizzato alla pagina di login."})
+        res.status(200).json({message: "Codice di verifica corretto. Ora sarai reindirizzato alla pagina di login."})
         }
     catch(error){
         return res.status(500).json({ message: 'Errore del server.' })
@@ -108,8 +109,8 @@ exports.login = async (req, res) => {
             maxAge: 3600000 // Scadenza in millisecondi (1 ora)
         });
 
-//uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
-//nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
+        //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
+        //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
 
         // Invia una risposta di successo con solo i dati dell'utente (ma senza il token)
         //il campo user corrisponde alla variabile user che viene salvata nel contesto (lato Front end)
@@ -127,25 +128,29 @@ exports.login = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-    const {username, password, confirmPassword} = req.body;
-    if (password !== confirmPassword) {
-        return res.status(400).json({ message: 'Le password non corrispondono.' });
+    try {
+        const {username, password, confirmPassword} = req.body;
+        if (password !== confirmPassword) {
+            return res.status(400).json({message: 'Le password non corrispondono.'});
+        }
+
+        //trovo l'utente con quel username
+        const user = await User.findOne({username: username})
+        if (!user) {
+            return res.status(400).json({message: "L'utente non esiste"})
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({message: 'Password aggiornata con successo.'});
+    }catch (error) {
+        res.status(500).json({message: 'Errore del server.'});
     }
-
-    //trovo l'utente con quel username
-    const user = await User.findOne({ username: username })
-    if (!user) {
-        return res.status(400).json({ message: "L'utente non esiste" })
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(confirmPassword, salt);
-
-    user.password = hashedPassword;
-    await user.save();
-
-    return res.status(200).json({ message: 'Password aggiornata con successo.' });
-    }
+}
 
 exports.logout = async (req, res) => { //cancella il cookie
     try {
@@ -186,7 +191,6 @@ exports.checkUser = async(req, res) => {
         }
         res.status(200).json(userProfile);
     } catch (error) {
-        console.error("Errore nel recuperare il profilo:", error);
         res.status(500).json({ message: 'Errore interno del server.' });
     }
 }

@@ -11,19 +11,18 @@ function App() {
     const {isLoggedIn} = useAuth() // Leggi lo stato di login direttamente dal contesto
     //verifica della sessione solo al primo re-rendering dell'App, cioè dopo che eseguo il login (dipendenza da array vuoto)
     useEffect(() => {
-         const checkUserSession = async () => {
-             try {
-                  await fetch('http://localhost:5001/api/me', {
+        fetch('http://localhost:5001/api/me', {
                      method: 'GET',
                      headers: { 'Content-Type': 'application/json' },
                      credentials: 'include',
-                 });
-             } catch (error) {
-                 console.log(error);
-             }
-         };
-         checkUserSession()
+                 }).then(response => {
+                     if (!response.ok) {
+                         throw new Error('Errore durante il login');
+                     }
+                 }).catch(error => {
+                     console.error('Errore durante il login:', error);})
      }, []);
+
 
    return(
         <Routes>
