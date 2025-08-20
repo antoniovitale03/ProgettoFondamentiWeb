@@ -63,11 +63,11 @@ export function AuthProvider({ children }) {
 
     };
 
-    const forgotPassword = async (username, password, confirmPassword) => {
+    const forgotPassword = async (username, oldPassword, newPassword, confirmNewPassword) => {
         const response = await fetch('http://localhost:5001/api/forgot-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password, confirmPassword })
+            body: JSON.stringify({ username, oldPassword, newPassword, confirmNewPassword })
         })
         const data = await response.json();
         if (!response.ok) {

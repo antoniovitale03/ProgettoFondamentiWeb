@@ -36,7 +36,7 @@ function DeleteAccount() {
                     {error && <p className="error-message">{error}</p>}
                     <p>Per confermare l'eliminazione del tuo account, inserisci la tua mail</p>
                     <div className="form-group">
-                        <input type="email" id="email" value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} required />
+                        <input type="email" id="email" value={confirmEmail} placeholder="es. mario.rossi@gmail.com" onChange={(e) => setConfirmEmail(e.target.value)} required />
                     </div>
                     <button type="submit">Conferma</button>
                 </form>

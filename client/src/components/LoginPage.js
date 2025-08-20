@@ -10,7 +10,9 @@ function LoginPage() {
     // Stato per memorizzare l'input dell'utente
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -38,7 +40,7 @@ function LoginPage() {
         event.preventDefault();
         setError(" ");
         try{
-            await forgotPassword(username, password, confirmPassword);
+            await forgotPassword(username, oldPassword, newPassword, confirmNewPassword);
             setSuccessMessage(<>
                 Password modificata correttamente!
                 <br />
@@ -52,8 +54,9 @@ function LoginPage() {
             setStep(1); //renderizzo il form di login
         } catch(error){
             setError(error.message)
-            setPassword("");
-            setConfirmPassword("");
+            setOldPassword("");
+            setNewPassword("");
+            setConfirmNewPassword("");
         }
     }
 
@@ -81,12 +84,14 @@ function LoginPage() {
                 {/* --- Step 2: Fase di impostazione nuova password --- */}
                 {step === 2 && (<>
                         <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            <input type="password" id="password" value={oldPassword} placeholder="Vecchia password" onChange={(e) => setOldPassword(e.target.value)} required />
+                        </div>
+
+                        <div className="form-group">
+                            <input type="password" id="password" value={newPassword} placeholder="Nuova password" onChange={(e) => setNewPassword(e.target.value)} required />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="confirmPassword">Conferma Password</label>
-                            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                            <input type="password" id="password" value={confirmNewPassword} placeholder="Conferma nuova password" onChange={(e) => setConfirmNewPassword(e.target.value)} required />
                         </div>
                         </>)}
                 <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>

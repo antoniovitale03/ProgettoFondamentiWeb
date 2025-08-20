@@ -129,19 +129,27 @@ exports.login = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
     try {
-        const {username, password, confirmPassword} = req.body;
-        if (password !== confirmPassword) {
-            return res.status(400).json({message: 'Le password non corrispondono.'});
-        }
+        const {username, oldPassword, newPassword, confirmNewPassword} = req.body;
 
-        //trovo l'utente con quel username
-        const user = await User.findOne({username: username})
+        //prima controllo che lo username esista
+        const user = await User.findOne({username})
         if (!user) {
             return res.status(400).json({message: "L'utente non esiste"})
         }
 
+        //poi controllo che la password inserita in "vecchia password" corrisponda a quella dell'utente
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch){
+            return res.status(400).json({message: "La vecchia password non è corretta. "})
+        }
+
+        //dopodichè controllo che la nuova password e la sua conferma siano uguali
+        if (newPassword !== confirmNewPassword) {
+            return res.status(400).json({message: 'Le password non corrispondono.'});
+        }
+
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
 
         user.password = hashedPassword;
         await user.save();
