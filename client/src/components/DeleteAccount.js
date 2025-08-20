@@ -8,37 +8,19 @@ function DeleteAccount() {
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const {user, sleep, logout} = useAuth();
+    const {sleep, logout, deleteAccount} = useAuth();
 
     const navigate = useNavigate();
 
     const handleDeleteAccount = async (event) => {
         event.preventDefault()
         setError("");
-
         try {
-            const trueEmail = user.email //trueEmail è l'effettiva mail dell'utente e la confronto con quella appena inserita
-            if (trueEmail !== confirmEmail) {
-                throw new Error("L'email non corrisponde a quella del tuo account. Riprova");
-            }
-
-            //se l'email corrisponde, si procede ad eliminare l'utente (tramite chiamata API al server)
-            const response = await fetch("http://localhost:5001/api/delete-account", {
-                method: "DELETE",
-                credentials: 'include' // Invia il cookie per l'autenticazione
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                const error = data.message;
-                throw new Error(error);
-            }
+            await deleteAccount(confirmEmail);
             setSuccessMessage("Eliminazione dell'account avvenuta correttamente!")
             await sleep(2000);
+            logout();
             navigate("/");
-            logout()
-
         }catch(error){
             setError(error.message);
             setConfirmEmail("");

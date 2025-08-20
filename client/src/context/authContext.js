@@ -57,7 +57,7 @@ export function AuthProvider({ children }) {
                 throw new Error(error);
             }
 
-            // Se la chiamata ha successo, aggiorna lo stato e localStorage
+            // Se la chiamata API ha successo, aggiorna lo stato e localStorage
             setUser(data.user);
             localStorage.setItem('user', JSON.stringify(data.user));
 
@@ -93,11 +93,31 @@ export function AuthProvider({ children }) {
     };
 
 
+    const deleteAccount = async(confirmEmail) => {
+        const trueEmail = user.email //trueEmail è l'effettiva mail dell'utente e la confronto con quella appena inserita
+        if (trueEmail !== confirmEmail) {
+            throw new Error("L'email non corrisponde a quella del tuo account. Riprova");
+        }
+
+        //se l'email corrisponde, si procede ad eliminare l'utente (tramite chiamata API al server)
+        const response = await fetch("http://localhost:5001/api/delete-account", {
+            method: "DELETE",
+            credentials: 'include' // Invia il cookie per l'autenticazione
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const error = data.message;
+            throw new Error(error);
+        }
+    }
+
     const sleep = (t) => new Promise(res => setTimeout(res, t))
 
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, setUser, registerData, verifyCode, login, logout, forgotPassword, isLoggedIn: !!user, sleep};
+    const value = { user, setUser, registerData, verifyCode, login, logout, forgotPassword, deleteAccount, isLoggedIn: !!user, sleep};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

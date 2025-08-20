@@ -1,5 +1,5 @@
 import {Routes, Route } from 'react-router-dom';
-import Profile from "./Profile"
+import Profile from "./Profile";
 import Home from "./Home";
 import About from "./About";
 import DeleteAccount from "./DeleteAccount";

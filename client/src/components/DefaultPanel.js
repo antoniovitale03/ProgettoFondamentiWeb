@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import Home from "./Home";
 import Profile from "./Profile";
 import About from "./About";
+//pannello per utenti non loggati
 function DefaultPanel(){
     return(
         <div className="mainLayout">

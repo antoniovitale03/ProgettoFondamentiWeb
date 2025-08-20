@@ -44,7 +44,7 @@ function LoginPage() {
                 <br />
                 Ora verrai reindirizzato alla pagina di login.
             </>);
-            await sleep(3000);
+            await sleep(2500);
             //ri-renderizzo la pagina di login con le variabili di stato iniziali
             setSuccessMessage("");
             setUsername("");
@@ -76,8 +76,6 @@ function LoginPage() {
                         <label htmlFor="password">Password</label>
                         <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
-
-                    <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
                     </>)}
 
                 {/* --- Step 2: Fase di impostazione nuova password --- */}
@@ -90,8 +88,8 @@ function LoginPage() {
                             <label htmlFor="confirmPassword">Conferma Password</label>
                             <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                         </div>
-                        <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
                         </>)}
+                <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
             </form>
             {/* Il bottone "Hai dimenticato la password" e il link di registrazione sono fuori dal form di login */}
             {step === 1 && (<>
@@ -99,7 +97,10 @@ function LoginPage() {
                         <button
                             type="button" // 'type="button"' è importante per non inviare il form
                             className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
-                            onClick={() => setStep(2)} // Assegna la tua funzione all'evento onClick
+                            onClick={() =>
+                            {   setError("");
+                                setStep(2);
+                            }} // Assegna la tua funzione all'evento onClick
                         >
                             Hai dimenticato la password?
                         </button>
