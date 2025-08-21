@@ -6,8 +6,8 @@ function Home(){
     return (
         <div>
             {user && <p>Benvenuto nella home, {user.username}!</p>}
+            {!user && <p>Benvenuto nella home!</p>}
         </div>
-
     )
 }
 export default Home;

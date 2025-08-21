@@ -25,9 +25,6 @@ function Header() {
                                 <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> {user.username} </NavLink>
                             </li>
                             <li>
-                                <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Chi Siamo </NavLink>
-                            </li>
-                            <li>
                                 <button onClick={logout} className="logout-button">Logout</button>
                             </li>
                             <li>
@@ -42,9 +39,6 @@ function Header() {
                         <ul>
                             <li>
                                 <NavLink to="/" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Home </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Chi Siamo </NavLink>
                             </li>
                             <li>
                                 <NavLink to="/login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Accedi</NavLink>
