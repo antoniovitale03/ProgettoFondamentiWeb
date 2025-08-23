@@ -4,6 +4,7 @@ import { NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
+import Header from "./Header";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
 function LoginPage() {
@@ -62,59 +63,59 @@ function LoginPage() {
 
     return (
         <div className="page-container">
-        <div className="form-container">
-            <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
-                <h2>{step === 1 ? "Login" : "Imposta una nuova password"}</h2>
-                {/* Mostra il messaggio di errore solo se esiste */}
-                {error && <p className="error-message">{error}</p>}
+            <div className="form-container">
+                <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
+                    <h2>{step === 1 ? "Login" : "Imposta una nuova password"}</h2>
+                    {/* Mostra il messaggio di errore solo se esiste */}
+                    {error && <p className="error-message">{error}</p>}
 
-                {/*  Fase di login */}
-                {step === 1 && (<>
-                    <div className="form-group">
-                        <label htmlFor="username">Nome Utente</label>
-                        <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    </div>
-                    </>)}
-
-                {/* --- Step 2: Fase di impostazione nuova password --- */}
-                {step === 2 && (<>
+                    {/*  Fase di login */}
+                    {step === 1 && (<>
                         <div className="form-group">
-                            <input type="password" id="password" value={oldPassword} placeholder="Vecchia password" onChange={(e) => setOldPassword(e.target.value)} required />
+                            <label htmlFor="username">Nome Utente</label>
+                            <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
                         </div>
 
                         <div className="form-group">
-                            <input type="password" id="password" value={newPassword} placeholder="Nuova password" onChange={(e) => setNewPassword(e.target.value)} required />
-                        </div>
-                        <div className="form-group">
-                            <input type="password" id="password" value={confirmNewPassword} placeholder="Conferma nuova password" onChange={(e) => setConfirmNewPassword(e.target.value)} required />
+                            <label htmlFor="password">Password</label>
+                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                         </div>
                         </>)}
-                <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
-            </form>
-            {/* Il bottone "Hai dimenticato la password" e il link di registrazione sono fuori dal form di login */}
-            {step === 1 && (<>
-                    <div className="forgot-password-container">
-                        <button
-                            type="button" // 'type="button"' è importante per non inviare il form
-                            className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
-                            onClick={() =>
-                            {   setError("");
-                                setStep(2);
-                            }} // Assegna la tua funzione all'evento onClick
-                        >
-                            Hai dimenticato la password?
-                        </button>
-                    </div>
-                    <p className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
-                </>)}
-            {successMessage && <p className="success-message">{successMessage}</p>}
-        </div>
-        <Footer />
+
+                    {/* --- Step 2: Fase di impostazione nuova password --- */}
+                    {step === 2 && (<>
+                            <div className="form-group">
+                                <input type="password" id="password" value={oldPassword} placeholder="Vecchia password" onChange={(e) => setOldPassword(e.target.value)} required />
+                            </div>
+
+                            <div className="form-group">
+                                <input type="password" id="password" value={newPassword} placeholder="Nuova password" onChange={(e) => setNewPassword(e.target.value)} required />
+                            </div>
+                            <div className="form-group">
+                                <input type="password" id="password" value={confirmNewPassword} placeholder="Conferma nuova password" onChange={(e) => setConfirmNewPassword(e.target.value)} required />
+                            </div>
+                            </>)}
+                    <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
+                </form>
+                {/* Il bottone "Hai dimenticato la password" e il link di registrazione sono fuori dal form di login */}
+                {step === 1 && (<>
+                        <div className="forgot-password-container">
+                            <button
+                                type="button" // 'type="button"' è importante per non inviare il form
+                                className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
+                                onClick={() =>
+                                {   setError("");
+                                    setStep(2);
+                                }} // Assegna la tua funzione all'evento onClick
+                            >
+                                Hai dimenticato la password?
+                            </button>
+                        </div>
+                        <p className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
+                    </>)}
+                {successMessage && <p className="success-message">{successMessage}</p>}
+            </div>
+            <Footer />
         </div>
     )
 }

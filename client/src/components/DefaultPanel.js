@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import Home from "./Home";
 import Profile from "./Profile";
 import About from "./About";
+import Contact from "./Contact";
 //pannello per utenti non loggati
 function DefaultPanel(){
     return(
@@ -15,6 +16,7 @@ function DefaultPanel(){
                     <Route path="/" element={<Home/>} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="about" element={<About />} />
+                    <Route path="contact" element={<Contact/>} />
                 </Routes>
             </div>
             <Footer />

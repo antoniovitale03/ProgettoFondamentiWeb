@@ -1,13 +1,17 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle";
+import {Typography} from "@mui/material";
+import {Container, Box} from "@mui/material";
 function Home(){
     useDocumentTitle("Home")
     const {user} = useAuth();
     return (
-        <div>
-            {user && <p>Benvenuto nella home, {user.username}!</p>}
-            {!user && <p>Benvenuto nella home!</p>}
-        </div>
+        <Container>
+            <Box>
+                {user && <Typography variant="h6" align="center">Benvenuto nella home, {user.username}!</Typography>}
+                {!user && <p>Benvenuto nella home!</p>}
+            </Box>
+        </Container>
     )
 }
 export default Home;

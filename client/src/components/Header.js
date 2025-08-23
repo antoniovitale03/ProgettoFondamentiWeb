@@ -5,51 +5,59 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 // isActive è true se l'URL corrente corrisponde al to del NavLink.
 // Usiamo un operatore ternario per restituire la classe 'nav-link active' se il link è attivo, altrimenti solo 'nav-link'
 
-import "../CSS/header.css"
+import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
+import {Container, Box} from "@mui/material";
 
 function Header() {
     const {user, logout, isLoggedIn} = useAuth();
     return (
         <header className="navigation-bar">
-            <div className="logo">
-                Mia App
-            </div>
-            {isLoggedIn && (<>
-                    <nav>
-                        <ul>
-                            <li>
-                                <NavLink to="/" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Home </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> {user.username} </NavLink>
-                            </li>
-                            <li>
-                                <button onClick={logout} className="logout-button">Logout</button>
-                            </li>
-                            <li>
-                                <NavLink to="/delete-account" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Elimina Account</NavLink>
-                            </li>
-                        </ul>
-                    </nav>
-                </>
-            )}
-            {!isLoggedIn && (<>
-                    <nav>
-                        <ul>
-                            <li>
-                                <NavLink to="/" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> Home </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Accedi</NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/registration" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Crea un Account</NavLink>
-                            </li>
-                        </ul>
-                    </nav>
-                </>
-                )}
+            <Container>
+                <Box>
+                    {/*Header per utenti loggati*/}
+                    {isLoggedIn && (<>
+                            <nav>
+                                <ul>
+                                    <li className="logo">
+                                        <a href="/">
+                                            <img src="../../public/logo192.png" alt="Logo dell'App"/>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> {user.username} </NavLink>
+                                    </li>
+                                    <li>
+                                        <button onClick={logout} className="logout-button">Logout</button>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/delete-account" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Elimina Account</NavLink>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </>
+                    )}
+                    {/*Header per utenti non loggati*/}
+                    {!isLoggedIn && (<>
+                            <nav>
+                                <ul>
+                                    <li className="logo">
+                                        <a href="/">
+                                            <img src="../../public/logo192.png" alt="Logo dell'App"/>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Accedi</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/registration" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Crea un Account</NavLink>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </>
+                        )}
+                </Box>
+            </Container>
         </header>
     )
 }

@@ -7,5 +7,15 @@
     justify-content: space-around;
 }
 .navigation-bar nav ul li {
-    margin-bottom: 2rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.navigation-bar {
+    background-color: lightsteelblue;
+}
+
+.logo{
+    height: 50px;
+    width: 50px;
 }

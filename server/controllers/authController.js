@@ -176,7 +176,7 @@ exports.logout = async (req, res) => { //cancella il cookie
 
 exports.deleteAccount = async (req, res) => {
     try{
-        userID = req.user.id; //prendo l'id dell'utente dall'oggetto user che ricevo dal middleware verifyJWT (essendo l'utente loggato possiamo prelevare i suoi dati dal token contenuto nel cookie della richiesta)
+        const userID = req.user.id; //prendo l'id dell'utente dall'oggetto user che ricevo dal middleware verifyJWT (essendo l'utente loggato possiamo prelevare i suoi dati dal token contenuto nel cookie della richiesta)
         await User.findByIdAndDelete(userID);
 
         // 3. Cancella anche il cookie di sessione per completare il logout
