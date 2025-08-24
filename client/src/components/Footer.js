@@ -22,13 +22,13 @@ function Footer() {
                                </li>
                             ) : null}
                             <li>
-                                <a href="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank">GitHub</a>
+                                <a href="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">GitHub</a>
                             </li>
                             <li>
-                                <a href="">LinkedIn</a>
+                                <a href="qualcosa">LinkedIn</a>
                             </li>
                             <li>
-                                <a href="">Instagram</a>
+                                <a href="qualcosa">Instagram</a>
                             </li>
                         </ul>
                     </nav>

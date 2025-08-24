@@ -9,6 +9,7 @@ function Help(){
     return(
         <Container>
             <Box className="form-container" align="left">
+                <h3>Contattaci per avere supporto</h3>
                 <form>
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">Email</label>

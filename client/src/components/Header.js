@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
 import {Container, Box} from "@mui/material";
+import logo from "../assets/images/AppLogo.png"
 
 function Header() {
     const {user, logout, isLoggedIn} = useAuth();
@@ -17,13 +18,13 @@ function Header() {
                 <Box>
                     {/*Header per utenti loggati*/}
                     {isLoggedIn && (<>
+                            <div className="logo">
+                                <NavLink to="/">
+                                    <img src={logo} alt="logo" />
+                                </NavLink>
+                            </div>
                             <nav>
                                 <ul>
-                                    <li className="logo">
-                                        <a href="/">
-                                            <img src="../../public/logo192.png" alt="Logo dell'App"/>
-                                        </a>
-                                    </li>
                                     <li>
                                         <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> {user.username} </NavLink>
                                     </li>
@@ -43,7 +44,7 @@ function Header() {
                                 <ul>
                                     <li className="logo">
                                         <a href="/">
-                                            <img src="../../public/logo192.png" alt="Logo dell'App"/>
+                                            <img src={logo} alt="Logo"/>
                                         </a>
                                     </li>
                                     <li>
