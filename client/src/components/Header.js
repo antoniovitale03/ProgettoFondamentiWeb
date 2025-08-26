@@ -7,31 +7,42 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 
 import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
-import {Container, Box} from "@mui/material";
+import {Container, Box, TextField} from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 import logo from "../assets/images/AppLogo.png"
-import Menu from "../components/Menu";
-import {useState} from "react";
+import DropDownMenu from "./DropDownMenu";
+
+
+
 
 function Header() {
-    const {user, logout, isLoggedIn} = useAuth();
-    const [isMenuOpen, setIsMenuOpen] = useState(false); //variabile per gestire lo stato del menu a tendina
+    const {isLoggedIn} = useAuth();
+
+
+    function handleSearch() {
+        return null;
+    }
+
+
     return (
         <header className="navigation-bar">
             <Container>
                 <Box>
                     {/*Header per utenti loggati*/}
                     {isLoggedIn && (<>
-                            <Menu />
                             <nav>
                                 <ul>
                                     <li>
-                                        <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}> {user.username} </NavLink>
+                                        <DropDownMenu />
                                     </li>
                                     <li>
-                                        <button onClick={logout} className="logout-button">Logout</button>
+                                        <NavLink to="/archivio">Archivio</NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/delete-account" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Elimina Account</NavLink>
+                                        <TextField />
+                                        <button onClick={handleSearch}>
+                                            <SearchIcon />
+                                        </button>
                                     </li>
                                     <li>
                                         <div className="logo">
