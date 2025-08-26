@@ -160,11 +160,11 @@ exports.forgotPassword = async (req, res) => {
     }
 }
 
-exports.logout = async (req, res) => { //cancella il cookie
+exports.logout = async (req, res) => { //il server invia al client un cookie già scaduto, così il client automaticamente lo cancellerà
     try {
         res.cookie('token', '', {
             httpOnly: true,
-            expires: new Date(0) // il server invia al client un cookie già scaduto, che automaticamente scarterà
+            expires: new Date(0)
         });
         res.status(200).json({ message: 'Logout effettuato con successo.' });
     }
