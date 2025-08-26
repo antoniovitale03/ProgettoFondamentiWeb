@@ -21,6 +21,7 @@ function Footer() {
                                    <NavLink to="/help">Help</NavLink>
                                </li>
                             ) : null}
+                            {/*link App esterne*/}
                             <li>
                                 <a href="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">GitHub</a>
                             </li>

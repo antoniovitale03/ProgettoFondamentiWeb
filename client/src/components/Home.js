@@ -8,7 +8,7 @@ function Home(){
     return (
         <Container>
             <Box>
-                {user && <Typography variant="h6" align="center">Benvenuto nella home, {user.username}!</Typography>}
+                {user && <Typography variant="h6" >Benvenuto nella home, {user.username}!</Typography>}
                 {!user && <p>Benvenuto nella home!</p>}
             </Box>
         </Container>

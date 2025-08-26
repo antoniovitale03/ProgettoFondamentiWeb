@@ -4,7 +4,6 @@ import { NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
-import Header from "./Header";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
 function LoginPage() {

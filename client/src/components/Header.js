@@ -9,20 +9,19 @@ import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
 import {Container, Box} from "@mui/material";
 import logo from "../assets/images/AppLogo.png"
+import Menu from "../components/Menu";
+import {useState} from "react";
 
 function Header() {
     const {user, logout, isLoggedIn} = useAuth();
+    const [isMenuOpen, setIsMenuOpen] = useState(false); //variabile per gestire lo stato del menu a tendina
     return (
         <header className="navigation-bar">
             <Container>
                 <Box>
                     {/*Header per utenti loggati*/}
                     {isLoggedIn && (<>
-                            <div className="logo">
-                                <NavLink to="/">
-                                    <img src={logo} alt="logo" />
-                                </NavLink>
-                            </div>
+                            <Menu />
                             <nav>
                                 <ul>
                                     <li>
@@ -34,6 +33,13 @@ function Header() {
                                     <li>
                                         <NavLink to="/delete-account" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Elimina Account</NavLink>
                                     </li>
+                                    <li>
+                                        <div className="logo">
+                                            <NavLink to="/">
+                                                <img src={logo} alt="logo" />
+                                            </NavLink>
+                                        </div>
+                                    </li>
                                 </ul>
                             </nav>
                         </>
@@ -42,16 +48,16 @@ function Header() {
                     {!isLoggedIn && (<>
                             <nav>
                                 <ul>
-                                    <li className="logo">
-                                        <a href="/">
-                                            <img src={logo} alt="Logo"/>
-                                        </a>
-                                    </li>
                                     <li>
                                         <NavLink to="/login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Accedi</NavLink>
                                     </li>
                                     <li>
                                         <NavLink to="/registration" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Crea un Account</NavLink>
+                                    </li>
+                                    <li className="logo">
+                                        <a href="/">
+                                            <img src={logo} alt="Logo"/>
+                                        </a>
                                     </li>
                                 </ul>
                             </nav>
