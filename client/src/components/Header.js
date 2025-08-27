@@ -11,16 +11,29 @@ import {Container, Box, TextField} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
-
-
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useFilm} from "../context/filmContext";
 
 
 function Header() {
-    const {isLoggedIn} = useAuth();
+    const {isLoggedIn, sleep} = useAuth();
+    const {getFilmsFromSearch} = useFilm();
+    const [film, setFilm] = useState("");
 
+    const navigate = useNavigate();
 
-    function handleSearch() {
-        return null;
+    const handleSearch = async (event) => {
+        event.preventDefault();
+        try{
+            await getFilmsFromSearch(film); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così altre componenti come SearchFilmResults e FilmCard possono accedere ai dati
+            await sleep(2000);
+            navigate(`/search/${film}`);
+            setFilm("");
+        }catch(error){
+            setFilm("");
+        }
+
     }
 
 
@@ -39,7 +52,7 @@ function Header() {
                                         <NavLink to="/archivio">Archivio</NavLink>
                                     </li>
                                     <li>
-                                        <TextField />
+                                        <TextField id="film" value={film} onChange={ (e) => setFilm(e.target.value) } required/>
                                         <button onClick={handleSearch}>
                                             <SearchIcon />
                                         </button>

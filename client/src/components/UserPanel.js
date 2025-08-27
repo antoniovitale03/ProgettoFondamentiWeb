@@ -12,6 +12,8 @@ import Settings from "./Settings";
 import Archivio from "./Archivio";
 import "../CSS/UserPanel.css";
 import Recensioni from "./Recensioni";
+import Watchlist from "./Watchlist";
+import SearchFilmResults from "./SearchFilmResults";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
   return (
@@ -23,9 +25,12 @@ function UserPanel() {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/lista-film" element={<ListaFilm />} />
                   <Route path="/recensioni" element={<Recensioni />} />
+                  <Route path="/watchlist" element={<Watchlist />} />
                   <Route path="/settings" element={<Settings />} />
 
                   <Route path="/archivio" element={<Archivio />} />
+                  <Route path="/search/:film" element={<SearchFilmResults />} />
+
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/delete-account" element={<DeleteAccount />} />

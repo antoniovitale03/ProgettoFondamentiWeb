@@ -15,6 +15,8 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user'))) //converte l'oggetto JSON in JS
     // Funzione per aggiornare lo stato e localStorage al login
 
+    const [searchFilmResults, setSearchFilmResults] = useState([]);
+
      const registerData = async (username, email) => {
          const response = await fetch('http://localhost:5001/api/registration/data', {
              method: 'POST',
@@ -75,6 +77,7 @@ export function AuthProvider({ children }) {
             throw new Error(error)
         }
     };
+
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
         const response = await fetch('http://localhost:5001/api/logout', {
@@ -91,7 +94,6 @@ export function AuthProvider({ children }) {
         setUser(null);
         localStorage.removeItem('user');
     };
-
 
     const deleteAccount = async(confirmEmail) => {
         const trueEmail = user.email //trueEmail è l'effettiva mail dell'utente e la confronto con quella appena inserita
@@ -117,7 +119,7 @@ export function AuthProvider({ children }) {
 
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, setUser, registerData, verifyCode, login, logout, forgotPassword, deleteAccount, isLoggedIn: !!user, sleep};
+    const value = { user, registerData, verifyCode, login, logout, forgotPassword, deleteAccount, isLoggedIn: !!user, sleep};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

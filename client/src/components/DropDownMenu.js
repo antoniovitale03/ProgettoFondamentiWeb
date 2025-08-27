@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {Button, Menu, MenuItem, Icon} from '@mui/material';
+import {Button, Menu, MenuItem} from '@mui/material';
 import {NavLink} from 'react-router-dom';
 import {useAuth} from "../context/authContext";
 import {useState} from "react";
 
 function DropDownMenu() {
-    const {logout} = useAuth();
+    const {user, logout} = useAuth();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -25,7 +25,7 @@ function DropDownMenu() {
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
             >
-                Menu
+                {user.username}
             </Button>
             <Menu
                 id="basic-menu"
@@ -49,6 +49,10 @@ function DropDownMenu() {
 
                 <MenuItem onClick={handleClose}>
                     <NavLink to="/recensioni">Le mie recensioni</NavLink>
+                </MenuItem>
+
+                <MenuItem onClick={handleClose}>
+                    <NavLink to="/watchlist">Film da guardare</NavLink>
                 </MenuItem>
 
                 {/*All'interno della pagina impostazioni possiamo mettere la componente DeleteAccount per eliminare l'account*/}
