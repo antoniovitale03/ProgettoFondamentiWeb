@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
-import {Button, FormControl, InputLabel, Input, Stack} from "@mui/material";
+import {Button, FormControl, InputLabel, Input, Stack, Box, Typography} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
@@ -63,12 +63,13 @@ function LoginPage() {
     }
 
     return (
-        <div className="page-container">
-            <div className="form-container">
+        <Box className="page-container">
+            <Box className="form-container">
+
                 <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
-                    <h2>{step === 1 ? "Login" : "Imposta una nuova password"}</h2>
+                    <Typography component="h2">{ step === 1 ? "Login" : "Imposta una nuova password" }</Typography>
                     {/* Mostra il messaggio di errore solo se esiste */}
-                    {error && <p className="error-message">{error}</p>}
+                    {error && <Typography component="p" className="error-message">{error}</Typography>}
 
                     {/*  Fase di login */}
                     {step === 1 && (<>
@@ -77,12 +78,12 @@ function LoginPage() {
                                 <InputLabel htmlFor="username">Nome Utente</InputLabel>
                                 <Input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
                             </FormControl>
+
                             <FormControl>
                                 <InputLabel htmlFor="password">Password</InputLabel>
                                 <Input type="password" id="username" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
                             </FormControl>
                         </Stack>
-
                        </>)}
 
                     {/* --- Step 2: Fase di impostazione nuova password --- */}
@@ -106,6 +107,8 @@ function LoginPage() {
 
 
                         </>)}
+
+                    {/* Impostazione del bottone del form al variare di step */}
                     {step === 1 ? <Button variant="contained" type="submit">Accedi</Button>:
                         step === 2 ? <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>
                         : null}
@@ -113,8 +116,8 @@ function LoginPage() {
                 </form>
                 {/* Il bottone "Hai dimenticato la password" e il link di registrazione sono fuori dal form di login */}
                 {step === 1 && (<>
-                        <div className="forgot-password-container">
-                            <button
+                        <Box className="forgot-password-container">
+                            <Button
                                 type="button" // 'type="button"' è importante per non inviare il form
                                 className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
                                 onClick={() =>
@@ -123,14 +126,14 @@ function LoginPage() {
                                 }} // Assegna la tua funzione all'evento onClick
                             >
                                 Hai dimenticato la password?
-                            </button>
-                        </div>
-                        <p className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </p>
+                            </Button>
+                        </Box>
+                        <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </Typography>
                     </>)}
-                {successMessage && <p className="success-message">{successMessage}</p>}
-            </div>
+                {successMessage && <Typography component="p" className="success-message">{successMessage}</Typography>}
+            </Box>
             <Footer />
-        </div>
+        </Box>
     )
 }
 

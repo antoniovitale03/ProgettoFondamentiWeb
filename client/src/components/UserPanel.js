@@ -10,7 +10,6 @@ import Help from "./Help";
 import ListaFilm from "./ListaFilm";
 import Settings from "./Settings";
 import Archivio from "./Archivio";
-import "../CSS/UserPanel.css";
 import Recensioni from "./Recensioni";
 import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
@@ -20,9 +19,10 @@ import {Container, Box} from "@mui/material";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
   return (
-      <div className="mainLayout">
+      <Box style={{display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
           <Header />
-          <Container className="content-page">
+          {/*Questa dice all'area main di crescere e occupare tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
+          <Container style={{flexGrow: 1}}>
               <Box>
                   <Routes>
                       <Route path="/" element={<Home/>} />
@@ -45,7 +45,7 @@ function UserPanel() {
               </Box>
           </Container>
           <Footer />
-      </div>
+      </Box>
   );
 }
 

@@ -1,6 +1,5 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import "../CSS/UserPanel.css";
 import {Route, Routes} from "react-router-dom";
 import Home from "./Home";
 import About from "./About";
@@ -9,9 +8,9 @@ import {Container, Box} from "@mui/material";
 //pannello per utenti non loggati
 function DefaultPanel(){
     return(
-        <div className="mainLayout">
+        <Box style={{display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
             <Header />
-            <Container className="content-page">
+            <Container style={{flexGrow:1}}>
                 <Box>
                     <Routes>
                         <Route path="/" element={<Home/>} />
@@ -21,7 +20,7 @@ function DefaultPanel(){
                 </Box>
             </Container>
             <Footer />
-        </div>
+        </Box>
     )
 }
 

@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {useAuth} from "../context/authContext";
 import {useNavigate, NavLink} from "react-router-dom";
+import {Box, FormControl, InputLabel, Typography, Input, Button} from "@mui/material";
+import "../CSS/Form.css"
 
 function DeleteAccount() {
 
@@ -29,22 +31,24 @@ function DeleteAccount() {
 
 
     return (
-        <div className="page-container">
-            <div className="form-container">
+        <Box className="page-container">
+            <Box className="form-container">
                 <form onSubmit={handleDeleteAccount}>
-                    <h2>Elimina il tuo account</h2>
-                    {error && <p className="error-message">{error}</p>}
-                    <p>Per confermare l'eliminazione del tuo account, inserisci la tua mail</p>
-                    <div className="form-group">
-                        <input type="email" id="email" value={confirmEmail} placeholder="es. mario.rossi@gmail.com" onChange={(e) => setConfirmEmail(e.target.value)} required />
-                    </div>
-                    <button type="submit">Conferma</button>
+                    <Typography component="h2">Elimina il tuo account</Typography>
+                    {error && <Typography component="p" className="error-message">{error}</Typography>}
+                    <Typography component="p">Per confermare l'eliminazione del tuo account, inserisci la tua mail</Typography>
+                    <FormControl>
+                        <InputLabel htmlFor="email">Email</InputLabel>
+                        <Input type="email" id="email" value={confirmEmail} placeholder="es. mario.rossi@gmail.com" onChange={(e) => setConfirmEmail(e.target.value)} required/>
+                    </FormControl>
+                    <Button type="submit">Conferma</Button>
                 </form>
-                <p>Se non desideri più eliminare il tuo account, clicca <NavLink to="/">qui</NavLink> per tornare alla home</p>
-                {successMessage && <p className="success-message">{successMessage}</p>}
-            </div>
-
-        </div>
+                <p></p>
+                <p></p>
+                <Typography component="p">Se non desideri più eliminare il tuo account, clicca <NavLink to="/">qui</NavLink> per tornare alla home</Typography>
+                {successMessage && <Typography component="p" className="success-message">{successMessage}</Typography>}
+            </Box>
+        </Box>
 
     )
 }

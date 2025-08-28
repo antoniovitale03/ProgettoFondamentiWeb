@@ -1,7 +1,7 @@
 import React from "react";
 import {useState} from "react";
 import "../CSS/Form.css"
-import {Typography} from "@mui/material";
+import {Box, FormControl, InputLabel, Stack, Typography, TextField, Input, Button} from "@mui/material";
 import useDocumentTitle from "./useDocumentTitle";
 function Help(){
     const [email, setEmail] = useState("");
@@ -24,27 +24,33 @@ function Help(){
         }
     }
     return(
-            <div className="form-container" align="left">
-                <Typography variant="h5">Contattaci per avere supporto</Typography>
-                {error && <Typography variant="p" className="error-message">{error}</Typography>}
+        <Box classname="page-container">
+            <Box className="form-container">
+                <Typography component="h5">Contattaci per avere supporto</Typography>
+                {error && <Typography component="p" className="error-message">{error}</Typography>}
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email" className="form-label">Email</label>
-                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="title" className="form-label">Titolo</label>
-                        <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description" className="form-label">Descrizione del problema</label>
-                        <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-                    </div>
-                    <button type="submit">Invia</button>
+                    <Stack spacing={5}>
+                        <FormControl>
+                            <InputLabel htmlFor="email">Email</InputLabel>
+                            <Input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                        </FormControl>
+
+                        <FormControl>
+                            <InputLabel htmlFor="title">Titolo</InputLabel>
+                            <Input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
+                        </FormControl>
+
+                        <FormControl>
+                            <TextField id="outlined-multiline-flexible" multiline rows={5} label="Descrizione del problema" value={description} onChange={(e) => setDescription(e.target.value)} />
+                        </FormControl>
+
+                    </Stack>
+
+                    <Button type="submit">Invia</Button>
                 </form>
                 {successMessage && <Typography variant="p" className="success-message">{successMessage}</Typography>}
-            </div>
-
+            </Box>
+        </Box>
     )
 }
 
