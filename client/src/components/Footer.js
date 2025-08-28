@@ -1,6 +1,6 @@
 import {NavLink} from "react-router-dom";
 import "../CSS/header-footer.css";
-import {Container, Box, IconButton} from "@mui/material";
+import {Container, Box} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -26,19 +26,19 @@ function Footer() {
                             ) : null}
                             {/*link App esterne*/}
                             <li>
-                                <IconButton component="a" href="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
+                                <a href="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
                                     <GitHubIcon />
-                                </IconButton>
+                                </a>
                             </li>
                             <li>
-                                <IconButton component="a" href="link di Linkedin" target="_blank" rel="noreferrer">
+                                <a href="link di LinkedIn" target="_blank" rel="noreferrer">
                                     <LinkedInIcon />
-                                </IconButton>
+                                </a>
                             </li>
                             <li>
-                                <IconButton component="a" href="link di instagram" target="_blank" rel="noreferrer">
+                                <a href="link di Instagram" target="_blank" rel="noreferrer">
                                     <InstagramIcon />
-                                </IconButton>
+                                </a>
                             </li>
                         </ul>
                     </nav>

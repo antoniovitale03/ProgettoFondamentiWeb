@@ -50,22 +50,20 @@ function Header() {
                                         <NavLink to="/archivio">Archivio</NavLink>
                                     </li>
                                     <li>
-                                        <TextField id="film" value={film} onChange={ (e) => setFilm(e.target.value) } required/>
-                                        <button onClick={handleSearch}>
-                                            <SearchIcon />
-                                        </button>
+                                        <Box>
+                                            <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={film} onChange={ (e) => setFilm(e.target.value) } />
+                                            <Button variant="contained" onClick={handleSearch}>
+                                                <SearchIcon />
+                                            </Button>
+                                        </Box>
                                     </li>
                                     <li>
-                                        <Button variant="contained" color="success">
-                                            <NavLink to="/log-a-film" style={{ textDecoration: 'none', color: "white" }}>Log</NavLink>
+                                        <Button variant="contained" color="success" href="/log-a-film" style={{ textDecoration: 'none', color: "white" }}> + Log </Button>
+                                    </li>
+                                    <li>
+                                        <Button href="/">
+                                            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
                                         </Button>
-                                    </li>
-                                    <li>
-                                        <div className="logo">
-                                            <NavLink to="/">
-                                                <img src={logo} alt="logo" />
-                                            </NavLink>
-                                        </div>
                                     </li>
                                 </ul>
                             </nav>
@@ -76,15 +74,15 @@ function Header() {
                             <nav>
                                 <ul>
                                     <li>
-                                        <NavLink to="/login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Accedi</NavLink>
+                                        <Button variant="contained" color="success" href="/login"> Login </Button>
                                     </li>
                                     <li>
-                                        <NavLink to="/registration" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Crea un Account</NavLink>
+                                        <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>
                                     </li>
-                                    <li className="logo">
-                                        <a href="/">
-                                            <img src={logo} alt="Logo"/>
-                                        </a>
+                                    <li>
+                                        <Button href="/">
+                                            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
+                                        </Button>
                                     </li>
                                 </ul>
                             </nav>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import '../CSS/Form.css';
-import { NavLink} from "react-router-dom";
+import {Form, NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
-import {Button} from "@mui/material";
+import {Button, FormControl, InputLabel, Input, Stack} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
@@ -72,30 +72,40 @@ function LoginPage() {
 
                     {/*  Fase di login */}
                     {step === 1 && (<>
-                        <div className="form-group">
-                            <label htmlFor="username">Nome Utente</label>
-                            <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                        </div>
+                        <Stack spacing={5}>
+                            <FormControl>
+                                <InputLabel htmlFor="username">Nome Utente</InputLabel>
+                                <Input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel htmlFor="password">Password</InputLabel>
+                                <Input type="password" id="username" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
+                            </FormControl>
+                        </Stack>
 
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                        </div>
-                        </>)}
+                       </>)}
 
                     {/* --- Step 2: Fase di impostazione nuova password --- */}
                     {step === 2 && (<>
-                            <div className="form-group">
-                                <input type="password" id="password" value={oldPassword} placeholder="Vecchia password" onChange={(e) => setOldPassword(e.target.value)} required />
-                            </div>
+                        <Stack spacing={5}>
+                            <FormControl>
+                                <InputLabel hmtlFor="oldPassword">Vecchia password</InputLabel>
+                                <Input type="password" id="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+                            </FormControl>
 
-                            <div className="form-group">
-                                <input type="password" id="password" value={newPassword} placeholder="Nuova password" onChange={(e) => setNewPassword(e.target.value)} required />
-                            </div>
-                            <div className="form-group">
-                                <input type="password" id="password" value={confirmNewPassword} placeholder="Conferma nuova password" onChange={(e) => setConfirmNewPassword(e.target.value)} required />
-                            </div>
-                            </>)}
+                            <FormControl>
+                                <InputLabel htmlFor="newPassword">Nuova password</InputLabel>
+                                <Input type="password" id="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required/>
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel htmlFor="confirmNewPassword">Conferma nuova password</InputLabel>
+                                <Input type="password" id="password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} required/>
+                            </FormControl>
+                        </Stack>
+
+
+                        </>)}
                     {step === 1 ? <Button variant="contained" type="submit">Accedi</Button>:
                         step === 2 ? <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>
                         : null}

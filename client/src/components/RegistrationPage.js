@@ -4,7 +4,7 @@ import "../CSS/Form.css"
 import Footer from "./Footer";
 import useDocumentTitle from "./useDocumentTitle";
 import {useAuth} from "../context/authContext"
-import {Button} from "@mui/material";
+import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 function RegistrationPage() {
     const [username, setUsername] = useState('');
@@ -82,28 +82,31 @@ function RegistrationPage() {
 
                     {/*  Inserimento Dati */}
                     {step === 1 && (<>
-                    <div className="form-group">
-                        <label htmlFor="username">Nome Utente</label>
-                        <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                    </div>
+                        <Stack spacing={5}>
+                            <FormControl>
+                                <InputLabel htmlFor="username">Nome Utente</InputLabel>
+                                <Input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required/>
+                            </FormControl>
 
-                    <div className="form-group">
-                        <label htmlFor="email">E-mail</label>
-                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    </div>
+                            <FormControl>
+                                <InputLabel htmlFor="email">Email</InputLabel>
+                                <Input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            </FormControl>
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    </div>
+                            <FormControl>
+                                <InputLabel htmlFor="password">Password</InputLabel>
+                                <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                            </FormControl>
+                        </Stack>
+
                         </>)}
                     {/* --- Step 2: Inserimento Codice di Verifica --- */}
                     {step === 2 && (<>
-                            <div className="form-group">
-                                <label htmlFor="verificationCode">Codice di Verifica</label>
-                                <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
-                        </div>
-                            </>)}
+                            <FormControl>
+                                <InputLabel htmlFor="verificationCode">Codice di verifica</InputLabel>
+                                <Input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required/>
+                            </FormControl>
+                    </>)}
 
                     {buttonState === 1 ? <Button type="submit" variant="contained">Registrati</Button> :
                     buttonState === 2 ? <Button loading variant="contained" loadingPosition="end">Verifica in corso</Button> :
