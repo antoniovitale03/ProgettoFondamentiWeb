@@ -4,6 +4,8 @@ import "../CSS/Form.css"
 import Footer from "./Footer";
 import useDocumentTitle from "./useDocumentTitle";
 import {useAuth} from "../context/authContext"
+import {Button} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -102,13 +104,12 @@ function RegistrationPage() {
                                 <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
                         </div>
                             </>)}
-                    <button type="submit">
-                        {buttonState === 1 ? "Registrati" :
-                            buttonState === 2 ? 'Verifica in corso...':
-                                buttonState === 3 ? 'Invia' :
-                                    "Registrati"
-                        }
-                    </button>
+
+                    {buttonState === 1 ? <Button type="submit" variant="contained">Registrati</Button> :
+                    buttonState === 2 ? <Button loading variant="contained" loadingPosition="end">Verifica in corso</Button> :
+                    buttonState === 3 ? <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>: "Registrati"
+                    }
+
                 </form>
                 {successMessage && <p className="success-message">{successMessage}</p>}
                 {step === 1 && (<>

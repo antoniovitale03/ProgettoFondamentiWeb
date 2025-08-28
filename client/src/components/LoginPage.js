@@ -4,6 +4,8 @@ import { NavLink} from "react-router-dom";
 import Footer from "./Footer";
 import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
+import {Button} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
 function LoginPage() {
@@ -94,7 +96,10 @@ function LoginPage() {
                                 <input type="password" id="password" value={confirmNewPassword} placeholder="Conferma nuova password" onChange={(e) => setConfirmNewPassword(e.target.value)} required />
                             </div>
                             </>)}
-                    <button type="submit">{step === 1 ? "Accedi" : "Invia"}</button>
+                    {step === 1 ? <Button variant="contained" type="submit">Accedi</Button>:
+                        step === 2 ? <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>
+                        : null}
+
                 </form>
                 {/* Il bottone "Hai dimenticato la password" e il link di registrazione sono fuori dal form di login */}
                 {step === 1 && (<>
