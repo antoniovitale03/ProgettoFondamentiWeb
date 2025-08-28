@@ -14,29 +14,34 @@ import "../CSS/UserPanel.css";
 import Recensioni from "./Recensioni";
 import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
+import Log from "./Log";
+import {Container, Box} from "@mui/material";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
   return (
       <div className="mainLayout">
           <Header />
-          <div className="content-page">
-              <Routes>
-                  <Route path="/" element={<Home/>} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/lista-film" element={<ListaFilm />} />
-                  <Route path="/recensioni" element={<Recensioni />} />
-                  <Route path="/watchlist" element={<Watchlist />} />
-                  <Route path="/settings" element={<Settings />} />
+          <Container className="content-page">
+              <Box>
+                  <Routes>
+                      <Route path="/" element={<Home/>} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/lista-film" element={<ListaFilm />} />
+                      <Route path="/recensioni" element={<Recensioni />} />
+                      <Route path="/watchlist" element={<Watchlist />} />
+                      <Route path="/settings" element={<Settings />} />
 
-                  <Route path="/archivio" element={<Archivio />} />
-                  <Route path="/search/:film" element={<SearchFilmResults />} />
+                      <Route path="/archivio" element={<Archivio />} />
+                      <Route path="/search/:film" element={<SearchFilmResults />} />
+                      <Route path="/log-a-film" element={<Log />} />
 
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/delete-account" element={<DeleteAccount />} />
-                  <Route path="/help" element={<Help />} />
-              </Routes>
-          </div>
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/delete-account" element={<DeleteAccount />} />
+                      <Route path="/help" element={<Help />} />
+                  </Routes>
+              </Box>
+          </Container>
           <Footer />
       </div>
   );

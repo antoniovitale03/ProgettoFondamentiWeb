@@ -1,11 +1,9 @@
-import {Container, Box} from "@mui/material";
+import useDocumentTitle from "./useDocumentTitle";
+
 function Watchlist(){
+    useDocumentTitle("Watchlist");
     return(
-        <Container>
-            <Box>
-                <p>Lista dei film da guardare</p>
-            </Box>
-        </Container>
+        <p>Lista dei film da guardare</p>
     )
 }
 export default Watchlist;

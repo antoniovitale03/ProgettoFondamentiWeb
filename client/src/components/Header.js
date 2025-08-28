@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 
 import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
-import {Container, Box, TextField} from "@mui/material";
+import {Container, Box, TextField, Button} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
@@ -17,7 +17,7 @@ import {useFilm} from "../context/filmContext";
 
 
 function Header() {
-    const {isLoggedIn, sleep} = useAuth();
+    const {isLoggedIn} = useAuth();
     const {getFilmsFromSearch} = useFilm();
     const [film, setFilm] = useState("");
 
@@ -27,13 +27,11 @@ function Header() {
         event.preventDefault();
         try{
             await getFilmsFromSearch(film); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così altre componenti come SearchFilmResults e FilmCard possono accedere ai dati
-            await sleep(2000);
             navigate(`/search/${film}`);
             setFilm("");
         }catch(error){
             setFilm("");
         }
-
     }
 
 
@@ -56,6 +54,11 @@ function Header() {
                                         <button onClick={handleSearch}>
                                             <SearchIcon />
                                         </button>
+                                    </li>
+                                    <li>
+                                        <Button variant="contained" color="success">
+                                            <NavLink to="/log-a-film" style={{ textDecoration: 'none', color: "white" }}>Log</NavLink>
+                                        </Button>
                                     </li>
                                     <li>
                                         <div className="logo">

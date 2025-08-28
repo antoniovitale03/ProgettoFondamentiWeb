@@ -7,7 +7,6 @@ export function FilmProvider({ children }) {
     const API_KEY_TMDB = "28b872161efc4627e1657874dcc818d5";
     const posterBaseUrl = 'https://image.tmdb.org/t/p/w500' //per ricavare la locandina verticale usare questo url + film.poster_path
     const bannerBaseUrl = 'https://image.tmdb.org/t/p/w1280' // per ricavare lo sfondo orizzontale usare questo url + film.backdrop_path
-
     const [filmsFromSearch, setFilmsFromSearch] = useState([]); //film ottenuti dalla ricerca
 
     //FUNZIONE UTILE PER OTTENERE LE INFO PRINCIPALI DEI FILM DERIVANTI DALLA RICERCA (DA INSERIRE POI NELLE INFO CARD)
@@ -33,11 +32,12 @@ export function FilmProvider({ children }) {
         });
         const finalFilms = await Promise.all(modified_films)
         setFilmsFromSearch(finalFilms); //aggiungo l'array al contesto solo quando tutte le promise sono finite
+        console.log(finalFilms);
     }
 
 
     const getFilmDirector = async (filmID)  => {
-        // 2. Chiamata per il cast e la troupe
+        // 2. Chiamata per il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...)
         const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${API_KEY_TMDB}`);
         const credits = await creditsResponse.json();
 

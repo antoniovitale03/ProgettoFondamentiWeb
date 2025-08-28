@@ -1,11 +1,9 @@
-import {Container, Box} from "@mui/material";
+import useDocumentTitle from "./useDocumentTitle";
+
 function Recensioni(){
+    useDocumentTitle("Le mie Recensioni");
     return (
-        <Container>
-            <Box>
-                <p>Le mie recensioni</p>
-            </Box>
-        </Container>
+        <p>Le mie recensioni</p>
     )
 }
 

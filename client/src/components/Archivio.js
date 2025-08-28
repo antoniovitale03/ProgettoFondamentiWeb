@@ -1,11 +1,12 @@
-import {Container, Box} from "@mui/material";
+import useDocumentTitle from "./useDocumentTitle";
+
 function Archivio(){
+    useDocumentTitle("Archivio");
     return(
-        <Container>
-            <Box>
-                <p>Archivio di tutti i film disponibili</p>
-            </Box>
-        </Container>
+        <div>
+            <p>Archivio di tutti i film disponibili</p>
+            <p>Similmente alla funzione di ricerca, qui l'utente può trovare dei film non solo a partire dal nome, ma anche dalla data di uscita, genere, popolarità ecc.</p>
+        </div>
     )
 }
 

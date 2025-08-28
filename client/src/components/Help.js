@@ -1,7 +1,8 @@
 import React from "react";
 import {useState} from "react";
 import "../CSS/Form.css"
-import {Box, Container, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
+import useDocumentTitle from "./useDocumentTitle";
 function Help(){
     const [email, setEmail] = useState("");
     const [title, setTitle] = useState("");
@@ -9,6 +10,8 @@ function Help(){
 
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+
+    useDocumentTitle("Help");
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -21,8 +24,7 @@ function Help(){
         }
     }
     return(
-        <Container>
-            <Box className="form-container" align="left">
+            <div className="form-container" align="left">
                 <Typography variant="h5">Contattaci per avere supporto</Typography>
                 {error && <Typography variant="p" className="error-message">{error}</Typography>}
                 <form onSubmit={handleSubmit}>
@@ -41,8 +43,7 @@ function Help(){
                     <button type="submit">Invia</button>
                 </form>
                 {successMessage && <Typography variant="p" className="success-message">{successMessage}</Typography>}
-            </Box>
-        </Container>
+            </div>
 
     )
 }
