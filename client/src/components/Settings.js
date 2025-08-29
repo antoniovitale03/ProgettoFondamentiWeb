@@ -5,7 +5,7 @@ function Settings(){
     useDocumentTitle("Settings");
     return(
         <div>
-            <p>Impostazioni per modificare il profilo</p>
+            <p>Impostazioni per modificare nomeutente, email, eventuale biografia, film preferiti, ...</p>
             <NavLink to="/delete-account">Elimina il tuo account </NavLink>
         </div>
     )

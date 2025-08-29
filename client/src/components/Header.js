@@ -35,6 +35,7 @@ function Header() {
     }
 
 
+
     return (
         <header className="navigation-bar">
             <Container>
@@ -50,7 +51,7 @@ function Header() {
                                         <NavLink to="/archivio">Archivio</NavLink>
                                     </li>
                                     <li>
-                                        <Box>
+                                        <Box component="form" onSubmit={handleSearch}>
                                             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={film} onChange={ (e) => setFilm(e.target.value) } />
                                             <Button variant="contained" onClick={handleSearch}>
                                                 <SearchIcon />
@@ -69,6 +70,8 @@ function Header() {
                             </nav>
                         </>
                     )}
+
+
                     {/*Header per utenti non loggati*/}
                     {!isLoggedIn && (<>
                             <nav>

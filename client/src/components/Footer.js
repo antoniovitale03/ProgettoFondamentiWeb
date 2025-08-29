@@ -5,6 +5,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import {useAuth} from "../context/authContext";
+import {Link} from "react-router-dom";
 function Footer() {
     const {isLoggedIn} = useAuth();
     return (
@@ -24,21 +25,22 @@ function Footer() {
                                    <NavLink to="/help">Help</NavLink>
                                </li>
                             ) : null}
+
                             {/*link App esterne*/}
                             <li>
-                                <a href="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
+                                <Link to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
                                     <GitHubIcon />
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="link di LinkedIn" target="_blank" rel="noreferrer">
+                                <Link to="link di LinkedIn" target="_blank" rel="noreferrer">
                                     <LinkedInIcon />
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="link di Instagram" target="_blank" rel="noreferrer">
+                                <Link to="link di Instagram" target="_blank" rel="noreferrer">
                                     <InstagramIcon />
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </nav>

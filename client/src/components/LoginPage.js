@@ -65,7 +65,6 @@ function LoginPage() {
     return (
         <Box className="page-container">
             <Box className="form-container">
-
                 <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
                     <Typography component="h2">{ step === 1 ? "Login" : "Imposta una nuova password" }</Typography>
                     {/* Mostra il messaggio di errore solo se esiste */}
