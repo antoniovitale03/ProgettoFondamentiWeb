@@ -53,13 +53,8 @@ export function FilmProvider({ children }) {
     const value = {filmsFromSearch, getFilmsFromSearch}
     return <FilmContext.Provider value={value}>{children}</FilmContext.Provider>;
 }
+
  //custom hook
 export function useFilm() {
-    const context = useContext(FilmContext);
-    // Se un componente prova a usare questo hook senza essere un figlio
-    // del Provider, 'context' sarà 'null'.
-    if (context === null) {
-        throw new Error("useAuth deve essere usato all'interno di un AuthProvider");
-    }
-    return context;
+    return useContext(FilmContext);
 }

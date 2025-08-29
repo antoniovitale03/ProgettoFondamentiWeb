@@ -35,7 +35,6 @@ function Header() {
     }
 
 
-
     return (
         <header className="navigation-bar">
             <Container>
