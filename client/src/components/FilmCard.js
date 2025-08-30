@@ -1,16 +1,16 @@
-import {Box, Stack} from "@mui/material";
-import {Link} from "@mui/material";
+import {Box, Button, Stack} from "@mui/material";
+import {NavLink} from "react-router-dom";
 
-function FilmCard({film}){
+function FilmCard({ film }){
     const title = film.title.replaceAll(" ", "-"); //se ci sono spazi nel titolo del film li sostituisco con i trattini
     //es. The Matrix reindirizza all'url /film/The-Matrix piuttosto ch /film/The%Matrix
     return(
        <Box>
            <Stack spacing={4}>
-               <Link href={`/film/${title}`} >{film.title}</Link>
+               <NavLink to={`/film/${title}/${film.id}`}>{film.title}</NavLink>
                <img src={film.poster_path} alt="Locandina film"/>
-               <p>{film.release_date}</p>
-               <p>{film.director}</p>
+               <p>Data di uscita: {film.release_date}</p>
+               <p>Diretto da: {film.director}</p>
                <p>-------</p>
            </Stack>
        </Box>

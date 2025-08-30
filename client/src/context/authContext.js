@@ -15,10 +15,9 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user'))) //converte l'oggetto JSON in JS
     // Funzione per aggiornare lo stato e localStorage al login
 
-    const [searchFilmResults, setSearchFilmResults] = useState([]);
 
      const registerData = async (username, email) => {
-         const response = await fetch('http://localhost:5001/api/registration/data', {
+         const response = await fetch('http://localhost:5001/api/auth/registration/data', {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ username, email }),
@@ -31,7 +30,7 @@ export function AuthProvider({ children }) {
      }
 
      const verifyCode = async (username, email, password, verificationCode) => {
-         const response = await fetch('http://localhost:5001/api/registration/verify', {
+         const response = await fetch('http://localhost:5001/api/auth/registration/verify', {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ username, email, password, verificationCode }), // Invia l'email per identificare l'utente
@@ -44,7 +43,7 @@ export function AuthProvider({ children }) {
      }
 
     const login = async (username, password) => {
-            const response = await fetch('http://localhost:5001/api/login', {
+            const response = await fetch('http://localhost:5001/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
@@ -66,7 +65,7 @@ export function AuthProvider({ children }) {
     };
 
     const forgotPassword = async (username, oldPassword, newPassword, confirmNewPassword) => {
-        const response = await fetch('http://localhost:5001/api/forgot-password', {
+        const response = await fetch('http://localhost:5001/api/auth/forgot-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, oldPassword, newPassword, confirmNewPassword })
@@ -80,7 +79,7 @@ export function AuthProvider({ children }) {
 
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
-        const response = await fetch('http://localhost:5001/api/logout', {
+        const response = await fetch('http://localhost:5001/api/auth/logout', {
             method:"POST",
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
@@ -102,7 +101,7 @@ export function AuthProvider({ children }) {
         }
 
         //se l'email corrisponde, si procede ad eliminare l'utente (tramite chiamata API al server)
-        const response = await fetch("http://localhost:5001/api/delete-account", {
+        const response = await fetch("http://localhost:5001/api/auth/delete-account", {
             method: "DELETE",
             credentials: 'include' // Invia il cookie per l'autenticazione
         });

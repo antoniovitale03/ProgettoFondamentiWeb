@@ -8,9 +8,9 @@ import {Container, Box} from "@mui/material";
 //pannello per utenti non loggati
 function DefaultPanel(){
     return(
-        <Box style={{display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
             <Header />
-            <Container style={{flexGrow:1}}>
+            <Container style={{ flexGrow:1 }}>
                 <Box>
                     <Routes>
                         <Route path="/" element={<Home/>} />

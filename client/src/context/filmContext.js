@@ -1,56 +1,52 @@
-import React, {createContext, useContext, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 
 const FilmContext = createContext(null);
 
 export function FilmProvider({ children }) {
 
-    const API_KEY_TMDB = "28b872161efc4627e1657874dcc818d5";
-    const posterBaseUrl = 'https://image.tmdb.org/t/p/w500' //per ricavare la locandina verticale usare questo url + film.poster_path
-    const bannerBaseUrl = 'https://image.tmdb.org/t/p/w1280' // per ricavare lo sfondo orizzontale usare questo url + film.backdrop_path
-    const [filmsFromSearch, setFilmsFromSearch] = useState([]); //film ottenuti dalla ricerca
+
+    const [searchQuery, setSearchQuery] = useState(" "); //film cercato dall'utente
+    const [filmsFromSearch, setFilmsFromSearch] = useState([]); //lista di film ottenuti dalla ricerca
 
     //FUNZIONE UTILE PER OTTENERE LE INFO PRINCIPALI DEI FILM DERIVANTI DALLA RICERCA (DA INSERIRE POI NELLE INFO CARD)
     //COPERTINA + NOME FILM + ANNO DI USCITA + REGISTA
     const getFilmsFromSearch = async (film) => {
-        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY_TMDB}&query=${film}`);
-        const data = await response.json();
-        const films = data.results; //ottengo la lista di tutti i film che corrispondono alla ricerca
-        //aggiungo ad ogni film la proprietà che riguarda il regista, completo l'url per locandina e sfondo (se esistono) e
-        //converto release_date indicando solo l'anno di uscita senza mese e giorno
-        const modified_films = await films.map(async (film) => {  //array di Promise
-            const director = await getFilmDirector(film.id);
-            const poster_image_url = film.poster_path ? posterBaseUrl + film.poster_path : null
-            const background_image_url = film.backdrop_path ? bannerBaseUrl + film.backdrop_path : null
-            const year = film.release_date ? new Date(film.release_date).getFullYear() : "N/A";
-            return{
-                ...film,
-                director: director,
-                poster_path: poster_image_url,
-                backdrop_path: background_image_url,
-                release_date:year
-            };
+        setSearchQuery(film);
+        const response = await fetch('http://localhost:5001/api/films/getFilmSearchResults', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ film }),
         });
-        const finalFilms = await Promise.all(modified_films)
-        setFilmsFromSearch(finalFilms); //aggiungo l'array al contesto solo quando tutte le promise sono finite
-        console.log(finalFilms);
+        const films = await response.json(); //ottengo l'array con tutti i film ottenuti dalla ricerca
+        setFilmsFromSearch(films); //aggiungo l'array al contesto
     }
 
-
-    const getFilmDirector = async (filmID)  => {
-        // 2. Chiamata per il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...)
-        const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${API_KEY_TMDB}`);
-        const credits = await creditsResponse.json();
-
-        // 3. Trova il regista nell'array 'crew'
-        const directorObject = credits.crew.find( (member) => member.job === 'Director');
-
-        // 4. Estrai il nome (gestendo il caso in cui non venga trovato)
-        const director = directorObject ? directorObject.name : null;
-        return director;
+    //trovo il film dall'array generato da getFilmsFromSearch e passo l'oggetto al componente FilmPage
+    const findFilm = async (filmTitle, filmID) => {
+        const response = await fetch('http://localhost:5001/api/films/findFilm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filmTitle, filmID })
+        })
+        const film = await response.json();
+        return film;
     }
 
+    const addToWatchlist = async (film) => {
+        const response = await fetch("http://localhost:5001/api/films/add-to-watchlist", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ film }),
+            credentials: 'include'
+        })
+        const data = await response.json();
+        if (!response.ok) {
+            let error = data.message;
+            throw new Error(error);
+        }
+    }
 
-    const value = {filmsFromSearch, getFilmsFromSearch}
+    const value = {searchQuery, filmsFromSearch, getFilmsFromSearch, findFilm, addToWatchlist}
     return <FilmContext.Provider value={value}>{children}</FilmContext.Provider>;
 }
 

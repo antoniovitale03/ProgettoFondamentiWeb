@@ -27,7 +27,8 @@ function Header() {
         event.preventDefault();
         try{
             await getFilmsFromSearch(film); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così altre componenti come SearchFilmResults e FilmCard possono accedere ai dati
-            navigate(`/search/${film}`);
+            let filmTitle = film.replaceAll(" ", "-");
+            navigate(`/search/${filmTitle}`); //a questo url viene renderizzato SearchFilmResults
             setFilm("");
         }catch(error){
             setFilm("");

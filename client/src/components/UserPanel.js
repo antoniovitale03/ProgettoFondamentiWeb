@@ -13,7 +13,7 @@ import Archivio from "./Archivio";
 import Recensioni from "./Recensioni";
 import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
-import Film from "./Film";
+import FilmPage from "./FilmPage";
 import Log from "./Log";
 import {Container, Box} from "@mui/material";
 //la componente principale che gestisce tutti i percorsi
@@ -34,7 +34,7 @@ function UserPanel() {
 
                       <Route path="/archivio" element={<Archivio />} />
                       <Route path="/search/:film" element={<SearchFilmResults />} />
-                      <Route path="/film/:film" element={<Film />} />
+                      <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
                       <Route path="/log-a-film" element={<Log />} />
 
                       <Route path="/about" element={<About />} />

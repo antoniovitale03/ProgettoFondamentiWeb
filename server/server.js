@@ -5,7 +5,7 @@ require('dotenv').config();      //legge il file `.env`, e permette di accedere 
 const connectdb = require("./controllers/connect_db_controller")
 // Importa il file delle rotte
 const authRouter = require('./routes/authRouter');
-
+const filmRouter = require('./routes/filmRouter');
 const app = express(); // Creiamo un'istanza del nostro server Express.
 const PORT = 5001; // Definiamo la porta su cui ascolterà.
 
@@ -19,7 +19,8 @@ app.use(express.json());  // Questo è FONDAMENTALE. Permette al server di capir
 
 app.use(cookieParser()) // questo permette al server di leggere il token dal cookie presente nelle richieste successive del client dopo la fase di login
 
-app.use('/api', authRouter)  //in questo modo gestisco login e registrazione ai link /api/login e /api/registration (raggiungibili solo da post)
+app.use('/api/auth', authRouter)  //gestione dell'autenticazione
+app.use('/api/films', filmRouter)  //gestione dei film
 
 connectdb();
 
