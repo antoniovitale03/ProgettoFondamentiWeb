@@ -4,7 +4,6 @@ import useDocumentTitle from "./useDocumentTitle";
 //questo componente serve a mostrare i risultati di ricerca di un film
 function SearchFilmResults() {
     const {searchQuery, filmsFromSearch} = useFilm();
-    console.log(filmsFromSearch);
     useDocumentTitle(`Mostra risultati per ${searchQuery}`)
     return(
         <div>

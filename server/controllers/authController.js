@@ -54,7 +54,7 @@ exports.registerdata = async (req, res) => {
 
 exports.verifycode = async (req, res) => {
     try{
-        const {username,email, password, verificationCode } = req.body;
+        const {username, email, password, verificationCode } = req.body;
 
         //controlla se il codice inserito dall'utente(verificationCode) corrisponde a quello inviato via mail(code)
         if (verificationCode !== code) { //codice errato
@@ -99,7 +99,7 @@ exports.login = async (req, res) => {
             } // Includo nel payload anche l'ID dell'utente nel token (quello che c'è nel DB)
         };
         // Firma il token con un segreto e imposta una scadenza
-        const token = jwt.sign(payload,process.env.JWT_SECRET, {expiresIn: "1h"})
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "1h"})
 
         //Sessione stateful: si inserisce il token non in JSON nella risposta ma in un header Set-Cookie
 

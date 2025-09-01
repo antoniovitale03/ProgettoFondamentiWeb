@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 
 import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
-import {Container, Box, TextField, Button} from "@mui/material";
+import {Container, Box, TextField, Button, Avatar} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
@@ -19,19 +19,19 @@ import {useFilm} from "../context/filmContext";
 function Header() {
     const {isLoggedIn} = useAuth();
     const {getFilmsFromSearch} = useFilm();
-    const [film, setFilm] = useState("");
+    const [title, setTitle] = useState("");
 
     const navigate = useNavigate();
 
     const handleSearch = async (event) => {
         event.preventDefault();
         try{
-            await getFilmsFromSearch(film); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così altre componenti come SearchFilmResults e FilmCard possono accedere ai dati
-            let filmTitle = film.replaceAll(" ", "-");
+            await getFilmsFromSearch(title); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così il componente SearchFilmResults potrà usarlo per mostrare i risultati di ricerca
+            let filmTitle = title.replaceAll(" ", "-");
             navigate(`/search/${filmTitle}`); //a questo url viene renderizzato SearchFilmResults
-            setFilm("");
+            setTitle("");
         }catch(error){
-            setFilm("");
+            setTitle("");
         }
     }
 
@@ -45,6 +45,9 @@ function Header() {
                             <nav>
                                 <ul>
                                     <li>
+                                        <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />
+                                    </li>
+                                    <li>
                                         <DropDownMenu />
                                     </li>
                                     <li>
@@ -52,7 +55,7 @@ function Header() {
                                     </li>
                                     <li>
                                         <Box component="form" onSubmit={handleSearch}>
-                                            <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={film} onChange={ (e) => setFilm(e.target.value) } />
+                                            <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
                                             <Button variant="contained" onClick={handleSearch}>
                                                 <SearchIcon />
                                             </Button>

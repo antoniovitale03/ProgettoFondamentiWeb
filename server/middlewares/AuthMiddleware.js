@@ -18,13 +18,10 @@ exports.verifyJWT = function(req, res, next) {
         return res.status(401).json({ message: 'Nessun token, autorizzazione negata.' });
     }
     try {
-        // 3. Verifica il token.
-        //    jwt.verify decodifica il token usando il tuo segreto e ne estrae il payload
-        //    Se il token è scaduto o la firma non è valida, lancerà un errore.
+        // Decodifichiamo il token usando il tuo segreto ed estraiamo il payload
         const payload = jwt.verify(token, process.env.JWT_SECRET);
-        // 4. Se il token è valido, il suo payload conterrà i dati che abbiamo inserito durante la firma (es. { user: { id: '...' } }).
-        //    Aggiungiamo queste informazioni all'oggetto 'req' per renderle disponibili
-        //    ai middleware successivi
+        // Se il token è valido, il suo payload conterrà i dati che abbiamo inserito durante la firma (es. { user: { id: '...' } }).
+        // Aggiungiamo queste informazioni all'oggetto 'req' per renderle disponibili ai middleware successivi
         req.user = payload.user;
         next();
     } catch (err) {

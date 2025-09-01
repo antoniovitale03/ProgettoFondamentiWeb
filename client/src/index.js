@@ -5,6 +5,7 @@ import App from './App';
 import {BrowserRouter} from "react-router-dom";
 import {AuthProvider} from "./context/authContext";
 import {FilmProvider} from "./context/filmContext";
+import {NotificationProvider} from "./context/notificationContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,7 +13,9 @@ root.render(
           <BrowserRouter>
               <AuthProvider>
                   <FilmProvider>
-                      <App />
+                      <NotificationProvider>
+                          <App />
+                      </NotificationProvider>
                   </FilmProvider>
               </AuthProvider>
           </BrowserRouter>

@@ -2,44 +2,117 @@ import { useParams } from 'react-router-dom';
 import {useFilm} from "../context/filmContext"
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Button} from "@mui/material";
+import {useNotification} from "../context/notificationContext"
+import {Button, Rating} from "@mui/material";
 import ReviewsIcon from '@mui/icons-material/Reviews';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AddIcon from '@mui/icons-material/Add';
+import {Link} from "@mui/material";
+
 // /film/filmTitle/filmID
 function FilmPage(){
 
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
-    //N.B.: se il titolo ha dei trattini, vnano rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
+    //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
     filmTitle = filmTitle.replaceAll("-", " ");
 
-    const {findFilm, addToWatchlist} = useFilm();
+    useDocumentTitle(filmTitle);
+
+    const {showNotification} = useNotification();
+    const {getFilm, addToWatchlist, addToFavorites, addToLiked, addToWatched} = useFilm();
     const [film, setFilm] = useState(null);
+    //rating in quinti
+    const [rating, setRating] = useState(0);
+    const [userRating, setUserRating] = useState(0);
 
     const handleSubmitWatchlist = async (event) => {
         event.preventDefault();
         try{
             await addToWatchlist(film);
+            showNotification(<>
+                "{filmTitle}" è stato aggiunto alla watchlist
+                </>
+
+            )
         }catch(error){
             console.log(error);
         }
 
     }
 
-    useDocumentTitle(filmTitle);
+    const handleSubmitFavorites = async (event) => {
+        event.preventDefault();
+        try{
+            await addToFavorites(film);
+            showNotification(<>
+                "{filmTitle}" è stato aggiunto alla lista dei preferiti
+                </>
+            )
+        }catch(error){
+            showNotification(error.message)
+        }
+    }
+
+    const handleSubmitLiked = async (event) => {
+        event.preventDefault();
+        try{
+            await addToLiked(film);
+            showNotification(<>
+                "{filmTitle}" è stato aggiunto ai film piaciuti
+            </>)
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    const handleSubmitWatched = async (event) => {
+        event.preventDefault();
+        try{
+            await addToWatched(film);
+            showNotification(<>
+                "{filmTitle}" è stato aggiunto ai film visti</>)
+        }catch(error){
+            console.log(error);
+        }
+    }
 
 
 
+    // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID)
     useEffect( () => {
-            async function trovafilm(){
-                 const film = await findFilm(filmTitle, filmID);
-                 setFilm(film);
-                 console.log(film);
+        async function fetchFilm(){
+            if (filmTitle && filmID) {
+                const film = await getFilm(filmTitle, filmID);
+                setFilm(film);
             }
-            trovafilm();
-         }, [filmTitle, filmID, findFilm]) //Ogni volta che cambia il titolo e/o l'id del film eseguo l'effetto, cioè trovo il film
-                                            // e lo visualizzo in filmPage
+        }
+        fetchFilm();
+    }, [filmTitle, filmID, getFilm])
+
+    //Effetto per calcolare il rating medio e il rating inserito dall'utente, solo se il film esiste
+    useEffect( () => {
+        async function fetchRating(){
+            //calcolo rating medio
+            if(film && film.vote_average !== 0){
+                let avgRating = (film.vote_average)/2; //rating in quinti
+                avgRating = Number(avgRating.toFixed(1)); //lo blocco ad una cifra decimale
+                setRating(avgRating);
+            }
+
+            //calcolo rating inserito dall'utente, conoscendo l'id del film
+            const response = await fetch(`http://localhost:5001/api/films/reviews/${filmID}`, {
+                method: 'GET',
+                credentials: "include"
+            })
+            const rating = await response.json();
+            setUserRating(rating)
+        }
+        fetchRating();
+    }, [film])
+
 
     if(!film){
         return(
@@ -61,24 +134,40 @@ function FilmPage(){
                 <Button>Dettagli</Button>
                 <Button>Generi</Button>
             </div>
-            <p>Rating medio: {film.vote_average}/10</p>
+            {rating !== 0 ? <div>
+                <p>Rating medio: {rating}</p>
+                <Rating name="rating" value={rating} precision={0.5} readOnly /> {/* //rating in quinti */}
+                </div> : null}
+
+            {userRating !== 0 ? <div>
+                <p>Rating inserito da te: </p>
+                <Rating name="rating" value={userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
+            </div> : null}
+
             <Button onClick={handleSubmitWatchlist}>
                 <WatchLaterIcon />
                 <p>Aggiungi alla Watchlist</p>
             </Button>
-            <Button>
+
+            <Button onClick={handleSubmitLiked}>
                 <ThumbUpIcon />
                 <p>Aggiungi ai film piaciuti</p>
             </Button>
+
             <Button>
                 <ReviewsIcon />
                 <p>Aggiungi una recensione</p>
             </Button>
-            <Button>
+
+            <Button onClick={handleSubmitFavorites}>
                 <FavoriteIcon />
                 <p>Aggiungi ai film preferiti</p>
             </Button>
-            <p>Voto inserito da te: </p>
+
+            <Button onClick={handleSubmitWatched}>
+                <AddIcon />
+                <p>Aggiungi ai film visti</p>
+            </Button>
         </div>
 
     )

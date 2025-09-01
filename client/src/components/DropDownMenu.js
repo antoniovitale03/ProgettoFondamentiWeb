@@ -46,6 +46,9 @@ function DropDownMenu() {
                     <NavLink to="/lista-film">La mia lista</NavLink>
                 </MenuItem>
 
+                <MenuItem onClick={handleClose}>
+                    <NavLink to="/favorites">I miei preferiti</NavLink>
+                </MenuItem>
 
                 <MenuItem onClick={handleClose}>
                     <NavLink to="/recensioni">Le mie recensioni</NavLink>
