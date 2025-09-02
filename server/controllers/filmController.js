@@ -49,14 +49,31 @@ exports.getFilm = async (req, res) => {
     const filmID = parseInt(req.params.filmID);
     const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
     let film = await response.json();
-    //aggiungo il regista e modifico la data d'uscita
+    //trovo il regista e modifico la data d'uscita
     const director = await getFilmDirector(filmID); //oppure film.id
     const year = film.release_date ? new Date(film.release_date).getFullYear() : "N/A";
+    //trovo il cast e la crew
+    const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
+    const credits = await creditsResponse.json();
+
+    //aggiusto l'url per la locandina degli attori e di tutti i membri della crew
+    let cast = credits.cast.map( (actor) => {
+        const actor_image = actor.profile_path ? process.env.posterBaseUrl + actor.profile_path : process.env.greyPosterUrl
+        return {...actor, profile_path: actor_image}
+    })
+
+    let crew = credits.crew.map( (crewMember) => {
+        const member_image = crewMember.profile_path ? process.env.posterBaseUrl + crewMember.profile_path : process.env.greyPosterUrl
+        return {...crewMember, profile_path: member_image}
+    })
+
     film = {...film,
         director: director,
         release_date: year,
         poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
-        backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl
+        backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
+        cast: cast,
+        crew: crew
     }
     res.status(200).json(film);
 }
@@ -70,7 +87,6 @@ exports.addToWatchlist = async (req, res) => {
         const userID = req.user.id;
         let { film } = req.body;
 
-        const director = await getFilmDirector(film.id);
 
         //il server verifica se il film esiste già nella collezione films verificando l'id, se non esiste lo crea.
         // questo garantisce di avere sempre una sola copia dei dati di ogni film.
@@ -211,9 +227,12 @@ exports.saveReview = async (req, res) => {
                 upsert: true // Se il documento non esiste sulla base del filtro, ne crea uno nuovo sulla base di update
             }
         );
-
+        //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
         await User.findByIdAndUpdate(userID, {
-            $addToSet: { reviews: film.id }
+            $addToSet: {
+                reviews: film.id,
+                watched: film.id
+            }
         });
 
         res.status(200).json({ message: `Recensione di "${film.title}" salvata correttamente!`  });
@@ -271,7 +290,7 @@ exports.addToLiked = async (req, res) => {
                 title: film.title,
                 release_date: film.release_date,
                 director: film.director,
-                poster_path: film.poster_path
+                poster_path: film.poster_path,
             },
             {
                 upsert: true
@@ -313,4 +332,52 @@ exports.addToWatched = async (req, res) => {
     }catch(error){
         res.status(500).json({ message: "Errore interno del server." });
     }
+}
+
+exports.getActorInfo = async (req, res) => {
+    try{
+        const actorID = req.params.actorID;
+        const response = await fetch(`https://api.themoviedb.org/3/person/${actorID}?api_key=${process.env.API_KEY_TMDB}&language=en-EN&append_to_response=movie_credits`);
+        let data = await response.json();
+        let actorPersonalInfo = {
+            id: data.id,
+            name: data.name,
+            biography: data.biography,
+            birthday: data.birthday,
+            profile_image: data.profile_path ? process.env.posterBaseUrl + data.profile_path : process.env.greyPosterUrl
+        }
+        //film in cui ha partecipato come attore
+        let actorCast = data.movie_credits.cast.map( (film) => {
+            return {
+                id: film.id,
+                title: film.title,
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                character: film.character,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+            }
+        })
+
+
+        //film in cui ha partecipato con un ruolo tecnico (sceneggiatore, scrittore, ecc...)
+        let actorCrew = data.movie_credits.crew.map( (film) => {
+            return {
+                id: film.id,
+                title: film.title,
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                job: film.job,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+            }
+        })
+
+        const actorInfo = {
+            personalInfo: actorPersonalInfo,
+            cast: actorCast, //film in cui la persona ha svolto un ruolo di attore
+            crew: actorCrew //film in cui la persona ha svotlo un ruolo più tecnico (sceneggiatore, scrittore, ecc...)
+        }
+
+        res.status(200).json(actorInfo);
+    }catch(error){
+        res.status(500).json({ message: "Errore interno del server." });
+    }
+
 }

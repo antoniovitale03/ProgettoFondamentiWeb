@@ -16,6 +16,9 @@ import SearchFilmResults from "./SearchFilmResults";
 import FilmPage from "./FilmPage";
 import FavoritesFilms from "./FavoritesFilms";
 import Log from "./Log";
+import CastPage from "./CastPage";
+import CrewPage from "./CrewPage";
+import ActorPage from "./ActorPage";
 import {Container, Box} from "@mui/material";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
@@ -38,6 +41,11 @@ function UserPanel() {
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
                       <Route path="/log-a-film" element={<Log />} />
+
+                      <Route path="/film/:filmTitle/cast" element={<CastPage />} />
+                      <Route path="film/:filmTitle/crew" element={<CrewPage />} />
+                      <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
+
 
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />

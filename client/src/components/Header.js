@@ -7,19 +7,29 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 
 import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
-import {Container, Box, TextField, Button, Avatar} from "@mui/material";
+import {Container, Box, TextField, Button, Avatar, MenuItem} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useFilm} from "../context/filmContext";
+import * as React from "react";
 
 
 function Header() {
-    const {isLoggedIn} = useAuth();
+    const {isLoggedIn, user, logout} = useAuth();
     const {getFilmsFromSearch} = useFilm();
     const [title, setTitle] = useState("");
+    const menuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist", "/settings"]
+    const menuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Impostazioni"]
+
+    let menuItems = (<>
+        { menuLinks.map( (link, index) => <MenuItem component={NavLink} to={link}>{menuNames[index]}</MenuItem>)  }
+        <MenuItem component={Button} onClick={logout}>
+            Logout
+        </MenuItem>
+        </>)
 
     const navigate = useNavigate();
 
@@ -48,7 +58,9 @@ function Header() {
                                         <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />
                                     </li>
                                     <li>
-                                        <DropDownMenu />
+                                        <DropDownMenu buttonContent={user.username} menuContent={menuItems}/>
+                                            {/* menuContent */}
+
                                     </li>
                                     <li>
                                         <NavLink to="/archivio">Archivio</NavLink>

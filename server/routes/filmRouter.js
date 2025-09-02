@@ -15,5 +15,6 @@ router.get("/get-reviews", authMiddleware.verifyJWT, filmController.getReviews)
 router.get("/reviews/:filmID", authMiddleware.verifyJWT, filmController.getRating)
 router.post("/add-to-liked", authMiddleware.verifyJWT, filmController.addToLiked)
 router.post("/add-to-watched", authMiddleware.verifyJWT, filmController.addToWatched)
+router.get("/get-actor-info/:actorID", filmController.getActorInfo)
 
 module.exports = router;

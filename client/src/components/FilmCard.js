@@ -24,8 +24,9 @@ function FilmCard({ film }){
            <Stack spacing={4}>
                <Button onClick={handleClick}>{film.title}</Button>
                <img src={film.poster_path} alt="Locandina film"/>
-               <p>Anno di uscita: {film.release_date}</p>
-               {film.director !== null ? <p>Diretto da: {film.director}</p> : null}
+               <p>Anno di uscita: {film.release_year}</p>
+               {film.director ? <p>Diretto da: {film.director}</p> : null}
+               {film.job ? <p>Ruolo: {film.job}</p> : null}
                <p>-------</p>
            </Stack>
        </Box>

@@ -1,32 +1,40 @@
-import { useParams } from 'react-router-dom';
+import {useParams, useNavigate, Link, NavLink} from 'react-router-dom';
 import {useFilm} from "../context/filmContext"
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext"
-import {Button, Rating} from "@mui/material";
+import {Button, MenuItem, Rating} from "@mui/material";
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddIcon from '@mui/icons-material/Add';
-import {Link} from "@mui/material";
 
+
+import DropDownMenu from './DropDownMenu';
+import * as React from "react";
 // /film/filmTitle/filmID
 function FilmPage(){
 
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
-    filmTitle = filmTitle.replaceAll("-", " ");
 
-    useDocumentTitle(filmTitle);
+    useDocumentTitle(filmTitle.replaceAll("-", " "));
 
+    const navigate = useNavigate();
     const {showNotification} = useNotification();
     const {getFilm, addToWatchlist, addToFavorites, addToLiked, addToWatched} = useFilm();
     const [film, setFilm] = useState(null);
+    const [filmGenres, setFilmGenres] = useState([]);
     //rating in quinti
     const [rating, setRating] = useState(0);
     const [userRating, setUserRating] = useState(0);
+
+    let menuItems = (<>
+        {filmGenres.map( (genre) => <MenuItem>{genre}</MenuItem> )}
+    </>)
+
 
     const handleSubmitWatchlist = async (event) => {
         event.preventDefault();
@@ -113,6 +121,14 @@ function FilmPage(){
         fetchRating();
     }, [film])
 
+    //Effetto per calcolare i generi di un film
+    useEffect( () => {
+        if (film){
+            let filmGenres = film.genres.map( (genre) => {return genre.name})
+            setFilmGenres(filmGenres)
+        }
+        }, [film])
+
 
     if(!film){
         return(
@@ -129,20 +145,29 @@ function FilmPage(){
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
             <div>
-                <Button>Cast</Button>
-                <Button>Crew</Button>
+                <Button component={Link} to={`/film/${filmTitle}/cast`} state={{ cast: film.cast}} >
+                Cast
+                </Button>
+
+                <Button component={Link} to={`/film/${filmTitle}/crew`} state={{ crew: film.crew}}>
+                    Crew
+                </Button>
+
                 <Button>Dettagli</Button>
-                <Button>Generi</Button>
+
+                <DropDownMenu buttonContent="Generi" menuContent={menuItems} />
             </div>
             {rating !== 0 ? <div>
                 <p>Rating medio: {rating}</p>
                 <Rating name="rating" value={rating} precision={0.5} readOnly /> {/* //rating in quinti */}
-                </div> : null}
+                </div> : null
+            }
 
             {userRating !== 0 ? <div>
-                <p>Rating inserito da te: </p>
+                <p>Il tuo rating: </p>
                 <Rating name="rating" value={userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
-            </div> : null}
+            </div> : null
+            }
 
             <Button onClick={handleSubmitWatchlist}>
                 <WatchLaterIcon />
@@ -154,7 +179,7 @@ function FilmPage(){
                 <p>Aggiungi ai film piaciuti</p>
             </Button>
 
-            <Button>
+            <Button href="/log-a-film">
                 <ReviewsIcon />
                 <p>Aggiungi una recensione</p>
             </Button>

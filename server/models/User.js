@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     watchlist: [{ type: Number, ref: "Film" }], //invece di aggiungere gli oggetti film in watchlist, aggiungo solo il loro id (infatti type è Number, lo stesso di id)
     favorites: [{ type: Number, ref: "Film" }],
     liked: [{ type: Number, ref: "Film" }],
+    watched: [{ type: Number, ref: "Film" }],
     reviews: [{ type: Number, ref: "Review" }]
 });
 

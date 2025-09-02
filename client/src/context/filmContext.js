@@ -102,7 +102,16 @@ export function FilmProvider({ children }) {
         }
     }
 
-    const value = {searchQuery, filmsFromSearch, getFilmsFromSearch, getFilm, addToWatchlist, addToFavorites, saveReview, addToLiked, addToWatched}
+    const getActor = async (actorID) => {
+        const response = await fetch(`http://localhost:5001/api/films/get-actor-info/${actorID}`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+        })
+        let actorInfo = await response.json();
+        return actorInfo;
+    }
+
+    const value = {searchQuery, filmsFromSearch, getFilmsFromSearch, getFilm, addToWatchlist, addToFavorites, saveReview, addToLiked, addToWatched, getActor}
     return <FilmContext.Provider value={value}>{children}</FilmContext.Provider>;
 }
 
