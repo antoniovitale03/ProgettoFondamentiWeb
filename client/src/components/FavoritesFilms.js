@@ -1,24 +1,19 @@
 import {useEffect, useState} from "react";
 import FilmCard from "./FilmCard";
+import api from "../api";
+import {useNotification} from "../context/notificationContext";
 
 function FavoritesFilms(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
+    const {showNotification} = useNotification();
     useEffect(() => {
         const fetchFavorites = async () => {
             try{
-                const response = await fetch('http://localhost:5001/api/films/get-favorites', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Impossibile recuperare la watchlist.');
-                }
-                const films = await response.json();
+                const response = await api.get('http://localhost:5001/api/films/get-favorites');
+                const films = await response.data;
                 setFavoritesFilms(films);
             }catch(error){
-                console.log(error);
+                showNotification(error.response.data);
             }
         }
         fetchFavorites();

@@ -6,6 +6,7 @@ import {useAuth} from "../context/authContext";
 import useDocumentTitle from "./useDocumentTitle";
 import {Button, FormControl, InputLabel, Input, Stack, Box, Typography} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import api from "../api";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
 function LoginPage() {
@@ -21,7 +22,7 @@ function LoginPage() {
     // Variabile usata per fare rendering condizionale del form di login(1) o di impostazione della nuova password (2)
     const [step, setStep] = useState(1);
 
-    const {login, forgotPassword, sleep} = useAuth() //ottieni la funzione login dal contesto
+    const {login, sleep} = useAuth() //ottieni la funzione login dal contesto
 
     useDocumentTitle("Login")
 
@@ -42,7 +43,9 @@ function LoginPage() {
         event.preventDefault();
         setError(" ");
         try{
-            await forgotPassword(username, oldPassword, newPassword, confirmNewPassword);
+            await api.post('http://localhost:5001/api/auth/forgot-password', {
+                username, oldPassword, newPassword, confirmNewPassword
+            })
             setSuccessMessage(<>
                 Password modificata correttamente!
                 <br />
@@ -55,7 +58,7 @@ function LoginPage() {
             setPassword("");
             setStep(1); //renderizzo il form di login
         } catch(error){
-            setError(error.message)
+            setError(error.response.data)
             setOldPassword("");
             setNewPassword("");
             setConfirmNewPassword("");
@@ -80,7 +83,7 @@ function LoginPage() {
 
                             <FormControl>
                                 <InputLabel htmlFor="password">Password</InputLabel>
-                                <Input type="password" id="username" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
+                                <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
                             </FormControl>
                         </Stack>
                        </>)}
@@ -90,17 +93,17 @@ function LoginPage() {
                         <Stack spacing={5}>
                             <FormControl>
                                 <InputLabel hmtlFor="oldPassword">Vecchia password</InputLabel>
-                                <Input type="password" id="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+                                <Input type="password" id="oldPassword" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
                             </FormControl>
 
                             <FormControl>
                                 <InputLabel htmlFor="newPassword">Nuova password</InputLabel>
-                                <Input type="password" id="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required/>
+                                <Input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required/>
                             </FormControl>
 
                             <FormControl>
                                 <InputLabel htmlFor="confirmNewPassword">Conferma nuova password</InputLabel>
-                                <Input type="password" id="password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} required/>
+                                <Input type="password" id="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} required/>
                             </FormControl>
                         </Stack>
 

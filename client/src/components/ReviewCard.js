@@ -11,9 +11,8 @@ function ReviewCard( {review} ){
     return(
         <Box>
             <Stack spacing={4}>
-                <Button onClick={handleClick}>{review.title}</Button>
+                <Button onClick={handleClick}>{review.title}  ({review.release_year})</Button>
                 <img src={review.poster_path} alt="Locandina film"/>
-                <p>Data di uscita: {review.release_year}</p>
                 <p>Recensione: {review.review}</p>
                 <p>Il voto che hai inserito: {<Rating name="rating" value={review.rating} readOnly/> }</p>
                 <p>Data della recensione: {review.review_date}</p>

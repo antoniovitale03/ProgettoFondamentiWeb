@@ -1,5 +1,7 @@
-import {Box, Button, Stack} from "@mui/material";
+import {Box, Button, Rating, Stack} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import * as React from "react";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 function FilmCard({ film }){
     const navigate = useNavigate();
@@ -7,10 +9,9 @@ function FilmCard({ film }){
     //es. The Matrix reindirizza all'url /film/The-Matrix piuttosto ch /film/The%Matrix
 
 
-    const handleClick = (event) => {
-        event.preventDefault();
+    const handleClick = () => {
         if (!film.id){
-            //l'oggetto film proviene dal popolamento della watchlist quindi avrà _id
+            //l'oggetto film proviene dal popolamento di un documento DB quindi avrà _id
             navigate(`/film/${title}/${film._id}`);
         }
         else{
@@ -22,11 +23,17 @@ function FilmCard({ film }){
     return(
        <Box>
            <Stack spacing={4}>
-               <Button onClick={handleClick}>{film.title}</Button>
+               <Button onClick={handleClick}>{film.title}  ({film.release_year})</Button>
+
                <img src={film.poster_path} alt="Locandina film"/>
-               <p>Anno di uscita: {film.release_year}</p>
-               {film.director ? <p>Diretto da: {film.director}</p> : null}
-               {film.job ? <p>Ruolo: {film.job}</p> : null}
+
+               { film.director ? <p>Diretto da: {film.director}</p> : null }
+
+               { film.job ? <p>Ruolo: {film.job}</p> : null }
+
+               { film.rating !== undefined ? <Rating name="rating" value={film.rating} precision={0.5} readOnly /> : null }
+
+               { film.isLiked === true ?  <ThumbUpIcon /> : null }
                <p>-------</p>
            </Stack>
        </Box>

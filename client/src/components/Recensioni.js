@@ -3,27 +3,22 @@ import {useEffect, useState} from "react";
 import {Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import ReviewCard from "./ReviewCard";
+import {useNotification} from "../context/notificationContext";
+import api from "../api";
 
 function Recensioni(){
     useDocumentTitle("Le mie Recensioni");
     const [filmReviews, setFilmReviews] = useState([]);
+    const {showNotification} = useNotification();
 
     useEffect(() => {
         const fetchReviews = async () => {
             try{
-                const response = await fetch('http://localhost:5001/api/films/get-reviews', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: "include",
-                });
-
-                if (!response.ok) {
-                    throw new Error('Impossibile recuperare le recensioni');
-                }
-                const reviews = await response.json();
+                const response = await api.get('http://localhost:5001/api/films/get-reviews');
+                const reviews = await response.data;
                 setFilmReviews(reviews); // Salviamo i film nello stato
             }catch(error){
-                console.log(error);
+                showNotification(error.response.data);
             }
         }
         fetchReviews();
@@ -39,6 +34,7 @@ function Recensioni(){
     return (
         <div>
             <p>Lista delle recensioni</p>
+            <h1>Hai recensito {filmReviews.length} film</h1>
             { filmReviews.map( (review) => <ReviewCard key={review._id} review={review} /> ) }
         </div>
     )

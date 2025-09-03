@@ -24,17 +24,16 @@ function Header() {
     const menuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist", "/settings"]
     const menuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Impostazioni"]
 
-    let menuItems = (<>
-        { menuLinks.map( (link, index) => <MenuItem component={NavLink} to={link}>{menuNames[index]}</MenuItem>)  }
-        <MenuItem component={Button} onClick={logout}>
-            Logout
+    let menuItems = [
+        ...menuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{menuNames[index]}</MenuItem>),
+        <MenuItem component={Button} key={10102} onClick={logout}>
+        Logout
         </MenuItem>
-        </>)
+    ]
 
     const navigate = useNavigate();
 
-    const handleSearch = async (event) => {
-        event.preventDefault();
+    const handleSearch = async () => {
         try{
             await getFilmsFromSearch(title); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così il componente SearchFilmResults potrà usarlo per mostrare i risultati di ricerca
             let filmTitle = title.replaceAll(" ", "-");
@@ -59,8 +58,6 @@ function Header() {
                                     </li>
                                     <li>
                                         <DropDownMenu buttonContent={user.username} menuContent={menuItems}/>
-                                            {/* menuContent */}
-
                                     </li>
                                     <li>
                                         <NavLink to="/archivio">Archivio</NavLink>

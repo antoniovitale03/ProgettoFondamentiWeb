@@ -34,7 +34,7 @@ exports.getFilmsFromSearch = async (req, res) => {
             id: film.id,
             director: director,
             poster_path: poster_image_url,
-            release_date: year,
+            release_year: year,
         };
     });
 
@@ -69,7 +69,7 @@ exports.getFilm = async (req, res) => {
 
     film = {...film,
         director: director,
-        release_date: year,
+        release_year: year,
         poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
         backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
         cast: cast,
@@ -87,7 +87,6 @@ exports.addToWatchlist = async (req, res) => {
         const userID = req.user.id;
         let { film } = req.body;
 
-
         //il server verifica se il film esiste già nella collezione films verificando l'id, se non esiste lo crea.
         // questo garantisce di avere sempre una sola copia dei dati di ogni film.
 
@@ -98,7 +97,7 @@ exports.addToWatchlist = async (req, res) => {
             {
                 _id: film.id,
                 title: film.title,
-                release_date: film.release_date,
+                release_year: film.release_year,
                 director: film.director,
                 poster_path: film.poster_path,
             },
@@ -116,7 +115,7 @@ exports.addToWatchlist = async (req, res) => {
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla watchlist!`  });
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server." );
     }
 }
 
@@ -129,14 +128,14 @@ exports.getWatchlist = async (req, res) => {
         }
         //N.B. le proprietà dei film da mostrare nella pagina watchlist si trovano nella proprietà _doc dell'oggetto film
         let watchlist = user.watchlist.map( (film) => {
-                return {...film._doc}}
-            )
+                return {...film._doc}
+        })
 
         // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID
         res.status(200).json(watchlist);
 
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." })
+        res.status(500).json("Errore interno del server.")
     }
 }
 
@@ -156,7 +155,7 @@ exports.addToFavorites = async (req, res) => {
             {
                 _id: film.id,
                 title: film.title,
-                release_date: film.release_date,
+                release_year: film.release_year,
                 director: film.director,
                 poster_path: film.poster_path,
             },
@@ -171,7 +170,7 @@ exports.addToFavorites = async (req, res) => {
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei favoriti!`  });
 
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
 }
 
@@ -189,7 +188,7 @@ exports.getFavorites = async (req, res) => {
         res.status(200).json(favorites);
 
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
 }
 
@@ -206,7 +205,7 @@ exports.saveReview = async (req, res) => {
         //trovo il film che corrisponde alla data di uscita che ho inserito, sempre se è corretta
         let film = films.find((film) => new Date(film.release_date).getFullYear() === releaseYear);
         if (!film) {
-            return res.status(400).json({ message: "Nessun film trovato." });
+            return res.status(400).json("Nessun film trovato.");
         }
 
         //il film è stato trovato, quindi modifico l'url per mostrare la locandina
@@ -234,6 +233,22 @@ exports.saveReview = async (req, res) => {
                 watched: film.id
             }
         });
+        //e aggiungo il rating (dovengo aggiungere un'oggetto film devo calcolare il regista)
+        const director = await getFilmDirector(film.id); //oppure film.id
+
+        await Film.findOneAndUpdate(
+            { _id: film.id },
+            {
+                _id: film.id,
+                title: film.title,
+                release_date: releaseYear,
+                director: director,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+            },
+            {
+                upsert: true
+            }
+        )
 
         res.status(200).json({ message: `Recensione di "${film.title}" salvata correttamente!`  });
         }catch(error){
@@ -258,7 +273,7 @@ exports.getReviews = async (req, res) => {
         res.status(200).json(reviews);
 
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
 }
 
@@ -274,7 +289,7 @@ exports.getRating = async(req, res) => {
         }
         res.status(200).json(review.rating);
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
 }
 
@@ -288,9 +303,9 @@ exports.addToLiked = async (req, res) => {
             {
                 _id: film.id,
                 title: film.title,
-                release_date: film.release_date,
+                release_year: film.release_year,
                 director: film.director,
-                poster_path: film.poster_path,
+                poster_path: film.poster_path
             },
             {
                 upsert: true
@@ -302,7 +317,7 @@ exports.addToLiked = async (req, res) => {
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film piaciuti!`  });
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
 }
 
@@ -315,7 +330,7 @@ exports.addToWatched = async (req, res) => {
             {
                 _id: film.id,
                 title: film.title,
-                release_date: film.release_date,
+                release_year: film.release_year,
                 director: film.director,
                 poster_path: film.poster_path,
             },
@@ -330,8 +345,26 @@ exports.addToWatched = async (req, res) => {
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
+}
+
+exports.getWatched = async (req, res) => {
+    const userID = req.user.id;
+    const user = await User.findById(userID).populate('watched').populate('reviews');
+    //per ogni film visto controllo se è stato anche piaciuto e il suo rating
+    let watchedFilms = user.watched.map( (watchedFilm) => {
+        let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
+        isLiked = isLiked === undefined ? false : true;
+        let review = user.reviews.find( (review) => review._id === watchedFilm._id) // trovo la recensione (se esiste)
+        let rating = review === undefined ? undefined : review.rating;
+        return {...watchedFilm._doc,
+                director: null, //nella pagina dei film visti non mostro il regista di ogni film
+                isLiked: isLiked,
+                rating: rating
+                }
+    })
+    res.status(200).json(watchedFilms);
 }
 
 exports.getActorInfo = async (req, res) => {
@@ -377,7 +410,7 @@ exports.getActorInfo = async (req, res) => {
 
         res.status(200).json(actorInfo);
     }catch(error){
-        res.status(500).json({ message: "Errore interno del server." });
+        res.status(500).json("Errore interno del server.");
     }
 
 }

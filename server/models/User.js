@@ -4,12 +4,15 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    refreshToken: { type: String },
     watchlist: [{ type: Number, ref: "Film" }], //invece di aggiungere gli oggetti film in watchlist, aggiungo solo il loro id (infatti type è Number, lo stesso di id)
     favorites: [{ type: Number, ref: "Film" }],
     liked: [{ type: Number, ref: "Film" }],
     watched: [{ type: Number, ref: "Film" }],
     reviews: [{ type: Number, ref: "Review" }]
 });
+//N.B. un film recensito viene aggiunto sia in reviews che in watched (non il contrario)
+//watched contiene coppie di filmID e rating inserito. se il film viene visto ma non recensito, il rating è 0.
 
 //required:true indica che il campo è obbligatorio
 //unique:true indica che il valore di quel campo è uniquo in tutti i documenti della collezione (non ci possono essere più utenti

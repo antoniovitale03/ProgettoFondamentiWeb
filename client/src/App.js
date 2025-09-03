@@ -8,21 +8,22 @@ import {useAuth} from "./context/authContext";
 // la componente principale App gestisce solo il routing per il percorso protetto dell'app (accessibile solo dopo il login)
 //per gestire il login uso localStorage in modo da salvare lo stato di login anche dopo aver chiuso il browser
 function App() {
-    const {isLoggedIn} = useAuth() // Leggi lo stato di login direttamente dal contesto
-    //verifica della sessione solo al primo re-rendering dell'App, cioè dopo che eseguo il login (dipendenza da array vuoto)
-    useEffect(() => {
-        fetch('http://localhost:5001/api/me', {
-                     method: 'GET',
-                     headers: { 'Content-Type': 'application/json' },
-                     credentials: 'include',
-                 }).then(response => {
-                     if (!response.ok) {
-                         throw new Error('Errore durante il login');
-                     }
-                 }).catch(error => {
-                     console.error('Errore durante il login:', error);})
-     }, []);
+    const {isLoggedIn, logout} = useAuth() // Leggi lo stato di login direttamente dal contesto
 
+    //Effetto per verificare se il token è scaduto, nel caso si procede al logout
+    useEffect(() => {
+
+        const handleLogout = () => logout()
+
+        // Si mette in ascolto dell'evento "logout-event" lanciato da api.js
+        // quando il refresh token fallisce, quindi esegue il logout
+        window.addEventListener('logout-event', handleLogout);
+
+        // Funzione di pulizia per rimuovere l'ascoltatore
+        return () => {
+            window.removeEventListener('logout-event', handleLogout);
+        };
+    }, [logout]);
 
    return(
         <Routes>

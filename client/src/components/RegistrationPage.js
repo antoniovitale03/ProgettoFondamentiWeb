@@ -6,6 +6,7 @@ import useDocumentTitle from "./useDocumentTitle";
 import {useAuth} from "../context/authContext"
 import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import api from "../api";
 function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -24,26 +25,30 @@ function RegistrationPage() {
 
 
     const navigate = useNavigate();
-    const {registerData, verifyCode, sleep} = useAuth()
+    const {sleep} = useAuth()
 
     useDocumentTitle("Registrazione");
+
 
     //gestisce l'invio dei dati iniziali
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError('');
-        try {
-            setButtonState(2); //-> "Verifica in corso..."
-            await registerData(username, email); //controllo se l'username o l'email già esistono.
+        setButtonState(2);
+        try{
+            await api.post('http://localhost:5001/api/auth/registration/data', {
+                username,
+                email
+            })
             // Se la chiamata ha successo, mostra il messaggio di successo e passa al secondo step
-            setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.");
+            setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.")
             await sleep(2000);
             setStep(2); // -> Form di verifica del codice
-            setButtonState(3) // -> "Invia"
+            setButtonState(3); // -> "Invia"
             setSuccessMessage("");
-        } catch (error) {
+        }catch(error){
+            setError(error.response.data);
             //in caso di errore (email o username già esistenti), mostro l'errore e resetto i dati di input
-            setError(error.message);
             setUsername("");
             setEmail("");
             setPassword("");
@@ -55,7 +60,9 @@ function RegistrationPage() {
         event.preventDefault();
         setError('');
         try {
-            await verifyCode(username, email, password, verificationCode);
+            await api.post('http://localhost:5001/api/auth/registration/verify', {
+                username, email, password, verificationCode
+            })
             // Se il codice è corretto, mostra il messaggio finale e reindirizza
             setSuccessMessage(<>
                 Registrazione avvenuta con successo!
@@ -65,8 +72,8 @@ function RegistrationPage() {
             await sleep(2500);
             navigate('/login');
         } catch (error) {
+            setError(error.response.data);
             setVerificationCode("");
-            setError(error.message);
         }
     };
 

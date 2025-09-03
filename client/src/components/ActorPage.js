@@ -3,18 +3,27 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useFilm} from "../context/filmContext"
 import FilmCard from "./FilmCard";
+import api from "../api";
+import {useNotification} from "../context/notificationContext";
 function ActorPage() {
     let { actorName } = useParams()
     let { actorID } = useParams()
 
     const [actorInfo, setActorInfo] = useState([])
     const {getActor} = useFilm()
+    const {showNotification} = useNotification();
 
     //Effetto per trovare tutte le info dell'attore conoscendone l'id
     useEffect(() => {
         async function fetchActor(){
-            const actorInfo = await getActor(actorID);
-            setActorInfo(actorInfo);
+            try{
+                const response = await api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`)
+                const actorInfo = response.data;
+                setActorInfo(actorInfo);
+            }catch(error){
+                showNotification(error.response.message)
+            }
+
         }
         fetchActor();
     }, [actorName, actorID, getActor]);

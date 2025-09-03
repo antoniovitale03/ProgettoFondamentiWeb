@@ -3,6 +3,7 @@ import {useAuth} from "../context/authContext";
 import {useNavigate, NavLink} from "react-router-dom";
 import {Box, FormControl, InputLabel, Typography, Input, Button} from "@mui/material";
 import "../CSS/Form.css"
+import api from "../api";
 
 function DeleteAccount() {
 
@@ -10,7 +11,7 @@ function DeleteAccount() {
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const {sleep, logout, deleteAccount} = useAuth();
+    const {user, sleep, logout, deleteAccount} = useAuth();
 
     const navigate = useNavigate();
 
@@ -18,13 +19,22 @@ function DeleteAccount() {
         event.preventDefault()
         setError("");
         try {
-            await deleteAccount(confirmEmail);
+            const trueEmail = user.email //trueEmail è l'effettiva mail dell'utente e la confronto con quella appena inserita
+            if (trueEmail !== confirmEmail) {
+                throw new Error("L'email non corrisponde a quella del tuo account. Riprova");
+            }
+            //se l'email corrisponde, si procede ad eliminare l'utente (tramite chiamata API al server)
+            await api.delete('http://localhost:5001/api/auth/delete-account')
             setSuccessMessage("Eliminazione dell'account avvenuta correttamente!")
             await sleep(2000);
             logout();
             navigate("/");
         }catch(error){
-            setError(error.message);
+            if(error.response){ //errore generato dall'endpoint API
+                setError(error.response.data);
+            }else{
+                setError(error.message); //errore dovuto ad email non corrispondenti
+            }
             setConfirmEmail("");
         }
     }

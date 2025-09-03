@@ -10,22 +10,24 @@
 const jwt = require('jsonwebtoken');
 
 exports.verifyJWT = function(req, res, next) {
-    // 1. Legge il token dal cookie ricevuto dal client.
-    // 2. Grazie a 'cookie-parser', il server può accedere ai cookie della richiesta in req.cookies
-    const token = req.cookies.token;
-    //controlla se il cookie esiste
-    if (!token) {
-        return res.status(401).json({ message: 'Nessun token, autorizzazione negata.' });
+    // 1. Legge l'accessToken dall'header della richiesta
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.sendStatus(401); // Unauthorized
     }
+
+    const accessToken = authHeader.split(' ')[1];
+
+
     try {
         // Decodifichiamo il token usando il tuo segreto ed estraiamo il payload
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const payload = jwt.verify(accessToken, process.env.JWT_SECRET);
         // Se il token è valido, il suo payload conterrà i dati che abbiamo inserito durante la firma (es. { user: { id: '...' } }).
         // Aggiungiamo queste informazioni all'oggetto 'req' per renderle disponibili ai middleware successivi
         req.user = payload.user;
         next();
-    } catch (err) {
-        res.status(401).json({ message: 'Token non valido.' });
+    } catch (error) {
+        res.status(401).json('Token non valido.'); //Unauthorized
     }
 };
 

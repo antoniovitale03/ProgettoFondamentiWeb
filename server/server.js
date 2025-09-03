@@ -11,12 +11,13 @@ const PORT = 5001; // Definiamo la porta su cui ascolterà.
 
 app.use(cors({
     origin: 'http://localhost:3000', // È una buona pratica specificare l'origine
-    credentials: true                // 2. Permette l'invio di cookie cross-origin
+    credentials: true,                // 2. Permette l'invio di cookie cross-origin
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());  // Questo è FONDAMENTALE. Permette al server di capire i dati in formato JSON inviati dal frontend. Senza questo, req.body sarebbe indefinito.
+app.use(express.json({ limit: '50mb' }));  // Questo è FONDAMENTALE. Permette al server di capire i dati in formato JSON inviati dal frontend. Senza questo, req.body sarebbe indefinito.
 // in questo modo impostiamo le regole generali per tutte le richieste in arrivo.
-
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser()) // questo permette al server di leggere il token dal cookie presente nelle richieste successive del client dopo la fase di login
 
 app.use('/api/auth', authRouter)  //gestione dell'autenticazione

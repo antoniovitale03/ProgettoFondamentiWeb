@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import DropDownMenu from './DropDownMenu';
 import * as React from "react";
+import api from "../api";
 // /film/filmTitle/filmID
 function FilmPage(){
 
@@ -24,7 +25,7 @@ function FilmPage(){
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
-    const {getFilm, addToWatchlist, addToFavorites, addToLiked, addToWatched} = useFilm();
+    const {getFilm} = useFilm();
     const [film, setFilm] = useState(null);
     const [filmGenres, setFilmGenres] = useState([]);
     //rating in quinti
@@ -36,54 +37,52 @@ function FilmPage(){
     </>)
 
 
-    const handleSubmitWatchlist = async (event) => {
+    const addToWatchlist = async (event) => {
         event.preventDefault();
         try{
-            await addToWatchlist(film);
-            showNotification(<>
-                "{filmTitle}" è stato aggiunto alla watchlist
-                </>
-
-            )
+            await api.post("http://localhost:5001/api/films/add-to-watchlist", { film })
         }catch(error){
-            console.log(error);
+            showNotification(error.response.data);
         }
-
+        showNotification(<>
+                "{filmTitle}" è stato aggiunto alla watchlist
+            </>
+        )
     }
 
-    const handleSubmitFavorites = async (event) => {
+    const addToFavorites = async (event) => {
         event.preventDefault();
         try{
-            await addToFavorites(film);
+            await api.post('http://localhost:5001/api/films/add-to-favorites', { film })
             showNotification(<>
                 "{filmTitle}" è stato aggiunto alla lista dei preferiti
                 </>
             )
         }catch(error){
-            showNotification(error.message)
+            showNotification(error.response.data);
         }
     }
 
-    const handleSubmitLiked = async (event) => {
+    const addToLiked = async (event) => {
         event.preventDefault();
         try{
-            await addToLiked(film);
+            await api.post('http://localhost:5001/api/films/add-to-liked', { film })
             showNotification(<>
                 "{filmTitle}" è stato aggiunto ai film piaciuti
             </>)
         }catch(error){
-            console.log(error);
+            showNotification(error.response.data);
         }
     }
 
-    const handleSubmitWatched = async (event) => {
+    const addToWatched = async (event) => {
         event.preventDefault();
         try{
-            await addToWatched(film);
+            await api.post('http://localhost:5001/api/films/add-to-watched', { film });
             showNotification(<>
                 "{filmTitle}" è stato aggiunto ai film visti</>)
         }catch(error){
-            console.log(error);
+            showNotification(error.response.data);
         }
     }
 
@@ -141,7 +140,7 @@ function FilmPage(){
             <img src={film.backdrop_path} alt="Immagine in background del film"/>
             <p>Locandina del film</p>
             <img src={film.poster_path} alt="Locandina del film" />
-            <p>{film.title} {film.release_date} Diretto da {film.director}</p>
+            <p>{film.title} {film.release_year} Diretto da {film.director}</p>
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
             <div>
@@ -169,12 +168,12 @@ function FilmPage(){
             </div> : null
             }
 
-            <Button onClick={handleSubmitWatchlist}>
+            <Button onClick={addToWatchlist}>
                 <WatchLaterIcon />
                 <p>Aggiungi alla Watchlist</p>
             </Button>
 
-            <Button onClick={handleSubmitLiked}>
+            <Button onClick={addToLiked}>
                 <ThumbUpIcon />
                 <p>Aggiungi ai film piaciuti</p>
             </Button>
@@ -184,14 +183,36 @@ function FilmPage(){
                 <p>Aggiungi una recensione</p>
             </Button>
 
-            <Button onClick={handleSubmitFavorites}>
+            <Button onClick={addToFavorites}>
                 <FavoriteIcon />
                 <p>Aggiungi ai film preferiti</p>
             </Button>
 
-            <Button onClick={handleSubmitWatched}>
+            <Button onClick={addToWatched}>
                 <AddIcon />
                 <p>Aggiungi ai film visti</p>
+            </Button>
+
+            <Button>
+                <p>Rimuovi dalla watchlist</p>
+            </Button>
+
+            <Button>
+                <p>Rimuovi dai film piaciuti</p>
+            </Button>
+
+            <Button>
+                <p>Rimuovi recensione</p>
+            </Button>
+
+
+            <Button>
+                <p>Rimuovi dai film preferiti</p>
+            </Button>
+
+
+            <Button>
+                <p>Rimuovi dai film visti</p>
             </Button>
         </div>
 
