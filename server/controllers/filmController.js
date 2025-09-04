@@ -119,6 +119,22 @@ exports.addToWatchlist = async (req, res) => {
     }
 }
 
+exports.removeFromWatchlist = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const filmID = parseInt(req.params.filmID);
+
+        const user = await User.findById(userID);
+        user.watchlist = user.watchlist.filter(id => id !== filmID);
+
+        await user.save();
+
+    }catch(error){
+        res.status(500).json("Errore interno del server." );
+    }
+    res.status(200).json("Film eliminato dalla watchlist");
+}
+
 exports.getWatchlist = async (req, res) => {
     try{
         const userID = req.user.id; //prendo l'id dell'utente da req.user fornito dal middleware verifyjwt
@@ -174,6 +190,22 @@ exports.addToFavorites = async (req, res) => {
     }
 }
 
+exports.removeFromFavorites = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const filmID = parseInt(req.params.filmID);
+
+        const user = await User.findById(userID);
+        user.favorites = user.favorites.filter(id => id !== filmID);
+
+        await user.save();
+
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
+    res.status(200).json("Film rimosso dai preferiti")
+}
+
 exports.getFavorites = async (req, res) => {
     try{
         const userID = req.user.id;
@@ -200,7 +232,7 @@ exports.saveReview = async (req, res) => {
         const data = await response.json();
         let films = data.results;
         if (!films) {
-            return res.status(400).json({ message: "Nessun film trovato." });
+            return res.status(400).json("Nessun film trovato." );
         }
         //trovo il film che corrisponde alla data di uscita che ho inserito, sempre se è corretta
         let film = films.find((film) => new Date(film.release_date).getFullYear() === releaseYear);
@@ -250,12 +282,30 @@ exports.saveReview = async (req, res) => {
             }
         )
 
-        res.status(200).json({ message: `Recensione di "${film.title}" salvata correttamente!`  });
+        res.status(200).json(`Recensione di "${film.title}" salvata correttamente!`);
         }catch(error){
-            res.status(500).json({ message: "Errore interno del server." });
+        console.log(error)
+        res.status(500).json("Errore interno del server.");
     }
 
 
+}
+
+exports.deleteReview = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const filmID = parseInt(req.params.filmID);
+        const user = await User.findById(userID)
+
+        user.reviews = user.reviews.filter(id => id !== filmID);
+        await user.save();
+
+        await Review.findOneAndDelete( {_id: filmID} );
+
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
+    res.status(200).json("Recensione rimossa")
 }
 
 exports.getReviews = async (req, res) => {
@@ -285,7 +335,7 @@ exports.getRating = async(req, res) => {
         let user = await User.findById(userID).populate('reviews');
         let review = user.reviews.find( (review) => review._id === filmID)
         if (!review){
-            return res.status(200).json(0);
+            return res.status(200).json(null);
         }
         res.status(200).json(review.rating);
     }catch(error){
@@ -321,6 +371,20 @@ exports.addToLiked = async (req, res) => {
     }
 }
 
+exports.removeFromLiked = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const filmID = parseInt(req.params.filmID);
+
+        const user = await User.findById(userID);
+        user.liked = user.liked.find(id => id !== filmID);
+        await user.save()
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
+    res.status(200).json("Film rimosso dai piaciuti")
+}
+
 exports.addToWatched = async (req, res) => {
     try{
         const userID = req.user.id;
@@ -349,6 +413,20 @@ exports.addToWatched = async (req, res) => {
     }
 }
 
+exports.removeFromWatched = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const filmID = parseInt(req.params.filmID);
+
+        const user = await User.findById(userID);
+        user.watched = user.watched.find(id => id !== filmID);
+        await user.save()
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
+    res.status(200).json("Film rimosso da quelli visti")
+}
+
 exports.getWatched = async (req, res) => {
     const userID = req.user.id;
     const user = await User.findById(userID).populate('watched').populate('reviews');
@@ -357,7 +435,7 @@ exports.getWatched = async (req, res) => {
         let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
         isLiked = isLiked === undefined ? false : true;
         let review = user.reviews.find( (review) => review._id === watchedFilm._id) // trovo la recensione (se esiste)
-        let rating = review === undefined ? undefined : review.rating;
+        let rating = review === undefined ? null : review.rating;
         return {...watchedFilm._doc,
                 director: null, //nella pagina dei film visti non mostro il regista di ogni film
                 isLiked: isLiked,
@@ -365,6 +443,31 @@ exports.getWatched = async (req, res) => {
                 }
     })
     res.status(200).json(watchedFilms);
+}
+
+exports.getFilmInfo = async(req, res) => {
+    const userID = req.user.id;
+    const filmID = parseInt(req.params.filmID);
+    const user = await User.findById(userID);
+
+    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
+    isInWatchlist = isInWatchlist === undefined ? false : true;
+
+    let isLiked = user.liked.find( (id) => id === filmID )
+    isLiked = isLiked === undefined ? false : true;
+
+    let isReviewed = user.reviews.find( (id) => id === filmID )
+    isReviewed = isReviewed  === undefined ? false : true;
+
+    let isFavorite = user.favorites.find( (id) => id === filmID )
+    isFavorite = isFavorite === undefined ? false : true;
+
+    let isWatched = user.watched.find( (id) => id === filmID )
+    isWatched = isWatched === undefined ? false : true;
+
+    res.status(200).json([isInWatchlist, isLiked, isReviewed, isFavorite, isWatched]);
+
+
 }
 
 exports.getActorInfo = async (req, res) => {

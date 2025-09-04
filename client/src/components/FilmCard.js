@@ -31,7 +31,7 @@ function FilmCard({ film }){
 
                { film.job ? <p>Ruolo: {film.job}</p> : null }
 
-               { film.rating !== undefined ? <Rating name="rating" value={film.rating} precision={0.5} readOnly /> : null }
+               { film.rating !== undefined || null ? <Rating name="rating" value={film.rating} precision={0.5} readOnly /> : null }
 
                { film.isLiked === true ?  <ThumbUpIcon /> : null }
                <p>-------</p>

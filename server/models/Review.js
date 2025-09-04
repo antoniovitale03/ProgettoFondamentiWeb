@@ -7,7 +7,7 @@ const reviewSchema = mongoose.Schema({
     poster_path: { type: String, required: true },
     release_year: { type: Number, required: true },
     review: { type: String, required: true },
-    rating: { type: Number, required: true, default: undefined },
+    rating: { type: Number, required: true, default: null },
     review_date: { type: String, required: true },
     })
 

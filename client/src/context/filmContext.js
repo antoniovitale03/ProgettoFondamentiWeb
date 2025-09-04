@@ -29,15 +29,12 @@ export function FilmProvider({ children }) {
     }
 
     const saveReview = async (title, releaseYear, review, rating) => {
-        const response = await api.post('http://localhost:5001/api/films/save-review', {
-            title,
-            releaseYear,
-            review,
-            rating
-        })
-        const data = await response.data;
-        if (!response.ok) {
-            throw new Error("errore nel salvare la recensione");
+        try{
+             await api.post('http://localhost:5001/api/films/save-review', {
+                title, releaseYear, review, rating
+             })
+        }catch(error){
+            throw new Error(error.response.data)
         }
     }
 
