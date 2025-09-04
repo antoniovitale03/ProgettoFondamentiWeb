@@ -27,5 +27,6 @@ router.get("/get-watched", authMiddleware.verifyJWT, filmController.getWatched)
 
 router.get("/:filmID", authMiddleware.verifyJWT, filmController.getFilmInfo)
 router.get("/get-actor-info/:actorID", filmController.getActorInfo)
+router.get("/get-director-info/:directorID", filmController.getDirector)
 
 module.exports = router;

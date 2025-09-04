@@ -26,7 +26,7 @@ function FavoritesFilms(){
     return(
         <div>
             <p>Qui inseriamo i 10 film preferiti dall'utente</p>
-            {favoritesFilms.map( film => <FilmCard key={film.id} film={film} />)}
+            { favoritesFilms.map( ( (film,index) => <FilmCard key={film.id || index} film={film} />)) }
         </div>
 
     )

@@ -4,7 +4,8 @@ const User = require('../models/User');
 const Review = require('../models/Review');
 
 async function getFilmDirector(filmID) {
-    // 2. Chiamata per il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...)
+    // Chiamata usata per ottenere il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...), più
+    //utile per ottenere solo
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
 
@@ -12,7 +13,7 @@ async function getFilmDirector(filmID) {
     const directorObject = credits.crew.find( (member) => member.job === 'Director');
 
     // 4. Estrai il nome (gestendo il caso in cui non venga trovato)
-    const director = directorObject ? directorObject.name : null;
+    const director = directorObject ? {name: directorObject.name, id:directorObject.id} : null;
     return director;
 }
 
@@ -516,4 +517,50 @@ exports.getActorInfo = async (req, res) => {
         res.status(500).json("Errore interno del server.");
     }
 
+}
+
+exports.getDirector = async (req, res) => {
+    try{
+        const directorID = parseInt(req.params.directorID);
+        const response = await fetch(`https://api.themoviedb.org/3/person/${directorID}?api_key=${process.env.API_KEY_TMDB}&language=en-EN&append_to_response=movie_credits`)
+        let data = await response.json();
+        let directorPersonalInfo = {
+            id: data.id,
+            name: data.name,
+            birthday: data.birthday,
+            biography: data.biography,
+            place_of_birth: data.place_of_birth,
+            profile_image: data.profile_path ? process.env.posterBaseUrl + data.profile_path : process.env.greyPosterUrl,
+        }
+
+
+        let directorCast = data.movie_credits.cast.map( (film) => {
+            return {
+                id: film.id,
+                title: film.title,
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                character: film.character,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+            }
+        })
+
+        let directorCrew = data.movie_credits.crew.map( (film) => {
+            return {
+                id: film.id,
+                title: film.title,
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                job: film.job,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+            }
+        })
+        const actorInfo = {
+            personalInfo: directorPersonalInfo,
+            cast: directorCast, //film in cui la persona ha svolto un ruolo di attore
+            crew: directorCrew //film in cui la persona ha svotlo un ruolo più tecnico (sceneggiatore, scrittore, ecc...)
+        }
+        res.status(200).json(actorInfo);
+
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
 }

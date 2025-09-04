@@ -13,9 +13,7 @@ export function FilmProvider({ children }) {
     //COPERTINA + NOME FILM + ANNO DI USCITA + REGISTA
     const getFilmsFromSearch = async (title) => {
         setSearchQuery(title);
-        const response = await api.post('http://localhost:5001/api/films/get-film-search-results', {
-            title
-        })
+        const response = await api.post('http://localhost:5001/api/films/get-film-search-results', { title })
         const films = await response.data; //ottengo l'array con tutti i film ottenuti dalla ricerca
         setFilmsFromSearch(films); //aggiungo l'array al contesto
     }
@@ -39,13 +37,7 @@ export function FilmProvider({ children }) {
     }
 
 
-    const getActor = async (actorID) => {
-        const response = await api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`);
-        let actorInfo = await response.data;
-        return actorInfo;
-    }
-
-    const value = {searchQuery, filmsFromSearch, getFilmsFromSearch, getFilm, saveReview, getActor}
+    const value = {searchQuery, filmsFromSearch, getFilmsFromSearch, getFilm, saveReview}
     return <FilmContext.Provider value={value}>{children}</FilmContext.Provider>;
 }
 

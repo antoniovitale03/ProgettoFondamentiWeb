@@ -10,7 +10,6 @@ function ActorPage() {
     let { actorID } = useParams()
 
     const [actorInfo, setActorInfo] = useState([])
-    const {getActor} = useFilm()
     const {showNotification} = useNotification();
 
     //Effetto per trovare tutte le info dell'attore conoscendone l'id
@@ -26,7 +25,7 @@ function ActorPage() {
 
         }
         fetchActor();
-    }, [actorName, actorID, getActor]);
+    }, [actorName, actorID]);
 
 
 
@@ -34,17 +33,16 @@ function ActorPage() {
     return(
         <div>
             <p>Info personali dell'attore</p>
-            <p>{actorInfo.personalInfo.name}</p>
-            <img src={actorInfo.personalInfo.profile_image} alt="Immagine dell'attore"/>
-            <p>Data di nascita: {actorInfo.personalInfo.birthday}</p>
-            <p>Biografia: {actorInfo.personalInfo.biography}</p>
+            <h1>{actorInfo.personalInfo?.name}</h1>
+            <img src={actorInfo.personalInfo?.profile_image} alt="Immagine dell'attore"/>
+            <p>Data di nascita: {actorInfo.personalInfo?.birthday}</p>
+            <p>Biografia: {actorInfo.personalInfo?.biography}</p>
 
-            <h1>Lista dei film in cui {actorInfo.personalInfo.name} ha performato come attore </h1>
-            { actorInfo.cast.map( (film) => <FilmCard key={film} film={film} /> )  }
+            <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore ({actorInfo?.cast?.length})</h1>
+            { actorInfo.cast?.map( (film) => <FilmCard key={film.id} film={film} /> )  }
 
-            <h1>Lista dei film in cui {actorInfo.personalInfo.name} ha svolto un ruolo tecnico </h1>
-            { actorInfo.crew.map( (film) => <FilmCard key={film} film={film} /> ) }
-
+            <h1>Lista dei film in cui {actorInfo.personalInfo?.name} ha svolto un ruolo tecnico ({actorInfo?.crew?.length}) </h1>
+            { actorInfo.crew?.map( (film) => <FilmCard key={film.id} film={film} /> ) }
 
 
         </div>

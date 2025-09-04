@@ -1,5 +1,5 @@
 import {Box, Button, Rating, Stack} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import * as React from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
@@ -27,7 +27,7 @@ function FilmCard({ film }){
 
                <img src={film.poster_path} alt="Locandina film"/>
 
-               { film.director ? <p>Diretto da: {film.director}</p> : null }
+               { film.director ? <p>Diretto da: <NavLink to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>{film.director.name}</NavLink></p> : null }
 
                { film.job ? <p>Ruolo: {film.job}</p> : null }
 

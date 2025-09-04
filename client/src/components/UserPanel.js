@@ -19,6 +19,7 @@ import Log from "./Log";
 import CastPage from "./CastPage";
 import CrewPage from "./CrewPage";
 import ActorPage from "./ActorPage";
+import DirectorPage from "./DirectorPage";
 import {Container, Box} from "@mui/material";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
@@ -45,7 +46,7 @@ function UserPanel() {
                       <Route path="/film/:filmTitle/cast" element={<CastPage />} />
                       <Route path="film/:filmTitle/crew" element={<CrewPage />} />
                       <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
-
+                      <Route path="/director/:directorName/:directorID" element={ <DirectorPage />} />
 
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />

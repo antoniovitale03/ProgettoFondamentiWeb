@@ -1,4 +1,4 @@
-import {useParams, useNavigate, Link} from 'react-router-dom';
+import {useParams, useNavigate, Link, NavLink} from 'react-router-dom';
 import {useFilm} from "../context/filmContext"
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
@@ -49,9 +49,9 @@ function FilmPage(){
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
 
-    let genreMenuItems = (<>
+    let genreMenuItems = (<div>
         {filmGenres.map( (genre) => <MenuItem>{genre}</MenuItem> )}
-    </>)
+    </div>)
 
     const addReview = async () => {
         await saveReview(film.title, film.release_year, review, reviewRating);
@@ -60,7 +60,8 @@ function FilmPage(){
         setReviewButton(0);
     }
 
-    let detailsMenuItems = (<>
+    let detailsMenuItems = (
+        <div>
             <MenuItem>
                 <h4>Original language: </h4>
                 <p>{filmDetails.original_language}</p>
@@ -85,8 +86,7 @@ function FilmPage(){
                 <h4>Budget: </h4>
                 <p>{filmDetails.budget}</p>
             </MenuItem>
-
-        </>
+        </div>
     )
 
     let reviewMenuItems = (<>
@@ -209,7 +209,6 @@ function FilmPage(){
             if (filmTitle && filmID) {
                 const film = await getFilm(filmTitle, filmID);
                 setFilm(film);
-                console.log(film);
                 let filmGenres = film.genres.map( (genre) => {return genre.name})
                 setFilmGenres(filmGenres)
 
@@ -222,7 +221,6 @@ function FilmPage(){
                     revenue: film.revenue,
                 }
                 setFilmDetails(filmDetails);
-                console.log(filmDetails);
             }
         }
         fetchFilm();
@@ -244,7 +242,7 @@ function FilmPage(){
             setUserRating(rating)
         }
         fetchRating();
-    }, [film])
+    }, [film, filmID])
 
     //Effetto per calcolare se il film è nella watchlist o meno, se è stato piaciuto o meno ecc.. per renderizzare
     //correttamente i bottoni -> array di valori booleani(isWatched, isLiked, isReviewed, isFavorite, isWatched)
@@ -285,12 +283,12 @@ function FilmPage(){
         )
     }
     return (
-        <div>
+        <Box>
             <p>Immagine background del film</p>
             <img src={film.backdrop_path} alt="Immagine in background del film"/>
             <p>Locandina del film</p>
             <img src={film.poster_path} alt="Locandina del film" />
-            <p>{film.title} {film.release_year} Diretto da {film.director}</p>
+            <p>{film.title} {film.release_year} Diretto da <NavLink to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>{film.director.name}</NavLink></p>
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
             <div>
@@ -372,7 +370,7 @@ function FilmPage(){
                     <p>Rimuovi dai film visti</p>
                 </Button>
             }
-        </div>
+        </Box>
 
     )
 }
