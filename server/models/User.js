@@ -4,6 +4,10 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    name: { type: String },
+    surname: { type: String },
+    biography: { type: String },
+    country: { type: String },
     refreshToken: { type: String },
     watchlist: [{ type: Number, ref: "Film" }], //invece di aggiungere gli oggetti film in watchlist, aggiungo solo il loro id (infatti type è Number, lo stesso di id)
     favorites: [{ type: Number, ref: "Film" }],

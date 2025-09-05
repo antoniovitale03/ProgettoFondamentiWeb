@@ -1,7 +1,7 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle";
 import {Box, Typography, Card, CardMedia, Button} from "@mui/material";
-import './home.css'
+import '../CSS/home.css'
 import Carosello from "./Carosello"
 function Home(){
     useDocumentTitle("Home")

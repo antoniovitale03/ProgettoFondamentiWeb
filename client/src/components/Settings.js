@@ -1,25 +1,105 @@
 import {NavLink} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
-import {Button} from "@mui/material";
-import {useState} from "react";
+import {Button, FormControl, InputLabel, Input, Stack, Box, TextField} from "@mui/material";
+import React, {useState} from "react";
+import "../CSS/Form.css"
+import {useAuth} from "../context/authContext";
+import {useNotification} from "../context/notificationContext";
+import api from "../api";
 //questa pagina viene usata per modifcare informazioni del profilo, come nomeutente, biografia, email, lista dei film preferiti, ma anche per eliminare l'account
 function Settings(){
     useDocumentTitle("Settings");
-    const [buttonState, setButtonState] = useState(0)
+    const {user} = useAuth();
+    const {showNotification} = useNotification();
 
-    const changeUsername = (event) => {
+    const [newUsername, setNewUsername] = useState("");
+    const [newName, setNewName] = useState("");
+    const [newSurname, setNewSurname] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+    const [newBio, setNewBio] = useState("");
+    const [newCountry, setNewCountry] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+    const handleModifyProfile = async (event) => {
         event.preventDefault();
-        setButtonState(1);
+        try{
+            await api.post("http://localhost:5001/api/auth/modify-profile", {
+                newUsername, newName, newSurname, newEmail, newBio, newCountry
+            })
+        }catch(error){
+            showNotification(error.response.data)
+        }
+
+    }
+
+    const handleModifyPassword = async (event) => {
+        event.preventDefault();
     }
     return(
-        <div>
-            <p>Impostazioni per modificare nomeutente, email, eventuale biografia, film preferiti, ...</p>
-            <Button onClick={changeUsername}>Modifica il tuo nome utente</Button>
-            {buttonState === 1 ?
-                <p>Ciao</p>:null
-            }
-            <NavLink to="/delete-account">Elimina il tuo account </NavLink>
-        </div>
+            <Box className="page-container">
+                <Box className="form-container">
+                    <form onSubmit={handleModifyProfile} >
+                        <h1 style={{textAlign:"left"}}>Modifica il tuo profilo</h1>
+                        <Stack spacing={4}>
+                            <FormControl>
+                                <InputLabel htmlFor="username">Username</InputLabel>
+                                <Input id="username" type="text" placeholder={user.username} value={newUsername} onChange={ e => setNewUsername(e.target.value)} />
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel>Nome</InputLabel>
+                                <Input id="nome" type="text" placeholder={user.name} value={newName} onChange={ e => setNewName(e.target.value)} />
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel>Cognome</InputLabel>
+                                <Input id="surname" type="text" placeholder={user.surname} value={newSurname} onChange={ e => setNewSurname(e.target.value)} />
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel htmlFor="email">Email</InputLabel>
+                                <Input type="email" id="email" placeholder={user.email} value={newEmail} onChange={ e => setNewEmail(e.target.value)} />
+                            </FormControl>
+
+                            <FormControl>
+                                <TextField id="outlined-multiline-flexible" multiline rows={5} label="Biografia" placeholder={user.biography} value={newBio} onChange={(e) => setNewBio(e.target.value)} />
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel htmlFor="country">Paese d'origine</InputLabel>
+                                <Input type="country" id="country"  placeholder={user.country} value={newCountry} onChange={ e => setNewCountry(e.target.value)} />
+                            </FormControl>
+                            <Button type="submit" variant="contained" color="primary">Salva le modifiche</Button>
+                        </Stack>
+                    </form>
+
+                    <form onSubmit={handleModifyPassword}>
+                        <h1>Modifica la tua password</h1>
+                        <Stack spacing={5}>
+                            <FormControl>
+                                <InputLabel hmtlFor="oldPassword">Vecchia password</InputLabel>
+                                <Input type="password" id="oldPassword" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel htmlFor="newPassword">Nuova password</InputLabel>
+                                <Input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required/>
+                            </FormControl>
+
+                            <FormControl>
+                                <InputLabel htmlFor="confirmNewPassword">Conferma nuova password</InputLabel>
+                                <Input type="password" id="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} required/>
+                            </FormControl>
+                            <Button type="onSubmit">Invia</Button>
+                        </Stack>
+                    </form>
+                </Box>
+                <NavLink to="/delete-account">Elimina il tuo account </NavLink>
+            </Box>
+
+
     )
 }
 

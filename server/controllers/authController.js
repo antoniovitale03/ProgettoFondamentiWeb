@@ -216,3 +216,12 @@ exports.deleteAccount = async (req, res) => {
         res.status(500).json('Errore del server.');
     }
 }
+
+exports.modifyProfile = async (req, res) => {
+    try{
+        const {newUsername, newName, newSurname, newEmail, newBio, newCountry} = req.body;
+        console.log(newUsername, newName, newSurname, newEmail, newBio, newCountry);
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}

@@ -10,7 +10,7 @@ router.post("/refresh", authController.refresh)
 router.post("/forgot-password", authController.forgotPassword) //imposto nuova password
 router.post("/logout", authController.logout);
 router.delete("/delete-account", authMiddleware.verifyJWT, authController.deleteAccount)
-
+router.post("/modify-profile", authMiddleware.verifyJWT, authController.modifyProfile)
 //  /api/me è l'API che serve per verificare il token inviato e la correttezza dei dati dell'utente nel DB. Viene eseguita
 //ogni volta che l'applicazione viene riavviata o viene caricata una pagina, lato front-end si fa una fetch a questa API per verificare
 //se c'è una sessione valida per l'utente

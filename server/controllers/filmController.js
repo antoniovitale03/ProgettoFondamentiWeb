@@ -90,18 +90,16 @@ exports.addToWatchlist = async (req, res) => {
 
         //il server verifica se il film esiste già nella collezione films verificando l'id, se non esiste lo crea.
         // questo garantisce di avere sempre una sola copia dei dati di ogni film.
-
         //findOneandUpdate(filter, update, options)
-         await Film.findOneAndUpdate(
+        await Film.findOneAndUpdate(
             { _id: film.id }, // Condizione di ricerca
             //se non esiste crea un nuovo oggetto film nella collezione films:
-            {
-                _id: film.id,
-                title: film.title,
-                release_year: film.release_year,
-                director: film.director,
-                poster_path: film.poster_path,
-            },
+            { $set: {
+                    title: film.title,
+                    release_year: film.release_year,
+                    director: film.director,
+                    poster_path: film.poster_path,
+                }},
             {
                 upsert: true // Se il documento non esiste sulla base del filtro, ne crea uno nuovo sulla base di update
             }
@@ -114,8 +112,9 @@ exports.addToWatchlist = async (req, res) => {
             { $addToSet: { watchlist: film.id }
             }) //con embedding avremmo fatto watchlist: film, aggiungendo l'intero oggetto film
 
-        res.status(200).json({ message: `"${film.title}" aggiunto alla watchlist!`  });
+        res.status(200).json(`"${film.title}" aggiunto alla watchlist!`);
     }catch(error){
+        console.log(error.name);
         res.status(500).json("Errore interno del server." );
     }
 }
@@ -164,7 +163,7 @@ exports.addToFavorites = async (req, res) => {
         //controllo che venga rispettato il limite di 10 film preferiti
         const user = await User.findById(userID)
         if (user.favorites.length >= 10){
-            return res.status(500).json({ message: "Impossibile aggiungere il film. Hai superato il limite di 10 film nei preferiti" });
+            return res.status(500).json("Impossibile aggiungere il film. Hai superato il limite di 10 film nei preferiti");
         }
 
         await Film.findOneAndUpdate(
@@ -179,12 +178,11 @@ exports.addToFavorites = async (req, res) => {
             {
                 upsert: true
             });
-
         await User.findByIdAndUpdate(
             userID,
             { $addToSet: { favorites: film.id } }
         )
-        res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei favoriti!`  });
+        res.status(200).json(`"${film.title}" aggiunto alla lista dei favoriti!`);
 
     }catch(error){
         res.status(500).json("Errore interno del server.");
