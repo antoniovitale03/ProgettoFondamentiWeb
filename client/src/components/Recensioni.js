@@ -18,7 +18,7 @@ function Recensioni(){
                 const reviews = await response.data;
                 setFilmReviews(reviews); // Salviamo i film nello stato
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
         }
         fetchReviews();

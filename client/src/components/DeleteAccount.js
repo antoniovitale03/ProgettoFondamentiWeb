@@ -4,13 +4,13 @@ import {useNavigate, NavLink} from "react-router-dom";
 import {Box, FormControl, InputLabel, Typography, Input, Button} from "@mui/material";
 import "../CSS/Form.css"
 import api from "../api";
-
+import {useNotification} from "../context/notificationContext";
 function DeleteAccount() {
 
     const [confirmEmail, setConfirmEmail] = useState("");
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-
+    const {showNotification} = useNotification();
     const {user, sleep, logout, deleteAccount} = useAuth();
 
     const navigate = useNavigate();
@@ -31,7 +31,7 @@ function DeleteAccount() {
             navigate("/");
         }catch(error){
             if(error.response){ //errore generato dall'endpoint API
-                setError(error.response.data);
+                setError(error.message);
             }else{
                 setError(error.message); //errore dovuto ad email non corrispondenti
             }

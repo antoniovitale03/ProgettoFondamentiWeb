@@ -17,9 +17,8 @@ function ListaFilm(){
                 const response = await api.get('http://localhost:5001/api/films/get-watched')
                 const watchedFilms = await response.data;
                 setWatchedFilms(watchedFilms);
-                console.log(watchedFilms);
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
 
         }

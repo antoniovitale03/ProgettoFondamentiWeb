@@ -20,7 +20,7 @@ function ActorPage() {
                 const actorInfo = response.data;
                 setActorInfo(actorInfo);
             }catch(error){
-                showNotification(error.response.message)
+                showNotification(error.response.message, "error")
             }
 
         }

@@ -18,7 +18,7 @@ function DirectorPage() {
                 const director = response.data;
                 setDirector(director);
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
         }
         fetchDirector();

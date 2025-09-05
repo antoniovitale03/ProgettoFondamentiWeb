@@ -11,10 +11,9 @@ function FavoritesFilms(){
             try{
                 const response = await api.get('http://localhost:5001/api/films/get-favorites');
                 const films = await response.data;
-                setFavoritesFilms(films);
-                console.log(films);
+                setFavoritesFilms(films);;
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
         }
         fetchFavorites();

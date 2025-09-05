@@ -17,7 +17,7 @@ function Watchlist(){
                 const films = await response.data;
                 setWatchlistFilms(films); // Salviamo i film nello stato
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
         }
         fetchWatchlist();
