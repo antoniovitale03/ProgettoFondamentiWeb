@@ -213,7 +213,7 @@ exports.getFavorites = async (req, res) => {
             return res.status(404).json({ message: "Utente non trovato." });
         }
         let favorites = user.favorites.map( async (film) => {
-            return {...film._doc, director: await getFilmDirector(film._id)}
+            return {...film._doc, director: await getFilmDirector(film._id), rating: null}
         })
         favorites = await Promise.all(favorites);
         res.status(200).json(favorites);

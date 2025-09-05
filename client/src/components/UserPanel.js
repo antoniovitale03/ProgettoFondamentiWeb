@@ -8,7 +8,6 @@ import Footer from "./Footer";
 import Contact from "./Contact";
 import Help from "./Help";
 import ListaFilm from "./ListaFilm";
-import Settings from "./Settings";
 import Archivio from "./Archivio";
 import Recensioni from "./Recensioni";
 import Watchlist from "./Watchlist";
@@ -20,7 +19,10 @@ import CastPage from "./CastPage";
 import CrewPage from "./CrewPage";
 import ActorPage from "./ActorPage";
 import DirectorPage from "./DirectorPage";
+import ModifyProfile from "./ModifyProfile";
 import {Container, Box} from "@mui/material";
+import ModifyPassword from "./ModifyPassword";
+import ModifyAvatar from "./ModifyAvatar";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
   return (
@@ -36,7 +38,11 @@ function UserPanel() {
                       <Route path="/favorites" element={<FavoritesFilms />} />
                       <Route path="/recensioni" element={<Recensioni />} />
                       <Route path="/watchlist" element={<Watchlist />} />
-                      <Route path="/settings" element={<Settings />} />
+
+                      <Route path="/settings/modify-profile" element={ <ModifyProfile />} />
+                      <Route path="/settings/modify-password" element={ <ModifyPassword />} />
+                      <Route path="/settings/delete-account" element={<DeleteAccount />} />
+                      <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
 
                       <Route path="/archivio" element={<Archivio />} />
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
@@ -50,7 +56,6 @@ function UserPanel() {
 
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />
-                      <Route path="/delete-account" element={<DeleteAccount />} />
                       <Route path="/help" element={<Help />} />
                   </Routes>
               </Box>

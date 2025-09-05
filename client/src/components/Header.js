@@ -9,6 +9,7 @@ import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
 import {Container, Box, TextField, Button, Avatar, MenuItem} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
@@ -21,14 +22,21 @@ function Header() {
     const {isLoggedIn, user, logout} = useAuth();
     const {getFilmsFromSearch} = useFilm();
     const [title, setTitle] = useState("");
-    const menuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist", "/settings"]
-    const menuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Impostazioni"]
+    const userMenuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist", "/settings"]
+    const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Impostazioni"]
 
-    let menuItems = [
-        ...menuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{menuNames[index]}</MenuItem>),
+    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il tuo avatar", "Elimina il tuo account"]
+    const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
+
+    let userMenuItems = [
+        ...userMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{userMenuNames[index]}</MenuItem>),
         <MenuItem component={Button} key={10102} onClick={logout}>
         Logout
         </MenuItem>
+    ]
+
+    let settingsMenuItems = [
+        settingsMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{settingsMenuNames[index]}</MenuItem>)
     ]
 
     const navigate = useNavigate();
@@ -57,7 +65,10 @@ function Header() {
                                         <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />
                                     </li>
                                     <li>
-                                        <DropDownMenu buttonContent={user.username} menuContent={menuItems}/>
+                                        <DropDownMenu buttonContent={user.username} menuContent={userMenuItems}/>
+                                    </li>
+                                    <li>
+                                        <DropDownMenu buttonContent={<SettingsOutlinedIcon />} menuContent={settingsMenuItems}/>
                                     </li>
                                     <li>
                                         <NavLink to="/archivio">Archivio</NavLink>

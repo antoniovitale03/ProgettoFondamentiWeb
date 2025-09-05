@@ -12,7 +12,7 @@ export function NotificationProvider({ children }) {
     const [severity, setSeverity] = useState('success'); // 'success', 'error', 'warning', 'info'
 
     // Funzione per mostrare la notifica
-    const showNotification = (newMessage, newSeverity = 'success') => {
+    const showNotification = (newMessage, newSeverity) => {
         setMessage(newMessage);
         setSeverity(newSeverity);
         setOpen(true);
@@ -49,4 +49,4 @@ export function NotificationProvider({ children }) {
 
 export function useNotification() {
     return useContext(NotificationContext);
-};
+}
