@@ -6,25 +6,17 @@ const FilmContext = createContext(null);
 export function FilmProvider({ children }) {
 
 
-    const [searchQuery, setSearchQuery] = useState(" "); //film cercato dall'utente
+    const [searchQuery] = useState(" "); //film cercato dall'utente
     const [filmsFromSearch, setFilmsFromSearch] = useState([]); //lista di film ottenuti dalla ricerca
 
     //FUNZIONE UTILE PER OTTENERE LE INFO PRINCIPALI DEI FILM DERIVANTI DALLA RICERCA (DA INSERIRE POI NELLE INFO CARD)
     //COPERTINA + NOME FILM + ANNO DI USCITA + REGISTA
     const getFilmsFromSearch = async (title) => {
-        setSearchQuery(title);
         const response = await api.post('http://localhost:5001/api/films/get-film-search-results', { title })
         const films = await response.data; //ottengo l'array con tutti i film ottenuti dalla ricerca
         setFilmsFromSearch(films); //aggiungo l'array al contesto
     }
 
-    //trovo il film dall'array generato da getFilmsFromSearch e passo l'oggetto al componente FilmPage
-    const getFilm = async (filmTitle, filmID) => {
-        filmTitle = filmTitle.replaceAll(" ", "-")
-        const response = await api.get(`http://localhost:5001/api/films/getFilm/${filmTitle}/${filmID}`);
-        const film = await response.data;
-        return film;
-    }
 
     const saveReview = async (title, releaseYear, review, rating) => {
         try{
@@ -37,7 +29,7 @@ export function FilmProvider({ children }) {
     }
 
 
-    const value = {searchQuery, filmsFromSearch, getFilmsFromSearch, getFilm, saveReview}
+    const value = {filmsFromSearch, getFilmsFromSearch, saveReview}
     return <FilmContext.Provider value={value}>{children}</FilmContext.Provider>;
 }
 

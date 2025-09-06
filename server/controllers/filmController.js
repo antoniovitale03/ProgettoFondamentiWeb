@@ -48,6 +48,8 @@ exports.getFilmsFromSearch = async (req, res) => {
 exports.getFilm = async (req, res) => {
     const filmTitle = req.params.filmTitle;
     const filmID = parseInt(req.params.filmID);
+    const userID = req.user.id;
+
     const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
     let film = await response.json();
     //trovo il regista e modifico la data d'uscita
@@ -68,13 +70,55 @@ exports.getFilm = async (req, res) => {
         return {...crewMember, profile_path: member_image}
     })
 
+    //calcolo il rating medio del film
+    let avgRating = (film.vote_average)/2; //rating in quinti
+    avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;  //lo blocco ad una cifra decimale (se è 0 lo setto a null)
+
+    //calcolo il rating inserito dall'utente
+    let user = await User.findById(userID).populate('reviews');
+    let review = user.reviews.find( (review) => review._id === filmID)
+    let userRating = review !== undefined ? review.rating : null;
+
+    //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
+    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
+    isInWatchlist = isInWatchlist === undefined ? false : true;
+
+    let isLiked = user.liked.find( (id) => id === filmID )
+    isLiked = isLiked === undefined ? false : true;
+
+    let isReviewed = user.reviews.find( (review) => review._id === filmID )
+    isReviewed = isReviewed  === undefined ? false : true;
+
+    let isFavorite = user.favorites.find( (id) => id === filmID )
+    isFavorite = isFavorite === undefined ? false : true;
+
+    let isWatched = user.watched.find( (id) => id === filmID )
+    isWatched = isWatched === undefined ? false : true;
+
+    const filmInfo = [isInWatchlist, isLiked, isReviewed, isFavorite, isWatched];
+
+    //ottengo i dettagli del film
+    let filmDetails = {
+        production_companies: film.production_companies.map( e => {return {name: e.name, country: e.origin_country}}),
+        origin_country: film.origin_country,
+        original_language: film.original_language,
+        spoken_languages: film.spoken_languages.map(e => e.english_name),
+        budget: film.budget,
+        revenue: film.revenue,
+    }
+
     film = {...film,
         director: director,
         release_year: year,
         poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
         backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
         cast: cast,
-        crew: crew
+        crew: crew,
+        avgRating: avgRating,
+        userRating: userRating,
+        genres: film.genres,
+        filmInfo: filmInfo,
+        details: filmDetails
     }
     res.status(200).json(film);
 }
@@ -138,13 +182,16 @@ exports.removeFromWatchlist = async (req, res) => {
 exports.getWatchlist = async (req, res) => {
     try{
         const userID = req.user.id; //prendo l'id dell'utente da req.user fornito dal middleware verifyjwt
-        let user = await User.findById(userID).populate('watchlist'); //trova l'utente con quell'id e popola l'array watchlist con i dati
+        let user = await User.findById(userID).populate('watchlist').populate('reviews'); //trova l'utente con quell'id e popola l'array watchlist con i dati
         if (!user) {
             return res.status(404).json({ message: "Utente non trovato." });
         }
+
         //N.B. le proprietà dei film da mostrare nella pagina watchlist si trovano nella proprietà _doc dell'oggetto film
         let watchlist = user.watchlist.map( (film) => {
-                return {...film._doc}
+            let review = user.reviews.find( (review) => review._id === film._id)
+            let rating = review !== undefined ? review.rating : null;
+                return {...film._doc, rating: rating};
         })
 
         // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID
@@ -326,22 +373,6 @@ exports.getReviews = async (req, res) => {
     }
 }
 
-//funzione che permette di ottenere il rating del film inserito dall'utente durante la recensione
-exports.getRating = async(req, res) => {
-    try{
-        const userID = req.user.id;
-        const filmID = parseInt(req.params.filmID);
-        let user = await User.findById(userID).populate('reviews');
-        let review = user.reviews.find( (review) => review._id === filmID)
-        if (!review){
-            return res.status(200).json(null);
-        }
-        res.status(200).json(review.rating);
-    }catch(error){
-        res.status(500).json("Errore interno del server.");
-    }
-}
-
 exports.addToLiked = async (req, res) => {
     try{
         const userID = req.user.id;
@@ -401,9 +432,10 @@ exports.addToWatched = async (req, res) => {
                 upsert: true
             }
         )
-
+        //se ho visto un film eventualmente va rimosso dalla watchlist
         await User.findByIdAndUpdate(userID, {
-            $addToSet: { watched: film.id }
+            $addToSet: { watched: film.id },
+            $pull: {watchlist: film.id}
         })
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
@@ -434,7 +466,7 @@ exports.getWatched = async (req, res) => {
         let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
         isLiked = isLiked === undefined ? false : true;
         let review = user.reviews.find( (review) => review._id === watchedFilm._id) // trovo la recensione (se esiste)
-        let rating = review === undefined ? null : review.rating;
+        let rating = review !== undefined ? review.rating : null;
         return {...watchedFilm._doc,
                 director: null, //nella pagina dei film visti non mostro il regista di ogni film
                 isLiked: isLiked,
@@ -442,31 +474,6 @@ exports.getWatched = async (req, res) => {
                 }
     })
     res.status(200).json(watchedFilms);
-}
-
-exports.getFilmInfo = async(req, res) => {
-    const userID = req.user.id;
-    const filmID = parseInt(req.params.filmID);
-    const user = await User.findById(userID);
-
-    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
-    isInWatchlist = isInWatchlist === undefined ? false : true;
-
-    let isLiked = user.liked.find( (id) => id === filmID )
-    isLiked = isLiked === undefined ? false : true;
-
-    let isReviewed = user.reviews.find( (id) => id === filmID )
-    isReviewed = isReviewed  === undefined ? false : true;
-
-    let isFavorite = user.favorites.find( (id) => id === filmID )
-    isFavorite = isFavorite === undefined ? false : true;
-
-    let isWatched = user.watched.find( (id) => id === filmID )
-    isWatched = isWatched === undefined ? false : true;
-
-    res.status(200).json([isInWatchlist, isLiked, isReviewed, isFavorite, isWatched]);
-
-
 }
 
 exports.getActorInfo = async (req, res) => {

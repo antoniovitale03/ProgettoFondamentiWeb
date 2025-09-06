@@ -19,7 +19,6 @@ api.interceptors.response.use(
                 // Fai la chiamata per ottenere un nuovo access token
                 const {data} = await api.post('http://localhost:5001/api/auth/refresh');
                 const accessToken = data.accessToken;
-                console.log(accessToken);
 
 
                 // AGGIORNA IL TOKEN NEGLI HEADER DI DEFAULT DELLA TUA ISTANZA API

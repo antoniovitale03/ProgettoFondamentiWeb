@@ -22,8 +22,8 @@ function Header() {
     const {isLoggedIn, user, logout} = useAuth();
     const {getFilmsFromSearch} = useFilm();
     const [title, setTitle] = useState("");
-    const userMenuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist", "/settings"]
-    const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Impostazioni"]
+    const userMenuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist"]
+    const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"]
 
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il tuo avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]

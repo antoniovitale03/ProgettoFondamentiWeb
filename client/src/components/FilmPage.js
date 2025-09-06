@@ -28,15 +28,10 @@ function FilmPage(){
     const navigate = useNavigate();
 
     const {showNotification} = useNotification();
-    const {getFilm, saveReview} = useFilm();
+    const {saveReview} = useFilm();
     const [film, setFilm] = useState(null);
-    const [filmGenres, setFilmGenres] = useState([]);
-    const [filmDetails, setFilmDetails] = useState([]);
 
-    const [filmInfo, setFilmInfo] = useState([]);
     //rating in quinti
-    const [avgRating, setAvgRating] = useState(null);
-    const [userRating, setUserRating] = useState(null);
     const [reviewRating, setReviewRating] = useState(0);
 
     const [review, setReview] = useState("");
@@ -49,9 +44,6 @@ function FilmPage(){
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
 
-    let genreMenuItems = (<div>
-        {filmGenres.map( (genre) => <MenuItem>{genre}</MenuItem> )}
-    </div>)
 
     const addReview = async () => {
         await saveReview(film.title, film.release_year, review, reviewRating);
@@ -59,44 +51,6 @@ function FilmPage(){
         navigate(`/film/${filmTitle}/${filmID}`);
         setReviewButton(0);
     }
-
-    let detailsMenuItems = (
-        <div>
-            <MenuItem>
-                <h4>Original language: </h4>
-                <p>{filmDetails.original_language}</p>
-            </MenuItem>
-            <MenuItem>
-                <h4>Original country: </h4>
-                <p>{filmDetails.origin_country?.[0]}</p>
-            </MenuItem>
-            <MenuItem>
-                <h4>Spoken languages: </h4>
-                { filmDetails.spoken_languages?.map( (language) => <p> {language} </p>) }
-            </MenuItem>
-            <MenuItem>
-                <h4>Production Companies:</h4>
-                    { filmDetails?.production_companies?.map( e => <p> {e.name}({e.country}), </p>) }
-            </MenuItem>
-            <MenuItem>
-                <h4>Revenue: </h4>
-                <p>{filmDetails.revenue}</p>
-            </MenuItem>
-            <MenuItem>
-                <h4>Budget: </h4>
-                <p>{filmDetails.budget}</p>
-            </MenuItem>
-        </div>
-    )
-
-    let reviewMenuItems = (<>
-            <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
-            <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
-            <Button onClick={addReview}>
-                Salva
-            </Button>
-        </>
-    )
 
     //bisognerà aggiungere delle funzioni che vedono se il film è nella watchlist o meno, restituisce true o false: se è true allora
     //fai vedere buttonState 0 altrimenti buttonState 1. questo
@@ -183,6 +137,8 @@ function FilmPage(){
     const addToWatched = async (event) => {
         event.preventDefault();
         setWatchedButton(0);
+        //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
+        setWatchlistButton(1);
         try{
             await api.post('http://localhost:5001/api/films/add-to-watched', { film });
             showNotification(`${filmTitle} è stato aggiunto ai film visti`, "success")
@@ -207,75 +163,65 @@ function FilmPage(){
     useEffect( () => {
         async function fetchFilm(){
             if (filmTitle && filmID) {
-                const film = await getFilm(filmTitle, filmID);
-                setFilm(film);
-                let filmGenres = film.genres.map( (genre) => {return genre.name})
-                setFilmGenres(filmGenres)
+                //utilizzando questa api ottengo tutte le info utili da mostrare nella pagina del Film usando come parametri
+                //filmTitle e filmID ottenuti dall'url
+                const response = await api.get(`http://localhost:5001/api/films/getFilm/${filmTitle}/${filmID}`);
+                const film = await response.data;
 
-                let filmDetails = {
-                    production_companies: film.production_companies.map( e => {return {name: e.name, country: e.origin_country}}),
-                    origin_country: film.origin_country,
-                    original_language: film.original_language,
-                    spoken_languages: film.spoken_languages.map(e => e.english_name),
-                    budget: film.budget,
-                    revenue: film.revenue,
-                }
-                setFilmDetails(filmDetails);
+                setFilm(film);
+
+                //renderizzo i bottoni in base allo stato attuale del film
+                setWatchlistButton(film.filmInfo[0] === true ? 0 : 1);
+                setLikedButton(film.filmInfo[1] === true ? 0 : 1);
+                setReviewButton(film.filmInfo[2] === true ? 0 : 1);
+                setFavoritesButton(film.filmInfo[3] === true ? 0 : 1);
+                setWatchedButton(film.filmInfo[4] === true ? 0 : 1);
             }
         }
         fetchFilm();
-    }, [filmTitle, filmID, getFilm])
+    }, [filmTitle, filmID])
 
-    //Effetto per calcolare il rating medio e il rating inserito dall'utente, solo se il film esiste
-    useEffect( () => {
-        async function fetchRating(){
-            //calcolo rating medio
-            if(film && film.vote_average !== 0){
-                let avgRating = (film.vote_average)/2; //rating in quinti
-                avgRating = Number(avgRating.toFixed(1)); //lo blocco ad una cifra decimale
-                setAvgRating(avgRating);
-            }
+    let genreMenuItems = (<div>
+        {film?.genres.map( (genre) => <MenuItem key={genre.id}>{genre.name}</MenuItem> )}
+    </div>)
 
-            //calcolo rating inserito dall'utente, conoscendo l'id del film
-            const response = await api.get(`http://localhost:5001/api/films/reviews/${filmID}`)
-            const rating = await response.data;
-            setUserRating(rating)
-        }
-        fetchRating();
-    }, [film, filmID])
+    let detailsMenuItems = (
+        <div>
+            <MenuItem>
+                <h4>Original language: </h4>
+                <p>{film?.details.original_language}</p>
+            </MenuItem>
+            <MenuItem>
+                <h4>Original country: </h4>
+                <p>{film?.details.origin_country?.[0]}</p>
+            </MenuItem>
+            <MenuItem>
+                <h4>Spoken languages: </h4>
+                { film?.details.spoken_languages?.map( (language) => <p> {language} </p>) }
+            </MenuItem>
+            <MenuItem>
+                <h4>Production Companies:</h4>
+                { film?.details.production_companies?.map( e => <p> {e.name}({e.country}), </p>) }
+            </MenuItem>
+            <MenuItem>
+                <h4>Revenue: </h4>
+                <p>{film?.details.revenue}</p>
+            </MenuItem>
+            <MenuItem>
+                <h4>Budget: </h4>
+                <p>{film?.details.budget}</p>
+            </MenuItem>
+        </div>
+    )
 
-    //Effetto per calcolare se il film è nella watchlist o meno, se è stato piaciuto o meno ecc.. per renderizzare
-    //correttamente i bottoni -> array di valori booleani(isWatched, isLiked, isReviewed, isFavorite, isWatched)
-    useEffect( () => {
-        async function fetchFilmInfo(){
-            const response = await api.get(`http://localhost:5001/api/films/${filmID}`)
-            let filmInfo = response.data;
-            setFilmInfo(filmInfo);
-            if ((filmInfo[0]) === true) {
-                setWatchlistButton(0)
-            }else{ setWatchlistButton(1) }
-
-            if ((filmInfo[1]) === true){
-                setLikedButton(0)
-            }else{ setLikedButton(1) }
-
-            if (filmInfo[2] === true){
-                setReviewButton(0)
-            }else{ setReviewButton(1) }
-
-            if ((filmInfo[3]) === true){
-                setFavoritesButton(0)
-            }else{ setFavoritesButton(1) }
-
-            if ((filmInfo[4]) === true){
-                setWatchedButton(0)
-            }else{ setWatchedButton(1) }
-        }
-        fetchFilmInfo();
-    }, [filmID])
-
-
-
+    let reviewMenuItems = (<>
+            <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
+            <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
+            <Button onClick={addReview}>
+                Salva
+            </Button>
+        </>
+    )
 
     if(!film){
         return(
@@ -304,15 +250,15 @@ function FilmPage(){
 
                 <DropDownMenu buttonContent="Generi" menuContent={genreMenuItems} />
             </div>
-            {avgRating !== null ? <div>
-                <p>Rating medio: {avgRating}</p>
-                <Rating name="rating" value={avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
+            {film.avgRating !== null ? <div>
+                <p>Rating medio: {film.avgRating}</p>
+                <Rating name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
                 </div> : null
             }
 
-            {userRating !== null ? <div>
+            {film.userRating !== null ? <div>
                 <p>Il tuo rating: </p>
-                <Rating name="rating" value={userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
+                <Rating name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
             </div> : null
             }
 
