@@ -99,7 +99,7 @@ exports.login = async (req, res) => {
             } // Includo nel payload anche l'ID dell'utente nel token (quello che c'è nel DB)
         };
         // Firma il token con un segreto e imposta una scadenza
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "1h"})
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"})
 
         //ora creiamo il refreshToken a lunga scadenza (es. 7 giorni), dopo la quale l'utente viene sloggato dal sistema
         //il ruolo del refreshToken è di aggiornare e dare al front end un nuovo accessToken ogni volta che ne scade uno
@@ -111,7 +111,7 @@ exports.login = async (req, res) => {
         await user.save();
 
 
-        //inserisco il refreshtoken nel cookie
+        //inserisco il refreshtoken nel cookie per inviarlo al browser
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -138,21 +138,24 @@ exports.login = async (req, res) => {
 exports.refresh = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-        return res.status(401).json({message: 'Refresh token non esistente. L utente deve loggarsi di nuovo.'});
+        return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
     }
 
     const user = await User.findOne({ refreshToken });
-    if (!user) return res.status(403).json({message: "Il refresh token non corrisponde a nessun utente"})
+    if (!user) return res.status(403).json("Il refresh token non corrisponde a nessun utente")
 
-    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    if (payload.id !== user._id) return res.status(403).json({message: "Errore nella verifica del refreshtoken"})
+
+    let payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    if (payload.user.id !== user._id.toString()) return res.status(403).json("Errore nella verifica del refreshtoken")
+    payload = {user: payload.user}; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
+
 
     const newAccessToken = jwt.sign(
         payload,
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '1h' }
+        process.env.JWT_SECRET,
+        { expiresIn: '15m' }
     );
-    res.json({ newAccessToken }); //token aggiornato
+    res.json(newAccessToken); //token aggiornato
 
 }
 
@@ -165,6 +168,7 @@ exports.forgotPassword = async (req, res) => {
         if (!user) {
             return res.status(400).json("L'utente non esiste")
         }
+
 
         //poi controllo che la password inserita in "vecchia password" corrisponda a quella dell'utente
         const isMatch = await bcrypt.compare(oldPassword, user.password);
@@ -217,11 +221,57 @@ exports.deleteAccount = async (req, res) => {
     }
 }
 
-exports.modifyProfile = async (req, res) => {
+exports.getProfileData = async (req, res) => {
     try{
-        const {newUsername, newName, newSurname, newEmail, newBio, newCountry} = req.body;
-        console.log(newUsername, newName, newSurname, newEmail, newBio, newCountry);
+        const userID = req.user.id;
+        const user = await User.findById(userID);
+        let profileData = {
+            username: user.username ? user.username : "",
+            email: user.email ? user.email : "",
+            name: user.name ? user.name : "",
+            surname: user.surname ? user.surname : "",
+            biography: user.biography ? user.biography : "",
+            country: user.country ? user.country : "",
+        }
+        res.json(profileData);
     }catch(error){
         res.status(500).json('Errore del server.');
     }
+}
+
+exports.updateProfile = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const profileData = req.body;
+
+        await User.updateOne(
+            { _id: userID },
+            { $set: {
+                    username: profileData.username,
+                    email: profileData.email,
+                    name: profileData.name,
+                    surname: profileData.surname,
+                    biography: profileData.biography,
+                    country: profileData.country
+
+            } },
+            {
+                runValidators: true //esegue le validazioni dello schema (es. unique)
+            }
+            )
+        let user = {
+            id: userID,
+            username: profileData.username,
+            email: profileData.email,
+            name: profileData.name,
+            surname: profileData.surname,
+            biography: profileData.biography,
+            country: profileData.country
+        }
+        res.status(200).json(user)
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+
+
 }

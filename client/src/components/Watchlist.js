@@ -31,7 +31,7 @@ function Watchlist(){
         <div>
             <p>Lista dei film da guardare</p>
             <h1>Vuoi guardare {watchlistFilms.length} film</h1>
-            { watchlistFilms.map((film) => <FilmCard key={film.id} film={film} />) }
+            { watchlistFilms.map((film) => <FilmCard key={film.film_id} film={film} />) }
         </div>
 
     )

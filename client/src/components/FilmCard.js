@@ -12,7 +12,7 @@ function FilmCard({ film }){
     const handleClick = () => {
         if (!film.id){
             //l'oggetto film proviene dal popolamento di un documento DB quindi avrà _id
-            navigate(`/film/${title}/${film._id}`);
+            navigate(`/film/${title}/${film.film_id}`);
         }
         else{
             //l'oggetto film proviene dall'array SearchFilmsResults ottenuto con l'api TMDB avrà la proprietà id
@@ -29,9 +29,14 @@ function FilmCard({ film }){
 
                { film.director ? <p>Diretto da: <NavLink to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>{film.director.name}</NavLink></p> : null }
 
+               {film.date ? <p>Data della visione: {film.date}</p> : null}
+
                { film.job ? <p>Ruolo: {film.job}</p> : null }
 
-               { film.rating !== null ? <Rating name="rating" value={film.rating} precision={0.5} readOnly /> : null }
+               { film.rating === null ? null :
+                 film.rating === undefined ? null :
+                     <Rating name="rating" value={film.rating} precision={0.5} readOnly />
+               }
 
                { film.isLiked === true ?  <ThumbUpIcon /> : null }
                <p>-------</p>

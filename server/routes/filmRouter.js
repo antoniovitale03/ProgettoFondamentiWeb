@@ -25,6 +25,6 @@ router.delete("/remove-from-watched/:filmID", authMiddleware.verifyJWT, filmCont
 router.get("/get-watched", authMiddleware.verifyJWT, filmController.getWatched)
 
 router.get("/get-actor-info/:actorID", filmController.getActorInfo)
-router.get("/get-director-info/:directorID", filmController.getDirector)
+router.get("/get-director-info/:directorID", filmController.getDirectorInfo)
 
 module.exports = router;

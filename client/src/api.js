@@ -17,8 +17,14 @@ api.interceptors.response.use(
 
             try {
                 // Fai la chiamata per ottenere un nuovo access token
-                const {data} = await api.post('http://localhost:5001/api/auth/refresh');
-                const accessToken = data.accessToken;
+                const response = await api.post('http://localhost:5001/api/auth/refresh');
+                const accessToken = response.data;
+
+
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.accessToken = accessToken;
+                localStorage.setItem('user', JSON.stringify(user));
+
 
 
                 // AGGIORNA IL TOKEN NEGLI HEADER DI DEFAULT DELLA TUA ISTANZA API
@@ -48,11 +54,11 @@ api.interceptors.request.use(
     (config) => {
         //Recupera il token
         const user = JSON.parse(localStorage.getItem('user'));
-        const token = user?.accessToken; // Assumendo che il token sia salvato qui
+        const accessToken = user?.accessToken; // Assumendo che il token sia salvato qui
 
-        if (token) {
+        if (accessToken) {
             // 2. Se il token esiste, aggiungilo agli header
-            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
         return config; // Restituisci la configurazione aggiornata

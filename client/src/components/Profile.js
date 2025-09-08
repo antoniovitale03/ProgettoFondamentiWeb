@@ -1,6 +1,6 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle"
-import {Button, Typography} from "@mui/material";
+import {Avatar, Button, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -9,6 +9,7 @@ import ReviewCard from "./ReviewCard";
 
 function Profile(){
     const {user} = useAuth();
+
     const {showNotification} = useNotification();
     useDocumentTitle("Profilo")
 
@@ -60,17 +61,18 @@ function Profile(){
         <div>
             {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
             {user.name && user.surname && <Typography component="p">{user.name} {user.surname}</Typography>}
+            <Avatar />
             {user.biography && <Typography component="p">{user.biography}</Typography>}
             {user.country && <Typography component="p">{user.country}</Typography>}
             <Button href="/settings/modify-profile">Modifica il profilo</Button>
 
             {favoritesFilms.length > 0 && <div>
                 <h1>Film preferiti</h1>
-                {favoritesFilms.map(film => <FilmCard key={film.id} film={film} /> )}
+                {favoritesFilms.map(film => <FilmCard key={film._id} film={film} /> )}
             </div>}
 
             <h1>Ultimi film visti (4)</h1>
-            {watchedFilms.map(film => <FilmCard key={film.id} film={film} /> )}
+            {watchedFilms.map(film => <FilmCard key={film._id} film={film} /> )}
 
             <h1>Ultime recensioni fatte (4): </h1>
             {filmsReviews.map(review => <ReviewCard key={review.id} review={review} /> )}

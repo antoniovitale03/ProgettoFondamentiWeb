@@ -2,9 +2,11 @@ import {Box, Button, FormControl, Input, InputLabel, Stack, Typography} from "@m
 import React, {useState} from "react";
 import api from "../api";
 import {useAuth} from "../context/authContext";
+import {useNotification} from "../context/notificationContext";
 
 function ModifyPassword() {
     const {user, sleep} = useAuth();
+    const {showNotification} = useNotification();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -20,8 +22,7 @@ function ModifyPassword() {
             await api.post('http://localhost:5001/api/auth/forgot-password', {
                 username, oldPassword, newPassword, confirmNewPassword
             })
-            setSuccessMessage("Password modificata correttamente!");
-            await sleep(2500);
+            showNotification("Password aggiornata correttamente", "success");
             //ri-renderizzo la pagina di login con le variabili di stato iniziali
             setSuccessMessage("");
         } catch(error){

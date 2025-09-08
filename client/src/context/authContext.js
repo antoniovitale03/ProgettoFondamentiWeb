@@ -48,12 +48,15 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('user');
     };
 
+    const updateUser = (user) => {
+        setUser(user);
+    }
 
     const sleep = (t) => new Promise(res => setTimeout(res, t))
 
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, login, logout, isLoggedIn: !!user, sleep};
+    const value = { user, login, logout, isLoggedIn: !!user, sleep, updateUser };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
