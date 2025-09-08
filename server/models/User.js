@@ -8,7 +8,12 @@ const userSchema = new mongoose.Schema({
     surname: { type: String },
     biography: { type: String },
     country: { type: String },
-    refreshToken: { type: String }
+    refreshToken: { type: String },
+    watchlist: [{ type: Number, ref:"Film" }],
+    liked: [{ type: Number, ref:"Film" }],
+    favorites: [{ type: Number, ref:"Film" }],
+    reviews: [{ type: Number, ref:"Review" }],
+    watched: [{ type: Number, ref:"Film" }]
 });
 //N.B. un film recensito viene aggiunto sia in reviews che in watched (non il contrario)
 //watched contiene coppie di filmID e rating inserito. se il film viene visto ma non recensito, il rating è 0.

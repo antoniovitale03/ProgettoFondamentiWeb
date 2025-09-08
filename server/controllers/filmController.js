@@ -32,7 +32,7 @@ exports.getFilmsFromSearch = async (req, res) => {
         const year = film.release_date ? new Date(film.release_date).getFullYear() : "N/A";
         return {
             title: film.title,
-            id: film.id,
+            _id: film.id,
             director: director,
             poster_path: poster_image_url,
             release_year: year,
@@ -75,26 +75,27 @@ exports.getFilm = async (req, res) => {
     avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;  //lo blocco ad una cifra decimale (se è 0 lo setto a null)
 
     //calcolo il rating inserito dall'utente
-    const review = await Review.findOne({
-        user_id: userID,
-        film_id: filmID
-    });
-
-    let userRating = review !== null ? review.rating : null;
+    let user = await User.findById(userID).populate('reviews');
+    let review = user.reviews.find( (review) => review._id === filmID)
+    let userRating = review !== undefined ? review.rating : null;
 
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
-    const currentFilm = await Film.findOne({
-        user_id: userID,
-        film_id: filmID
-    });
+    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
+    isInWatchlist = isInWatchlist === undefined ? false : true;
 
-    let isInWatchlist = currentFilm ? currentFilm.isInWatchlist : false;
-    let isLiked = currentFilm ? currentFilm.isLiked : false;
-    let isReviewed = currentFilm ? currentFilm.isReviewed : false;
-    let isFavorite = currentFilm ? currentFilm.isFavorite : false;
-    let isWatched = currentFilm ? currentFilm.isWatched : false;
+    let isLiked = user.liked.find( (id) => id === filmID )
+    isLiked = isLiked === undefined ? false : true;
 
-    const filmInfo = [isInWatchlist, isLiked, isReviewed, isFavorite, isWatched]
+    let isReviewed = user.reviews.find( (review) => review._id === filmID )
+    isReviewed = isReviewed  === undefined ? false : true;
+
+    let isFavorite = user.favorites.find( (id) => id === filmID )
+    isFavorite = isFavorite === undefined ? false : true;
+
+    let isWatched = user.watched.find( (id) => id === filmID )
+    isWatched = isWatched === undefined ? false : true;
+
+    const filmInfo = [isInWatchlist, isLiked, isReviewed, isFavorite, isWatched];
 
     //ottengo i dettagli del film
     let filmDetails = {
@@ -107,6 +108,7 @@ exports.getFilm = async (req, res) => {
     }
 
     film = {...film,
+        _id: film.id,
         director: director,
         release_year: year,
         poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
@@ -135,21 +137,25 @@ exports.addToWatchlist = async (req, res) => {
         // questo garantisce di avere sempre una sola copia dei dati di ogni film.
         //findOneandUpdate(filter, update, options)
         await Film.findOneAndUpdate(
-            {   user_id: userID,
-                film_id: film.id,
-            }, // Condizione di ricerca
+            { _id: film.id }, // Condizione di ricerca
             //se non esiste crea un nuovo oggetto film nella collezione films:
             { $set: {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
                     poster_path: film.poster_path,
-                    isInWatchlist: true
                 }},
             {
                 upsert: true // Se il documento non esiste sulla base del filtro, ne crea uno nuovo sulla base di update
             }
         );
+
+        //per aggiungere l'id del film all'array watchlist dell'utente, uso $addToSet che
+        // aggiunge un elemento a un array SOLO SE non è già presente (evitare duplicati)
+        await User.findByIdAndUpdate(
+            userID,
+            { $addToSet: { watchlist: film.id }
+            }) //con embedding avremmo fatto watchlist: film, aggiungendo l'intero oggetto film
 
         res.status(200).json(`"${film.title}" aggiunto alla watchlist!`);
     }catch(error){
@@ -162,15 +168,10 @@ exports.removeFromWatchlist = async (req, res) => {
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
 
-        await Film.findOneAndUpdate(
-            {
-                user_id: userID,
-                film_id: filmID,
-            },
-            { $set: {
-                    isInWatchlist: false
-                }}
-        )
+        const user = await User.findById(userID);
+        user.watchlist = user.watchlist.filter(id => id !== filmID);
+
+        await user.save();
 
     }catch(error){
         res.status(500).json("Errore interno del server." );
@@ -181,12 +182,17 @@ exports.removeFromWatchlist = async (req, res) => {
 exports.getWatchlist = async (req, res) => {
     try{
         const userID = req.user.id; //prendo l'id dell'utente da req.user fornito dal middleware verifyjwt
-        const watchlist = await Film.find(
-            {
-                user_id: userID,
-                isInWatchlist: true
-            }
-        )
+        let user = await User.findById(userID).populate('watchlist').populate('reviews'); //trova l'utente con quell'id e popola l'array watchlist con i dati
+        if (!user) {
+            return res.status(404).json({ message: "Utente non trovato." });
+        }
+
+        //N.B. le proprietà dei film da mostrare nella pagina watchlist si trovano nella proprietà _doc dell'oggetto film
+        let watchlist = user.watchlist.map( (film) => {
+            return {...film._doc, rating: null};
+        })
+
+        // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID
         res.status(200).json(watchlist);
 
     }catch(error){
@@ -199,32 +205,28 @@ exports.addToFavorites = async (req, res) => {
         const userID = req.user.id;
         let {film} = req.body;
 
-        const favoritesFilms = await Film.find({
-            user_id: userID,
-            film_id: film.id,
-        })
-
         //controllo che venga rispettato il limite di 10 film preferiti
-        if (favoritesFilms.length >= 10){
+        const user = await User.findById(userID)
+        if (user.favorites.length >= 10){
             return res.status(500).json("Impossibile aggiungere il film. Hai superato il limite di 10 film nei preferiti");
         }
 
         await Film.findOneAndUpdate(
-            { user_id: userID,
-                film_id: film.id
-            },
+            { _id: film.id },
             {
-                $set: {
-                    title: film.title,
-                    release_year: film.release_year,
-                    director: film.director,
-                    poster_path: film.poster_path,
-                    isFavorite: true
-                }
+                _id: film.id,
+                title: film.title,
+                release_year: film.release_year,
+                director: film.director,
+                poster_path: film.poster_path,
             },
             {
                 upsert: true
             });
+        await User.findByIdAndUpdate(
+            userID,
+            { $addToSet: { favorites: film.id } }
+        )
         res.status(200).json(`"${film.title}" aggiunto alla lista dei favoriti!`);
 
     }catch(error){
@@ -237,11 +239,10 @@ exports.removeFromFavorites = async (req, res) => {
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
 
-        await Film.findOneAndUpdate({
-                user_id: userID,
-                film_id: filmID,
-            },
-            { $set: {isFavorite:false}})
+        const user = await User.findById(userID);
+        user.favorites = user.favorites.filter(id => id !== filmID);
+
+        await user.save();
 
     }catch(error){
         res.status(500).json("Errore interno del server.");
@@ -252,7 +253,14 @@ exports.removeFromFavorites = async (req, res) => {
 exports.getFavorites = async (req, res) => {
     try{
         const userID = req.user.id;
-        const favorites = await Film.find({user_id: userID, isFavorite: true});
+        const user = await User.findById(userID).populate('favorites');
+        if(!user) {
+            return res.status(404).json({ message: "Utente non trovato." });
+        }
+        let favorites = user.favorites.map( async (film) => {
+            return {...film._doc, director: await getFilmDirector(film._id), rating: null}
+        })
+        favorites = await Promise.all(favorites);
         res.status(200).json(favorites);
 
     }catch(error){
@@ -268,46 +276,55 @@ exports.saveReview = async (req, res) => {
         const data = await response.json();
         let films = data.results;
         if (!films) {
-            return res.status(400).json("Nessun film trovato.");
+            return res.status(400).json("Nessun film trovato." );
         }
         //trovo il film che corrisponde alla data di uscita che ho inserito, sempre se è corretta
         let film = films.find((film) => new Date(film.release_date).getFullYear() === releaseYear);
         if (!film) {
-            return res.status(400).json("Data di uscita errata.");
+            return res.status(400).json("Nessun film trovato.");
         }
 
         //il film è stato trovato, quindi modifico l'url per mostrare la locandina
-        const newReview = new Review({
-            user_id: userID,
-            film: film.id,
-            title: film.title,
-            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
-            release_year: releaseYear,
-            review: review,
-            rating: rating,
-            review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
-        })
-        await newReview.save();
 
-        let director = await getFilmDirector(film.id);
-        //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
-        await Film.findOneAndUpdate(
+        await Review.findOneAndUpdate(
+            { _id: film.id }, // Condizione di ricerca
+            //se non esiste crea un nuovo oggetto film nella collezione films:
             {
-                user_id: userID,
-                film_id: film.id
+                _id: film.id,
+                title: film.title,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+                release_year: releaseYear,
+                review: review,
+                rating: rating,
+                review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
             },
             {
-                $set: {
-                    title: film.title,
-                    release_year: film.release_year,
-                    director: director,
-                    poster_path: film.poster_path,
-                    isWatched: true
-                }
+                upsert: true // Se il documento non esiste sulla base del filtro, ne crea uno nuovo sulla base di update
+            }
+        );
+        //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
+        await User.findByIdAndUpdate(userID, {
+            $addToSet: {
+                reviews: film.id,
+                watched: film.id
+            }
+        });
+        //e aggiungo il rating (dovengo aggiungere un'oggetto film devo calcolare il regista)
+        const director = await getFilmDirector(film.id); //oppure film.id
+
+        await Film.findOneAndUpdate(
+            { _id: film.id },
+            {
+                _id: film.id,
+                title: film.title,
+                release_date: releaseYear,
+                director: director,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
             },
             {
                 upsert: true
-            });
+            }
+        )
 
         res.status(200).json(`Recensione di "${film.title}" salvata correttamente!`);
     }catch(error){
@@ -360,18 +377,13 @@ exports.addToLiked = async (req, res) => {
         let { film } = req.body;
 
         await Film.findOneAndUpdate(
-            { user_id: userID,
-                film_id: film.id,
-            },
+            { _id: film.id },
             {
-                $set: {
-                    user_id: userID,
-                    film_id: film.id,
-                    title: film.title,
-                    release_year: film.release_year,
-                    director: film.director,
-                    poster_path: film.poster_path,
-                }
+                _id: film.id,
+                title: film.title,
+                release_year: film.release_year,
+                director: film.director,
+                poster_path: film.poster_path
             },
             {
                 upsert: true
@@ -381,7 +393,7 @@ exports.addToLiked = async (req, res) => {
             $addToSet: { liked: film.id }
         })
 
-        res.status(200).json(`"${film.title}" aggiunto alla lista dei film piaciuti!`);
+        res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film piaciuti!`  });
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
@@ -406,21 +418,13 @@ exports.addToWatched = async (req, res) => {
         const userID = req.user.id;
         const { film } = req.body;
         await Film.findOneAndUpdate(
+            { _id: film.id },
             {
-                user_id: userID,
-                film_id: film.id,
-            },
-            {
-                $set: {
-                    user_id: userID,
-                    film_id: film.id,
-                    title: film.title,
-                    release_year: film.release_year,
-                    director: film.director,
-                    date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'}),
-                    poster_path: film.poster_path,
-
-                }
+                _id: film.id,
+                title: film.title,
+                release_year: film.release_year,
+                director: film.director,
+                poster_path: film.poster_path,
             },
             {
                 upsert: true
@@ -432,7 +436,7 @@ exports.addToWatched = async (req, res) => {
             $pull: {watchlist: film.id}
         })
 
-        res.status(200).json(`"${film.title}" aggiunto alla lista dei film visti!`);
+        res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
@@ -518,7 +522,7 @@ exports.getActorInfo = async (req, res) => {
 
 }
 
-exports.getDirector = async (req, res) => {
+exports.getDirectorInfo = async (req, res) => {
     try{
         const directorID = parseInt(req.params.directorID);
         const response = await fetch(`https://api.themoviedb.org/3/person/${directorID}?api_key=${process.env.API_KEY_TMDB}&language=en-EN&append_to_response=movie_credits`)

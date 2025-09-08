@@ -20,11 +20,10 @@ api.interceptors.response.use(
                 const response = await api.post('http://localhost:5001/api/auth/refresh');
                 const accessToken = response.data;
 
-
+                //aggiorno l'accessToken nel localStorage
                 const user = JSON.parse(localStorage.getItem('user'));
                 user.accessToken = accessToken;
                 localStorage.setItem('user', JSON.stringify(user));
-
 
 
                 // AGGIORNA IL TOKEN NEGLI HEADER DI DEFAULT DELLA TUA ISTANZA API

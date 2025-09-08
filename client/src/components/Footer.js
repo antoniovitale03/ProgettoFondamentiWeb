@@ -9,41 +9,29 @@ import {Link} from "react-router-dom";
 
 
 function Footer() {
-    const {isLoggedIn} = useAuth();
+
+    let footerItems = [
+        <NavLink to="/about">About</NavLink>,
+        <NavLink to="/contact">Contact</NavLink>,
+        <NavLink to="/help">Help</NavLink>,
+        <Link to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
+            <GitHubIcon />
+        </Link>,
+        <Link to="link di LinkedIn" target="_blank" rel="noreferrer">
+            <LinkedInIcon />
+        </Link>,
+        <Link to="link di Instagram" target="_blank" rel="noreferrer">
+            <InstagramIcon />
+        </Link>
+    ]
+
     return (
         <footer className="navigation-bar">
             <Container>
                 <Box>
                     <nav>
                         <ul>
-                            <li>
-                                <NavLink to="/about">About</NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/contact">Contact</NavLink>
-                            </li>
-                            {isLoggedIn ? (
-                               <li>
-                                   <NavLink to="/help">Help</NavLink>
-                               </li>
-                            ) : null}
-
-                            {/*link App esterne*/}
-                            <li>
-                                <Link to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
-                                    <GitHubIcon />
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="link di LinkedIn" target="_blank" rel="noreferrer">
-                                    <LinkedInIcon />
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="link di Instagram" target="_blank" rel="noreferrer">
-                                    <InstagramIcon />
-                                </Link>
-                            </li>
+                            { footerItems.map( (footerItem) => <li>{footerItem}</li> ) }
                         </ul>
                     </nav>
                     <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>

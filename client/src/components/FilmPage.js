@@ -44,7 +44,6 @@ function FilmPage(){
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
 
-
     const addReview = async () => {
         await saveReview(film.title, film.release_year, review, reviewRating);
         showNotification(`La recensione di ${film.title}" è stata salvata correttamente!`)

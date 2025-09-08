@@ -39,6 +39,7 @@ function Header() {
         settingsMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{settingsMenuNames[index]}</MenuItem>)
     ]
 
+
     const navigate = useNavigate();
 
     const handleSearch = async () => {
@@ -52,6 +53,29 @@ function Header() {
         }
     }
 
+    let headerItems = [
+        <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />,
+        <DropDownMenu buttonContent={user?.username} menuContent={userMenuItems}/>,
+        <DropDownMenu buttonContent={<SettingsOutlinedIcon />} menuContent={settingsMenuItems}/>,
+        <NavLink to="/archivio">Archivio</NavLink>,
+        <Box component="form" onSubmit={handleSearch}>
+            <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
+            <Button variant="contained" onClick={handleSearch}>
+                <SearchIcon />
+            </Button>
+        </Box>,
+        <Button variant="contained" color="success" href="/log-a-film" style={{ textDecoration: 'none', color: "white" }}> + Log </Button>,
+        <Button href="/">
+            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
+        </Button>
+    ]
+    let notLoggedDefaultHeaderItems = [
+        <Button variant="contained" color="success" href="/login"> Login </Button>,
+        <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
+        <Button href="/">
+            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
+        </Button>
+    ]
 
     return (
         <header className="navigation-bar">
@@ -61,34 +85,7 @@ function Header() {
                     {isLoggedIn && (<>
                             <nav>
                                 <ul>
-                                    <li>
-                                        <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />
-                                    </li>
-                                    <li>
-                                        <DropDownMenu buttonContent={user.username} menuContent={userMenuItems}/>
-                                    </li>
-                                    <li>
-                                        <DropDownMenu buttonContent={<SettingsOutlinedIcon />} menuContent={settingsMenuItems}/>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/archivio">Archivio</NavLink>
-                                    </li>
-                                    <li>
-                                        <Box component="form" onSubmit={handleSearch}>
-                                            <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
-                                            <Button variant="contained" onClick={handleSearch}>
-                                                <SearchIcon />
-                                            </Button>
-                                        </Box>
-                                    </li>
-                                    <li>
-                                        <Button variant="contained" color="success" href="/log-a-film" style={{ textDecoration: 'none', color: "white" }}> + Log </Button>
-                                    </li>
-                                    <li>
-                                        <Button href="/">
-                                            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
-                                        </Button>
-                                    </li>
+                                    {headerItems.map((headerItem) => <li>{headerItem}</li>)}
                                 </ul>
                             </nav>
                         </>
@@ -99,17 +96,7 @@ function Header() {
                     {!isLoggedIn && (<>
                             <nav>
                                 <ul>
-                                    <li>
-                                        <Button variant="contained" color="success" href="/login"> Login </Button>
-                                    </li>
-                                    <li>
-                                        <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>
-                                    </li>
-                                    <li>
-                                        <Button href="/">
-                                            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
-                                        </Button>
-                                    </li>
+                                    { notLoggedDefaultHeaderItems.map((headerItem) => <li>{headerItem}</li>) }
                                 </ul>
                             </nav>
                         </>

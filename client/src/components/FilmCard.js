@@ -1,5 +1,5 @@
 import {Box, Button, Rating, Stack} from "@mui/material";
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink, useNavigate, Link} from "react-router-dom";
 import * as React from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
@@ -9,23 +9,14 @@ function FilmCard({ film }){
     //es. The Matrix reindirizza all'url /film/The-Matrix piuttosto ch /film/The%Matrix
 
 
-    const handleClick = () => {
-        if (!film.id){
-            //l'oggetto film proviene dal popolamento di un documento DB quindi avrà _id
-            navigate(`/film/${title}/${film.film_id}`);
-        }
-        else{
-            //l'oggetto film proviene dall'array SearchFilmsResults ottenuto con l'api TMDB avrà la proprietà id
-            navigate(`/film/${title}/${film.id}`);
-        }
-    }
 
     return(
        <Box>
            <Stack spacing={4}>
-               <Button onClick={handleClick}>{film.title}  ({film.release_year})</Button>
+               <Link to={`/film/${title}/${film._id}`}>{film.title}</Link>
+               <Link to={`/films/${film.release_year}`}>({film.release_year})</Link>
 
-               <img onClick={handleClick} src={film.poster_path} alt="Locandina film"/>
+               <img onClick={() => navigate(`/film/${title}/${film._id}`)} src={film.poster_path} alt="Locandina film"/>
 
                { film.director ? <p>Diretto da: <NavLink to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>{film.director.name}</NavLink></p> : null }
 

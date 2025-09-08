@@ -25,6 +25,16 @@ import ModifyPassword from "./ModifyPassword";
 import ModifyAvatar from "./ModifyAvatar";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
+
+    let paths = ["/", "/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist",
+                 "/settings/modify-profile", "/settings/modify-password", "/settings/delete-account",
+                 "/settings/modify-avatar", "/archivio", "/search/:filmTitle", "/film/:filmTitle/:filmID",
+                 "/log-a-film", "/film/:filmTitle/cast", "film/:filmTitle/crew", "/actor/:actorName/:actorID",
+                 "/director/:directorName/:directorID", "/about", "/contact", "/help"]
+
+    let components = [ <Home />, <Profile/>, <ListaFilm />, <FavoritesFilms/>, <Recensioni/>, <Watchlist/>, <ModifyProfile/>,
+                     <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
+                     <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
   return (
       <Box style={{display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
           <Header />
@@ -32,31 +42,7 @@ function UserPanel() {
           <Container style={{flexGrow: 1}}>
               <Box>
                   <Routes>
-                      <Route path="/" element={<Home/>} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/lista-film" element={<ListaFilm />} />
-                      <Route path="/favorites" element={<FavoritesFilms />} />
-                      <Route path="/recensioni" element={<Recensioni />} />
-                      <Route path="/watchlist" element={<Watchlist />} />
-
-                      <Route path="/settings/modify-profile" element={ <ModifyProfile />} />
-                      <Route path="/settings/modify-password" element={ <ModifyPassword />} />
-                      <Route path="/settings/delete-account" element={<DeleteAccount />} />
-                      <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
-
-                      <Route path="/archivio" element={<Archivio />} />
-                      <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
-                      <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
-                      <Route path="/log-a-film" element={<Log />} />
-
-                      <Route path="/film/:filmTitle/cast" element={<CastPage />} />
-                      <Route path="film/:filmTitle/crew" element={<CrewPage />} />
-                      <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
-                      <Route path="/director/:directorName/:directorID" element={ <DirectorPage />} />
-
-                      <Route path="/about" element={<About />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/help" element={<Help />} />
+                      { paths.map((path, index) => <Route path={path} key={index} element={components[index]}/>) }
                   </Routes>
               </Box>
           </Container>
