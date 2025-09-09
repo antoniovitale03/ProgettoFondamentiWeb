@@ -23,6 +23,7 @@ import ModifyProfile from "./ModifyProfile";
 import {Container, Box} from "@mui/material";
 import ModifyPassword from "./ModifyPassword";
 import ModifyAvatar from "./ModifyAvatar";
+import FilmsByYear from "./FilmsByYear";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
 
@@ -42,7 +43,33 @@ function UserPanel() {
           <Container style={{flexGrow: 1}}>
               <Box>
                   <Routes>
-                      { paths.map((path, index) => <Route path={path} key={index} element={components[index]}/>) }
+                      <Route path="/" element={<Home/>} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/lista-film" element={<ListaFilm />} />
+                      <Route path="/favorites" element={<FavoritesFilms />} />
+                      <Route path="/recensioni" element={<Recensioni />} />
+                      <Route path="/watchlist" element={<Watchlist />} />
+
+                      <Route path="/settings/modify-profile" element={ <ModifyProfile />} />
+                      <Route path="/settings/modify-password" element={ <ModifyPassword />} />
+                      <Route path="/settings/delete-account" element={<DeleteAccount />} />
+                      <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
+
+                      <Route path="/archivio" element={<Archivio />} />
+                      <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
+                      <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
+                      <Route path="/log-a-film" element={<Log />} />
+
+                      <Route path="/film/:filmTitle/cast" element={<CastPage />} />
+                      <Route path="/film/:filmTitle/crew" element={<CrewPage />} />
+                      <Route path="/films/:year/page/:page" element={<FilmsByYear />} />
+                      <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
+                      <Route path="/director/:directorName/:directorID" element={ <DirectorPage />} />
+
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/help" element={<Help />} />
+
                   </Routes>
               </Box>
           </Container>

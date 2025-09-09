@@ -85,7 +85,7 @@ function Header() {
                     {isLoggedIn && (<>
                             <nav>
                                 <ul>
-                                    {headerItems.map((headerItem) => <li>{headerItem}</li>)}
+                                    {headerItems.map((headerItem, index) => <li key={index}>{headerItem}</li>)}
                                 </ul>
                             </nav>
                         </>

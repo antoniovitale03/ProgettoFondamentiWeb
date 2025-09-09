@@ -4,6 +4,7 @@ import FilmCard from "./FilmCard";
 import {useFilm, useFilms} from "../context/filmContext"
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
+import {Grid} from "@mui/material";
 function ListaFilm(){
     useDocumentTitle("Lista film")
 
@@ -28,10 +29,14 @@ function ListaFilm(){
 
     return(
         <div>
-            <p>Qui inseriamo tutti i film visti dall'utente (locandina + voto(in stelle o numero) + eventuale like)</p>
-            <p>L'utente può filtrare i film per genere, rating, film piaciuti (con like == true) e, se fosse possibile, la decade di uscita (1980s, 1990s, 2000s,...)</p>
             <h1>Hai visto {watchedFilms.length} film</h1>
-            { watchedFilms.map((film) => <FilmCard key={film._id} film={film}/>) }
+            <Grid container spacing={2}>
+                { [...watchedFilms].reverse().map((film) =>
+                    <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                        <FilmCard key={film._id} film={film}/>
+                    </Grid>)}
+            </Grid>
+
 
 
         </div>

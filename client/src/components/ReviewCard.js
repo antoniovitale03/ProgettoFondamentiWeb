@@ -1,22 +1,20 @@
-import {useNavigate} from "react-router-dom";
-import {Box, Button, Rating, Stack} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
+import {Box, Rating, Stack} from "@mui/material";
+import * as React from "react";
 
 function ReviewCard( {review} ){
-    const navigate = useNavigate();
 
-    const handleClick = (event) => {
-        event.preventDefault();
-        navigate(`/film/${review.title}/${review._id}`);
-    }
     return(
-        <Box>
-            <Stack spacing={4}>
-                <Button onClick={handleClick}>{review.title}  ({review.release_year})</Button>
+        <Box sx={{ marginBottom: '70px' }}>
+            <Stack spacing={3}>
+                <Link to={`/film/${review.title}/${review._id}`}>{review.title}</Link>
+                {review.release_year ?
+                    <Link to={`/films/${review.release_year}/page/1`}>({review.release_year})</Link> : null
+                }
                 <img src={review.poster_path} alt="Locandina film"/>
                 <p>Recensione: {review.review}</p>
                 <p>Il voto che hai inserito: {<Rating name="rating" value={review.rating} readOnly/> }</p>
                 <p>Data della recensione: {review.review_date}</p>
-                <p>-------</p>
             </Stack>
         </Box>
     )

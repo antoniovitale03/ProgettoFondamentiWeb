@@ -6,6 +6,8 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 router.post("/get-film-search-results", filmController.getFilmsFromSearch )
 router.get("/getFilm/:filmTitle/:filmID", authMiddleware.verifyJWT, filmController.getFilm)
+router.get("/:year/page/:page", authMiddleware.verifyJWT, filmController.getFilmsByYear)
+
 router.post("/add-to-watchlist", authMiddleware.verifyJWT, filmController.addToWatchlist)
 router.delete("/remove-from-watchlist/:filmID", authMiddleware.verifyJWT, filmController.removeFromWatchlist)
 router.get("/get-watchlist", authMiddleware.verifyJWT, filmController.getWatchlist)

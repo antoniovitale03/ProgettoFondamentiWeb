@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import FilmCard from "./FilmCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
+import {Grid} from "@mui/material";
 
 function Watchlist(){
     useDocumentTitle("Watchlist");
@@ -28,10 +29,21 @@ function Watchlist(){
     }
 
     return(
+        //Ogni film è un Grid "item"
+    //    xs={12} -> occupa 12 colonne (tutta la riga) su schermi extra-piccoli
+    //    sm={6}  -> occupa 6 colonne (2 per riga) su schermi piccoli
+    //    md={4}  -> occupa 4 colonne (3 per riga) su schermi medi
+    //    lg={3}  -> occupa 3 colonne (4 per riga) su schermi grandi
         <div>
-            <p>Lista dei film da guardare</p>
             <h1>Vuoi guardare {watchlistFilms.length} film</h1>
-            { watchlistFilms.map((film) => <FilmCard key={film.film_id} film={film} />) }
+            <Grid container spacing={2}>
+                { [...watchlistFilms].reverse().map((film) =>
+                    <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                        <FilmCard key={film._id} film={film} />
+                    </Grid>) }
+            </Grid>
+
+
         </div>
 
     )

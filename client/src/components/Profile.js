@@ -1,6 +1,6 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle"
-import {Avatar, Button, Typography} from "@mui/material";
+import {Avatar, Button, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -66,16 +66,42 @@ function Profile(){
             {user.country && <Typography component="p">{user.country}</Typography>}
             <Button href="/settings/modify-profile">Modifica il profilo</Button>
 
-            {favoritesFilms.length > 0 && <div>
-                <h1>Film preferiti</h1>
-                {favoritesFilms.map(film => <FilmCard key={film._id} film={film} /> )}
-            </div>}
+            {favoritesFilms.length > 0 ?
+                <div>
+                    <h1>Film preferiti</h1>
+                    <Grid container spacing={2}>
+                        { [...favoritesFilms].reverse().slice(0,4).map((film) =>
+                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                                <FilmCard key={film._id} film={film}/>
+                            </Grid>)}
+                    </Grid>
+                </div>
+                : null}
 
-            <h1>Ultimi film visti (4)</h1>
-            {watchedFilms.map(film => <FilmCard key={film._id} film={film} /> )}
+            {watchedFilms.length > 0 ?
+                <div>
+                    <h1>Ultimi film visti (4)</h1>
+                    {<Grid container spacing={2}>
+                        { [...watchedFilms].reverse().slice(0, 4).map((film) =>
+                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                                <FilmCard key={film._id} film={film}/>
+                            </Grid>)}
+                    </Grid>}
+                </div>: null
+            }
 
-            <h1>Ultime recensioni fatte (4): </h1>
-            {filmsReviews.map(review => <ReviewCard key={review.id} review={review} /> )}
+
+            {filmsReviews.length > 0 ?
+                <div>
+                    <h1>Ultime recensioni fatte (4): </h1>
+                    {<Grid container spacing={2}>
+                        { [...filmsReviews].reverse().slice(0, 4).map((review) =>
+                            <Grid item key={review._id} xs={12} sm={6} md={4} lg={3}>
+                                <ReviewCard key={review._id} review={review}/>
+                            </Grid>)}
+                    </Grid>}
+                </div> : null
+            }
 
         </div>
     )

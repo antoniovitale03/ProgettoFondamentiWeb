@@ -11,10 +11,13 @@ function FilmCard({ film }){
 
 
     return(
-       <Box>
-           <Stack spacing={4}>
+       <Box sx={{ marginBottom: '70px' }}>
+           <Stack spacing={3}>
                <Link to={`/film/${title}/${film._id}`}>{film.title}</Link>
-               <Link to={`/films/${film.release_year}`}>({film.release_year})</Link>
+               {film.release_year ?
+                   <Link to={`/films/${film.release_year}/page/1`}>({film.release_year})</Link> : null
+               }
+
 
                <img onClick={() => navigate(`/film/${title}/${film._id}`)} src={film.poster_path} alt="Locandina film"/>
 
@@ -30,7 +33,6 @@ function FilmCard({ film }){
                }
 
                { film.isLiked === true ?  <ThumbUpIcon /> : null }
-               <p>-------</p>
            </Stack>
        </Box>
     )

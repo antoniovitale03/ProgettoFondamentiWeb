@@ -43,6 +43,28 @@ exports.getFilmsFromSearch = async (req, res) => {
     res.status(200).json(films);
 }
 
+exports.getFilmsByYear = async (req, res) => {
+    try{
+        const { year, page } = req.params;
+        //usando questa API posso ottenere 20 film per pagina
+        const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&primary_release_year=${year}&page=${page}&language=en-EN&sort_by=popularity.desc`);
+        let data = await response.json();
+        data.results = data.results.map( film => {
+            return {
+                ...film,
+                _id: film.id,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+                release_year: null //questa informazione è ridondante
+            }}
+        )
+        data = {films: data.results, totalPages: data.total_pages}
+        res.status(200).json(data); //invio l'array dei film e il numero totali di pagine
+    }catch(error){
+        console.log(error);
+        res.status(200).json("Errore nel caricamento dei film")
+    }
+
+}
 //questa funzione serve per trovare un film conoscendo il suo ID di tmdb e il suo titolo, restituendo tutte le informazioni che
 //dovranno essere mostrate nella filmPage
 exports.getFilm = async (req, res) => {
