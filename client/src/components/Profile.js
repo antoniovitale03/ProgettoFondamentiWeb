@@ -72,11 +72,21 @@ function Profile(){
             </div>}
 
             <h1>Ultimi film visti (4)</h1>
-            {watchedFilms.map(film => <FilmCard key={film._id} film={film} /> )}
+            <div>
+                { watchedFilms.length > 4 ?
+                        [...watchedFilms].reverse().slice(0, 4).map((film) => <FilmCard key={film._id} film={film} />) :
+                        [...watchedFilms].reverse().map((film) => <FilmCard key={film._id} film={film} />)
+                }
+            </div>
+
 
             <h1>Ultime recensioni fatte (4): </h1>
-            {filmsReviews.map(review => <ReviewCard key={review.id} review={review} /> )}
-
+            <div>
+                {filmsReviews.length > 4 ?
+                    [...filmsReviews].reverse().slice(0, 4).map( (review) => <ReviewCard key={review._id} review={review} />) :
+                    [...filmsReviews].reverse().map((review) => <ReviewCard key={review._id} review={review} />)
+                }
+            </div>
         </div>
     )
 }
