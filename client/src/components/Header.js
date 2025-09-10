@@ -81,26 +81,19 @@ function Header() {
         <header className="navigation-bar">
             <Container>
                 <Box>
-                    {/*Header per utenti loggati*/}
-                    {isLoggedIn && (<>
+                    {/*Rendering condizionale dell'header in base allo stato di login*/}
+                    {isLoggedIn ?
                             <nav>
                                 <ul>
                                     {headerItems.map((headerItem, index) => <li key={index}>{headerItem}</li>)}
                                 </ul>
-                            </nav>
-                        </>
-                    )}
-
-
-                    {/*Header per utenti non loggati*/}
-                    {!isLoggedIn && (<>
+                            </nav> :
                             <nav>
                                 <ul>
                                     { notLoggedDefaultHeaderItems.map((headerItem) => <li>{headerItem}</li>) }
                                 </ul>
                             </nav>
-                        </>
-                        )}
+                    }
                 </Box>
             </Container>
         </header>

@@ -4,7 +4,6 @@ import {Container, Box} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import {useAuth} from "../context/authContext";
 import {Link} from "react-router-dom";
 
 

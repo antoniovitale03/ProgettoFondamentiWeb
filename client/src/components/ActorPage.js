@@ -41,25 +41,32 @@ function ActorPage() {
             <p>Data di nascita: {actorInfo.personalInfo?.birthday}</p>
             <p>Biografia: {actorInfo.personalInfo?.biography}</p>
 
-            <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore ({actorInfo?.cast?.length})</h1>
+            {actorInfo?.cast?.length !== 0 ?
+                <div>
+                <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore ({actorInfo?.cast?.length})</h1>
 
-            <Grid container spacing={7}>
-                {actorInfo.cast?.map(film =>
-                    <Grid item key={film.id} xs={12} sm={6} md={4}>
-                        <FilmCard key={film.id} film={film} />
+                <Grid container spacing={7}>
+                    {actorInfo.cast?.map(film =>
+                        <Grid item key={film.id} xs={12} sm={6} md={4}>
+                            <FilmCard key={film.id} film={film} />
+                        </Grid>
+                    )}
+                </Grid>
+                </div>: null
+            }
+
+            {actorInfo?.crew?.length !== 0 ?
+                <div>
+                    <h1>Lista dei film in cui {actorInfo.personalInfo?.name} ha svolto un ruolo tecnico ({actorInfo?.crew?.length}) </h1>
+                    <Grid container spacing={7}>
+                        {actorInfo.crew?.map(film =>
+                            <Grid item key={film.id} xs={12} sm={6} md={4}>
+                                <FilmCard key={film.id} film={film} />
+                            </Grid>
+                        )}
                     </Grid>
-                )}
-            </Grid>
-
-            <h1>Lista dei film in cui {actorInfo.personalInfo?.name} ha svolto un ruolo tecnico ({actorInfo?.crew?.length}) </h1>
-            <Grid container spacing={7}>
-                {actorInfo.crew?.map(film =>
-                    <Grid item key={film.id} xs={12} sm={6} md={4}>
-                        <FilmCard key={film.id} film={film} />
-                    </Grid>
-                )}
-            </Grid>
-
+                </div>: null
+            }
         </div>
 
     )

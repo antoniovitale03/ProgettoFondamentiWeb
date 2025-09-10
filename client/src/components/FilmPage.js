@@ -182,9 +182,14 @@ function FilmPage(){
         fetchFilm();
     }, [filmTitle, filmID])
 
-    let genreMenuItems = (<div>
-        {film?.genres.map( (genre) => <MenuItem key={genre.id}>{genre.name}</MenuItem> )}
-    </div>)
+    let genreMenuItems = (
+        <div>
+        {film?.genres.map( (genre) =>
+            <MenuItem key={genre.id}>
+                <strong>{genre.name}</strong>
+            </MenuItem> )}
+        </div>
+    )
 
     let detailsMenuItems = (
         <div>
@@ -226,7 +231,7 @@ function FilmPage(){
 
     if(!film){
         return(
-            <div>Caricamento del film...</div>
+            <div>Caricamento del film... </div>
         )
     }
     return (
@@ -234,8 +239,12 @@ function FilmPage(){
             <p>Immagine background del film</p>
             <img src={film.backdrop_path} alt="Immagine in background del film"/>
             <p>Locandina del film</p>
+            <p>
+                <strong>{film.title}</strong>
+                <Button component={Link} to={`/films/${film.release_year}/page/1`}>( {film.release_year} )</Button>
+            </p>
             <img src={film.poster_path} alt="Locandina del film" />
-            <p>{film.title} {film.release_year} Diretto da
+            <p>Diretto da
                 <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
                 <strong>{film.director.name}</strong>
                 </Button>

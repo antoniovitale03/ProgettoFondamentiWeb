@@ -1,5 +1,5 @@
-import {Link, NavLink} from "react-router-dom";
-import {Button, Card, CardActions, CardContent, CardMedia, Rating, Stack} from "@mui/material";
+import {Link} from "react-router-dom";
+import {Button, Card, CardContent, CardMedia, Rating} from "@mui/material";
 import * as React from "react";
 
 function ReviewCard( {review} ){

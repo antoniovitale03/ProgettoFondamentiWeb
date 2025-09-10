@@ -74,7 +74,7 @@ function LoginPage() {
                     {error && <Typography component="p" className="error-message">{error}</Typography>}
 
                     {/*  Fase di login */}
-                    {step === 1 && (<>
+                    {step === 1 ?
                         <Stack spacing={5}>
                             <FormControl>
                                 <InputLabel htmlFor="username">Nome Utente</InputLabel>
@@ -85,11 +85,11 @@ function LoginPage() {
                                 <InputLabel htmlFor="password">Password</InputLabel>
                                 <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
                             </FormControl>
-                        </Stack>
-                       </>)}
+                        </Stack> : null
+                    }
 
                     {/* --- Step 2: Fase di impostazione nuova password --- */}
-                    {step === 2 && (<>
+                    {step === 2 ?
                         <Stack spacing={5}>
                             <FormControl>
                                 <InputLabel hmtlFor="oldPassword">Vecchia password</InputLabel>
@@ -105,10 +105,8 @@ function LoginPage() {
                                 <InputLabel htmlFor="confirmNewPassword">Conferma nuova password</InputLabel>
                                 <Input type="password" id="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} required/>
                             </FormControl>
-                        </Stack>
-
-
-                        </>)}
+                        </Stack> : null
+                        }
 
                     {/* Impostazione del bottone del form al variare di step */}
                     {step === 1 ? <Button variant="contained" type="submit">Accedi</Button>:

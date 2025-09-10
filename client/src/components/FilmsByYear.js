@@ -44,8 +44,20 @@ function FilmsByYear(){
     return(
         <div>
             <h1>Sono usciti {films?.length * totalPages} film nel {year} </h1>
+
+            <div style={{ textAlign: 'center' }}>
+                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={page === 1}>
+                    <KeyboardArrowLeftIcon />
+                </Button>
+
+                <Button onClick={setNextPage} variant="contained" color="primary" disabled={page >= totalPages}>
+                    <KeyboardArrowRightIcon />
+                </Button>
+                <p>pagina {page} di {totalPages}</p>
+            </div>
+
             <Grid container spacing={7}>
-                { films.map( film =>
+                { films?.map( film =>
                     <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
                     <FilmCard key={film._id} film={film} />
                     </Grid>

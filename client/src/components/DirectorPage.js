@@ -4,6 +4,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./useDocumentTitle";
+import {Grid} from "@mui/material";
 function DirectorPage() {
     let { directorName } = useParams();
     let { directorID } = useParams();
@@ -26,20 +27,40 @@ function DirectorPage() {
 
     return(
         <div>
-           <p>Info personali del regista</p>
             <h1>{director?.personalInfo?.name}</h1>
             <img src={director.personalInfo?.profile_image} alt="Immagine del direttore"/>
             {director.personalInfo?.birthday ? <p>Data di nascita: {director.personalInfo?.birthday}</p> : null}
             {director.personalInfo?.place_of_birth ? <p>Luogo di nascita: {director.personalInfo?.place_of_birth}</p> : null}
             <p>Biografia: {director.personalInfo?.biography}</p>
 
-            <h1>Lista dei film in cui {director.personalInfo?.name} ha performato come attore ({director?.cast?.length})</h1>
-            { director.cast?.map( (film) => <FilmCard key={film.id} film={film} /> )  }
 
-            <h1>Lista dei film in cui {director.personalInfo?.name} ha svolto un ruolo tecnico ({director?.cast?.length})</h1>
-            { director.crew?.map( (film) => <FilmCard key={film.id} film={film} /> ) }
+            {director?.cast?.length !== 0 ?
+                <div>
+                    <h1>Lista dei film in cui {director.personalInfo?.name} ha performato come attore ({director?.cast?.length})</h1>
+                    <Grid container spacing={2}>
+                        { director?.cast?.map((film) =>
+                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                                <FilmCard film={film} />
+                            </Grid>)
+                        }
+                    </Grid>
+                </div> : null
+            }
+
+
+            {director?.crew?.length !== 0 ?
+                <div>
+                    <h1>Lista dei film in cui {director.personalInfo?.name} ha svolto un ruolo tecnico ({director?.crew?.length})</h1>
+                    <Grid container spacing={2}>
+                        { director?.crew?.map((film) =>
+                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                                <FilmCard film={film} />
+                            </Grid>)
+                        }
+                    </Grid>
+                </div> : null
+            }
         </div>
-
     )
 }
 

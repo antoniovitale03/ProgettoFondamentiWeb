@@ -211,7 +211,7 @@ exports.getWatchlist = async (req, res) => {
 
         //N.B. le proprietà dei film da mostrare nella pagina watchlist si trovano nella proprietà _doc dell'oggetto film
         let watchlist = user.watchlist.map( (film) => {
-            return {...film._doc, rating: null};
+            return {...film._doc, rating: null, date: null};
         })
 
         // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID
@@ -280,7 +280,7 @@ exports.getFavorites = async (req, res) => {
             return res.status(404).json({ message: "Utente non trovato." });
         }
         let favorites = user.favorites.map( async (film) => {
-            return {...film._doc, director: await getFilmDirector(film._id), rating: null}
+            return {...film._doc, director: await getFilmDirector(film._id), rating: null, date: null}
         })
         favorites = await Promise.all(favorites);
         res.status(200).json(favorites);
@@ -491,7 +491,7 @@ exports.getWatched = async (req, res) => {
         return {...watchedFilm._doc,
             director: null, //nella pagina dei film visti non mostro il regista di ogni film
             isLiked: isLiked,
-            rating: rating
+            rating: rating,
         }
     })
     res.status(200).json(watchedFilms);
@@ -503,7 +503,7 @@ exports.getActorInfo = async (req, res) => {
         const response = await fetch(`https://api.themoviedb.org/3/person/${actorID}?api_key=${process.env.API_KEY_TMDB}&language=en-EN&append_to_response=movie_credits`);
         let data = await response.json();
         let actorPersonalInfo = {
-            id: data.id,
+            _id: data.id,
             name: data.name,
             biography: data.biography,
             birthday: data.birthday,
@@ -512,7 +512,7 @@ exports.getActorInfo = async (req, res) => {
         //film in cui ha partecipato come attore
         let actorCast = data.movie_credits.cast.map( (film) => {
             return {
-                id: film.id,
+                _id: film.id,
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
                 character: film.character,
@@ -534,7 +534,7 @@ exports.getActorInfo = async (req, res) => {
         //film in cui ha partecipato con un ruolo tecnico (sceneggiatore, scrittore, ecc...)
         let actorCrew = data.movie_credits.crew.map( (film) => {
             return {
-                id: film.id,
+                _id: film.id,
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
                 job: film.job,
@@ -570,7 +570,7 @@ exports.getDirectorInfo = async (req, res) => {
         const response = await fetch(`https://api.themoviedb.org/3/person/${directorID}?api_key=${process.env.API_KEY_TMDB}&language=en-EN&append_to_response=movie_credits`)
         let data = await response.json();
         let directorPersonalInfo = {
-            id: data.id,
+            _id: data.id,
             name: data.name,
             birthday: data.birthday,
             biography: data.biography,
@@ -581,7 +581,7 @@ exports.getDirectorInfo = async (req, res) => {
 
         let directorCast = data.movie_credits.cast.map( (film) => {
             return {
-                id: film.id,
+                _id: film.id,
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
                 character: film.character,
@@ -591,7 +591,7 @@ exports.getDirectorInfo = async (req, res) => {
 
         let directorCrew = data.movie_credits.crew.map( (film) => {
             return {
-                id: film.id,
+                _id: film.id,
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
                 job: film.job,

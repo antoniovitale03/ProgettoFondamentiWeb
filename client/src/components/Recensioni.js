@@ -37,7 +37,7 @@ function Recensioni(){
             <h1>Hai recensito {filmReviews.length} film</h1>
                 { [...filmReviews].reverse().map((review) =>
                         <ReviewCard review={review}/>
-                    )}
+                )}
         </div>
     )
 }

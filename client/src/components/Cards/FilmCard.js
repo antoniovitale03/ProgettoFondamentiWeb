@@ -1,4 +1,4 @@
-import {Box, Button, Rating, Stack} from "@mui/material";
+import {Box, Button, Card, CardContent, CardMedia, Rating, Stack} from "@mui/material";
 import {NavLink, useNavigate, Link} from "react-router-dom";
 import * as React from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -11,38 +11,36 @@ function FilmCard({ film }){
 
 
     return(
-       <Box sx={{ marginBottom: '70px' }}>
-           <Stack spacing={3}>
-               <p>
-                   <Button component={Link} to={`/film/${title}/${film._id}`}><strong>{film.title}</strong>
-                   </Button>
-                   {film.release_year ?
-                       <Button component={Link} to={`/films/${film.release_year}/page/1`}><strong>({film.release_year}) </strong></Button> : null
-                   }
-               </p>
+        <Card style={{ marginBottom: '20px' }}>
+            <CardContent>
+                <p>
+                    <Button component={Link} to={`/film/${title}/${film._id}`}>
+                        <strong>{film.title}</strong>
+                    </Button>
+                    {film.release_year ?
+                        <Button component={Link} to={`/films/${film.release_year}/page/1`}><strong>({film.release_year}) </strong></Button> : null
+                    }
+                </p>
+                <CardMedia component="img" image={film.poster_path} onClick={() => navigate(`/film/${title}/${film._id}`)} alt="Locandina film"/>
+                { film.director ? <p>Diretto da: <Button to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
+                        <strong>{film.director.name}</strong>
+                    </Button></p>
+                    : null }
 
+                {film.date ? <p>Data della visione: {film.date}</p> : null}
 
-               <img onClick={() => navigate(`/film/${title}/${film._id}`)} src={film.poster_path} alt="Locandina film"/>
+                { film.job ? <p>Ruolo: {film.job}</p> : null }
 
-               { film.director ? <p>Diretto da: <Button to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
-                       <strong>{film.director.name}</strong>
-                                 </Button></p>
-                                 : null }
+                <p>
+                    { film.rating === null ? null :
+                        film.rating === undefined ? null :
+                            <Rating name="rating" value={film.rating} precision={0.5} readOnly />
+                    }
 
-               {film.date ? <p>Data della visione: {film.date}</p> : null}
-
-               { film.job ? <p>Ruolo: {film.job}</p> : null }
-
-               <p>
-               { film.rating === null ? null :
-                 film.rating === undefined ? null :
-                     <Rating name="rating" value={film.rating} precision={0.5} readOnly />
-               }
-
-               { film.isLiked === true ? <ThumbUpIcon /> : null }
-               </p>
-           </Stack>
-       </Box>
+                    { film.isLiked === true ? <ThumbUpIcon /> : null }
+                </p>
+            </CardContent>
+        </Card>
     )
 }
 export default FilmCard;

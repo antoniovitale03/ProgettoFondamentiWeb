@@ -88,7 +88,7 @@ function RegistrationPage() {
                     {error && <p className="error-message">{error}</p>}
 
                     {/*  Inserimento Dati */}
-                    {step === 1 && (<>
+                    {step === 1 ?
                         <Stack spacing={5}>
                             <FormControl>
                                 <InputLabel htmlFor="username">Nome Utente</InputLabel>
@@ -104,16 +104,15 @@ function RegistrationPage() {
                                 <InputLabel htmlFor="password">Password</InputLabel>
                                 <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
                             </FormControl>
-                        </Stack>
-
-                        </>)}
+                        </Stack>: null
+                    }
                     {/* --- Step 2: Inserimento Codice di Verifica --- */}
-                    {step === 2 && (<>
+                    {step === 2 ?
                             <FormControl>
                                 <InputLabel htmlFor="verificationCode">Codice di verifica</InputLabel>
                                 <Input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required/>
-                            </FormControl>
-                    </>)}
+                            </FormControl>: null
+                    }
 
                     {buttonState === 1 ? <Button type="submit" variant="contained">Registrati</Button> :
                     buttonState === 2 ? <Button loading variant="contained" loadingPosition="end">Verifica in corso</Button> :
@@ -122,10 +121,8 @@ function RegistrationPage() {
 
                 </form>
                 {successMessage && <p className="success-message">{successMessage}</p>}
-                {step === 1 && (<>
-                        <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p>
-                    </>
-                )}
+                {step === 1 ?
+                        <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p> : null}
             </div>
             <Footer />
             </div>
