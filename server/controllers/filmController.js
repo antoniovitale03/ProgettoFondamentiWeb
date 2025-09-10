@@ -447,6 +447,7 @@ exports.addToWatched = async (req, res) => {
                 release_year: film.release_year,
                 director: film.director,
                 poster_path: film.poster_path,
+                date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
             },
             {
                 upsert: true
@@ -519,6 +520,16 @@ exports.getActorInfo = async (req, res) => {
             }
         })
 
+        //lo ordino per anno di uscita
+        actorCast = [...actorCast].sort((a, b) => {
+            // Se b ha un anno e a no, b viene prima
+            if (b.release_year === "N/A") return -1;
+            if (a.release_year === "N/A") return 1;
+
+            // Ordina numericamente in modo decrescente
+            return b.release_year - a.release_year; //se è positivo, mette a prima di b; altrimento mette b prima di a
+        });
+
 
         //film in cui ha partecipato con un ruolo tecnico (sceneggiatore, scrittore, ecc...)
         let actorCrew = data.movie_credits.crew.map( (film) => {
@@ -530,6 +541,15 @@ exports.getActorInfo = async (req, res) => {
                 poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
             }
         })
+
+        actorCrew = [...actorCrew].sort((a, b) => {
+            if (b.release_year === "N/A") return -1;
+            if (a.release_year === "N/A") return 1;
+
+            return b.release_year - a.release_year;
+        })
+
+
 
         const actorInfo = {
             personalInfo: actorPersonalInfo,

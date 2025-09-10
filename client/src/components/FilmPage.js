@@ -13,6 +13,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import DropDownMenu from './DropDownMenu';
 import * as React from "react";
@@ -23,6 +24,7 @@ function FilmPage(){
 
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
+    filmTitle = filmTitle.replaceAll("-", " ");
 
     useDocumentTitle(filmTitle.replaceAll("-", " "));
     const navigate = useNavigate();
@@ -46,7 +48,7 @@ function FilmPage(){
 
     const addReview = async () => {
         await saveReview(film.title, film.release_year, review, reviewRating);
-        showNotification(`La recensione di ${film.title}" è stata salvata correttamente!`)
+        showNotification(`La recensione di ${filmTitle}" è stata salvata correttamente!`)
         navigate(`/film/${filmTitle}/${filmID}`);
         setReviewButton(0);
     }
@@ -70,7 +72,7 @@ function FilmPage(){
         setWatchlistButton(1);
         try{
             await api.delete(`http://localhost:5001/api/films/remove-from-watchlist/${filmID}`)
-            showNotification(`${filmTitle.replaceAll("-", " ")} è stato rimosso dalla watchlist`, "success")
+            showNotification(`${filmTitle} è stato rimosso dalla watchlist`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -224,7 +226,7 @@ function FilmPage(){
 
     if(!film){
         return(
-            <div>Caricamento del film....</div>
+            <div>Caricamento del film...</div>
         )
     }
     return (
@@ -233,10 +235,14 @@ function FilmPage(){
             <img src={film.backdrop_path} alt="Immagine in background del film"/>
             <p>Locandina del film</p>
             <img src={film.poster_path} alt="Locandina del film" />
-            <p>{film.title} {film.release_year} Diretto da <NavLink to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>{film.director.name}</NavLink></p>
+            <p>{film.title} {film.release_year} Diretto da
+                <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
+                <strong>{film.director.name}</strong>
+                </Button>
+            </p>
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
-            <div>
+            <div style={{ display:"flex", flexDirection: 'row' }}>
                 <Button component={Link} to={`/film/${filmTitle}/cast`} state={{ cast: film.cast}} >
                 Cast
                 </Button>
@@ -261,6 +267,11 @@ function FilmPage(){
             </div> : null
             }
 
+            <div style={{ textAlign: 'center' }}>
+
+            </div>
+
+            <div>
             {watchlistButton === 1 ?
                 <Button onClick={addToWatchlist}>
                 <AccessTimeIcon />
@@ -315,8 +326,16 @@ function FilmPage(){
                     <p>Rimuovi dai film visti</p>
                 </Button>
             }
-        </Box>
 
+            {/* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte*/}
+            {watchedButton === 0 ?
+            <Button onClick={addToWatched}>
+                <VisibilityIcon />
+                <p>L'ho rivisto di nuovo</p>
+            </Button>: null
+            }
+            </div>
+        </Box>
     )
 }
 

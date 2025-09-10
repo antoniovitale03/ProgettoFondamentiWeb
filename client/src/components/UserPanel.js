@@ -37,11 +37,10 @@ function UserPanel() {
                      <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
                      <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
   return (
-      <Box style={{display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
+      <Box>
           <Header />
           {/*Questa dice all'area main di crescere e occupare tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
-          <Container style={{flexGrow: 1}}>
-              <Box>
+          <Container style={{flexGrow: 1, maxWidth: '98%'}}>
                   <Routes>
                       <Route path="/" element={<Home/>} />
                       <Route path="/profile" element={<Profile />} />
@@ -69,9 +68,7 @@ function UserPanel() {
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/help" element={<Help />} />
-
                   </Routes>
-              </Box>
           </Container>
           <Footer />
       </Box>

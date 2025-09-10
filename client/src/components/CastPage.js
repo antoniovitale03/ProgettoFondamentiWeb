@@ -1,6 +1,7 @@
 import {useLocation, useParams} from "react-router-dom";
-import ActorCard from "./ActorCard"
+import ActorCard from "./Cards/ActorCard"
 import useDocumentTitle from "./useDocumentTitle";
+import {Grid} from "@mui/material";
 // /films/filmTitle/filmID/cast
 function CastPage(){
     const {filmTitle} = useParams()
@@ -12,7 +13,15 @@ function CastPage(){
     return(
         <div>
             <h1>Cast di "{filmTitle}" ( {cast.length} attori )</h1>
-            {cast.map( (actor) => <ActorCard key={actor.id} actor={actor} />)}
+            <Grid container spacing={7}>
+
+                {cast.map((actor) =>
+                    <Grid item key={actor.id} xs={12} sm={6} md={4}>
+                        <ActorCard key={actor.id} actor={actor}/>
+                    </Grid>
+
+                )}
+            </Grid>
         </div>
         )
 }

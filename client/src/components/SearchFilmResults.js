@@ -1,5 +1,5 @@
 import {useFilm} from "../context/filmContext";
-import FilmCard from "./FilmCard";
+import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./useDocumentTitle";
 import {useParams} from "react-router-dom";
 import {Grid} from "@mui/material";

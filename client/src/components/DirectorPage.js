@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import FilmCard from "./FilmCard";
+import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./useDocumentTitle";
 function DirectorPage() {
     let { directorName } = useParams();

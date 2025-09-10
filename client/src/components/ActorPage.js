@@ -2,9 +2,12 @@ import useDocumentTitle from "./useDocumentTitle";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useFilm} from "../context/filmContext"
-import FilmCard from "./FilmCard";
+import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
+import CrewMemberCard from "./Cards/CrewMemberCard";
+import {Grid} from "@mui/material";
+import ActorCard from "./Cards/ActorCard";
 function ActorPage() {
     let { actorName } = useParams()
     let { actorID } = useParams()
@@ -39,11 +42,23 @@ function ActorPage() {
             <p>Biografia: {actorInfo.personalInfo?.biography}</p>
 
             <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore ({actorInfo?.cast?.length})</h1>
-            { actorInfo.cast?.map( (film) => <FilmCard key={film.id} film={film} /> )  }
+
+            <Grid container spacing={7}>
+                {actorInfo.cast?.map(film =>
+                    <Grid item key={film.id} xs={12} sm={6} md={4}>
+                        <FilmCard key={film.id} film={film} />
+                    </Grid>
+                )}
+            </Grid>
 
             <h1>Lista dei film in cui {actorInfo.personalInfo?.name} ha svolto un ruolo tecnico ({actorInfo?.crew?.length}) </h1>
-            { actorInfo.crew?.map( (film) => <FilmCard key={film.id} film={film} /> ) }
-
+            <Grid container spacing={7}>
+                {actorInfo.crew?.map(film =>
+                    <Grid item key={film.id} xs={12} sm={6} md={4}>
+                        <FilmCard key={film.id} film={film} />
+                    </Grid>
+                )}
+            </Grid>
 
         </div>
 

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import FilmCard from "./FilmCard";
+import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Grid} from "@mui/material";

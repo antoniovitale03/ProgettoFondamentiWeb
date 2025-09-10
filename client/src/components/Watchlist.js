@@ -1,6 +1,6 @@
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
-import FilmCard from "./FilmCard";
+import FilmCard from "./Cards/FilmCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Grid} from "@mui/material";

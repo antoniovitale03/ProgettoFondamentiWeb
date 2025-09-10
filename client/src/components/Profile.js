@@ -4,8 +4,8 @@ import {Avatar, Button, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import FilmCard from "./FilmCard";
-import ReviewCard from "./ReviewCard";
+import FilmCard from "./Cards/FilmCard";
+import ReviewCard from "./Cards/ReviewCard";
 
 function Profile(){
     const {user} = useAuth();
