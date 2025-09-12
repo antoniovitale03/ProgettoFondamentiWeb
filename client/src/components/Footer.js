@@ -1,27 +1,36 @@
 import {NavLink} from "react-router-dom";
 import "../CSS/header-footer.css";
-import {Container, Box} from "@mui/material";
+import {Container, Box, Button} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import XIcon from '@mui/icons-material/X';
 import {Link} from "react-router-dom";
 
 
 function Footer() {
 
     let footerItems = [
-        <NavLink to="/about">About</NavLink>,
-        <NavLink to="/contact">Contact</NavLink>,
-        <NavLink to="/help">Help</NavLink>,
-        <Link to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
+        <Button component={Link} to="/about">About</Button>,
+        <Button component={Link} to="/contact">Contact</Button>,
+        <Button component={Link} to="/help">Help</Button>,
+        <Button component={Link} to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
             <GitHubIcon />
-        </Link>,
-        <Link to="link di LinkedIn" target="_blank" rel="noreferrer">
+        </Button>,
+        <Button component={Link} to="link di LinkedIn" target="_blank" rel="noreferrer">
             <LinkedInIcon />
-        </Link>,
-        <Link to="link di Instagram" target="_blank" rel="noreferrer">
+        </Button>,
+        <Button component={Link} to="link di Instagram" target="_blank" rel="noreferrer">
             <InstagramIcon />
-        </Link>
+        </Button>,
+        <Button component={Link} to="link di Facebook" target="_blank" rel="noreferrer">
+            <FacebookIcon />
+        </Button>,
+        <Button component={Link} to="link di X" target="_blank" rel="noreferrer">
+            <XIcon />
+        </Button>
+
     ]
 
     return (

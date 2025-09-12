@@ -14,6 +14,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import DropDownMenu from './DropDownMenu';
 import * as React from "react";
@@ -24,9 +25,8 @@ function FilmPage(){
 
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
-    filmTitle = filmTitle.replaceAll("-", " ");
 
-    useDocumentTitle(filmTitle.replaceAll("-", " "));
+    useDocumentTitle(filmTitle.replaceAll(" ", "-"));
     const navigate = useNavigate();
 
     const {showNotification} = useNotification();
@@ -251,6 +251,11 @@ function FilmPage(){
             </p>
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
+            <Button component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
+                <YouTubeIcon />
+                <p>Trailer</p>
+            </Button>
+
             <div style={{ display:"flex", flexDirection: 'row' }}>
                 <Button component={Link} to={`/film/${filmTitle}/cast`} state={{ cast: film.cast}} >
                 Cast

@@ -1,51 +1,53 @@
 import {useEffect, useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
 import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import {useParams, useNavigate} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
+import {useNotification} from "../context/notificationContext"
+import {Box, Button, Grid} from "@mui/material";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import FilmCard from "./Cards/FilmCard";
-import {Button, Grid} from "@mui/material";
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
-function FilmsByYear(){
-    let {year, pageNumber} = useParams();
-    pageNumber = parseInt(pageNumber);
-    useDocumentTitle(`Film usciti nel ${year}`);
+function TopRatedFilms() {
+    useDocumentTitle("Film più acclamati");
 
     const {showNotification} = useNotification();
-    const navigate = useNavigate();
+    let {pageNumber} = useParams()
+    pageNumber = parseInt(pageNumber);
+    const navigate = useNavigate()
 
-    const [films, setFilms] = useState([]); // Per salvare l'elenco dei film
-    const [totalPages, setTotalPages] = useState(0); // Per il numero totale di pagine
+    const [films, setFilms] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+
 
     useEffect( () => {
-        async function fetchFilmsByYear(){
+        async function fetchTopRatedFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/${year}/page/${pageNumber}`); //caricamento paginato dei film
+                const response = await api.get(`http://localhost:5001/api/films/get-top-rated-films/page/${pageNumber}`);
                 let data = response.data;
-                setFilms(data.films);
+                setFilms(data.topRatedFilms);
                 setTotalPages(data.totalPages);
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error");
             }
-        }
-        fetchFilmsByYear();
-    });
 
-    const setNextPage = () => {
-        navigate(`/films/${year}/page/${pageNumber + 1}`);
-    };
+        }
+        fetchTopRatedFilms();
+    })
 
     const setPreviousPage = () => {
-        navigate(`/films/${year}/page/${pageNumber - 1}`);
-    };
+        navigate(`/films/top-rated-films/page/${pageNumber - 1}`)
+    }
+
+    const setNextPage = () => {
+        navigate(`/films/top-rated-films/page/${pageNumber + 1}`)
+    }
 
     return(
-        <div>
-            <h1>Sono usciti {films?.length * totalPages} film nel {year} </h1>
+        <Box>
+            <h1>Film più acclamati</h1>
 
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center'}}>
                 <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
                     <KeyboardArrowLeftIcon />
                 </Button>
@@ -59,10 +61,11 @@ function FilmsByYear(){
             <Grid container spacing={7}>
                 { films?.map( film =>
                     <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
-                    <FilmCard key={film._id} film={film} />
+                        <FilmCard key={film._id} film={film} />
                     </Grid>
                 )}
             </Grid>
+
             <div style={{ textAlign: 'center' }}>
                 <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
                     <KeyboardArrowLeftIcon />
@@ -74,7 +77,8 @@ function FilmsByYear(){
                 <p>pagina {pageNumber}</p>
             </div>
 
-        </div>
+        </Box>
     )
 }
-export default FilmsByYear;
+
+export default TopRatedFilms;

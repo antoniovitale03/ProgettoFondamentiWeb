@@ -1,6 +1,6 @@
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import ReviewCard from "./Cards/ReviewCard";
 import {useNotification} from "../context/notificationContext";
@@ -33,12 +33,17 @@ function Recensioni(){
         </Typography>;
     }
     return (
-        <div>
+        <Box sx={{ width: '90%' }}>
             <h1>Hai recensito {filmReviews.length} film</h1>
+            <Grid container spacing={2}>
                 { [...filmReviews].reverse().map((review) =>
-                        <ReviewCard review={review}/>
+                    <Grid item key={review._id} size={6}>
+                    <ReviewCard review={review}/>
+                    </Grid>
                 )}
-        </div>
+            </Grid>
+
+        </Box>
     )
 }
 

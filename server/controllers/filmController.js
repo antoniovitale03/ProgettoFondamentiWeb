@@ -17,8 +17,166 @@ async function getFilmDirector(filmID) {
     return director;
 }
 
+//richieste paginate
+async function getCurrentPopularFilms(pageNumber){
+    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
+    const data = await response.json();
+    const currentPopularFilms = data.results.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+        }
+    })
+    return {
+        currentPopularFilms: currentPopularFilms,
+        totalPages: data.total_pages
+    }
+}
+
+async function getUpcomingFilms(pageNumber){
+    const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.API_KEY_TMDB}&language=it-IT&region=IT&page=${pageNumber}`);
+    const data = await response.json();
+    const upComingFilms = data.results.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+        }
+    })
+    return {
+        upcomingFilms: upComingFilms,
+        totalPages: data.total_pages
+    }
+}
+
+async function getTopRatedFilms(pageNumber){
+    const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY_TMDB}&language=it-IT&page=${pageNumber}`);
+    const data = await response.json();
+    const topRatedFilms = data.results.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+        }
+    })
+    return {
+        topRatedFilms: topRatedFilms,
+        totalPages: data.total_pages
+    }
+}
+
+async function getNowPlayingFilms(pageNumber){
+    const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.API_KEY_TMDB}&language=it-IT&region=IT&page=${pageNumber}`);
+    const data = await response.json();
+    const nowPlayingFilms = data.results.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+        }
+    })
+    return {
+        nowPlayingFilms: nowPlayingFilms,
+        totalPages: data.total_pages
+    }
+}
+
+async function getTrendingFilms(pageNumber){
+    const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY_TMDB}&language=it-IT`);
+    const data = await response.json();
+    const trendingFilms = data.results.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+        }
+    })
+    return {
+        trendingFilms: trendingFilms,
+        totalPages: data.totalPages
+    }
+}
+
+//le richieste sono paginate (prendo solo la prima pagina massimo 20 film da mostrare nel carosello).
+exports.getHomePageFilmsInfo = async (req, res) => {
+    try{
+
+        const currentPopularFilmsObj = await getCurrentPopularFilms("1");
+        const upcomingFilmsObj = await getUpcomingFilms("1");
+        const topRatedFilmsObj = await getTopRatedFilms("1");
+        const nowPlayingFilmsObj = await getNowPlayingFilms("1");
+        const trendingFilmsObj = await getTrendingFilms("1");
+
+        //le informazioni mostrate nei caroselli fanno riferimento solo alla prima pagina
+        const homePageFilms = {
+            currentPopularFilms: currentPopularFilmsObj.currentPopularFilms,
+            upcomingFilms: upcomingFilmsObj.upcomingFilms,
+            topRatedFilms: topRatedFilmsObj.topRatedFilms,
+            nowPlayingFilms: nowPlayingFilmsObj.nowPlayingFilms,
+            trendingFilms: trendingFilmsObj.trendingFilms
+        }
+        res.status(200).json(homePageFilms);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+}
+
+//funzioni utilizzate per mostrare i film più nel dettaglio nella singola componente, in base al numero di pagina
+exports.getAllCurrentPopularFilms = async (req, res) => {
+    const {pageNumber} = req.params;
+    try{
+        const currentPopularFilmsObj = await getCurrentPopularFilms(pageNumber);
+        res.status(200).json(currentPopularFilmsObj);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+}
+
+exports.getAllUpcomingFilms = async (req, res) => {
+    const {pageNumber} = req.params;
+    try{
+        const upcomingFilmsObj = await getUpcomingFilms(pageNumber);
+        res.status(200).json(upcomingFilmsObj);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+}
+
+exports.getAllTopRatedFilms = async (req, res) => {
+    const {pageNumber} = req.params;
+    try{
+        const topRatedFilms = await getTopRatedFilms(pageNumber);
+        res.status(200).json(topRatedFilms);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+}
+
+exports.getAllNowPlayingFilms = async (req, res) => {
+    const {pageNumber} = req.params;
+    try{
+        const nowPlayingFilmsObj = await getNowPlayingFilms(pageNumber);
+        res.status(200).json(nowPlayingFilmsObj);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+
+}
+
+exports.getAllTrendingFilms = async (req, res) => {
+    const {pageNumber} = req.params;
+    try{
+        const trendingFilmsObj = await getTrendingFilms(pageNumber);
+        res.status(200).json(trendingFilmsObj);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+}
+
 //ottieni i risultati di ricerca di un film (array di oggetti film)
 //N.B per ogni film mostro solo locandina, titolo, data di uscita e regista
+
 exports.getFilmsFromSearch = async (req, res) => {
     const { title } = req.body;
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY_TMDB}&query=${title}`);
@@ -43,6 +201,10 @@ exports.getFilmsFromSearch = async (req, res) => {
     res.status(200).json(films);
 }
 
+exports.getArchiveFilms = async (req, res) => {
+    const {decade, genre, minRating} = req.body;
+    console.log(decade, genre, minRating);
+}
 exports.getFilmsByYear = async (req, res) => {
     try{
         const { year, page } = req.params;
@@ -51,10 +213,9 @@ exports.getFilmsByYear = async (req, res) => {
         let data = await response.json();
         data.results = data.results.map( film => {
             return {
-                ...film,
                 _id: film.id,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
-                release_year: null //questa informazione è ridondante
+                title: film.title,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
             }}
         )
         data = {films: data.results, totalPages: data.total_pages}
@@ -72,7 +233,7 @@ exports.getFilm = async (req, res) => {
     const filmID = parseInt(req.params.filmID);
     const userID = req.user.id;
 
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
+    let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
     let film = await response.json();
     //trovo il regista e modifico la data d'uscita
     const director = await getFilmDirector(filmID); //oppure film.id
@@ -100,6 +261,14 @@ exports.getFilm = async (req, res) => {
     let user = await User.findById(userID).populate('reviews');
     let review = user.reviews.find( (review) => review._id === filmID)
     let userRating = review !== undefined ? review.rating : null;
+
+    //trovo il link Youtube del trailer
+    response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/videos?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+    let data = await response.json();
+    let youtubeTrailerObj = data.results.find( video => video.site === 'YouTube' && video.type === 'Trailer' && video.name === 'Official Trailer');
+    let key = youtubeTrailerObj.key;
+    let youtubeTrailerLink = `https://www.youtube.com/watch?v=${key}`;
+
 
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
     let isInWatchlist = user.watchlist.find( (id) => id === filmID )
@@ -137,6 +306,7 @@ exports.getFilm = async (req, res) => {
         backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
         cast: cast,
         crew: crew,
+        trailerLink: youtubeTrailerLink,
         avgRating: avgRating,
         userRating: userRating,
         genres: film.genres,

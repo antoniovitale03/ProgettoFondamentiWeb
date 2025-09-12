@@ -24,6 +24,10 @@ import {Container, Box} from "@mui/material";
 import ModifyPassword from "./ModifyPassword";
 import ModifyAvatar from "./ModifyAvatar";
 import FilmsByYear from "./FilmsByYear";
+import CurrentPopularFilms from "./CurrentPopularFilms";
+import UpcomingFilms from "./UpcomingFilms";
+import TopRatedFilms from "./TopRatedFilms";
+import NowPlayingFilms from "./NowPlayingFilms";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
 
@@ -61,9 +65,15 @@ function UserPanel() {
 
                       <Route path="/film/:filmTitle/cast" element={<CastPage />} />
                       <Route path="/film/:filmTitle/crew" element={<CrewPage />} />
-                      <Route path="/films/:year/page/:page" element={<FilmsByYear />} />
+                      <Route path="/films/:year/page/:pageNumber" element={<FilmsByYear />} />
                       <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
                       <Route path="/director/:directorName/:directorID" element={ <DirectorPage />} />
+
+                      { /* informazioni dei film mostrati nella homePage */}
+                      <Route path="/films/current-popular-films/page/:pageNumber" element={<CurrentPopularFilms />} />
+                      <Route path="/films/upcoming-films/page/:pageNumber" element={<UpcomingFilms />} />
+                      <Route path="/films/top-rated-films/page/:pageNumber" element={<TopRatedFilms />} />
+                      <Route path="/films/now-playing-films/page/:pageNumber" element={<NowPlayingFilms />} />
 
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />

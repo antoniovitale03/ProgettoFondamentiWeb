@@ -43,7 +43,7 @@ function ActorPage() {
 
             {actorInfo?.cast?.length !== 0 ?
                 <div>
-                <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore ({actorInfo?.cast?.length})</h1>
+                <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore/attrice ({actorInfo?.cast?.length})</h1>
 
                 <Grid container spacing={7}>
                     {actorInfo.cast?.map(film =>

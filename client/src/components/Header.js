@@ -16,6 +16,7 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useFilm} from "../context/filmContext";
 import * as React from "react";
+import {Link} from "react-router-dom";
 
 
 function Header() {
@@ -57,7 +58,7 @@ function Header() {
         <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />,
         <DropDownMenu buttonContent={user?.username} menuContent={userMenuItems}/>,
         <DropDownMenu buttonContent={<SettingsOutlinedIcon />} menuContent={settingsMenuItems}/>,
-        <NavLink to="/archivio">Archivio</NavLink>,
+        <Button component={Link} to="/archivio">Archivio</Button>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
             <Button variant="contained" onClick={handleSearch}>

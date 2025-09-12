@@ -36,7 +36,7 @@ function DirectorPage() {
 
             {director?.cast?.length !== 0 ?
                 <div>
-                    <h1>Lista dei film in cui {director.personalInfo?.name} ha performato come attore ({director?.cast?.length})</h1>
+                    <h1>Lista dei film in cui {director.personalInfo?.name} ha performato come attore/attrice ({director?.cast?.length})</h1>
                     <Grid container spacing={2}>
                         { director?.cast?.map((film) =>
                             <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>

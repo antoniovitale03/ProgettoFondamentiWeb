@@ -1,9 +1,17 @@
 const filmController = require("../controllers/filmController");
 const express = require("express");
-router = express.Router();
+const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 // /api/films
 
+
+router.get("/get-home-page-film-info", filmController.getHomePageFilmsInfo)
+router.get("/get-current-popular-films/page/:pageNumber", filmController.getAllCurrentPopularFilms)
+router.get("/get-upcoming-films/page/:pageNumber", filmController.getAllUpcomingFilms)
+router.get("/get-top-rated-films/page/:pageNumber", filmController.getAllTopRatedFilms)
+router.get("/get-now-playing-films/page/:pageNumber", filmController.getAllNowPlayingFilms)
+
+router.post("/get-archive-films", filmController.getArchiveFilms)
 router.post("/get-film-search-results", filmController.getFilmsFromSearch )
 router.get("/getFilm/:filmTitle/:filmID", authMiddleware.verifyJWT, filmController.getFilm)
 router.get("/:year/page/:page", authMiddleware.verifyJWT, filmController.getFilmsByYear)
