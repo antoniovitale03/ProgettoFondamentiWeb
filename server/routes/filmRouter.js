@@ -11,6 +11,8 @@ router.get("/get-upcoming-films/page/:pageNumber", filmController.getAllUpcoming
 router.get("/get-top-rated-films/page/:pageNumber", filmController.getAllTopRatedFilms)
 router.get("/get-now-playing-films/page/:pageNumber", filmController.getAllNowPlayingFilms)
 
+
+router.get("/get-all-genres", filmController.getAllGenres)
 router.post("/get-archive-films", filmController.getArchiveFilms)
 router.post("/get-film-search-results", filmController.getFilmsFromSearch )
 router.get("/getFilm/:filmTitle/:filmID", authMiddleware.verifyJWT, filmController.getFilm)

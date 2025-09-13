@@ -1,11 +1,9 @@
-import {useEffect, useState} from "react";
+import {React, useEffect, useState} from "react";
 import api from "../api";
 import {useParams, useNavigate} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
 import {useNotification} from "../context/notificationContext"
-import {Box, Button, Grid} from "@mui/material";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import {Box, Button, Grid, Pagination} from "@mui/material";
 import FilmCard from "./Cards/FilmCard";
 
 function TopRatedFilms() {
@@ -16,6 +14,7 @@ function TopRatedFilms() {
     pageNumber = parseInt(pageNumber);
     const navigate = useNavigate()
 
+    const [currentPage, setCurrentPage] = useState(1);
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
 
@@ -23,7 +22,7 @@ function TopRatedFilms() {
     useEffect( () => {
         async function fetchTopRatedFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-top-rated-films/page/${pageNumber}`);
+                const response = await api.get(`http://localhost:5001/api/films/get-top-rated-films/page/${currentPage}`);
                 let data = response.data;
                 setFilms(data.topRatedFilms);
                 setTotalPages(data.totalPages);
@@ -33,30 +32,25 @@ function TopRatedFilms() {
 
         }
         fetchTopRatedFilms();
-    })
+    }, [currentPage])
 
-    const setPreviousPage = () => {
-        navigate(`/films/top-rated-films/page/${pageNumber - 1}`)
-    }
 
-    const setNextPage = () => {
-        navigate(`/films/top-rated-films/page/${pageNumber + 1}`)
-    }
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+        window.scrollTo(0, 0);
+    };
+
 
     return(
         <Box>
             <h1>Film più acclamati</h1>
-
-            <div style={{ textAlign: 'center'}}>
-                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
-                    <KeyboardArrowLeftIcon />
-                </Button>
-
-                <Button onClick={setNextPage} variant="contained" color="primary" disabled={pageNumber >= totalPages}>
-                    <KeyboardArrowRightIcon />
-                </Button>
-                <p>pagina {pageNumber}</p>
-            </div>
+            <Pagination
+                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+            />
 
             <Grid container spacing={7}>
                 { films?.map( film =>
@@ -66,16 +60,13 @@ function TopRatedFilms() {
                 )}
             </Grid>
 
-            <div style={{ textAlign: 'center' }}>
-                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
-                    <KeyboardArrowLeftIcon />
-                </Button>
-
-                <Button onClick={setNextPage} variant="contained" color="primary" disabled={pageNumber >= totalPages}>
-                    <KeyboardArrowRightIcon />
-                </Button>
-                <p>pagina {pageNumber}</p>
-            </div>
+            <Pagination
+                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+            />
 
         </Box>
     )

@@ -1,10 +1,10 @@
-import {useEffect, useState} from "react";
+import {React, useEffect, useState} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import useDocumentTitle from "./useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
-import {Button, Grid} from "@mui/material";
+import {Button, Grid, Pagination} from "@mui/material";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
@@ -16,13 +16,15 @@ function FilmsByYear(){
     const {showNotification} = useNotification();
     const navigate = useNavigate();
 
+    const [currentPage, setCurrentPage] = useState(1);
     const [films, setFilms] = useState([]); // Per salvare l'elenco dei film
     const [totalPages, setTotalPages] = useState(0); // Per il numero totale di pagine
 
+    //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
         async function fetchFilmsByYear(){
             try{
-                const response = await api.get(`http://localhost:5001/api/films/${year}/page/${pageNumber}`); //caricamento paginato dei film
+                const response = await api.get(`http://localhost:5001/api/films/${year}/page/${currentPage}`); //caricamento paginato dei film
                 let data = response.data;
                 setFilms(data.films);
                 setTotalPages(data.totalPages);
@@ -31,30 +33,25 @@ function FilmsByYear(){
             }
         }
         fetchFilmsByYear();
-    });
+    }, [currentPage]);
 
-    const setNextPage = () => {
-        navigate(`/films/${year}/page/${pageNumber + 1}`);
-    };
 
-    const setPreviousPage = () => {
-        navigate(`/films/${year}/page/${pageNumber - 1}`);
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+        window.scrollTo(0, 0);
     };
 
     return(
         <div>
-            <h1>Sono usciti {films?.length * totalPages} film nel {year} </h1>
+            <h1>Film usciti nel {year} </h1>
 
-            <div style={{ textAlign: 'center' }}>
-                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
-                    <KeyboardArrowLeftIcon />
-                </Button>
-
-                <Button onClick={setNextPage} variant="contained" color="primary" disabled={pageNumber >= totalPages}>
-                    <KeyboardArrowRightIcon />
-                </Button>
-                <p>pagina {pageNumber}</p>
-            </div>
+            <Pagination
+                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+            />
 
             <Grid container spacing={7}>
                 { films?.map( film =>
@@ -63,16 +60,15 @@ function FilmsByYear(){
                     </Grid>
                 )}
             </Grid>
-            <div style={{ textAlign: 'center' }}>
-                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
-                    <KeyboardArrowLeftIcon />
-                </Button>
 
-                <Button onClick={setNextPage} variant="contained" color="primary" disabled={pageNumber >= totalPages}>
-                    <KeyboardArrowRightIcon />
-                </Button>
-                <p>pagina {pageNumber}</p>
-            </div>
+            <Pagination
+                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+            />
+
 
         </div>
     )

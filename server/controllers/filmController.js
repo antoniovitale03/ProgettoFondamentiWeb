@@ -174,6 +174,16 @@ exports.getAllTrendingFilms = async (req, res) => {
     }
 }
 
+
+exports.getAllGenres = async (req, res) => {
+    try{
+        const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+        const data = await response.json();
+        res.status(200).json(data.genres);
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
+}
 //ottieni i risultati di ricerca di un film (array di oggetti film)
 //N.B per ogni film mostro solo locandina, titolo, data di uscita e regista
 
@@ -202,8 +212,42 @@ exports.getFilmsFromSearch = async (req, res) => {
 }
 
 exports.getArchiveFilms = async (req, res) => {
-    const {decade, genre, minRating} = req.body;
-    console.log(decade, genre, minRating);
+    try{
+        const { params } = req.body;
+        let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${params.page}`;
+        if (params.sortBy){
+            url += `&sortBy=${params.sortBy}`;
+        }
+        if (params.genre){
+            url += `&with_genres=${params.genre}`;
+        }
+
+        // La decade deve essere tradotta in un intervallo di date
+        if(params.decade){
+            //calcolo il primo e ultimo anno della decade (es. 1980s va da 1980 a 1989).
+            let firstYear = parseInt(params.decade);
+            let lastYear = firstYear + 9;
+            url += `&primary_release_date.gte=${firstYear}-01-01`;
+            url += `&primary_release_date.lte=${lastYear}-12-31`;
+        }
+        const response = await fetch(url);
+        let data = await response.json();
+
+        const films = data.results.map(film => {
+            return {
+                _id: film.id, title: film.title,
+                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : 'N/A'
+            }
+        })
+
+        res.status(200).json({
+            films: films,
+            totalPages: data.total_pages
+        });
+    }catch(error){
+        res.status(500).json("Errore interno del server");
+    }
 }
 exports.getFilmsByYear = async (req, res) => {
     try{

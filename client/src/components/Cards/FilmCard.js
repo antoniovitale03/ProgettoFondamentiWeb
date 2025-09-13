@@ -18,10 +18,12 @@ function FilmCard({ film }){
                         <strong>{film.title}</strong>
                     </Button>
                     {film.release_year ?
-                        <Button component={Link} to={`/films/${film.release_year}/page/1`}><strong>({film.release_year}) </strong></Button> : null
+                        <Button component={Link} to={`/films/${film.release_year}`}><strong>({film.release_year}) </strong></Button> : null
                     }
                 </p>
-                <CardMedia component="img" image={film.poster_path} onClick={() => navigate(`/film/${title}/${film._id}`)} alt="Locandina film"/>
+                <Button component={Link} to={`/film/${title}/${film._id}`}>
+                    <CardMedia component="img" image={film.poster_path} />
+                </Button>
                 { film.director ? <p>Diretto da: <Button to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
                         <strong>{film.director.name}</strong>
                     </Button></p>

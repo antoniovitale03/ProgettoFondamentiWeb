@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import {React, useEffect, useState} from "react";
 import api from "../api";
 import {useParams, useNavigate} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
 import {useNotification} from "../context/notificationContext"
-import {Box, Button, Grid} from "@mui/material";
+import {Box, Button, Grid, Pagination} from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import FilmCard from "./Cards/FilmCard";
@@ -18,12 +18,13 @@ function CurrentPopularFilms() {
 
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
 
 
     useEffect( () => {
         async function fetchCurrentPopularFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-current-popular-films/page/${pageNumber}`);
+                const response = await api.get(`http://localhost:5001/api/films/get-current-popular-films/page/${currentPage}`);
                 let data = response.data;
                 setFilms(data.currentPopularFilms);
                 setTotalPages(data.totalPages);
@@ -33,30 +34,24 @@ function CurrentPopularFilms() {
 
         }
         fetchCurrentPopularFilms();
-    }, [])
+    }, [currentPage]);
 
-    const setPreviousPage = () => {
-        navigate(`/films/current-popular-films/page/${pageNumber - 1}`)
-    }
-
-    const setNextPage = () => {
-        navigate(`/films/current-popular-films/page/${pageNumber + 1}`)
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+        window.scrollTo(0, 0);
     }
 
     return(
         <Box>
             <h1>Film popolari del momento</h1>
 
-            <div style={{ textAlign: 'center' }}>
-                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
-                    <KeyboardArrowLeftIcon />
-                </Button>
-
-                <Button onClick={setNextPage} variant="contained" color="primary" disabled={pageNumber >= totalPages}>
-                    <KeyboardArrowRightIcon />
-                </Button>
-                <p>pagina {pageNumber}</p>
-            </div>
+            <Pagination
+                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+            />
 
             <Grid container spacing={7}>
                 { films?.map( film =>
@@ -66,16 +61,6 @@ function CurrentPopularFilms() {
                 )}
             </Grid>
 
-            <div style={{ textAlign: 'center' }}>
-                <Button onClick={setPreviousPage} variant="contained" color="primary" disabled={pageNumber === 1}>
-                    <KeyboardArrowLeftIcon />
-                </Button>
-
-                <Button onClick={setNextPage} variant="contained" color="primary" disabled={pageNumber >= totalPages}>
-                    <KeyboardArrowRightIcon />
-                </Button>
-                <p>pagina {pageNumber}</p>
-            </div>
 
         </Box>
     )

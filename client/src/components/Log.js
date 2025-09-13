@@ -6,7 +6,7 @@ import {
     FormControl,
     Input,
     InputLabel,
-    MenuItem, Rating,
+    MenuItem, Rating, Select,
     Stack,
     TextField,
     Typography
@@ -65,20 +65,14 @@ function Log(){
 
 
                        <FormControl>
-                           <TextField
-                               select
-                               fullWidth // Occupa tutta la larghezza del contenitore
-                               label="Anno di uscita"
-                               value={releaseYear}
-                               onChange={(e) => setReleaseYear(e.target.value)}
-                               variant="standard" // Per avere solo la linea sotto, come nella tua immagine
-                           >
+                           <InputLabel>Anno di uscita</InputLabel>
+                           <Select name="Anno di uscita" value={releaseYear} label="Anno di uscita" onChange={(e) => setReleaseYear(e.target.value)} variant="standard">
                                {years.map((year) => (
                                    <MenuItem key={year} value={year}>
                                        {year}
                                    </MenuItem>
                                ))}
-                           </TextField>
+                           </Select>
                        </FormControl>
 
                        <FormControl>

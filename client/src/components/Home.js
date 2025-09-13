@@ -47,18 +47,18 @@ function Home(){
                 alt="esempio"
                 />
             </Card>
-             </Box>
+            </Box>
 
 
-            {homePageFilms?.currentPopularFilms ? <Carosello films={homePageFilms?.currentPopularFilms} title="I film più popolari del momento" link={"/films/current-popular-films/page/1"}/> : null}
+            {homePageFilms?.currentPopularFilms ? <Carosello films={homePageFilms?.currentPopularFilms} title="I film più popolari del momento" link={"/films/current-popular-films"}/> : null}
 
-            {homePageFilms?.upcomingFilms ? <Carosello films={homePageFilms?.upcomingFilms} title="Film in uscita in Italia" link={"/films/upcoming-films/page/1"}/> : null}
+            {homePageFilms?.upcomingFilms ? <Carosello films={homePageFilms?.upcomingFilms} title="Film in uscita in Italia" link={"/films/upcoming-films"}/> : null}
 
-            {homePageFilms?.topRatedFilms ? <Carosello  films={homePageFilms?.topRatedFilms} title="Film più acclamati dalla critica" link={"/films/top-rated-films/page/1"}/> : null}
+            {homePageFilms?.topRatedFilms ? <Carosello  films={homePageFilms?.topRatedFilms} title="Film più acclamati dalla critica" link={"/films/top-rated-films"}/> : null}
 
-            {homePageFilms?.nowPlayingFilms ? <Carosello films={homePageFilms?.nowPlayingFilms} title="Film attualmente al cinema" link={"/films/now-playing-films/page/1"} /> : null}
+            {homePageFilms?.nowPlayingFilms ? <Carosello films={homePageFilms?.nowPlayingFilms} title="Film attualmente al cinema" link={"/films/now-playing-films"} /> : null}
 
-            {homePageFilms?.trendingFilms ? <Carosello films={homePageFilms?.trendingFilms} title="Film in tendenza questa settimana" /> : null}
+            {homePageFilms?.trendingFilms ? <Carosello films={homePageFilms?.trendingFilms} title="Film in tendenza questa settimana" link={"/films/trending-films"}/> : null}
         </Box>
     )
 }
