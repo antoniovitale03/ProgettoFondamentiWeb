@@ -316,9 +316,10 @@ exports.getFilm = async (req, res) => {
     response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/videos?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
     let data = await response.json();
     let youtubeTrailerObj = data.results.find( video => video.site === 'YouTube' && video.type === 'Trailer');
-    let key = youtubeTrailerObj.key;
-    let youtubeTrailerLink = `https://www.youtube.com/watch?v=${key}`;
-
+    if (youtubeTrailerObj) {
+        let key = youtubeTrailerObj.key;
+        var youtubeTrailerLink = `https://www.youtube.com/watch?v=${key}`;
+    }
 
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
     let isInWatchlist = user.watchlist.find( (id) => id === filmID )
@@ -356,7 +357,7 @@ exports.getFilm = async (req, res) => {
         backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
         cast: cast,
         crew: crew,
-        trailerLink: youtubeTrailerLink,
+        trailerLink: youtubeTrailerLink ? youtubeTrailerLink : null,
         avgRating: avgRating,
         userRating: userRating,
         genres: film.genres,

@@ -253,10 +253,13 @@ function FilmPage(){
             </p>
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
-            <Button component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
-                <YouTubeIcon />
-                <p>Trailer</p>
-            </Button>
+            {film.trailerLink ?
+                <Button component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
+                    <YouTubeIcon />
+                    <p>Trailer</p>
+                </Button> : null
+            }
+
 
             <div style={{ display:"flex", flexDirection: 'row' }}>
                 <Button component={Link} to={`/film/${filmTitle}/cast`} state={{ cast: film.cast}} >

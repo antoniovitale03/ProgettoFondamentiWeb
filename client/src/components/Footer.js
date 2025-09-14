@@ -1,4 +1,3 @@
-import {NavLink} from "react-router-dom";
 import "../CSS/header-footer.css";
 import {Container, Box, Button} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
