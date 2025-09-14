@@ -6,11 +6,11 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 
 router.get("/get-home-page-film-info", authMiddleware.verifyJWT, filmController.getHomePageFilmsInfo)
-router.get("/get-current-popular-films/page/:pageNumber", filmController.getAllCurrentPopularFilms)
-router.get("/get-upcoming-films/page/:pageNumber", filmController.getAllUpcomingFilms)
-router.get("/get-top-rated-films/page/:pageNumber", filmController.getAllTopRatedFilms)
-router.get("/get-now-playing-films/page/:pageNumber", filmController.getAllNowPlayingFilms)
-router.get("/get-trending-films/page/:pageNumber", filmController.getAllTrendingFilms)
+router.get("/get-current-popular-films/page/:pageNumber", filmController.getCurrentPopularFilms)
+router.get("/get-upcoming-films/page/:pageNumber", filmController.getUpcomingFilms)
+router.get("/get-top-rated-films/page/:pageNumber", filmController.getTopRatedFilms)
+router.get("/get-now-playing-films/page/:pageNumber", filmController.getNowPlayingFilms)
+router.get("/get-trending-films/page/:pageNumber", filmController.getTrendingFilms)
 
 router.get("/get-similar/:filmID/:pageNumber", filmController.getSimilarFilms)
 router.get("/get-all-genres", filmController.getAllGenres)
