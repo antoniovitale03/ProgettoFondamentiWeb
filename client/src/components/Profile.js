@@ -1,6 +1,6 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle"
-import {Avatar, Button, Grid, Typography} from "@mui/material";
+import {Avatar, Box, Button, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -92,15 +92,15 @@ function Profile(){
 
 
             {filmsReviews.length > 0 ?
-                <div>
+                <Box sx={{ width: '90%' }}>
                     <h1>Ultime recensioni fatte (4): </h1>
-                    {<Grid container spacing={2}>
+                    <Grid container spacing={2}>
                         { [...filmsReviews].reverse().slice(0, 4).map((review) =>
-                            <Grid item key={review._id} xs={12} sm={6} md={4} lg={3}>
-                                <ReviewCard key={review._id} review={review}/>
+                            <Grid item key={review._id} size={6}>
+                                <ReviewCard review={review}/>
                             </Grid>)}
-                    </Grid>}
-                </div> : null
+                    </Grid>
+                </Box> : null
             }
 
         </div>

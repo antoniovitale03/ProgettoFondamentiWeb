@@ -1,20 +1,14 @@
 import {React, useEffect, useState} from "react";
 import api from "../api";
-import {useParams, useNavigate} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
 import {useNotification} from "../context/notificationContext"
-import {Box, Button, Grid, Pagination} from "@mui/material";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import {Box, Grid, Pagination} from "@mui/material";
 import FilmCard from "./Cards/FilmCard";
 
 function CurrentPopularFilms() {
     useDocumentTitle("Film più popolari del momento");
 
     const {showNotification} = useNotification();
-    let {pageNumber} = useParams()
-    pageNumber = parseInt(pageNumber);
-    const navigate = useNavigate()
 
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -26,8 +20,8 @@ function CurrentPopularFilms() {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-current-popular-films/page/${currentPage}`);
                 let data = response.data;
-                setFilms(data.currentPopularFilms);
-                setTotalPages(data.totalPages);
+                setFilms(data.results);
+                setTotalPages(data.total_pages);
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error");
             }
@@ -61,6 +55,13 @@ function CurrentPopularFilms() {
                 )}
             </Grid>
 
+            <Pagination
+                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+            />
 
         </Box>
     )

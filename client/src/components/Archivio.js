@@ -26,14 +26,15 @@ function Archivio(){
     const [totalPages, setTotalPages] = useState(0);
 
     const [genres, setGenres] = useState([]); // generi che vengono trovati solo al primo render del componente
-    const [minRating, setMinRating] = useState(0); // rating minimo inserito dall'utente
 
     const [archiveFilms, setArchiveFilms] = useState([]);
 
     //variabile di stato per gestire i filtri, inizialmente nulli
     const [filters, setFilters] = useState({
+        page: currentPage,
         genre: '', // Valore per "Tutti i Generi"
         decade: '', // Valore per "Tutte le Decadi"
+        minRating: 0,
         sortBy: '' // Valore di default per l'ordinamento
     });
 
@@ -60,6 +61,7 @@ function Archivio(){
                     page: currentPage,
                     genre: filters.genre,
                     decade: filters.decade,
+                    minRating: filters.minRating,
                     sortBy: filters.sortBy
                 };
 
@@ -77,6 +79,7 @@ function Archivio(){
         fetchArchiveFilms();
     }, [filters, currentPage]);
 
+    //Quando handleFilterChange viene chiamato, riceve il value del <MenuItem> selezionato, cioè l'ID (genre.id).
     const handleFilterChange = (event) => {
         const { name, value } = event.target;
         setFilters(prevFilters => ({
@@ -86,12 +89,21 @@ function Archivio(){
         setCurrentPage(1); // resetta la pagina quando un filtro cambia
     };
 
+    const handleRatingChange = (event, rating) => {
+        //modifico l'oggetto event per poterlo passare a handleFilterChange
+        const modifiedEvent = {
+            target: {
+                name: "minRating",
+                value: rating
+            }
+        };
+        handleFilterChange(modifiedEvent);
+    }
+
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
         window.scrollTo(0, 0);
     };
-
-
 
     return(
         <Box>
@@ -111,7 +123,7 @@ function Archivio(){
                 {genres.length > 0 ?
                     <FormControl sx={{ minWidth: 180 }}>
                         <InputLabel>Genere</InputLabel>
-                        <Select name="genre" value={filters.genre} label="Genere" onChange={handleFilterChange} variant="standard">
+                        <Select name="genre" value={filters.genre} label="Genere" onChange={(event, rating) => handleFilterChange(event, rating)} variant="standard">
                             {genres.map((genre, index) => (
                                 <MenuItem key={index} value={genre.id}>{genre.name}</MenuItem>
                             ))}
@@ -129,6 +141,11 @@ function Archivio(){
                     </Select>
                 </FormControl>
 
+                <FormControl sx={{ minWidth : 180}}>
+                    <Typography component="legend">Minimo Rating medio</Typography>
+                    <Rating name="minRating" value={filters.minRating} onChange={handleRatingChange} precision={0.5} />
+                </FormControl>
+
                 <FormControl sx={{ minWidth: 180 }}>
                     <InputLabel>Ordina per</InputLabel>
                     <Select name="sortBy" value={filters.sortBy} label="Ordina per" onChange={handleFilterChange} variant="standard">
@@ -136,6 +153,9 @@ function Archivio(){
                         <MenuItem value="popularity.asc">Dal meno popolare</MenuItem>
                     </Select>
                 </FormControl>
+
+
+
             </Box>
             {archiveFilms.length > 0 ?
                 (

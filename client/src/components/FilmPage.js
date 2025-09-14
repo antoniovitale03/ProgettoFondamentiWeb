@@ -238,11 +238,13 @@ function FilmPage(){
         <Box>
             <p>Immagine background del film</p>
             <img src={film.backdrop_path} alt="Immagine in background del film"/>
+
             <p>Locandina del film</p>
             <p>
                 <strong>{film.title}</strong>
-                <Button component={Link} to={`/films/${film.release_year}/page/1`}>( {film.release_year} )</Button>
+                <Button component={Link} to={`/films/${film.release_year}`}>( {film.release_year} )</Button>
             </p>
+
             <img src={film.poster_path} alt="Locandina del film" />
             <p>Diretto da
                 <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
@@ -349,6 +351,11 @@ function FilmPage(){
             </Button>: null
             }
             </div>
+
+            {/* mostro i film simili */}
+            <Button component={Link} to={`/film/${filmTitle}/${filmID}/similar`}>
+                Film simili a "{film.title}"
+            </Button>
         </Box>
     )
 }

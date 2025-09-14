@@ -1,44 +1,45 @@
+import {useParams} from "react-router-dom";
 import {React, useEffect, useState} from "react";
-import api from "../api";
 import useDocumentTitle from "./useDocumentTitle";
-import {useNotification} from "../context/notificationContext"
-import {Box, Button, Grid, Pagination} from "@mui/material";
+import {Box, Grid, Pagination} from "@mui/material";
+import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 
-function UpcomingFilms() {
-    useDocumentTitle("Film in uscita in Italia");
+function SimilarFilms(){
 
     const {showNotification} = useNotification();
+    const {filmTitle, filmID} = useParams();
+    useDocumentTitle(`Film simili a ${filmTitle}`);
 
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
 
-
-    useEffect( () => {
-        async function fetchUpComingFilms() {
+    useEffect(() => {
+        async function fetchSimilarFilms(){
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-upcoming-films/page/${currentPage}`);
-                let data = response.data;
+                const response = await fetch(`http://localhost:5001/api/films/get-similar/${filmID}/${currentPage}`);
+                const data = await response.json();
                 setFilms(data.results);
-                setTotalPages(data.total_pages);
+                setTotalPages(data.total_pages)
             }catch(error){
-                showNotification("Errore nel caricamento dei film", "error");
+                showNotification("Errore nel caricamento dei film simili", "error");
             }
 
         }
-        fetchUpComingFilms();
+        fetchSimilarFilms();
     }, [currentPage])
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
         window.scrollTo(0, 0);
-    };
-
+    }
 
     return(
         <Box>
-            <h1>Film in uscita in Italia</h1>
+            <h1>
+                Film simili a "{filmTitle.replaceAll("-", " ")}"
+            </h1>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
@@ -64,8 +65,9 @@ function UpcomingFilms() {
                 size="large"
             />
 
+
         </Box>
     )
 }
 
-export default UpcomingFilms;
+export default SimilarFilms;

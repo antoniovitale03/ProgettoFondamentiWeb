@@ -10,9 +10,6 @@ function TopRatedFilms() {
     useDocumentTitle("Film più acclamati");
 
     const {showNotification} = useNotification();
-    let {pageNumber} = useParams()
-    pageNumber = parseInt(pageNumber);
-    const navigate = useNavigate()
 
     const [currentPage, setCurrentPage] = useState(1);
     const [films, setFilms] = useState([]);
@@ -24,8 +21,8 @@ function TopRatedFilms() {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-top-rated-films/page/${currentPage}`);
                 let data = response.data;
-                setFilms(data.topRatedFilms);
-                setTotalPages(data.totalPages);
+                setFilms(data.results);
+                setTotalPages(data.total_pages);
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error");
             }
@@ -44,6 +41,7 @@ function TopRatedFilms() {
     return(
         <Box>
             <h1>Film più acclamati</h1>
+
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
                 page={currentPage}

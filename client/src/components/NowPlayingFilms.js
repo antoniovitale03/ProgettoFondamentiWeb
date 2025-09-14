@@ -4,17 +4,12 @@ import {useParams, useNavigate} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
 import {useNotification} from "../context/notificationContext"
 import {Box, Button, Grid, Pagination} from "@mui/material";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import FilmCard from "./Cards/FilmCard";
 
 function NowPlayingFilms() {
     useDocumentTitle("Film attualmente al cinema");
 
     const {showNotification} = useNotification();
-    let {pageNumber} = useParams()
-    pageNumber = parseInt(pageNumber);
-    const navigate = useNavigate()
 
     const [currentPage, setCurrentPage] = useState(1);
     const [films, setFilms] = useState([]);
@@ -26,8 +21,8 @@ function NowPlayingFilms() {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-now-playing-films/page/${currentPage}`);
                 let data = response.data;
-                setFilms(data.nowPlayingFilms);
-                setTotalPages(data.totalPages);
+                setFilms(data.results);
+                setTotalPages(data.total_pages);
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error");
             }

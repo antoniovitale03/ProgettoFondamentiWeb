@@ -9,12 +9,10 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 function FilmsByYear(){
-    let {year, pageNumber} = useParams();
-    pageNumber = parseInt(pageNumber);
+    let {year} = useParams();
     useDocumentTitle(`Film usciti nel ${year}`);
 
     const {showNotification} = useNotification();
-    const navigate = useNavigate();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [films, setFilms] = useState([]); // Per salvare l'elenco dei film
@@ -68,7 +66,6 @@ function FilmsByYear(){
                 color="primary"
                 size="large"
             />
-
 
         </div>
     )

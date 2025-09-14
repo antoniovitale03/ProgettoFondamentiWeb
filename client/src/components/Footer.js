@@ -39,7 +39,7 @@ function Footer() {
                 <Box>
                     <nav>
                         <ul>
-                            { footerItems.map( (footerItem) => <li>{footerItem}</li> ) }
+                            { footerItems.map( (footerItem, index) => <li key={index}>{footerItem}</li> ) }
                         </ul>
                     </nav>
                     <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>
