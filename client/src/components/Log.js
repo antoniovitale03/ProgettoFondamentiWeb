@@ -1,6 +1,5 @@
 import useDocumentTitle from "./useDocumentTitle";
 import {
-    Autocomplete,
     Box,
     Button,
     FormControl,
@@ -13,20 +12,18 @@ import {
 } from "@mui/material";
 import '../CSS/Form.css';
 import {React, useState} from "react";
-import {useFilm} from "../context/filmContext"
 import {useNotification} from "../context/notificationContext";
 import {NavLink} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
+import api from "../api";
 
 function Log(){
     useDocumentTitle("Log")
 
-    const [error, setError] = useState("");
     const [title, setTitle] = useState("");
-    const [releaseYear, setReleaseYear] = useState("");
+    const [release_year, setReleaseYear] = useState("");
     const [review, setReview] = useState("");
-    const [rating, setRating] = useState(0);
-    const {saveReview} = useFilm()
+    const [reviewRating, setReviewRating] = useState(0);
     const {showNotification} = useNotification();
     const navigate = useNavigate();
 
@@ -37,15 +34,16 @@ function Log(){
         years.push(year);
     }
 
-
     const handleLog = async (event) => {
         event.preventDefault();
         try{
-            await saveReview(title, releaseYear, review, rating);
+            await api.post('http://localhost:5001/api/films/reviews/add-review', {
+                title, release_year, review, reviewRating
+            })
             showNotification(`"La recensione di ${title}" è stata salvata correttamente!`)
-            navigate("/")
+            navigate("/");
         }catch(error){
-            setError(error.message);
+            showNotification(error.response.data, "error")
             setTitle("");
             setReleaseYear("");
         }
@@ -55,7 +53,6 @@ function Log(){
            <Box className="form-container">
                <form onSubmit={handleLog}>
                    <Typography component="h2">Aggiungi una recensione</Typography>
-                   {error && <Typography component="p" className="error-message">{error}</Typography>}
                    <Stack spacing={5}>
 
                        <FormControl>
@@ -66,7 +63,7 @@ function Log(){
 
                        <FormControl>
                            <InputLabel>Anno di uscita</InputLabel>
-                           <Select name="Anno di uscita" value={releaseYear} label="Anno di uscita" onChange={(e) => setReleaseYear(e.target.value)} variant="standard">
+                           <Select name="Anno di uscita" value={release_year} label="Anno di uscita" onChange={(e) => setReleaseYear(e.target.value)} variant="standard">
                                {years.map((year) => (
                                    <MenuItem key={year} value={year}>
                                        {year}
@@ -81,7 +78,7 @@ function Log(){
 
                        <FormControl>
                            <Typography component="p">Inserisci il rating</Typography>
-                           <Rating name="review-rating" value={rating} onChange={(event,rating) => setRating(rating)} precision={0.5} />
+                           <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
                        </FormControl>
                    </Stack>
 

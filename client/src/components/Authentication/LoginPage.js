@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import '../CSS/Form.css';
+import '../../CSS/Form.css';
 import {NavLink} from "react-router-dom";
-import Footer from "./Footer";
-import {useAuth} from "../context/authContext";
-import useDocumentTitle from "./useDocumentTitle";
+import Footer from "../Footer";
+import {useAuth} from "../../context/authContext";
+import useDocumentTitle from "../useDocumentTitle";
 import {Button, FormControl, InputLabel, Input, Stack, Box, Typography} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import api from "../../api";
+import {useNotification} from "../../context/notificationContext";
 // Il componente riceve una prop 'onLoginSuccess' dal suo genitore.
 // Questa è una funzione che verrà chiamata quando il login ha successo.
 function LoginPage() {

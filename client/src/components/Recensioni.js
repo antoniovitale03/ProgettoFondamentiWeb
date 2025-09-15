@@ -15,7 +15,7 @@ function Recensioni(){
     useEffect(() => {
         const fetchReviews = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-reviews');
+                const response = await api.get('http://localhost:5001/api/films/reviews/get-reviews');
                 const reviews = await response.data;
                 setFilmReviews(reviews); // Salviamo i film nello stato
             }catch(error){

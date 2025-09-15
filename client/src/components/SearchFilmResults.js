@@ -1,18 +1,30 @@
-import {useFilm} from "../context/filmContext";
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./useDocumentTitle";
 import {useParams} from "react-router-dom";
-import {Grid} from "@mui/material";
+import {Box, Grid} from "@mui/material";
+import {useEffect, useState} from "react";
+import api from "../api";
 //questo componente serve a mostrare i risultati di ricerca di un film
 function SearchFilmResults() {
 
     let {filmTitle} = useParams();
     filmTitle = filmTitle.replaceAll("-", " ");
-    const {filmsFromSearch} = useFilm();
     useDocumentTitle(`Mostra risultati per ${filmTitle}`);
+
+    const [filmsFromSearch, setFilmsFromSearch] = useState([]);
+
+    useEffect( () => {
+        async function fetchSearchResults(){
+            const response = await api.post('http://localhost:5001/api/films/get-film-search-results', { filmTitle });
+            let films = await response.data;
+            setFilmsFromSearch(films);
+        }
+        fetchSearchResults();
+    }, [filmTitle]) // eseguo l'effetto ogni volta che cambia la query di ricerca
+
     return(
-        <div>
-            {filmsFromSearch.length === 0 ? <p>Nessun film trovato</p> :
+        <Box>
+            {filmsFromSearch ?
                 <div>
                     <p>Risultati di ricerca per "<strong>{filmTitle}</strong>"</p>
                     <Grid container spacing={7}>
@@ -22,8 +34,9 @@ function SearchFilmResults() {
                             </Grid>)}
                     </Grid>
                 </div>
+                : <p>Nessun film trovato</p>
             }
-        </div>
+        </Box>
     )
 }
 export default SearchFilmResults;

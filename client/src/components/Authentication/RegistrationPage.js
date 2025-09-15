@@ -1,13 +1,13 @@
 import {NavLink, useNavigate} from "react-router-dom";
 import React, {useState} from "react";
-import "../CSS/Form.css"
-import Footer from "./Footer";
-import useDocumentTitle from "./useDocumentTitle";
-import {useAuth} from "../context/authContext"
+import "../../CSS/Form.css"
+import Footer from "../Footer";
+import useDocumentTitle from "../useDocumentTitle";
+import {useAuth} from "../../context/authContext"
 import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import api from "../../api";
+import {useNotification} from "../../context/notificationContext";
 function RegistrationPage() {
     const {showNotification} = useNotification();
 

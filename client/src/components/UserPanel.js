@@ -2,7 +2,7 @@ import {Routes, Route } from 'react-router-dom';
 import Profile from "./Profile";
 import Home from "./Home";
 import About from "./About";
-import DeleteAccount from "./DeleteAccount";
+import DeleteAccount from "./Authentication/DeleteAccount";
 import Header from "./Header";
 import Footer from "./Footer";
 import Contact from "./Contact";
@@ -19,29 +19,29 @@ import CastPage from "./CastPage";
 import CrewPage from "./CrewPage";
 import ActorPage from "./ActorPage";
 import DirectorPage from "./DirectorPage";
-import ModifyProfile from "./ModifyProfile";
+import ModifyProfile from "./Authentication/ModifyProfile";
 import {Container, Box} from "@mui/material";
-import ModifyPassword from "./ModifyPassword";
+import ModifyPassword from "./Authentication/ModifyPassword";
 import ModifyAvatar from "./ModifyAvatar";
 import FilmsByYear from "./FilmsByYear";
-import CurrentPopularFilms from "./CurrentPopularFilms";
-import UpcomingFilms from "./UpcomingFilms";
-import TopRatedFilms from "./TopRatedFilms";
-import NowPlayingFilms from "./NowPlayingFilms";
-import TrendingFilms from "./TrendingFilms";
+import CurrentPopularFilms from "./HomePageFilms/CurrentPopularFilms";
+import UpcomingFilms from "./HomePageFilms/UpcomingFilms";
+import TopRatedFilms from "./HomePageFilms/TopRatedFilms";
+import NowPlayingFilms from "./HomePageFilms/NowPlayingFilms";
+import TrendingFilms from "./HomePageFilms/TrendingFilms";
 import SimilarFilms from "./SimilarFilms";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
+    // let paths = ["/", "/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist",
+    //                  "/settings/modify-profile", "/settings/modify-password", "/settings/delete-account",
+    //                  "/settings/modify-avatar", "/archivio", "/search/:filmTitle", "/film/:filmTitle/:filmID",
+    //                  "/log-a-film", "/film/:filmTitle/cast", "film/:filmTitle/crew", "/actor/:actorName/:actorID",
+    //                  "/director/:directorName/:directorID", "/about", "/contact", "/help"]
+    //
+    //     let components = [ <Home />, <Profile/>, <ListaFilm />, <FavoritesFilms/>, <Recensioni/>, <Watchlist/>, <ModifyProfile/>,
+    //                      <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
+    //                      <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
 
-    let paths = ["/", "/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist",
-                 "/settings/modify-profile", "/settings/modify-password", "/settings/delete-account",
-                 "/settings/modify-avatar", "/archivio", "/search/:filmTitle", "/film/:filmTitle/:filmID",
-                 "/log-a-film", "/film/:filmTitle/cast", "film/:filmTitle/crew", "/actor/:actorName/:actorID",
-                 "/director/:directorName/:directorID", "/about", "/contact", "/help"]
-
-    let components = [ <Home />, <Profile/>, <ListaFilm />, <FavoritesFilms/>, <Recensioni/>, <Watchlist/>, <ModifyProfile/>,
-                     <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
-                     <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
   return (
       <Box style={{ display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
           <Header />

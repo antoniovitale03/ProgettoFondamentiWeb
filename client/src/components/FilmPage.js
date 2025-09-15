@@ -1,5 +1,4 @@
 import {useParams, useNavigate, Link, NavLink} from 'react-router-dom';
-import {useFilm} from "../context/filmContext"
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext"
@@ -30,7 +29,6 @@ function FilmPage(){
     const navigate = useNavigate();
 
     const {showNotification} = useNotification();
-    const {saveReview} = useFilm();
     const [film, setFilm] = useState(null);
 
     //rating in quinti
@@ -46,11 +44,17 @@ function FilmPage(){
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
 
-    const addReview = async () => {
-        await saveReview(film.title, film.release_year, review, reviewRating);
-        showNotification(`La recensione di ${filmTitle}" è stata salvata correttamente!`)
-        navigate(`/film/${filmTitle}/${filmID}`);
-        setReviewButton(0);
+    const addReview = async (title, release_year, review, reviewRating) => {
+        try {
+            await api.post('http://localhost:5001/api/films/reviews/add-review', {
+                title, release_year, review, reviewRating
+            })
+            showNotification(`La recensione di ${filmTitle}" è stata salvata correttamente!`)
+            navigate(`/film/${filmTitle}/${filmID}`);
+            setReviewButton(0);
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
     }
 
     //bisognerà aggiungere delle funzioni che vedono se il film è nella watchlist o meno, restituisce true o false: se è true allora
@@ -59,7 +63,7 @@ function FilmPage(){
         event.preventDefault();
         setWatchlistButton(0);
         try{
-            await api.post("http://localhost:5001/api/films/add-to-watchlist", { film })
+            await api.post("http://localhost:5001/api/films/watchlist/add-to-watchlist", { film })
             showNotification(`${filmTitle} è stato aggiunto alla watchlist`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -71,7 +75,7 @@ function FilmPage(){
         event.preventDefault();
         setWatchlistButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/remove-from-watchlist/${filmID}`)
+            await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`)
             showNotification(`${filmTitle} è stato rimosso dalla watchlist`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -82,7 +86,7 @@ function FilmPage(){
         event.preventDefault();
         setLikedButton(0);
         try{
-            await api.post('http://localhost:5001/api/films/add-to-liked', { film })
+            await api.post('http://localhost:5001/api/films/liked/add-to-liked', { film })
             showNotification(`${filmTitle} è stato aggiunto ai film piaciuti`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -93,7 +97,7 @@ function FilmPage(){
         event.preventDefault();
         setLikedButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/remove-from-liked/${filmID}`)
+            await api.delete(`http://localhost:5001/api/films/liked/remove-from-liked/${filmID}`)
             showNotification(`${filmTitle} è stato rimosso dai film piaciuti`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -105,7 +109,7 @@ function FilmPage(){
         event.preventDefault();
         setReviewButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/delete-review/${filmID}`)
+            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`)
             showNotification(`La recensione di ${filmTitle} è stata rimossa`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -116,7 +120,7 @@ function FilmPage(){
         event.preventDefault();
         setFavoritesButton(0);
         try{
-            await api.post('http://localhost:5001/api/films/add-to-favorites', { film })
+            await api.post('http://localhost:5001/api/films/favorites/add-to-favorites', { film })
             showNotification(`${filmTitle} è stato aggiunto ai film preferiti`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -127,7 +131,7 @@ function FilmPage(){
         event.preventDefault();
         setFavoritesButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/remove-from-favorites/${filmID}`)
+            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`)
             showNotification(`${filmTitle} è stato rimosso dai film preferiti`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -141,7 +145,7 @@ function FilmPage(){
         //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
         setWatchlistButton(1);
         try{
-            await api.post('http://localhost:5001/api/films/add-to-watched', { film });
+            await api.post('http://localhost:5001/api/films/watched/add-to-watched', { film });
             showNotification(`${filmTitle} è stato aggiunto ai film visti`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -152,7 +156,7 @@ function FilmPage(){
         event.preventDefault();
         setWatchedButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/remove-from-watched/${filmID}`);
+            await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
             showNotification(`${filmTitle} è stato rimosso dai film visti`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
@@ -223,7 +227,7 @@ function FilmPage(){
     let reviewMenuItems = (<>
             <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
             <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
-            <Button onClick={addReview}>
+            <Button onClick={() => addReview(film?.title, film?.release_year, review, reviewRating)}>
                 Salva
             </Button>
         </>
@@ -237,23 +241,23 @@ function FilmPage(){
     return (
         <Box>
             <p>Immagine background del film</p>
-            <img src={film.backdrop_path} alt="Immagine in background del film"/>
+            <img src={film?.backdrop_path} alt="Immagine in background del film"/>
 
             <p>Locandina del film</p>
             <p>
-                <strong>{film.title}</strong>
+                <strong>{film?.title}</strong>
                 <Button component={Link} to={`/films/${film.release_year}`}>( {film.release_year} )</Button>
             </p>
 
-            <img src={film.poster_path} alt="Locandina del film" />
+            <img src={film?.poster_path} alt="Locandina del film" />
             <p>Diretto da
                 <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
-                <strong>{film.director.name}</strong>
+                <strong>{film?.director.name}</strong>
                 </Button>
             </p>
             <p>{film.tagline}</p> {/* //slogan film */}
             <p>{film.overview}</p> {/* //trama */}
-            {film.trailerLink ?
+            {film?.trailerLink ?
                 <Button component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
                     <YouTubeIcon />
                     <p>Trailer</p>

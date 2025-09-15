@@ -1,6 +1,6 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle";
-import {Box, Typography, Card, CardMedia, Button} from "@mui/material";
+import {Box, Typography, Card, CardMedia} from "@mui/material";
 import '../CSS/home.css'
 import Carosello from "./Carosello"
 import {useEffect, useState} from "react";
@@ -51,7 +51,6 @@ function Home(){
             </Card>
             </Box>
 
-
             {homePageFilms?.currentPopularFilms ? <Carosello films={homePageFilms?.currentPopularFilms} title="I film più popolari del momento" link={"/films/current-popular-films"}/> : null}
 
             {homePageFilms?.upcomingFilms ? <Carosello films={homePageFilms?.upcomingFilms} title="Film in uscita in Italia" link={"/films/upcoming-films"}/> : null}
@@ -62,7 +61,7 @@ function Home(){
 
             {homePageFilms?.trendingFilms ? <Carosello films={homePageFilms?.trendingFilms} title="Film in tendenza questa settimana" link={"/films/trending-films"}/> : null}
 
-            {homePageFilms?.similarFilms ? <Carosello films={homePageFilms?.similarFilms} title="Film simili a quelli che hai già visto" link={"/films/similarFilms"}/> : null}
+            {homePageFilms?.similarFilms ? <Carosello films={homePageFilms?.similarFilms} title="Film simili a quelli che hai già visto" link={""}/> : null}
 
         </Box>
     )

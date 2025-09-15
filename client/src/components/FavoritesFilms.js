@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import {Grid} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 
 function FavoritesFilms(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
@@ -10,7 +10,7 @@ function FavoritesFilms(){
     useEffect(() => {
         const fetchFavorites = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-favorites');
+                const response = await api.get('http://localhost:5001/api/films/favorites/get-favorites');
                 const films = await response.data;
                 setFavoritesFilms(films);
             }catch(error){
@@ -23,7 +23,7 @@ function FavoritesFilms(){
 
 
     return(
-        <div>
+        <Box>
             {favoritesFilms.length === 0 ? <div>Non hai ancora aggiunto nessun film nei preferiti.</div> :
                 <div>
                     <h1><strong>I tuoi 10 film preferiti</strong></h1>
@@ -36,10 +36,7 @@ function FavoritesFilms(){
                     </Grid>
                 </div>
             }
-        </div>
-
-
-
+        </Box>
     )
 }
 export default FavoritesFilms;

@@ -1,7 +1,6 @@
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
-import {useFilm, useFilms} from "../context/filmContext"
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Grid} from "@mui/material";
@@ -10,12 +9,11 @@ function ListaFilm(){
 
     const {showNotification} = useNotification();
     const [watchedFilms, setWatchedFilms] = useState([]);
-    const {getWatched} = useFilm()
 
     useEffect(()=>{
         async function getWatchedFilms(){
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-watched')
+                const response = await api.get('http://localhost:5001/api/films/watched/get-watched')
                 const watchedFilms = await response.data;
                 setWatchedFilms(watchedFilms);
             }catch(error){
@@ -24,7 +22,7 @@ function ListaFilm(){
 
         }
         getWatchedFilms();
-    }, [getWatched])
+    }, [])
 
 
     return(

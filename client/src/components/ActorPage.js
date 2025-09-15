@@ -1,13 +1,10 @@
 import useDocumentTitle from "./useDocumentTitle";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {useFilm} from "../context/filmContext"
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import CrewMemberCard from "./Cards/CrewMemberCard";
 import {Grid} from "@mui/material";
-import ActorCard from "./Cards/ActorCard";
 function ActorPage() {
     let { actorName } = useParams()
     let { actorID } = useParams()

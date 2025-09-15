@@ -1,9 +1,9 @@
 import {React, useEffect, useState} from "react";
-import api from "../api";
-import useDocumentTitle from "./useDocumentTitle";
-import {useNotification} from "../context/notificationContext"
+import api from "../../api";
+import useDocumentTitle from "../useDocumentTitle";
+import {useNotification} from "../../context/notificationContext"
 import {Box, Grid, Pagination, Typography} from "@mui/material";
-import FilmCard from "./Cards/FilmCard";
+import FilmCard from "../Cards/FilmCard";
 
 function TrendingFilms() {
     useDocumentTitle("Trending films");

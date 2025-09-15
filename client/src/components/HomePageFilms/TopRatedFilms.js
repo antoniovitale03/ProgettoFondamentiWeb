@@ -1,10 +1,10 @@
 import {React, useEffect, useState} from "react";
-import api from "../api";
+import api from "../../api";
 import {useParams, useNavigate} from "react-router-dom";
-import useDocumentTitle from "./useDocumentTitle";
-import {useNotification} from "../context/notificationContext"
+import useDocumentTitle from "../useDocumentTitle";
+import {useNotification} from "../../context/notificationContext"
 import {Box, Button, Grid, Pagination} from "@mui/material";
-import FilmCard from "./Cards/FilmCard";
+import FilmCard from "../Cards/FilmCard";
 
 function TopRatedFilms() {
     useDocumentTitle("Film più acclamati");

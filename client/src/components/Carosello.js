@@ -29,9 +29,10 @@ function Carosello({ films, title, link }){
             <strong>
                 {title}
             </strong>
-            <Button component={Link} to={link}>
+            {link !== "" ? <Button component={Link} to={link}>
                 <InfoOutlineIcon /> più dettagli
-            </Button>
+            </Button> : null }
+
         </Typography>
 
         <Box sx={{textAlign: "center", maxWidth: "100%", display: "flex", overflow: "hidden", gap: 1, justifyContent: "center", marginLeft: "20px"}}>

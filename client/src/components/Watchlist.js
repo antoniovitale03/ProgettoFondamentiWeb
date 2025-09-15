@@ -14,7 +14,7 @@ function Watchlist(){
     useEffect(() => {
         const fetchWatchlist = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-watchlist');
+                const response = await api.get('http://localhost:5001/api/films/watchlist/get-watchlist');
                 const films = await response.data;
                 setWatchlistFilms(films); // Salviamo i film nello stato
             }catch(error){

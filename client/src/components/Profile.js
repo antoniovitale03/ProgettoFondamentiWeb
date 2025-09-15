@@ -6,6 +6,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import ReviewCard from "./Cards/ReviewCard";
+import {Link} from "react-router-dom";
 
 function Profile(){
     const {user} = useAuth();
@@ -87,6 +88,7 @@ function Profile(){
                                 <FilmCard key={film._id} film={film}/>
                             </Grid>)}
                     </Grid>}
+                    <Button component={Link} to="/lista-film">Vedi tutti i miei film visti</Button>
                 </div>: null
             }
 
@@ -100,6 +102,7 @@ function Profile(){
                                 <ReviewCard review={review}/>
                             </Grid>)}
                     </Grid>
+                    <Button component={Link} to="/recensioni">Vedi tutte le mie recensioni</Button>
                 </Box> : null
             }
 

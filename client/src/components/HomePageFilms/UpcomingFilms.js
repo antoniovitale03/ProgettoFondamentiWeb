@@ -1,9 +1,9 @@
 import {React, useEffect, useState} from "react";
-import api from "../api";
-import useDocumentTitle from "./useDocumentTitle";
-import {useNotification} from "../context/notificationContext"
-import {Box, Button, Grid, Pagination} from "@mui/material";
-import FilmCard from "./Cards/FilmCard";
+import api from "../../api";
+import useDocumentTitle from "../useDocumentTitle";
+import {useNotification} from "../../context/notificationContext"
+import {Box, Grid, Pagination} from "@mui/material";
+import FilmCard from "../Cards/FilmCard";
 
 function UpcomingFilms() {
     useDocumentTitle("Film in uscita in Italia");
@@ -25,10 +25,9 @@ function UpcomingFilms() {
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error");
             }
-
         }
         fetchUpComingFilms();
-    }, [currentPage])
+    }, [currentPage]);
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);

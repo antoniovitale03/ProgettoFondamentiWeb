@@ -14,14 +14,12 @@ import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {useFilm} from "../context/filmContext";
 import * as React from "react";
 import {Link} from "react-router-dom";
 
 
 function Header() {
     const {isLoggedIn, user, logout} = useAuth();
-    const {getFilmsFromSearch} = useFilm();
     const [title, setTitle] = useState("");
     const userMenuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist"]
     const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"]
@@ -45,9 +43,8 @@ function Header() {
 
     const handleSearch = async () => {
         try{
-            await getFilmsFromSearch(title); //ora l'array dei film ottenuti dalla ricerca viene inserito nel contesto così il componente SearchFilmResults potrà usarlo per mostrare i risultati di ricerca
             let filmTitle = title.replaceAll(" ", "-");
-            navigate(`/search/${filmTitle}`); //a questo url viene renderizzato SearchFilmResults
+            navigate(`/search/${filmTitle}`);
             setTitle("");
         }catch(error){
             setTitle("");

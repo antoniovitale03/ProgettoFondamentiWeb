@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import {useAuth} from "../context/authContext";
+import {useAuth} from "../../context/authContext";
 import {useNavigate, NavLink} from "react-router-dom";
 import {Box, FormControl, InputLabel, Typography, Input, Button} from "@mui/material";
-import "../CSS/Form.css"
-import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import "../../CSS/Form.css"
+import api from "../../api";
+import {useNotification} from "../../context/notificationContext";
 function DeleteAccount() {
 
     const [confirmEmail, setConfirmEmail] = useState("");

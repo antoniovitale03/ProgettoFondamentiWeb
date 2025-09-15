@@ -4,7 +4,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import useDocumentTitle from "./useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
-import {Button, Grid, Pagination} from "@mui/material";
+import {Box, Button, Grid, Pagination} from "@mui/material";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
@@ -40,7 +40,7 @@ function FilmsByYear(){
     };
 
     return(
-        <div>
+        <Box>
             <h1>Film usciti nel {year} </h1>
 
             <Pagination
@@ -66,8 +66,7 @@ function FilmsByYear(){
                 color="primary"
                 size="large"
             />
-
-        </div>
+        </Box>
     )
 }
 export default FilmsByYear;

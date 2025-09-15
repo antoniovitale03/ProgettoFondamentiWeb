@@ -1,43 +1,42 @@
 import {React, useEffect, useState} from "react";
-import api from "../api";
-import useDocumentTitle from "./useDocumentTitle";
-import {useNotification} from "../context/notificationContext"
+import api from "../../api";
+import useDocumentTitle from "../useDocumentTitle";
+import {useNotification} from "../../context/notificationContext"
 import {Box, Grid, Pagination} from "@mui/material";
-import FilmCard from "./Cards/FilmCard";
+import FilmCard from "../Cards/FilmCard";
 
-function CurrentPopularFilms() {
-    useDocumentTitle("Film più popolari del momento");
+function NowPlayingFilms() {
+    useDocumentTitle("Film attualmente al cinema");
 
     const {showNotification} = useNotification();
 
+    const [currentPage, setCurrentPage] = useState(1);
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
 
 
     useEffect( () => {
-        async function fetchCurrentPopularFilms() {
+        async function fetchNowPlayingFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-current-popular-films/page/${currentPage}`);
+                const response = await api.get(`http://localhost:5001/api/films/get-now-playing-films/page/${currentPage}`);
                 let data = response.data;
                 setFilms(data.results);
                 setTotalPages(data.total_pages);
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error");
             }
-
         }
-        fetchCurrentPopularFilms();
+        fetchNowPlayingFilms();
     }, [currentPage]);
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
         window.scrollTo(0, 0);
-    }
+    };
 
     return(
         <Box>
-            <h1>Film popolari del momento</h1>
+            <h1>Film attualmente al cinema</h1>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
@@ -67,4 +66,4 @@ function CurrentPopularFilms() {
     )
 }
 
-export default CurrentPopularFilms;
+export default NowPlayingFilms;

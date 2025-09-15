@@ -1,10 +1,10 @@
 import {Box, Button, FormControl, Input, InputLabel, Stack, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import "../CSS/Form.css"
-import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import "../../CSS/Form.css"
+import api from "../../api";
+import {useNotification} from "../../context/notificationContext";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../context/authContext";
+import {useAuth} from "../../context/authContext";
 function ModifyProfile(){
 
     const {showNotification} = useNotification();

@@ -1,9 +1,9 @@
 import {useEffect} from "react";
-import LoginPage from "./components/LoginPage";
+import LoginPage from "./components/Authentication/LoginPage";
 import UserPanel from "./components/UserPanel";
 import DefaultPanel from "./components/DefaultPanel";
 import {Route, Routes, Navigate} from "react-router-dom";
-import RegistrationPage from "./components/RegistrationPage"
+import RegistrationPage from "./components/Authentication/RegistrationPage"
 import {useAuth} from "./context/authContext";
 // la componente principale App gestisce solo il routing per il percorso protetto dell'app (accessibile solo dopo il login)
 //per gestire il login uso localStorage in modo da salvare lo stato di login anche dopo aver chiuso il browser
