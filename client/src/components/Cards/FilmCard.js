@@ -24,7 +24,7 @@ function FilmCard({ film }){
                 <Button component={Link} to={`/film/${title}/${film._id}`}>
                     <CardMedia component="img" image={film.poster_path} />
                 </Button>
-                { film.director ? <p>Diretto da: <Button to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
+                { film.director ? <p>Diretto da: <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
                         <strong>{film.director.name}</strong>
                     </Button></p>
                     : null }

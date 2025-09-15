@@ -43,6 +43,12 @@ function Carosello({ films, title, link }){
                             <strong>{film.title}</strong>
                         </p>
                     </Button>
+                    <Button component={Link} to={`/films/${film.release_year}`}>
+                        <p>
+                            <strong>({film.release_year})</strong>
+                        </p>
+                    </Button>
+
                     <CardMedia key={index} component="img" image={film.poster_path}
                         onClick={() => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}
                         sx={{

@@ -5,10 +5,12 @@ import '../CSS/home.css'
 import Carosello from "./Carosello"
 import {useEffect, useState} from "react";
 import api from "../api";
+import {useNotification} from "../context/notificationContext";
 
 function Home(){
     useDocumentTitle("Home")
     const {user} = useAuth();
+    const {showNotification} = useNotification()
 
     const [homePageFilms, setHomePageFilms] = useState({});
 
@@ -19,7 +21,7 @@ function Home(){
                 let films = await response.data;
                 setHomePageFilms(films);
             }catch(error){
-                console.log(error);
+                showNotification("Errore nel caricamento dei film", "error")
             }
         }
         homePageFilmInfo();
@@ -59,6 +61,9 @@ function Home(){
             {homePageFilms?.nowPlayingFilms ? <Carosello films={homePageFilms?.nowPlayingFilms} title="Film attualmente al cinema" link={"/films/now-playing-films"} /> : null}
 
             {homePageFilms?.trendingFilms ? <Carosello films={homePageFilms?.trendingFilms} title="Film in tendenza questa settimana" link={"/films/trending-films"}/> : null}
+
+            {homePageFilms?.similarFilms ? <Carosello films={homePageFilms?.similarFilms} title="Film simili a quelli che hai già visto" link={"/films/similarFilms"}/> : null}
+
         </Box>
     )
 }

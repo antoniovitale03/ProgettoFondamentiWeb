@@ -7,12 +7,13 @@ import {useAuth} from "../context/authContext"
 import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import api from "../api";
+import {useNotification} from "../context/notificationContext";
 function RegistrationPage() {
+    const {showNotification} = useNotification();
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
 
     // Stato per controllare lo stato di registrazione (1 = dati, 2 = codice di verifica)
     const [step, setStep] = useState(1);
@@ -33,7 +34,6 @@ function RegistrationPage() {
     //gestisce l'invio dei dati iniziali
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError('');
         setButtonState(2);
         try{
             await api.post('http://localhost:5001/api/auth/registration/data', {
@@ -41,13 +41,12 @@ function RegistrationPage() {
                 email
             })
             // Se la chiamata ha successo, mostra il messaggio di successo e passa al secondo step
-            setSuccessMessage("Abbiamo inviato un codice di verifica alla tua mail.")
+            showNotification("Abbiamo inviato un codice di verifica alla tua mail.", "success");
             await sleep(2000);
             setStep(2); // -> Form di verifica del codice
             setButtonState(3); // -> "Invia"
-            setSuccessMessage("");
         }catch(error){
-            setError(error.response.data);
+            showNotification(error.response.data, "error")
             //in caso di errore (email o username già esistenti), mostro l'errore e resetto i dati di input
             setUsername("");
             setEmail("");
@@ -58,21 +57,19 @@ function RegistrationPage() {
 
     const handleVerify = async (event) => {
         event.preventDefault();
-        setError('');
         try {
             await api.post('http://localhost:5001/api/auth/registration/verify', {
                 username, email, password, verificationCode
             })
-            // Se il codice è corretto, mostra il messaggio finale e reindirizza
-            setSuccessMessage(<>
+            showNotification(<>
                 Registrazione avvenuta con successo!
                 <br />
                 Ora verrai reindirizzato alla pagina di login.
-            </>);
+            </>, "success");
             await sleep(2500);
             navigate('/login');
         } catch (error) {
-            setError(error.response.data);
+            showNotification(error.response.data, "error")
             setVerificationCode("");
         }
     };
@@ -84,8 +81,6 @@ function RegistrationPage() {
             <div className="form-container">
                 <form onSubmit={step === 1 ? handleSubmit : handleVerify}>
                     <h2>{step === 1 ? "Registrazione" : "Verifica la tua identità"}</h2>
-                    {/* Mostra il messaggio di errore solo se esiste */}
-                    {error && <p className="error-message">{error}</p>}
 
                     {/*  Inserimento Dati */}
                     {step === 1 ?
@@ -120,7 +115,6 @@ function RegistrationPage() {
                     }
 
                 </form>
-                {successMessage && <p className="success-message">{successMessage}</p>}
                 {step === 1 ?
                         <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p> : null}
             </div>
