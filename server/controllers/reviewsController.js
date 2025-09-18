@@ -88,7 +88,10 @@ exports.deleteReview = async (req, res) => {
     try{
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
-        const user = await User.findById(userID)
+        const user = await User.findById(userID);
+        if (!user) {
+            return res.status(404).json("Utente non trovato.");
+        }
 
         user.reviews = user.reviews.filter(id => id !== filmID);
         await user.save();
@@ -112,6 +115,7 @@ exports.getReviews = async (req, res) => {
         let reviews = user.reviews.map( review => {
             return {...review._doc}
         })
+        reviews = await Promise.all(reviews);
 
         res.status(200).json(reviews);
 

@@ -1,11 +1,11 @@
-import "../CSS/header-footer.css";
-import {Container, Box, Button} from "@mui/material";
+import {Container, Box, Button, Toolbar, AppBar} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
 import {Link} from "react-router-dom";
+import * as React from "react";
 
 
 function Footer() {
@@ -29,22 +29,18 @@ function Footer() {
         <Button component={Link} to="link di X" target="_blank" rel="noreferrer">
             <XIcon />
         </Button>
-
     ]
 
     return (
-        <footer className="navigation-bar">
-            <Container>
-                <Box>
-                    <nav>
-                        <ul>
-                            { footerItems.map( (footerItem, index) => <li key={index}>{footerItem}</li> ) }
-                        </ul>
-                    </nav>
-                    <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>
+        <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
+            <Toolbar sx={{ width: "100%" }}>
+                <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
+                    { footerItems.map((footerItem) => footerItem) }
                 </Box>
-                </Container>
-        </footer>
+            </Toolbar>
+            <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>
+        </AppBar>
+
     )
 }
 

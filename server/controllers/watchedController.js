@@ -38,7 +38,7 @@ exports.removeFromWatched = async (req, res) => {
         const filmID = parseInt(req.params.filmID);
 
         const user = await User.findById(userID);
-        user.watched = user.watched.find(id => id !== filmID);
+        user.watched = user.watched.filter(id => id !== filmID);
         await user.save()
     }catch(error){
         res.status(500).json("Errore interno del server.");

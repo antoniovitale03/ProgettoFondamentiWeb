@@ -18,7 +18,7 @@ function CurrentPopularFilms() {
     useEffect( () => {
         async function fetchCurrentPopularFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-current-popular-films/page/${currentPage}`);
+                const response = await api.get(`http://localhost:5001/api/films/home/get-current-popular-films/page/${currentPage}`);
                 let data = response.data;
                 setFilms(data.results);
                 setTotalPages(data.total_pages);

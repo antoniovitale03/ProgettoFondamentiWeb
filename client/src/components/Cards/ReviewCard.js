@@ -1,8 +1,9 @@
 import {Link} from "react-router-dom";
 import {Button, Card, CardContent, CardMedia, Grid, Rating, Typography} from "@mui/material";
 import * as React from "react";
+import ClearIcon from '@mui/icons-material/Clear';
 
-function ReviewCard({ review }){
+function ReviewCard({ review, showRemoveButton, onRemove }){
     return(
         <Card style={{ marginBottom: 12 }}>
             <CardContent>
@@ -21,11 +22,19 @@ function ReviewCard({ review }){
                             <CardMedia component="img" image={review.poster_path} alt="Locandina film"/>
                         </Button>
                     </Grid>
-                    <Grid item size={8}>
+                    <Grid item size={7}>
                         <Typography component="p" sx={{ overflowWrap: 'break-word' }}>{review.review}</Typography>
                         <Typography component="p">Il tuo voto: {<Rating name="rating" value={review.rating} readOnly/> }</Typography>
                         <Typography component="p">Data della recensione: {review.review_date}</Typography>
                     </Grid>
+                    {showRemoveButton ?
+                        <Grid item size={1}>
+                            <Button onClick={ () => onRemove(review._id, review.title) }>
+                                <ClearIcon />
+                            </Button>
+                        </Grid> : null
+                    }
+
                 </Grid>
             </CardContent>
         </Card>

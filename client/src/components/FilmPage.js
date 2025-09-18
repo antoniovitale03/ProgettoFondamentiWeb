@@ -25,7 +25,10 @@ function FilmPage(){
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
 
-    useDocumentTitle(filmTitle.replaceAll(" ", "-"));
+    filmTitle = filmTitle.replaceAll("-", " ");
+
+    useDocumentTitle(filmTitle);
+
     const navigate = useNavigate();
 
     const {showNotification} = useNotification();
@@ -238,6 +241,7 @@ function FilmPage(){
             <div>Caricamento del film... </div>
         )
     }
+
     return (
         <Box>
             <p>Immagine background del film</p>

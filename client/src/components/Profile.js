@@ -21,7 +21,7 @@ function Profile(){
     useEffect(() => {
         const fetchFavorites = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-favorites');
+                const response = await api.get('http://localhost:5001/api/films/favorites/get-favorites');
                 const films = await response.data;
                 setFavoritesFilms(films);
             }catch(error){
@@ -34,11 +34,11 @@ function Profile(){
     useEffect(()=>{
         async function getWatchedFilms(){
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-watched')
+                const response = await api.get('http://localhost:5001/api/films/watched/get-watched')
                 const watchedFilms = await response.data;
                 setWatchedFilms(watchedFilms)
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
 
         }
@@ -48,18 +48,18 @@ function Profile(){
     useEffect(() => {
         const fetchReviews = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/get-reviews');
+                const response = await api.get('http://localhost:5001/api/films/reviews/get-reviews');
                 const reviews = await response.data;
                 setFilmsReviews(reviews); // Salviamo i film nello stato
             }catch(error){
-                showNotification(error.response.data);
+                showNotification(error.response.data, "error");
             }
         }
         fetchReviews();
-    });
+    }, []);
 
     return (
-        <div>
+        <Box>
             {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
             {user.name && user.surname && <Typography component="p">{user.name} {user.surname}</Typography>}
             <Avatar />
@@ -71,10 +71,11 @@ function Profile(){
                 <div>
                     <h1>Film preferiti</h1>
                     <Grid container spacing={2}>
-                        { [...favoritesFilms].reverse().slice(0,4).map((film) =>
+                        { [...favoritesFilms].reverse().map((film) =>
                             <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
                                 <FilmCard key={film._id} film={film}/>
-                            </Grid>)}
+                            </Grid>)
+                        }
                     </Grid>
                 </div>
                 : null}
@@ -82,12 +83,13 @@ function Profile(){
             {watchedFilms.length > 0 ?
                 <div>
                     <h1>Ultimi film visti (4)</h1>
-                    {<Grid container spacing={2}>
+                    <Grid container spacing={2}>
                         { [...watchedFilms].reverse().slice(0, 4).map((film) =>
                             <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
                                 <FilmCard key={film._id} film={film}/>
-                            </Grid>)}
-                    </Grid>}
+                            </Grid>)
+                        }
+                    </Grid>
                     <Button component={Link} to="/lista-film">Vedi tutti i miei film visti</Button>
                 </div>: null
             }
@@ -106,7 +108,7 @@ function Profile(){
                 </Box> : null
             }
 
-        </div>
+        </Box>
     )
 }
 

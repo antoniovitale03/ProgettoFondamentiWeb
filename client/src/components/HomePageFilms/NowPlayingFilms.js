@@ -18,7 +18,7 @@ function NowPlayingFilms() {
     useEffect( () => {
         async function fetchNowPlayingFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-now-playing-films/page/${currentPage}`);
+                const response = await api.get(`http://localhost:5001/api/films/home/get-now-playing-films/page/${currentPage}`);
                 let data = response.data;
                 setFilms(data.results);
                 setTotalPages(data.total_pages);

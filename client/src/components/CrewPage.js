@@ -2,7 +2,7 @@ import CrewMemberCard from './Cards/CrewMemberCard'
 import {useLocation, useParams} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
 import {Grid} from "@mui/material";
-import ActorCard from "./Cards/ActorCard";
+
 function CrewPage(){
     const { filmTitle } = useParams()
 

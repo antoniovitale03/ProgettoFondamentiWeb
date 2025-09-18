@@ -17,7 +17,7 @@ function Home(){
     useEffect(() => {
         async function homePageFilmInfo() {
             try{
-                const response = await api.get("http://localhost:5001/api/films/get-home-page-film-info");
+                const response = await api.get("http://localhost:5001/api/films/home/get-home-page-film-info");
                 let films = await response.data;
                 setHomePageFilms(films);
             }catch(error){

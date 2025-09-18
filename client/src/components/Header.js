@@ -5,9 +5,8 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 // isActive è true se l'URL corrente corrisponde al to del NavLink.
 // Usiamo un operatore ternario per restituire la classe 'nav-link active' se il link è attivo, altrimenti solo 'nav-link'
 
-import "../CSS/header-footer.css"
 import {useAuth} from "../context/authContext";
-import {Container, Box, TextField, Button, Avatar, MenuItem} from "@mui/material";
+import {Container, Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import logo from "../assets/images/AppLogo.png"
@@ -76,25 +75,16 @@ function Header() {
     ]
 
     return (
-        <header className="navigation-bar">
-            <Container>
-                <Box>
-                    {/*Rendering condizionale dell'header in base allo stato di login*/}
-                    {isLoggedIn ?
-                            <nav>
-                                <ul>
-                                    {headerItems.map((headerItem, index) => <li key={index}>{headerItem}</li>)}
-                                </ul>
-                            </nav> :
-                            <nav>
-                                <ul>
-                                    { notLoggedDefaultHeaderItems.map((headerItem) => <li>{headerItem}</li>) }
-                                </ul>
-                            </nav>
+        <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
+            <Toolbar sx={{ width: "100%" }}>
+                <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
+                    {
+                        isLoggedIn ? headerItems.map((headerItem) => headerItem) :
+                        notLoggedDefaultHeaderItems.map((headerItem) => headerItem)
                     }
                 </Box>
-            </Container>
-        </header>
+            </Toolbar>
+        </AppBar>
     )
 }
 

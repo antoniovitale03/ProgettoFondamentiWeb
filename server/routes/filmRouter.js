@@ -15,14 +15,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 router.use("/home", homeRouter)
 
-
-router.get("/get-home-page-film-info", authMiddleware.verifyJWT, filmController.getHomePageFilmsInfo)
-router.get("/get-current-popular-films/page/:pageNumber", filmController.getCurrentPopularFilms)
-router.get("/get-upcoming-films/page/:pageNumber", filmController.getUpcomingFilms)
-router.get("/get-top-rated-films/page/:pageNumber", filmController.getTopRatedFilms)
-router.get("/get-now-playing-films/page/:pageNumber", filmController.getNowPlayingFilms)
-router.get("/get-trending-films/page/:pageNumber", filmController.getTrendingFilms)
-
+//non inserisco questo percorso in homeRouter perchè viene usato per msotrare i film simili a partire dalla pagina dei film
 router.get("/get-similar/:filmID/:pageNumber", filmController.getSimilarFilms)
 router.get("/get-all-genres", filmController.getAllGenres)
 router.post("/get-archive-films", filmController.getArchiveFilms)
@@ -30,6 +23,8 @@ router.post("/get-film-search-results", filmController.getFilmsFromSearch )
 router.get("/getFilm/:filmTitle/:filmID", authMiddleware.verifyJWT, filmController.getFilm)
 router.get("/:year/page/:page", authMiddleware.verifyJWT, filmController.getFilmsByYear)
 
+router.get("/get-actor-info/:actorID", filmController.getActorInfo)
+router.get("/get-director-info/:directorID", filmController.getDirectorInfo)
 
 
 router.use("/watchlist", watchlistRouter)
@@ -38,8 +33,5 @@ router.use("/reviews", reviewsRouter)
 router.use("/favorites", favoritesRouter)
 router.use("/watched", watchedRouter)
 
-
-router.get("/get-actor-info/:actorID", filmController.getActorInfo)
-router.get("/get-director-info/:directorID", filmController.getDirectorInfo)
 
 module.exports = router;

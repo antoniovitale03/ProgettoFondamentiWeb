@@ -18,7 +18,7 @@ function UpcomingFilms() {
     useEffect( () => {
         async function fetchUpComingFilms() {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/get-upcoming-films/page/${currentPage}`);
+                const response = await api.get(`http://localhost:5001/api/films/home/get-upcoming-films/page/${currentPage}`);
                 let data = response.data;
                 setFilms(data.results);
                 setTotalPages(data.total_pages);
