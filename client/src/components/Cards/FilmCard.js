@@ -41,7 +41,7 @@ function FilmCard({ film, showRemoveButton, onRemove }){
                     </Button></p>
                     : null }
 
-                {film.date ? <p>Data della visione: {film.date}</p> : null}
+                {film.date ? <p>Data di ultima visione: {film.date}</p> : null}
 
                 { film.job ? <p>Ruolo: {film.job}</p> : null }
 

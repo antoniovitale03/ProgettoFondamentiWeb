@@ -4,10 +4,11 @@ import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import {Grid} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 function ActorPage() {
-    let { actorName } = useParams()
-    let { actorID } = useParams()
+    let { actorName } = useParams();
+    actorName = actorName.replaceAll("-", " ");
+    let { actorID } = useParams();
 
     const [actorInfo, setActorInfo] = useState([])
     const {showNotification} = useNotification();
@@ -29,9 +30,9 @@ function ActorPage() {
 
 
 
-    useDocumentTitle(actorName.replaceAll("-", " "));
+    useDocumentTitle(actorName);
     return(
-        <div>
+        <Box>
             <p>Info personali dell'attore</p>
             <h1>{actorInfo.personalInfo?.name}</h1>
             <img src={actorInfo.personalInfo?.profile_image} alt="Immagine dell'attore"/>
@@ -43,9 +44,9 @@ function ActorPage() {
                 <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore/attrice ({actorInfo?.cast?.length})</h1>
 
                 <Grid container spacing={7}>
-                    {actorInfo.cast?.map(film =>
-                        <Grid item key={film.id} xs={12} sm={6} md={4}>
-                            <FilmCard key={film.id} film={film} />
+                    {actorInfo.cast?.map((film, index) =>
+                        <Grid item key={index} xs={12} sm={6} md={4}>
+                            <FilmCard film={film} />
                         </Grid>
                     )}
                 </Grid>
@@ -53,18 +54,18 @@ function ActorPage() {
             }
 
             {actorInfo?.crew?.length !== 0 ?
-                <div>
+                <Box>
                     <h1>Lista dei film in cui {actorInfo.personalInfo?.name} ha svolto un ruolo tecnico ({actorInfo?.crew?.length}) </h1>
                     <Grid container spacing={7}>
-                        {actorInfo.crew?.map(film =>
-                            <Grid item key={film.id} xs={12} sm={6} md={4}>
-                                <FilmCard key={film.id} film={film} />
+                        {actorInfo.crew?.map((film, index) =>
+                            <Grid item key={index} xs={12} sm={6} md={4}>
+                                <FilmCard film={film} />
                             </Grid>
                         )}
                     </Grid>
-                </div>: null
+                </Box>: null
             }
-        </div>
+        </Box>
 
     )
 }

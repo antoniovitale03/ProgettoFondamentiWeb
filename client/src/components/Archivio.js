@@ -161,8 +161,8 @@ function Archivio(){
                 (
                     <>
                     <Grid container spacing={2}>
-                        {archiveFilms.map(film => (
-                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
+                        {archiveFilms.map((film, index) => (
+                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                                 <FilmCard film={film} />
                             </Grid>
                         ))}

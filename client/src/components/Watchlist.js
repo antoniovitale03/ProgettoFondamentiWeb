@@ -4,14 +4,10 @@ import FilmCard from "./Cards/FilmCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Box, Grid} from "@mui/material";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "../context/authContext"
 
 function Watchlist(){
     useDocumentTitle("Watchlist");
     const {showNotification} = useNotification();
-    const navigate = useNavigate();
-    const {sleep} = useAuth();
     const [watchlistFilms, setWatchlistFilms] = useState([]);
 
     useEffect(() => {

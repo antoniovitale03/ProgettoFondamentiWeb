@@ -14,9 +14,9 @@ function CastPage(){
         <Box>
             <h1>Cast di "{filmTitle}" ( {cast.length} attori )</h1>
             <Grid container spacing={2}>
-                {cast.map((actor) =>
-                    <Grid item key={actor.id} xs={12} sm={6} md={4}>
-                        <ActorCard key={actor.id} actor={actor}/>
+                {cast.map((actor, index) =>
+                    <Grid item key={index} xs={12} sm={6} md={4}>
+                        <ActorCard actor={actor}/>
                     </Grid>
                 )}
             </Grid>

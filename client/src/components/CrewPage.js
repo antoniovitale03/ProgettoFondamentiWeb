@@ -15,9 +15,9 @@ function CrewPage(){
             <h1>Crew di "{filmTitle}" ({crew.length} membri)</h1>
             <Grid container spacing={7}>
 
-                {crew.map((crewMember) =>
-                    <Grid item key={crewMember.id} xs={12} sm={6} md={4} lg={3}>
-                        <CrewMemberCard key={crewMember.id} crewMember={crewMember} />
+                {crew.map((crewMember, index) =>
+                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        <CrewMemberCard crewMember={crewMember} />
                     </Grid>
                 )}
             </Grid>

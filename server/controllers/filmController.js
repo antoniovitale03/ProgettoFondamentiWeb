@@ -234,12 +234,6 @@ exports.getFilm = async (req, res) => {
 // N.B. usato id nell'api tmdb e _id in mongodb, in modo da poter effettuare populate()
 
 
-
-
-
-
-
-
 exports.getActorInfo = async (req, res) => {
     try{
         const actorID = req.params.actorID;

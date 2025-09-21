@@ -10,7 +10,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                 <Grid container spacing={2}>
                     <Grid item size={4}>
                         <p>
-                        <Button component={Link} to={`/film/${review.title}/${review._id}`}>
+                        <Button component={Link} to={`/film/${review.title}/${review.filmID}`}>
                             <strong>{review.title}</strong></Button>
                         {review.release_year ?
                             <Button component={Link} to={`/films/${review.release_year}/page/1`}>
@@ -18,7 +18,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                             </Button> : null
                         }
                         </p>
-                        <Button component={Link} to={`/film/${review.title}/${review._id}`}>
+                        <Button component={Link} to={`/film/${review.title}/${review.filmID}`}>
                             <CardMedia component="img" image={review.poster_path} alt="Locandina film"/>
                         </Button>
                     </Grid>
@@ -29,7 +29,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                     </Grid>
                     {showRemoveButton ?
                         <Grid item size={1}>
-                            <Button onClick={ () => onRemove(review._id, review.title) }>
+                            <Button onClick={ () => onRemove(review.filmID, review.title) }>
                                 <ClearIcon />
                             </Button>
                         </Grid> : null

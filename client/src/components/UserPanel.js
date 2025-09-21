@@ -78,7 +78,7 @@ function UserPanel() {
                       <Route path="/films/now-playing-films" element={<NowPlayingFilms />} />
                       <Route path="/films/trending-films" element={<TrendingFilms />} />
 
-                      <Route path={`/film/:filmTitle/:filmID/similar`} element={<SimilarFilms />} />
+                      <Route path="/film/:filmTitle/:filmID/similar" element={<SimilarFilms />} />
 
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />

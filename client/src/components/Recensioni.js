@@ -5,37 +5,41 @@ import {NavLink} from "react-router-dom";
 import ReviewCard from "./Cards/ReviewCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
-import {useAuth} from "../context/authContext";
-import {useNavigate} from "react-router-dom";
 
 function Recensioni(){
+
     useDocumentTitle("Le mie Recensioni");
-    const [filmReviews, setFilmReviews] = useState([]);
+    const [reviews, setReviews] = useState([]);
+    const [r, setR] = useState(32828); // variabile di stato che serve per tracciare quando una recensione viene rimossa
+    // (modificando r), cosi al variare della variabile di stato eseguo l'effetto per mostrare le recensioni.
+
     const {showNotification} = useNotification();
 
+
     useEffect(() => {
-        const fetchReviews = async () => {
+        const getReviews = async () => {
             try{
                 const response = await api.get('http://localhost:5001/api/films/reviews/get-reviews');
                 const reviews = await response.data;
-                setFilmReviews(reviews); // Salviamo i film nello stato
+                setReviews(reviews); // Salviamo i film nello stato
             }catch(error){
                 showNotification(error.response.data, "error");
             }
         }
-        fetchReviews();
-    });
+        getReviews();
+    }, [r]);
 
     const removeReview = async (filmID, reviewTitle) => {
         try {
             await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
-            showNotification(`La recensione di ${reviewTitle} è stata rimossa`, "success");
+            showNotification(`La recensione di "${reviewTitle}" è stata rimossa`, "success");
+            setR(r - 1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
     }
 
-    if (filmReviews.length === 0) {
+    if (reviews.length === 0) {
         return <Typography component="p">
             Non hai ancora aggiunto nessuna recensione! Clicca
             <NavLink to="/log-a-film"> qui </NavLink>
@@ -44,15 +48,14 @@ function Recensioni(){
     }
     return (
         <Box>
-            <h1>Hai recensito {filmReviews.length} film</h1>
+            <h1>Hai recensito {reviews.length} film</h1>
             <Grid container spacing={2}>
-                { [...filmReviews].reverse().map((review) =>
-                    <Grid item key={review._id} size={6}>
+                { [...reviews].reverse().map((review, index) =>
+                    <Grid item key={index} size={6}>
                     <ReviewCard review={review} showRemoveButton={true} onRemove={removeReview} />
                     </Grid>
                 )}
             </Grid>
-
         </Box>
     )
 }

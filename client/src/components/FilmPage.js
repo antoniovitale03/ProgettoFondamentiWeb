@@ -1,4 +1,4 @@
-import {useParams, useNavigate, Link, NavLink} from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext"
@@ -25,9 +25,8 @@ function FilmPage(){
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
 
-    filmTitle = filmTitle.replaceAll("-", " ");
 
-    useDocumentTitle(filmTitle);
+    useDocumentTitle(filmTitle.replaceAll("-", " "));
 
     const navigate = useNavigate();
 
@@ -52,7 +51,7 @@ function FilmPage(){
             await api.post('http://localhost:5001/api/films/reviews/add-review', {
                 title, release_year, review, reviewRating
             })
-            showNotification(`La recensione di ${filmTitle}" è stata salvata correttamente!`)
+            showNotification(`La recensione di "${filmTitle}" è stata salvata correttamente!`)
             navigate(`/film/${filmTitle}/${filmID}`);
             setReviewButton(0);
         }catch(error){
@@ -60,8 +59,6 @@ function FilmPage(){
         }
     }
 
-    //bisognerà aggiungere delle funzioni che vedono se il film è nella watchlist o meno, restituisce true o false: se è true allora
-    //fai vedere buttonState 0 altrimenti buttonState 1. questo
     const addToWatchlist = async (event) => {
         event.preventDefault();
         setWatchlistButton(0);
@@ -167,12 +164,11 @@ function FilmPage(){
     }
 
 
-    // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), calcoli i generi e i dettagli
+    // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
+    //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
         async function fetchFilm(){
             if (filmTitle && filmID) {
-                //utilizzando questa api ottengo tutte le info utili da mostrare nella pagina del Film usando come parametri
-                //filmTitle e filmID ottenuti dall'url
                 const response = await api.get(`http://localhost:5001/api/films/getFilm/${filmTitle}/${filmID}`);
                 const film = await response.data;
 
@@ -354,7 +350,7 @@ function FilmPage(){
                 </Button>
             }
 
-            {/* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte*/}
+            { /* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte*/ }
             {watchedButton === 0 ?
             <Button onClick={addToWatched}>
                 <VisibilityIcon />

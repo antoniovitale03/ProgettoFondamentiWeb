@@ -34,27 +34,22 @@ exports.addReview = async (req, res) => {
         }
 
         //il film è stato trovato, quindi modifico l'url per mostrare la locandina
-
-        await Review.findOneAndUpdate(
-            { _id: film.id }, // Condizione di ricerca
-            //se non esiste crea un nuovo oggetto film nella collezione films:
+        const reviewDocument = await new Review(
             {
-                _id: film.id,
+                filmID: film.id,
                 title: film.title,
                 poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
                 release_year: release_year,
                 review: review,
                 rating: reviewRating,
                 review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
-            },
-            {
-                upsert: true // Se il documento non esiste sulla base del filtro, ne crea uno nuovo sulla base di update
             }
-        );
+        )
+        await reviewDocument.save();
         //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
         await User.findByIdAndUpdate(userID, {
             $addToSet: {
-                reviews: film.id,
+                reviews: reviewDocument._id,
                 watched: film.id
             }
         });
@@ -77,7 +72,6 @@ exports.addReview = async (req, res) => {
 
         res.status(200).json(`Recensione di "${film.title}" salvata correttamente!`);
     }catch(error){
-        console.log(error)
         res.status(500).json("Errore interno del server.");
     }
 
@@ -88,20 +82,25 @@ exports.deleteReview = async (req, res) => {
     try{
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
+
         const user = await User.findById(userID);
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
 
-        user.reviews = user.reviews.filter(id => id !== filmID);
+        //trovo l'oggetto Recensione che voglio eliminare e ne calcolo l'id
+        const reviewDocument = await Review.findOne( { filmID: filmID });
+
+        user.reviews = user.reviews.filter(id => id !== reviewDocument._id);
         await user.save();
 
-        await Review.findOneAndDelete( {_id: filmID} );
+        await Review.findOneAndDelete( {_id: reviewDocument._id} );
+        res.status(200).json("Recensione rimossa");
 
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
-    res.status(200).json("Recensione rimossa")
+
 }
 
 exports.getReviews = async (req, res) => {
@@ -111,13 +110,7 @@ exports.getReviews = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "Utente non trovato." });
         }
-
-        let reviews = user.reviews.map( review => {
-            return {...review._doc}
-        })
-        reviews = await Promise.all(reviews);
-
-        res.status(200).json(reviews);
+        res.status(200).json(user.reviews);
 
     }catch(error){
         res.status(500).json("Errore interno del server.");

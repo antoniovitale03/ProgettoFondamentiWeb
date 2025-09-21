@@ -30,8 +30,9 @@ function Home(){
     return (
         <Box>
             <Box>
-                {user && <Typography component="h6" >Benvenuto nella home, {user.username}!</Typography>}
-                {!user && <h1 id="titolohome1"> Nome del sito</h1>}
+                {user ? <Typography component="h6" >Benvenuto nella home, {user.username}!</Typography>
+                : <h1 id="titolohome1"> Nome del sito</h1>
+                }
                 <h2 id="sottotitolo">slogan del sito</h2>
             </Box>
             <Box
