@@ -17,6 +17,7 @@ router.use("/home", homeRouter)
 
 //non inserisco questo percorso in homeRouter perchè viene usato per msotrare i film simili a partire dalla pagina dei film
 router.get("/get-similar/:filmID/:pageNumber", filmController.getSimilarFilms)
+
 router.get("/get-all-genres", filmController.getAllGenres)
 router.post("/get-archive-films", filmController.getArchiveFilms)
 router.post("/get-film-search-results", filmController.getFilmsFromSearch )

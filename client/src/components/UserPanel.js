@@ -7,7 +7,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Contact from "./Contact";
 import Help from "./Help";
-import ListaFilm from "./ListaFilm";
+import WatchedFilms from "./WatchedFilms";
 import Archivio from "./Archivio";
 import Recensioni from "./Recensioni";
 import Watchlist from "./Watchlist";
@@ -38,7 +38,7 @@ function UserPanel() {
     //                  "/log-a-film", "/film/:filmTitle/cast", "film/:filmTitle/crew", "/actor/:actorName/:actorID",
     //                  "/director/:directorName/:directorID", "/about", "/contact", "/help"]
     //
-    //     let components = [ <Home />, <Profile/>, <ListaFilm />, <FavoritesFilms/>, <Recensioni/>, <Watchlist/>, <ModifyProfile/>,
+    //     let components = [ <Home />, <Profile/>, <WatchedFilms />, <FavoritesFilms/>, <Recensioni/>, <Watchlist/>, <ModifyProfile/>,
     //                      <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
     //                      <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
 
@@ -46,11 +46,11 @@ function UserPanel() {
       <Box style={{ display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
           <Header />
           {/*Questa dice all'area main di crescere e occupare tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
-          <Container style={{flexGrow: 1, maxWidth: '90%'}}>
+          <Container style={{ flexGrow: 1, maxWidth: '90%' }}>
                   <Routes>
                       <Route path="/" element={<Home/>} />
                       <Route path="/profile" element={<Profile />} />
-                      <Route path="/lista-film" element={<ListaFilm />} />
+                      <Route path="/watched" element={<WatchedFilms />} />
                       <Route path="/favorites" element={<FavoritesFilms />} />
                       <Route path="/recensioni" element={<Recensioni />} />
                       <Route path="/watchlist" element={<Watchlist />} />

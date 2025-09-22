@@ -9,8 +9,8 @@ const filmSchema = new mongoose.Schema({
         id: {type: Number, required: true},
         name: { type: String, required: true }
     },
-    date: { type: String }, //usato per indica la data di visione nella lista dei film visti
-    poster_path: {type: String, required: true}
+    poster_path: {type: String, required: true},
+    date: { type: String, default: null } //usato per indica la data di visione nella lista dei film visti
 })
 
 module.exports = mongoose.model("Film", filmSchema);

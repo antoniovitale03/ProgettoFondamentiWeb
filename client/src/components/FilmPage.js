@@ -25,8 +25,8 @@ function FilmPage(){
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
 
-
-    useDocumentTitle(filmTitle.replaceAll("-", " "));
+    filmTitle = filmTitle.replaceAll("-", " ");
+    useDocumentTitle(filmTitle);
 
     const navigate = useNavigate();
 
@@ -52,7 +52,6 @@ function FilmPage(){
                 title, release_year, review, reviewRating
             })
             showNotification(`La recensione di "${filmTitle}" è stata salvata correttamente!`)
-            navigate(`/film/${filmTitle}/${filmID}`);
             setReviewButton(0);
         }catch(error){
             showNotification(error.response.data, "error");

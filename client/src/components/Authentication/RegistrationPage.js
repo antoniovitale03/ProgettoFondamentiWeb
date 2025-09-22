@@ -4,7 +4,8 @@ import "../../CSS/Form.css"
 import Footer from "../Footer";
 import useDocumentTitle from "../useDocumentTitle";
 import {useAuth} from "../../context/authContext"
-import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
+import { MuiOtpInput } from 'mui-one-time-password-input';
 import SendIcon from "@mui/icons-material/Send";
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
@@ -77,8 +78,7 @@ function RegistrationPage() {
 
 //il form cambia in base al valore di step (1 o 2)
     return (
-        <div className="page-container">
-            <div className="form-container">
+            <Box className="form-container">
                 <form onSubmit={step === 1 ? handleSubmit : handleVerify}>
                     <h2>{step === 1 ? "Registrazione" : "Verifica la tua identità"}</h2>
 
@@ -103,23 +103,38 @@ function RegistrationPage() {
                     }
                     {/* --- Step 2: Inserimento Codice di Verifica --- */}
                     {step === 2 ?
-                            <FormControl>
-                                <InputLabel htmlFor="verificationCode">Codice di verifica</InputLabel>
-                                <Input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required/>
-                            </FormControl>: null
+                            <Box>
+                                <h3>Codice di verifica</h3>
+                                <MuiOtpInput
+                                    value={verificationCode}
+                                    onChange={setVerificationCode}
+                                    length={6}
+                                    validateChar={ (value, index) => {return !isNaN(Number(value))} } // Accetta solo numeri
+                                    sx={{
+                                        // Stile per i quadrati
+                                        '& .MuiInputBase-root': {
+                                            width: '50px',
+                                            height: '50px',
+                                        },
+                                        '& .MuiInputBase-input': {
+                                            textAlign: 'center',
+                                            fontSize: '1.5rem',
+                                        }
+                                    }}
+                                />
+                            </Box>
+                        : null
                     }
 
                     {buttonState === 1 ? <Button type="submit" variant="contained">Registrati</Button> :
                     buttonState === 2 ? <Button loading variant="contained" loadingPosition="end">Verifica in corso</Button> :
-                    buttonState === 3 ? <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>: "Registrati"
+                    buttonState === 3 ? <Button variant="contained" type="submit" endIcon={<SendIcon />} disabled={verificationCode.length < 6}>Invia</Button>: "Registrati"
                     }
 
                 </form>
                 {step === 1 ?
                         <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p> : null}
-            </div>
-            <Footer />
-            </div>
+            </Box>
     )
 }
 

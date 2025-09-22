@@ -127,7 +127,15 @@ function Archivio(){
                                 <MenuItem key={index} value={genre.id}>{genre.name}</MenuItem>
                             ))}
                         </Select>
-                    </FormControl> : null
+                    </FormControl>
+                    : null
+                    //<Autocomplete
+                    //   disablePortal
+                    //   options={top100Films}
+                    //   sx={{ width: 300 }}
+                    //   renderInput={(params) => <TextField {...params} label="Movie" />}
+                    // />
+
                 }
 
 

@@ -5,7 +5,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Box, Grid} from "@mui/material";
 
-function ListaFilm(){
+function WatchedFilms(){
 
     useDocumentTitle("Lista dei film visti");
     const {showNotification} = useNotification();
@@ -53,4 +53,4 @@ function ListaFilm(){
     )
 }
 
-export default ListaFilm;
+export default WatchedFilms;

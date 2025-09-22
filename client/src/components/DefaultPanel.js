@@ -15,7 +15,7 @@ function DefaultPanel(){
     return(
         <Box style={{ display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
             <Header />
-            <Container style={{ flexGrow:1 }}>
+            <Container style={{ flexGrow:1, maxWidth:'90%' }}>
                 <Box>
                     <Routes>
                         <Route path="/" element={<Home/>} />

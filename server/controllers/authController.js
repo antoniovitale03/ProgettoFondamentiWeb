@@ -215,11 +215,16 @@ exports.logout = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
     try{
-        const userID = req.user.id; //prendo l'id dell'utente dall'oggetto user che ricevo dal middleware verifyJWT (essendo l'utente loggato possiamo prelevare i suoi dati dal token contenuto nel cookie della richiesta)
-        await User.findByIdAndDelete(userID);
+        const userID = req.user.id;
+        let confirmEmail = req.params.confirmEmail;
 
-        // 3. Cancella anche il cookie di sessione per completare il logout
-        res.cookie('token', '', { httpOnly: true, expires: new Date(0) });
+        const user = await User.findById(userID);
+        if (user.email !== confirmEmail) {
+            return res.status(400).json("L'email inserita non corrisponde a quella del tuo account. Riprova.");
+        }
+
+        //se le email corrispondono, procedo ad eliminare l'account (documento utente nel DB)
+        await User.findByIdAndDelete(userID);
 
         res.status(200).json("Account eliminato con successo." );
     } catch(error){

@@ -8,7 +8,6 @@ import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 
 function Carosello({ films, title, link }){
 
-
         //abbiamo bisogno di uno stato che tenga conto dell'indice
         const [indice, setIndice] = useState(0);
         //numero di immagini visibili a schermo
@@ -40,14 +39,10 @@ function Carosello({ films, title, link }){
             <Card key={index}>
                 <CardContent>
                     <Button component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
-                        <p>
                             <strong>{film.title}</strong>
-                        </p>
                     </Button>
                     <Button component={Link} to={`/films/${film.release_year}`}>
-                        <p>
                             <strong>({film.release_year})</strong>
-                        </p>
                     </Button>
 
                     <CardMedia key={index} component="img" image={film.poster_path}
@@ -69,12 +64,7 @@ function Carosello({ films, title, link }){
             <Button onClick={precedente} variant="outlined" disabled={indice === 0}>
                 <ArrowBackIosIcon />
             </Button>
-            <Button  
-            onClick={successiva}
-            variant="outlined"
-            sx={{ ml: 1 }}
-            disabled={indice >= films.length - immvisibili }
-        >
+            <Button onClick={successiva} variant="outlined" sx={{ ml: 1 }}disabled={indice >= films.length - immvisibili }>
                 <ArrowForwardIosIcon />
             </Button>
         </Box>

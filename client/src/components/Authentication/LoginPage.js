@@ -64,10 +64,9 @@ function LoginPage() {
     }
 
     return (
-        <Box className="page-container">
             <Box className="form-container">
                 <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
-                    <Typography component="h2">{ step === 1 ? "Login" : "Imposta una nuova password" }</Typography>
+                    <h2>{ step === 1 ? "Login" : "Imposta una nuova password" }</h2>
                     {/*  Fase di login */}
                     {step === 1 ?
                         <Stack spacing={5}>
@@ -103,7 +102,7 @@ function LoginPage() {
                         </Stack> : null
                         }
 
-                    {/* Impostazione del bottone del form al variare di step */}
+                    {/* Impostazione del bottone del form */}
                     {step === 1 ? <Button variant="contained" type="submit">Accedi</Button>:
                         step === 2 ? <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>
                         : null}
@@ -123,8 +122,6 @@ function LoginPage() {
                         <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </Typography>
                     </>)}
             </Box>
-            <Footer />
-        </Box>
     )
 }
 

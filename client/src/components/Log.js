@@ -1,17 +1,7 @@
 import useDocumentTitle from "./useDocumentTitle";
-import {
-    Box,
-    Button,
-    FormControl,
-    Input,
-    InputLabel,
-    MenuItem, Rating, Select,
-    Stack,
-    TextField,
-    Typography
-} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, MenuItem, Rating, Select, Stack, TextField, Typography} from "@mui/material";
 import '../CSS/Form.css';
-import {React, useState} from "react";
+import {useState} from "react";
 import {useNotification} from "../context/notificationContext";
 import {NavLink} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
