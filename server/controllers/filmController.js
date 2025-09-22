@@ -11,7 +11,7 @@ async function getFilmDirector(filmID) {
     const directorObject = credits.crew.find( (member) => member.job === 'Director');
 
     // 4. Estrai il nome (gestendo il caso in cui non venga trovato)
-    const director = directorObject ? {name: directorObject.name, id:directorObject.id} : null;
+    const director = directorObject ? { name: directorObject.name, id:directorObject.id } : null;
     return director;
 }
 
@@ -75,7 +75,7 @@ exports.getArchiveFilms = async (req, res) => {
         const { params } = req.body;
         let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${params.page}`;
         if (params.sortBy){
-            url += `&sortBy=${params.sortBy}`;
+            url += `&sort_by=${params.sortBy}`;
         }
         if (params.genre){
             url += `&with_genres=${params.genre}`;

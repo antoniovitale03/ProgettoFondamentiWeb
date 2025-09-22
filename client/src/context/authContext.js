@@ -23,9 +23,9 @@ export function AuthProvider({ children }) {
                  password
              });
 
-             const data = await response.data; //data è JSON, response è JS (contiene i dati dell'utente appena loggato)
+             const data = await response.data; //data contiene i dati dell'utente + accessToken (che verranno salvati nella variabile di stato user e
+             // nella memoria locale del browser)
 
-             // Se la chiamata API ha successo, aggiorna lo stato e localStorage
              setUser(data);
              localStorage.setItem('user', JSON.stringify(data));
 
@@ -42,8 +42,8 @@ export function AuthProvider({ children }) {
             }catch(error){
                 throw new Error(error.response.data);
             }
-        //il server invierà un messaggio con cookie già scaduto, quindi viene scartato dal client
 
+        //il server invierà un messaggio con cookie già scaduto, quindi viene scartato dal client
         setUser(null);
         localStorage.removeItem('user');
     };

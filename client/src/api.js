@@ -2,7 +2,7 @@
 import axios from "axios";
 const api = axios.create({
     baseURL: "http://localhost:3000",
-    withCredentials: true //ogni richiesta fatta con axios includerà automaticamente i cookie
+    withCredentials: true //ogni richiesta fatta con axios includerà automaticamente i cookie (utile per inviare il refresh-token tramite i cookie)
 })
 
 // Intercettore che in caso di risposta 401 Unauthorized refresha il token
@@ -38,7 +38,7 @@ api.interceptors.response.use(
                 // Se il refresh ha successo, ritenta la richiesta originale
                 return api(originalRequest);
             } catch (refreshError) {
-                // Se anche il refresh fallisce, crea un evento "logout-event" che verrà catturato da App.js che eseguirà logout()
+                // Se anche il refresh fallisce (refresh-token scaduto), crea un evento "logout-event" che verrà catturato da App.js che eseguirà logout()
                 window.dispatchEvent(new CustomEvent('logout-event'));
                 return Promise.reject(refreshError);
             }
@@ -56,11 +56,10 @@ api.interceptors.request.use(
         const accessToken = user?.accessToken; // Assumendo che il token sia salvato qui
 
         if (accessToken) {
-            // 2. Se il token esiste, aggiungilo agli header
+            // Se il token esiste, aggiungilo agli header
             config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
-
-        return config; // Restituisci la configurazione aggiornata
+        return config;
     },
     (error) => {
         return Promise.reject(error);

@@ -6,6 +6,7 @@ const connectdb = require("./controllers/connect_db_controller")
 // Importa il file delle rotte
 const authRouter = require('./routes/authRouter');
 const filmRouter = require('./routes/filmRouter');
+
 const app = express(); // Creiamo un'istanza del nostro server Express.
 const PORT = 5001; // Definiamo la porta su cui ascolterà.
 
@@ -17,15 +18,15 @@ app.use(cors({
 
 app.use(express.json({ limit: '50mb' }));  // Questo è FONDAMENTALE. Permette al server di capire i dati in formato JSON inviati dal frontend. Senza questo, req.body sarebbe indefinito.
 // in questo modo impostiamo le regole generali per tutte le richieste in arrivo.
+
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 app.use(cookieParser()) // questo permette al server di leggere il token dal cookie presente nelle richieste successive del client dopo la fase di login
 
 app.use('/api/auth', authRouter)  //gestione dell'autenticazione
 app.use('/api/films', filmRouter)  //gestione dei film
 
 connectdb();
-
-
 
 
 app.listen(PORT, () => {

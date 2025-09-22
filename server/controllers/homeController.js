@@ -1,5 +1,15 @@
 const User = require("../models/User");
 
+function formatData(arrayFilm){
+    return arrayFilm.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
+            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+        }
+    });
+}
 //ottengo tutte le info dei film e li inserisco nella homePage
 exports.getHomePageFilmsInfo = async (req, res) => {
     try{
@@ -70,14 +80,7 @@ exports.getCurrentPopularFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
         let data = await response.json();
-        data.results = data.results.map(film => {
-            return {
-                _id: film.id,
-                title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
-            }
-        })
+        data.results = formatData(data.results);
         res.status(200).json(data);
     }catch(error){
         res.status(500).json("Errore interno del server");
@@ -89,13 +92,7 @@ exports.getUpcomingFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=${pageNumber}`);
         let data = await response.json();
-        data.results = data.results.map(film => {
-            return {
-                _id: film.id,
-                title: film.title,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
-            }
-        })
+        data.results = formatData(data.results);
         res.status(200).json(data);
     }catch(error){
         res.status(500).json("Errore interno del server");
@@ -107,14 +104,7 @@ exports.getTopRatedFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY_TMDB}&language=it-IT&page=${pageNumber}`);
         let data = await response.json();
-        data.results = data.results.map(film => {
-            return {
-                _id: film.id,
-                title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
-            }
-        })
+        data.results = formatData(data.results);
         res.status(200).json(data);
     }catch(error){
         res.status(500).json("Errore interno del server");
@@ -126,14 +116,7 @@ exports.getNowPlayingFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=${pageNumber}`);
         let data = await response.json();
-        data.results = data.results.map(film => {
-            return {
-                _id: film.id,
-                title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
-            }
-        })
+        data.results = formatData(data.results);
         res.status(200).json(data);
     }catch(error){
         res.status(500).json("Errore interno del server");
@@ -146,14 +129,7 @@ exports.getTrendingFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
         let data = await response.json();
-        data.results = data.results.map(film => {
-            return {
-                _id: film.id,
-                title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
-            }
-        })
+        data.results = formatData(data.results);
         res.status(200).json(data);
     }catch(error){
         res.status(500).json("Errore interno del server");

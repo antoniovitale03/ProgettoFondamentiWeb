@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invec
 // Usiamo un operatore ternario per restituire la classe 'nav-link active' se il link è attivo, altrimenti solo 'nav-link'
 
 import {useAuth} from "../context/authContext";
-import {Container, Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar} from "@mui/material";
+import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import logo from "../assets/images/AppLogo.png"
@@ -20,6 +20,7 @@ import {Link} from "react-router-dom";
 function Header() {
     const {isLoggedIn, user, logout} = useAuth();
     const [title, setTitle] = useState("");
+
     const userMenuLinks = ["/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist"]
     const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"]
 
@@ -27,7 +28,7 @@ function Header() {
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
 
     let userMenuItems = [
-        ...userMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{userMenuNames[index]}</MenuItem>),
+        userMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{userMenuNames[index]}</MenuItem>),
         <MenuItem component={Button} key={10102} onClick={logout}>
         Logout
         </MenuItem>

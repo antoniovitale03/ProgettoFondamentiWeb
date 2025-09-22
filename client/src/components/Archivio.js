@@ -17,7 +17,6 @@ const generateDecadesArray = () => {
 }
 
 
-
 function Archivio(){
     useDocumentTitle("Archivio");
     const {showNotification} = useNotification();
@@ -29,7 +28,7 @@ function Archivio(){
 
     const [archiveFilms, setArchiveFilms] = useState([]);
 
-    //variabile di stato per gestire i filtri, inizialmente nulli
+    //variabile di stato per gestire i filtri
     const [filters, setFilters] = useState({
         page: currentPage,
         genre: '', // Valore per "Tutti i Generi"

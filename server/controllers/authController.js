@@ -96,17 +96,13 @@ exports.login = async (req, res) => {
                 username: user.username,
                 email: user.email
 
-            } // Includo nel payload anche l'ID dell'utente nel token (quello che c'è nel DB)
+            }
         };
-        // Firma il token con un segreto e imposta una scadenza
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"})
+        // Creo i due token
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"}) // verrà salvato nella memoria locale del browser
+        const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"}) // verrà salvato nel DB
 
-        //ora creiamo il refreshToken a lunga scadenza (es. 7 giorni), dopo la quale l'utente viene sloggato dal sistema
-        //il ruolo del refreshToken è di aggiornare e dare al front end un nuovo accessToken ogni volta che ne scade uno
-        // per permetterea all'utente di restare loggato e non fare login ogni 15 minuti
-        const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"})
-
-        //salvo il refreshtoken nel db
+        //salvo il refreshtoken nel DB nella proprietà refreshToken dell'utente
         user.refreshToken = refreshToken;
         await user.save();
 
@@ -122,8 +118,7 @@ exports.login = async (req, res) => {
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
         //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
 
-        // Invia una risposta di successo con solo i dati dell'utente (ma senza il token)
-        //il campo user corrisponde alla variabile user che viene salvata nel contesto (lato Front end)
+        // Invia come riposta i dati dell'utente + accessToken
         res.status(200).json({
                 id: user._id,
                 username: user.username,
@@ -137,9 +132,8 @@ exports.login = async (req, res) => {
 
 exports.refresh = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) {
-        return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
-    }
+    if (!refreshToken) return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
+
 
     const user = await User.findOne({ refreshToken });
     if (!user) return res.status(403).json("Il refresh token non corrisponde a nessun utente")
@@ -193,16 +187,28 @@ exports.forgotPassword = async (req, res) => {
     }
 }
 
-exports.logout = async (req, res) => { //il server invia al client un cookie già scaduto, così il client automaticamente lo cancellerà
+exports.logout = async (req, res) => {
+    //devo invalidare il refreshToken eliminandolo dal DB e l'access Token inviando al client un cookie già scaduto, così
+    // verrà automaticamente scartato.
     try {
-        res.cookie('token', '', {
+        let refreshToken = req.cookies.refreshToken;
+
+        const user = await User.findOne({ refreshToken: refreshToken });
+        if (user) {
+            //Rimuovo il refresh token dal documento dell'utente nel DB
+            user.refreshToken = '';
+            await user.save();
+        }
+
+        res.cookie('accessToken', '', {
             httpOnly: true,
             expires: new Date(0)
         });
-        res.status(200).json({ message: 'Logout effettuato con successo.' });
+
+        res.status(200).json('Logout effettuato con successo.');
     }
     catch (error) {
-        res.status(500).json({ message: 'Errore del server.' });
+        res.status(500).json('Errore del server.');
     }
 
 }

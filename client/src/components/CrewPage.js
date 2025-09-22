@@ -1,7 +1,7 @@
 import CrewMemberCard from './Cards/CrewMemberCard'
 import {useLocation, useParams} from "react-router-dom";
 import useDocumentTitle from "./useDocumentTitle";
-import {Grid} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 
 function CrewPage(){
     const { filmTitle } = useParams()
@@ -11,7 +11,7 @@ function CrewPage(){
     const location = useLocation();
     const crew = location.state?.crew;
     return(
-        <div>
+        <Box>
             <h1>Crew di "{filmTitle}" ({crew.length} membri)</h1>
             <Grid container spacing={7}>
 
@@ -21,7 +21,7 @@ function CrewPage(){
                     </Grid>
                 )}
             </Grid>
-        </div>
+        </Box>
 
     )
 }

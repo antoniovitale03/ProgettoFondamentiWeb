@@ -12,7 +12,6 @@ function App() {
 
     //Effetto per verificare se il token è scaduto, nel caso si procede al logout
     useEffect(() => {
-
         const handleLogout = () => logout()
 
         // Si mette in ascolto dell'evento "logout-event" lanciato da api.js
@@ -20,9 +19,7 @@ function App() {
         window.addEventListener('logout-event', handleLogout);
 
         // Funzione di pulizia per rimuovere l'ascoltatore
-        return () => {
-            window.removeEventListener('logout-event', handleLogout);
-        };
+        return () => window.removeEventListener('logout-event', handleLogout);
     }, [logout]);
 
    return(
