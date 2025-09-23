@@ -1,9 +1,8 @@
 import {React, useEffect, useState} from "react";
 import api from "../../api";
-import {useParams, useNavigate} from "react-router-dom";
 import useDocumentTitle from "../useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
-import {Box, Button, Grid, Pagination} from "@mui/material";
+import {Grid, Pagination, Stack} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
 function TopRatedFilms() {
@@ -39,7 +38,7 @@ function TopRatedFilms() {
 
 
     return(
-        <Box>
+        <Stack spacing={3}>
             <h1>Film più acclamati</h1>
 
             <Pagination
@@ -51,9 +50,9 @@ function TopRatedFilms() {
             />
 
             <Grid container spacing={7}>
-                { films?.map( film =>
-                    <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
-                        <FilmCard key={film._id} film={film} />
+                { films?.map( (film, index) =>
+                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        <FilmCard film={film} />
                     </Grid>
                 )}
             </Grid>
@@ -66,7 +65,7 @@ function TopRatedFilms() {
                 size="large"
             />
 
-        </Box>
+        </Stack>
     )
 }
 

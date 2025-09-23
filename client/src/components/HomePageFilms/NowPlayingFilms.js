@@ -2,7 +2,7 @@ import {React, useEffect, useState} from "react";
 import api from "../../api";
 import useDocumentTitle from "../useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
-import {Box, Grid, Pagination} from "@mui/material";
+import {Box, Grid, Pagination, Stack} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
 function NowPlayingFilms() {
@@ -35,7 +35,7 @@ function NowPlayingFilms() {
     };
 
     return(
-        <Box>
+        <Stack spacing={3}>
             <h1>Film attualmente al cinema</h1>
 
             <Pagination
@@ -47,9 +47,9 @@ function NowPlayingFilms() {
             />
 
             <Grid container spacing={7}>
-                { films?.map( film =>
-                    <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
-                        <FilmCard key={film._id} film={film} />
+                { films?.map( (film, index) =>
+                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        <FilmCard film={film} />
                     </Grid>
                 )}
             </Grid>
@@ -62,7 +62,7 @@ function NowPlayingFilms() {
                 size="large"
             />
 
-        </Box>
+        </Stack>
     )
 }
 

@@ -65,8 +65,8 @@ function UserPanel() {
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
                       <Route path="/log-a-film" element={<Log />} />
 
-                      <Route path="/film/:filmTitle/cast" element={<CastPage />} />
-                      <Route path="/film/:filmTitle/crew" element={<CrewPage />} />
+                      <Route path="/film/:filmTitle/:filmID/cast" element={<CastPage />} />
+                      <Route path="/film/:filmTitle/:filmID/crew" element={<CrewPage />} />
                       <Route path="/films/:year" element={<FilmsByYear />} />
                       <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
                       <Route path="/director/:directorName/:directorID" element={ <DirectorPage />} />

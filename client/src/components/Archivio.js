@@ -1,5 +1,17 @@
 import useDocumentTitle from "./useDocumentTitle";
-import {Box, FormControl, Grid, InputLabel, MenuItem, Pagination, Rating,Select, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Pagination,
+    Rating,
+    Select,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import {React, useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
@@ -22,20 +34,15 @@ function Archivio(){
     const {showNotification} = useNotification();
 
     const [currentPage, setCurrentPage] = useState(1); //i film vengono mostrati paginati
+    const [genre, setGenre] = useState("");
+    const [decade, setDecade] = useState("");
+    const [minRating, setMinRating] = useState(0);
+    const [sortBy, setSortBy] = useState("");
     const [totalPages, setTotalPages] = useState(0);
 
     const [genres, setGenres] = useState([]); // generi che vengono trovati solo al primo render del componente
 
     const [archiveFilms, setArchiveFilms] = useState([]);
-
-    //variabile di stato per gestire i filtri
-    const [filters, setFilters] = useState({
-        page: currentPage,
-        genre: '', // Valore per "Tutti i Generi"
-        decade: '', // Valore per "Tutte le Decadi"
-        minRating: 0,
-        sortBy: '' // Valore di default per l'ordinamento
-    });
 
     //effetto per calcolare l'array con i generi (+ id corrispondente) una sola volta
     useEffect(() => {
@@ -58,10 +65,10 @@ function Archivio(){
                 //della pagina
                 const params = {
                     page: currentPage,
-                    genre: filters.genre,
-                    decade: filters.decade,
-                    minRating: filters.minRating,
-                    sortBy: filters.sortBy
+                    genre: genre,
+                    decade: decade,
+                    minRating: minRating,
+                    sortBy: sortBy
                 };
 
                 const response = await api.post('http://localhost:5001/api/films/get-archive-films', { params });
@@ -76,28 +83,7 @@ function Archivio(){
             }
         }
         fetchArchiveFilms();
-    }, [filters, currentPage]);
-
-    //Quando handleFilterChange viene chiamato, riceve il value del <MenuItem> selezionato, cioè l'ID (genre.id).
-    const handleFilterChange = (event) => {
-        const { name, value } = event.target;
-        setFilters(prevFilters => ({
-            ...prevFilters,
-            [name]: value
-        }));
-        setCurrentPage(1); // resetta la pagina quando un filtro cambia
-    };
-
-    const handleRatingChange = (event, rating) => {
-        //modifico l'oggetto event per poterlo passare a handleFilterChange
-        const modifiedEvent = {
-            target: {
-                name: "minRating",
-                value: rating
-            }
-        };
-        handleFilterChange(modifiedEvent);
-    }
+    }, [currentPage, genre, decade, minRating, sortBy]);
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -105,7 +91,7 @@ function Archivio(){
     };
 
     return(
-        <Box>
+        <Stack spacing={3}>
             <Typography variant="h4" component="h1">
                 Esplora l'Archivio
             </Typography>
@@ -118,30 +104,27 @@ function Archivio(){
                 size="large"
             />
 
-            <Box>
-                {genres.length > 0 ?
+            <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                {
+                    genres.length > 0 ?
                     <FormControl sx={{ minWidth: 180 }}>
                         <InputLabel>Genere</InputLabel>
-                        <Select name="genre" value={filters.genre} label="Genere" onChange={(event, rating) => handleFilterChange(event, rating)} variant="standard">
+                        <Select value={genre} label="Genere" variant="standard" onChange={(event) => {
+                            setGenre(event.target.value);
+                            setCurrentPage(1);}}>
                             {genres.map((genre, index) => (
                                 <MenuItem key={index} value={genre.id}>{genre.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                     : null
-                    //<Autocomplete
-                    //   disablePortal
-                    //   options={top100Films}
-                    //   sx={{ width: 300 }}
-                    //   renderInput={(params) => <TextField {...params} label="Movie" />}
-                    // />
-
                 }
-
 
                 <FormControl sx={{ minWidth: 180 }}>
                     <InputLabel>Decade</InputLabel>
-                    <Select name="decade" value={filters.decade} label="Decade" onChange={handleFilterChange} variant="standard">
+                    <Select name="decade" value={decade} label="Decade" variant="standard" onChange={(event) =>
+                    {setDecade(event.target.value);
+                    setCurrentPage(1);}} >
                         {generateDecadesArray().map((decade, index) => (
                             <MenuItem key={index} value={decade}>{decade}s</MenuItem>
                         ))}
@@ -150,44 +133,44 @@ function Archivio(){
 
                 <FormControl sx={{ minWidth : 180}}>
                     <Typography component="legend">Minimo Rating medio</Typography>
-                    <Rating name="minRating" value={filters.minRating} onChange={handleRatingChange} precision={0.5} />
+                    <Rating name="minRating" value={minRating} onChange={(event) =>
+                        {setMinRating(event.target.value);
+                        setCurrentPage(1);}} precision={0.5} />
                 </FormControl>
 
                 <FormControl sx={{ minWidth: 180 }}>
                     <InputLabel>Ordina per</InputLabel>
-                    <Select name="sortBy" value={filters.sortBy} label="Ordina per" onChange={handleFilterChange} variant="standard">
+                    <Select name="sortBy" value={sortBy} label="Ordina per" variant="standard" onChange={(event) =>
+                    {setSortBy(event.target.value);
+                    setCurrentPage(1);}} >
                         <MenuItem value="popularity.desc">Dal più popolare</MenuItem>
                         <MenuItem value="popularity.asc">Dal meno popolare</MenuItem>
                     </Select>
                 </FormControl>
 
-
-
             </Box>
             {archiveFilms.length > 0 ?
-                (
-                    <>
-                    <Grid container spacing={2}>
-                        {archiveFilms.map((film, index) => (
-                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                                <FilmCard film={film} />
-                            </Grid>
-                        ))}
-                    </Grid>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                        <Pagination
-                            count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                            page={currentPage}
-                            onChange={handlePageChange}
-                            color="primary"
-                            size="large"
-                        />
+                    <Box>
+                        <Grid container spacing={2}>
+                            {archiveFilms.map((film, index) => (
+                                <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                                    <FilmCard film={film} />
+                                </Grid>
+                            ))}
+                        </Grid>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                            <Pagination
+                                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                                page={currentPage}
+                                onChange={handlePageChange}
+                                color="primary"
+                                size="large"
+                            />
+                        </Box>
                     </Box>
-                    </>
-                ) : <p>Caricamento dei film...</p>
-
+                : <p>Caricamento dei film...</p>
             }
-        </Box>
+        </Stack>
     )
 }
 

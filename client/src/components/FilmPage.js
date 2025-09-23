@@ -1,8 +1,8 @@
-import {useParams, useNavigate, Link} from 'react-router-dom';
+import {useParams, Link} from 'react-router-dom';
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext"
-import {Box, Button, MenuItem, Rating, TextField} from "@mui/material";
+import {Box, Button, Card, CardContent, CardMedia, Grid, MenuItem, Rating, TextField} from "@mui/material";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -18,6 +18,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import DropDownMenu from './DropDownMenu';
 import * as React from "react";
 import api from "../api";
+import FilmCard from "./Cards/FilmCard";
 
 // /film/filmTitle/filmID
 function FilmPage(){
@@ -25,10 +26,10 @@ function FilmPage(){
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
 
+
     filmTitle = filmTitle.replaceAll("-", " ");
     useDocumentTitle(filmTitle);
 
-    const navigate = useNavigate();
 
     const {showNotification} = useNotification();
     const [film, setFilm] = useState(null);
@@ -162,7 +163,6 @@ function FilmPage(){
         }
     }
 
-
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
@@ -170,26 +170,28 @@ function FilmPage(){
             if (filmTitle && filmID) {
                 const response = await api.get(`http://localhost:5001/api/films/getFilm/${filmTitle}/${filmID}`);
                 const film = await response.data;
-
                 setFilm(film);
 
                 //renderizzo i bottoni in base allo stato attuale del film
-                setWatchlistButton(film.filmInfo[0] === true ? 0 : 1);
-                setLikedButton(film.filmInfo[1] === true ? 0 : 1);
-                setReviewButton(film.filmInfo[2] === true ? 0 : 1);
-                setFavoritesButton(film.filmInfo[3] === true ? 0 : 1);
-                setWatchedButton(film.filmInfo[4] === true ? 0 : 1);
+                setWatchlistButton(film?.filmStatus.isInWatchlist === true ? 0 : 1);
+                setLikedButton(film?.filmStatus.isLiked === true ? 0 : 1);
+                setReviewButton(film?.filmStatus.isReviewed === true ? 0 : 1);
+                setFavoritesButton(film?.filmStatus.isFavorite === true ? 0 : 1);
+                setWatchedButton(film?.filmStatus.isWatched === true ? 0 : 1);
             }
         }
         fetchFilm();
     }, [filmTitle, filmID])
 
+
+
     let genreMenuItems = (
         <div>
-        {film?.genres.map( (genre) =>
-            <MenuItem key={genre.id}>
+        {film?.genres.map( (genre, index) =>
+            <MenuItem key={index}>
                 <strong>{genre.name}</strong>
-            </MenuItem> )}
+            </MenuItem>
+        )}
         </div>
     )
 
@@ -265,11 +267,11 @@ function FilmPage(){
 
 
             <div style={{ display:"flex", flexDirection: 'row' }}>
-                <Button component={Link} to={`/film/${filmTitle}/cast`} state={{ cast: film.cast}} >
+                <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/cast`}>
                 Cast
                 </Button>
 
-                <Button component={Link} to={`/film/${filmTitle}/crew`} state={{ crew: film.crew}}>
+                <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/crew`}>
                     Crew
                 </Button>
 
@@ -277,6 +279,59 @@ function FilmPage(){
 
                 <DropDownMenu buttonContent="Generi" menuContent={genreMenuItems} />
             </div>
+
+            {film?.rent ?
+                    <div>
+                        <p>Noleggia</p>
+                        <Grid container>
+                            { film.rent.map( film =>
+                                <Grid item size={4}>
+                                    <Card>
+                                        <CardContent>
+                                            <p>{film.provider_name}</p>
+                                            <img src={film.logo_path} />
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            )
+                            }
+                        </Grid>
+                    </div>
+                : null
+                }
+
+            { film?.flatrate ? <div>
+                <p>Guarda in streaming</p>
+                <Grid container>
+                    { film.flatrate.map( film =>
+                        <Card>
+                            <CardContent>
+                                <p>{film.provider_name}</p>
+                                <img src={film.logo_path} />
+                            </CardContent>
+                        </Card>
+                    )
+                    }
+                </Grid>
+            </div> : null
+            }
+
+            { film?.buy ? <div>
+                <p>Acquista</p>
+                <Grid container>
+                    { film.buy.map( film =>
+                        <Card>
+                            <CardContent>
+                                <p>{film.provider_name}</p>
+                                <img src={film.logo_path} />
+                            </CardContent>
+                        </Card>
+                    )
+                    }
+                </Grid>
+            </div> : null
+            }
+
             {film.avgRating !== null ? <div>
                 <p>Rating medio: {film.avgRating}</p>
                 <Rating name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
@@ -288,10 +343,6 @@ function FilmPage(){
                 <Rating name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
             </div> : null
             }
-
-            <div style={{ textAlign: 'center' }}>
-
-            </div>
 
             <div>
             {watchlistButton === 1 ?
@@ -358,10 +409,27 @@ function FilmPage(){
             }
             </div>
 
+
             {/* mostro i film simili */}
-            <Button component={Link} to={`/film/${filmTitle}/${filmID}/similar`}>
+            <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
                 Film simili a "{film.title}"
             </Button>
+
+            { /* Se il film appartiene ad una saga, allora mostro anche gli altri film che vi appartengono */ }
+            { film?.collection ?
+                <div>
+                    <p>La saga completa</p>
+                    <Grid container spacing={2}>
+                        {film?.collection?.map( (film, index) =>
+                            <Grid item key={index} size={3}>
+                                <FilmCard film={film} />
+                            </Grid>
+                        )}
+                    </Grid>
+                </div> : null
+            }
+
+
         </Box>
     )
 }

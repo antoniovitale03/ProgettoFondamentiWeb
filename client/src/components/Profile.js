@@ -12,7 +12,7 @@ function Profile(){
     const {user} = useAuth();
 
     const {showNotification} = useNotification();
-    useDocumentTitle("Profilo")
+    useDocumentTitle("Il mio profilo");
 
     const [favoritesFilms, setFavoritesFilms] = useState([]);
     const [watchedFilms, setWatchedFilms] = useState([]);

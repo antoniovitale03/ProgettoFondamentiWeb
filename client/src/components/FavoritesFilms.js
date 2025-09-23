@@ -3,10 +3,12 @@ import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Box, Grid} from "@mui/material";
+import useDocumentTitle from "./useDocumentTitle"
 
 function FavoritesFilms(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
     const {showNotification} = useNotification();
+    useDocumentTitle("I miei film preferiti");
 
     useEffect(() => {
         const fetchFavorites = async () => {

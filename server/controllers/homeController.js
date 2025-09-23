@@ -1,15 +1,30 @@
 const User = require("../models/User");
 
+
+
+//funzione che calcola l'url delle immagini
+function getImageUrl(baseUrl, size, imagePath){
+    if(imagePath){
+        return `${baseUrl}/${size}/${imagePath}`;
+    }else{
+        const width = parseInt(size.substring(1), 10); //w500 -> 500
+        const height = Math.round(width * 1.5);
+        return `https://placehold.co/${width}x${height}/EFEFEF/EFEFEF`;
+    }
+}
+
 function formatData(arrayFilm){
     return arrayFilm.map(film => {
         return {
             _id: film.id,
             title: film.title,
             release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+            poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+            rating: null
         }
     });
 }
+
 //ottengo tutte le info dei film e li inserisco nella homePage
 exports.getHomePageFilmsInfo = async (req, res) => {
     try{
@@ -27,7 +42,7 @@ exports.getHomePageFilmsInfo = async (req, res) => {
                     _id: film.id,
                     title: film.title,
                     release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                    poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : null,
+                    poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
                 }
             })
             return data.results.slice(0,5);
@@ -54,7 +69,7 @@ exports.getHomePageFilmsInfo = async (req, res) => {
                     _id: film.id,
                     title: film.title,
                     release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                    poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+                    poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
                 }
             })
         });

@@ -1,6 +1,17 @@
 require('dotenv').config();
 const User = require('../models/User');
 
+//funzione che calcola l'url delle immagini
+function getImageUrl(baseUrl, size, imagePath){
+    if(imagePath){
+        return `${baseUrl}/${size}/${imagePath}`;
+    }else{
+        const width = parseInt(size.substring(1), 10); //w500 -> 500
+        const height = Math.round(width * 1.5);
+        return `https://placehold.co/${width}x${height}/EFEFEF/EFEFEF`;
+    }
+}
+
 async function getFilmDirector(filmID) {
     // Chiamata usata per ottenere il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...), più
     //utile per ottenere solo
@@ -15,6 +26,67 @@ async function getFilmDirector(filmID) {
     return director;
 }
 
+//vede se il film si trova in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
+async function getFilmStatus(user, filmID){
+    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
+
+    let isLiked = user.liked.find( (id) => id === filmID )
+
+    let isReviewed = user.reviews.find( (review) => review.filmID === filmID )
+
+    let isFavorite = user.favorites.find( (id) => id === filmID )
+
+    let isWatched = user.watched.find( (id) => id === filmID )
+
+    return {
+        isInWatchlist: isInWatchlist === undefined ? false : true,
+        isLiked: isLiked === undefined ? false : true,
+        isReviewed: isReviewed === undefined ? false : true,
+        isFavorite: isFavorite === undefined ? false : true,
+        isWatched: isWatched === undefined ? false : true,
+    }
+
+}
+
+//trova il trailer YT del film
+async function getFilmTrailer(filmID) {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/videos?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+    let data = await response.json();
+    let youtubeTrailerObj = data.results.find( video => video.site === 'YouTube' && video.type === 'Trailer');
+    if (youtubeTrailerObj) {
+        let key = youtubeTrailerObj.key;
+        return `https://www.youtube.com/watch?v=${key}`;
+    }else{ return null }
+}
+
+//calcola il rating medio dle film e quello inserito dlal'utente durante la recensione
+async function getRating(user, film, filmID){
+    let avgRating = (film.vote_average)/2; //rating in quinti
+    avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;  //lo blocco ad una cifra decimale (se è 0 lo setto a null)
+
+    //calcolo il rating inserito dall'utente
+    user = await user.populate('reviews');
+    let review = user.reviews.find( (review) => review.filmID === filmID);
+    let userRating = review !== undefined ? review.rating : null;
+    return {avgRating, userRating};
+}
+
+async function getCollectionFilms(film){
+    if (film.belongs_to_collection){
+        let collectionID = film.belongs_to_collection.id;
+        let response = await fetch(`https://api.themoviedb.org/3/collection/${collectionID}?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+        let data = await response.json();
+        return data.parts.map( film => {
+            return {
+                _id: film.id,
+                title: film.title,
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
+                rating: null
+            }
+        })
+    }else{ return null }
+}
 
 //le richieste sono paginate (prendo solo la prima pagina massimo 20 film da mostrare nel carosello).
 
@@ -29,7 +101,7 @@ exports.getSimilarFilms = async (req, res) => {
             _id: film.id,
             title: film.title,
             release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+            poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
         }
     })
     res.status(200).json(data);
@@ -56,13 +128,14 @@ exports.getFilmsFromSearch = async (req, res) => {
     //converto release_date indicando solo l'anno di uscita senza mese e giorno
     films = films.map(async (film) => {  //array di Promise
         const director = await getFilmDirector(film.id);
-        const year = film.release_date ? new Date(film.release_date).getFullYear() : "N/A";
+        const year = film.release_date ? new Date(film.release_date).getFullYear() : null;
         return {
             title: film.title,
             _id: film.id,
             director: director,
-            poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+            poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
             release_year: year,
+            rating: null
         };
     });
 
@@ -90,7 +163,6 @@ exports.getArchiveFilms = async (req, res) => {
             url += `&primary_release_date.lte=${lastYear}-12-31`;
         }
 
-
         if(params.minRating !== 0){
             url += `&vote_average.gte=${params.minRating}`;
         }
@@ -101,8 +173,9 @@ exports.getArchiveFilms = async (req, res) => {
         const films = data.results.map(film => {
             return {
                 _id: film.id, title: film.title,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : 'N/A'
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
+                rating: null
             }
         })
 
@@ -125,83 +198,66 @@ exports.getFilmsByYear = async (req, res) => {
             return {
                 _id: film.id,
                 title: film.title,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                rating: null
             }}
         )
         data = {films: data.results, totalPages: data.total_pages}
         res.status(200).json(data); //invio l'array dei film e il numero totali di pagine
     }catch(error){
-        console.log(error);
         res.status(200).json("Errore nel caricamento dei film")
     }
 
 }
 //questa funzione serve per trovare un film conoscendo il suo ID di tmdb e il suo titolo, restituendo tutte le informazioni che
 //dovranno essere mostrate nella filmPage
+
+exports.getCast = async (req, res) => {
+    const filmID = parseInt(req.params.filmID);
+    const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
+    const credits = await creditsResponse.json();
+    let cast = credits.cast.map( (actor) => {
+        return {...actor, profile_path: getImageUrl(process.env.baseUrl, "w500", actor.profile_path)}
+    })
+    res.status(200).json(cast);
+}
+
+exports.getCrew = async (req, res) => {
+    const filmID = parseInt(req.params.filmID);
+    const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
+    const credits = await creditsResponse.json();
+    let crew = credits.crew.map( (crewMember) => {
+        return {...crewMember, profile_path: getImageUrl(process.env.baseUrl, "w500", crewMember.profile_path)}
+    })
+    res.status(200).json(crew);
+}
+
 exports.getFilm = async (req, res) => {
     const filmTitle = req.params.filmTitle;
     const filmID = parseInt(req.params.filmID);
     const userID = req.user.id;
+    let user = await User.findById(userID);
 
     let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
     let film = await response.json();
-    //trovo il regista e modifico la data d'uscita
+
+    //trovo il regista e modifico la data d'uscita del film
     const director = await getFilmDirector(filmID); //oppure film.id
-    const year = film.release_date ? new Date(film.release_date).getFullYear() : "N/A";
-    //trovo il cast e la crew
-    const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
-    const credits = await creditsResponse.json();
+    const year = film.release_date ? new Date(film.release_date).getFullYear() : null;
 
-    //aggiusto l'url per la locandina degli attori e di tutti i membri della crew
-    let cast = credits.cast.map( (actor) => {
-        const actor_image = actor.profile_path ? process.env.posterBaseUrl + actor.profile_path : process.env.greyPosterUrl
-        return {...actor, profile_path: actor_image}
-    })
 
-    let crew = credits.crew.map( (crewMember) => {
-        const member_image = crewMember.profile_path ? process.env.posterBaseUrl + crewMember.profile_path : process.env.greyPosterUrl
-        return {...crewMember, profile_path: member_image}
-    })
-
-    //calcolo il rating medio del film
-    let avgRating = (film.vote_average)/2; //rating in quinti
-    avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;  //lo blocco ad una cifra decimale (se è 0 lo setto a null)
-
-    //calcolo il rating inserito dall'utente
-    let user = await User.findById(userID).populate('reviews');
-    let review = user.reviews.find( (review) => review._id === filmID)
-    let userRating = review !== undefined ? review.rating : null;
+    //calcola il rating medio dle film e quello inserito dlal'utente durante la recensione
+    const {avgRating, userRating} = await getRating(user, film, filmID);
 
     //trovo il link Youtube del trailer
-    response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/videos?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
-    let data = await response.json();
-    let youtubeTrailerObj = data.results.find( video => video.site === 'YouTube' && video.type === 'Trailer');
-    if (youtubeTrailerObj) {
-        let key = youtubeTrailerObj.key;
-        var youtubeTrailerLink = `https://www.youtube.com/watch?v=${key}`;
-    }
+    const trailerLink = await getFilmTrailer(filmID);
 
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
-    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
-    isInWatchlist = isInWatchlist === undefined ? false : true;
-
-    let isLiked = user.liked.find( (id) => id === filmID )
-    isLiked = isLiked === undefined ? false : true;
-
-    let isReviewed = user.reviews.find( (review) => review._id === filmID )
-    isReviewed = isReviewed  === undefined ? false : true;
-
-    let isFavorite = user.favorites.find( (id) => id === filmID )
-    isFavorite = isFavorite === undefined ? false : true;
-
-    let isWatched = user.watched.find( (id) => id === filmID )
-    isWatched = isWatched === undefined ? false : true;
-
-    const filmInfo = [isInWatchlist, isLiked, isReviewed, isFavorite, isWatched];
+    const filmStatus = await getFilmStatus(user, filmID);
 
     //ottengo i dettagli del film
     let filmDetails = {
-        production_companies: film.production_companies.map( e => {return {name: e.name, country: e.origin_country}}),
+        production_companies: film.production_companies.map( e => { return {name: e.name, country: e.origin_country}} ),
         origin_country: film.origin_country,
         original_language: film.original_language,
         spoken_languages: film.spoken_languages.map(e => e.english_name),
@@ -209,20 +265,42 @@ exports.getFilm = async (req, res) => {
         revenue: film.revenue,
     }
 
+    //verifico se il film appartiene ad una saga, così da trovare gli altri film della saga
+    const collectionFilms = await getCollectionFilms(film)
+
+    //trovo i providers del film
+    response = await fetch(`https://api.themoviedb.org/3/movie/${film.id}/watch/providers?api_key=${process.env.API_KEY_TMDB}`);
+    const data = await response.json();
+
+    const rent = data.results.IT?.rent?.map(film => {
+        return {...film, logo_path: getImageUrl(process.env.baseUrl, "w92", film.logo_path) }
+    })
+
+    const flatrate = data.results.IT?.flatrate?.map(film => {
+        return {...film, logo_path: getImageUrl(process.env.baseUrl, "w92", film.logo_path) }
+    })
+
+    const buy = data.results.IT?.buy?.map(film => {
+        return {...film, logo_path: getImageUrl(process.env.baseUrl, "w92", film.logo_path) }
+    })
+
+
     film = {...film,
         _id: film.id,
         director: director,
         release_year: year,
-        poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
+        poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
         backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
-        cast: cast,
-        crew: crew,
-        trailerLink: youtubeTrailerLink ? youtubeTrailerLink : null,
+        trailerLink: trailerLink,
         avgRating: avgRating,
         userRating: userRating,
         genres: film.genres,
-        filmInfo: filmInfo,
-        details: filmDetails
+        filmStatus: filmStatus,
+        details: filmDetails,
+        collection: collectionFilms,
+        rent: rent,
+        buy: buy,
+        flatrate: flatrate,
     }
     res.status(200).json(film);
 }
@@ -244,24 +322,24 @@ exports.getActorInfo = async (req, res) => {
             name: data.name,
             biography: data.biography,
             birthday: data.birthday,
-            profile_image: data.profile_path ? process.env.posterBaseUrl + data.profile_path : process.env.greyPosterUrl
+            profile_image: getImageUrl(process.env.baseUrl, "w500", data.profile_path)
         }
         //film in cui ha partecipato come attore
         let actorCast = data.movie_credits.cast.map( (film) => {
             return {
                 _id: film.id,
                 title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 character: film.character,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
             }
         })
 
         //lo ordino per anno di uscita
         actorCast = [...actorCast].sort((a, b) => {
             // Se b ha un anno e a no, b viene prima
-            if (b.release_year === "N/A") return -1;
-            if (a.release_year === "N/A") return 1;
+            if (b.release_year === null) return -1;
+            if (a.release_year === null) return 1;
 
             // Ordina numericamente in modo decrescente
             return b.release_year - a.release_year; //se è positivo, mette a prima di b; altrimento mette b prima di a
@@ -273,20 +351,18 @@ exports.getActorInfo = async (req, res) => {
             return {
                 _id: film.id,
                 title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 job: film.job,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
             }
         })
 
         actorCrew = [...actorCrew].sort((a, b) => {
-            if (b.release_year === "N/A") return -1;
-            if (a.release_year === "N/A") return 1;
+            if (b.release_year === null) return -1;
+            if (a.release_year === null) return 1;
 
             return b.release_year - a.release_year;
         })
-
-
 
         const actorInfo = {
             personalInfo: actorPersonalInfo,
@@ -312,7 +388,7 @@ exports.getDirectorInfo = async (req, res) => {
             birthday: data.birthday,
             biography: data.biography,
             place_of_birth: data.place_of_birth,
-            profile_image: data.profile_path ? process.env.posterBaseUrl + data.profile_path : process.env.greyPosterUrl,
+            profile_image: getImageUrl(process.env.baseUrl, "w500", data.profile_path)
         }
 
 
@@ -320,9 +396,9 @@ exports.getDirectorInfo = async (req, res) => {
             return {
                 _id: film.id,
                 title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 character: film.character,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
             }
         })
 
@@ -330,9 +406,9 @@ exports.getDirectorInfo = async (req, res) => {
             return {
                 _id: film.id,
                 title: film.title,
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : "N/A",
+                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 job: film.job,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
             }
         })
         const actorInfo = {
