@@ -8,7 +8,8 @@ exports.addToWatched = async (req, res) => {
         const { film } = req.body;
         await Film.findOneAndUpdate(
             { _id: film.id },
-            { $set:
+            {
+                $set:
                     {   title: film.title,
                         release_year: film.release_year,
                         director: film.director,

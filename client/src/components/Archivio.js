@@ -90,8 +90,12 @@ function Archivio(){
         window.scrollTo(0, 0);
     };
 
+    if (archiveFilms.length === 0) {
+        return <p>Caricamento dei film...</p>
+    }
+
     return(
-        <Stack spacing={3}>
+        <Stack spacing={7}>
             <Typography variant="h4" component="h1">
                 Esplora l'Archivio
             </Typography>
@@ -149,27 +153,22 @@ function Archivio(){
                 </FormControl>
 
             </Box>
-            {archiveFilms.length > 0 ?
-                    <Box>
-                        <Grid container spacing={2}>
-                            {archiveFilms.map((film, index) => (
-                                <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                                    <FilmCard film={film} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                            <Pagination
-                                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                                page={currentPage}
-                                onChange={handlePageChange}
-                                color="primary"
-                                size="large"
-                            />
-                        </Box>
-                    </Box>
-                : <p>Caricamento dei film...</p>
-            }
+            <Grid container spacing={2}>
+                {archiveFilms.map(film => (
+                    <Grid key={film._id} size={2}>
+                        <FilmCard film={film} />
+                    </Grid>
+                ))}
+            </Grid>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Pagination
+                    count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="large"
+                />
+            </Box>
         </Stack>
     )
 }

@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {React, useEffect, useState} from "react";
 import useDocumentTitle from "./useDocumentTitle";
-import {Box, Grid, Pagination} from "@mui/material";
+import {Box, Grid, Pagination, Stack} from "@mui/material";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 
@@ -36,10 +36,8 @@ function SimilarFilms(){
     }
 
     return(
-        <Box>
-            <h1>
-                Film simili a "{filmTitle.replaceAll("-", " ")}"
-            </h1>
+        <Stack spacing={7} marginBottom={10}>
+            <h1> Film simili a "{filmTitle.replaceAll("-", " ")}" </h1>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
@@ -49,9 +47,9 @@ function SimilarFilms(){
                 size="large"
             />
 
-            <Grid container spacing={7}>
-                { films?.map( (film, index) =>
-                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+            <Grid container spacing={2}>
+                { films?.map( film =>
+                    <Grid key={film._id} size={2}>
                         <FilmCard film={film} />
                     </Grid>)
                 }
@@ -64,9 +62,7 @@ function SimilarFilms(){
                 color="primary"
                 size="large"
             />
-
-
-        </Box>
+        </Stack>
     )
 }
 

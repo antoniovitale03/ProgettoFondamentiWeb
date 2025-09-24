@@ -2,7 +2,7 @@ import {useParams, Link} from 'react-router-dom';
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext"
-import {Box, Button, Card, CardContent, CardMedia, Grid, MenuItem, Rating, TextField} from "@mui/material";
+import {Box, Button, Card, CardContent, CardMedia, Divider, Grid, MenuItem, Rating, TextField} from "@mui/material";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -47,10 +47,10 @@ function FilmPage(){
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
 
-    const addReview = async (title, release_year, review, reviewRating) => {
+    const addReview = async (film, review, reviewRating) => {
         try {
             await api.post('http://localhost:5001/api/films/reviews/add-review', {
-                title, release_year, review, reviewRating
+                film, review, reviewRating
             })
             showNotification(`La recensione di "${filmTitle}" è stata salvata correttamente!`)
             setReviewButton(0);
@@ -163,6 +163,8 @@ function FilmPage(){
         }
     }
 
+
+
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
@@ -227,7 +229,7 @@ function FilmPage(){
     let reviewMenuItems = (<>
             <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
             <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
-            <Button onClick={() => addReview(film?.title, film?.release_year, review, reviewRating)}>
+            <Button onClick={() => addReview(film, review, reviewRating)}>
                 Salva
             </Button>
         </>
@@ -241,10 +243,6 @@ function FilmPage(){
 
     return (
         <Box>
-            <p>Immagine background del film</p>
-            <img src={film?.backdrop_path} alt="Immagine in background del film"/>
-
-            <p>Locandina del film</p>
             <p>
                 <strong>{film?.title}</strong>
                 <Button component={Link} to={`/films/${film.release_year}`}>( {film.release_year} )</Button>
@@ -281,14 +279,14 @@ function FilmPage(){
             </div>
 
             {film?.rent ?
-                    <div>
-                        <p>Noleggia</p>
+                    <Box>
+                        <h2>Noleggia</h2>
                         <Grid container>
                             { film.rent.map( film =>
-                                <Grid item size={4}>
-                                    <Card>
+                                <Grid size={1}>
+                                    <Card sx={{ minHeight: '100%' }}>
                                         <CardContent>
-                                            <p>{film.provider_name}</p>
+                                            <p><strong>{film.provider_name}</strong></p>
                                             <img src={film.logo_path} />
                                         </CardContent>
                                     </Card>
@@ -296,54 +294,72 @@ function FilmPage(){
                             )
                             }
                         </Grid>
-                    </div>
+                    </Box>
                 : null
                 }
 
-            { film?.flatrate ? <div>
-                <p>Guarda in streaming</p>
+            { film?.flatrate ?
+                <Box>
+                <h2>Guarda in streaming</h2>
                 <Grid container>
                     { film.flatrate.map( film =>
-                        <Card>
-                            <CardContent>
-                                <p>{film.provider_name}</p>
-                                <img src={film.logo_path} />
-                            </CardContent>
-                        </Card>
+                        <Grid size={1}>
+                            <Card sx={{ minHeight: '100%' }}>
+                                <CardContent>
+                                    <p><strong>{film.provider_name}</strong></p>
+                                    <img src={film.logo_path} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     )
                     }
                 </Grid>
-            </div> : null
+            </Box> : null
             }
 
-            { film?.buy ? <div>
-                <p>Acquista</p>
-                <Grid container>
-                    { film.buy.map( film =>
-                        <Card>
-                            <CardContent>
-                                <p>{film.provider_name}</p>
-                                <img src={film.logo_path} />
-                            </CardContent>
-                        </Card>
-                    )
-                    }
-                </Grid>
-            </div> : null
+            { film?.buy ?
+                <Box>
+                    <h2>Acquista</h2>
+                    <Grid container>
+                        { film.buy.map( film =>
+                            <Grid size={1}>
+                                <Card sx={{ minHeight: '100%' }}>
+                                    <CardContent>
+                                        <p><strong>{film.provider_name}</strong></p>
+                                        <img src={film.logo_path} />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        )
+                        }
+                    </Grid>
+                </Box> : null
             }
 
-            {film.avgRating !== null ? <div>
-                <p>Rating medio: {film.avgRating}</p>
-                <Rating name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
-                </div> : null
+            {film.avgRating !== null ?
+                <Box>
+                    <p>Rating medio: {film.avgRating}</p>
+                    <Rating name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
+                </Box> : null
             }
 
-            {film.userRating !== null ? <div>
-                <p>Il tuo rating: </p>
-                <Rating name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
-            </div> : null
+            {film.userRating !== null ?
+                <Box>
+                    <p>Il tuo rating: </p>
+                    <Rating name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
+                </Box> : null
             }
 
+            <DropDownMenu buttonContent="+" menuContent={watchlistButton === 1 ?
+                <Button onClick={addToWatchlist}>
+                    <AccessTimeIcon />
+                    <p>Aggiungi alla Watchlist</p>
+                </Button> :
+                <Button onClick={removeFromWatchlist}>
+                    <AccessTimeFilledIcon />
+                    <p>Rimuovi dalla watchlist</p>
+                </Button>
+            } />
             <div>
             {watchlistButton === 1 ?
                 <Button onClick={addToWatchlist}>
@@ -417,19 +433,17 @@ function FilmPage(){
 
             { /* Se il film appartiene ad una saga, allora mostro anche gli altri film che vi appartengono */ }
             { film?.collection ?
-                <div>
+                <Box>
                     <p>La saga completa</p>
                     <Grid container spacing={2}>
-                        {film?.collection?.map( (film, index) =>
-                            <Grid item key={index} size={3}>
+                        {film?.collection?.map( film =>
+                            <Grid key={film._id} size={2}>
                                 <FilmCard film={film} />
                             </Grid>
                         )}
                     </Grid>
-                </div> : null
+                </Box> : null
             }
-
-
         </Box>
     )
 }

@@ -17,6 +17,7 @@ function Profile(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
     const [watchedFilms, setWatchedFilms] = useState([]);
     const [filmsReviews, setFilmsReviews] = useState([]);
+    const [r, setR] = useState(90332); //variabile di stato per tenere traccia di quando viene rimosso un film tra i preferiti
 
     useEffect(() => {
         const fetchFavorites = async () => {
@@ -29,7 +30,7 @@ function Profile(){
             }
         }
         fetchFavorites();
-    }, [])
+    }, [r])
 
     useEffect(()=>{
         async function getWatchedFilms(){
@@ -58,6 +59,15 @@ function Profile(){
         fetchReviews();
     }, []);
 
+    const removeFromFavorites = async (filmID, filmTitle) => {
+        try{
+            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
+            showNotification(`${filmTitle} è stato rimosso dai preferiti`, "success");
+            setR(r - 1);
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
+    }
     return (
         <Box>
             {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
@@ -71,26 +81,28 @@ function Profile(){
                 <div>
                     <h1>Film preferiti</h1>
                     <Grid container spacing={2}>
-                        { [...favoritesFilms].reverse().map((film) =>
-                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
-                                <FilmCard key={film._id} film={film}/>
+                        {
+                            [...favoritesFilms].reverse().map((film, index) =>
+                            <Grid key={index} size={2}>
+                                <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites}/>
                             </Grid>)
                         }
                     </Grid>
                 </div>
-                : null}
+                : null
+            }
 
             {watchedFilms.length > 0 ?
                 <div>
                     <h1>Ultimi film visti (4)</h1>
+                    <Button component={Link} to="/lista-film">Vedi tutti i miei film visti</Button>
                     <Grid container spacing={2}>
-                        { [...watchedFilms].reverse().slice(0, 4).map((film) =>
-                            <Grid item key={film._id} xs={12} sm={6} md={4} lg={3}>
-                                <FilmCard key={film._id} film={film}/>
+                        { [...watchedFilms].reverse().slice(0, 4).map((film, index) =>
+                            <Grid key={index} size={2}>
+                                <FilmCard film={film}/>
                             </Grid>)
                         }
                     </Grid>
-                    <Button component={Link} to="/lista-film">Vedi tutti i miei film visti</Button>
                 </div>: null
             }
 
@@ -98,13 +110,13 @@ function Profile(){
             {filmsReviews.length > 0 ?
                 <Box sx={{ width: '90%' }}>
                     <h1>Ultime recensioni fatte (4): </h1>
+                    <Button component={Link} to="/recensioni">Vedi tutte le mie recensioni</Button>
                     <Grid container spacing={2}>
-                        { [...filmsReviews].reverse().slice(0, 4).map((review) =>
-                            <Grid item key={review._id} size={6}>
+                        { [...filmsReviews].reverse().slice(0, 4).map(review =>
+                            <Grid key={review.filmID} size={6}>
                                 <ReviewCard review={review}/>
                             </Grid>)}
                     </Grid>
-                    <Button component={Link} to="/recensioni">Vedi tutte le mie recensioni</Button>
                 </Box> : null
             }
 

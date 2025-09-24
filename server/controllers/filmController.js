@@ -102,6 +102,7 @@ exports.getSimilarFilms = async (req, res) => {
             title: film.title,
             release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+            rating: null
         }
     })
     res.status(200).json(data);
@@ -217,7 +218,7 @@ exports.getCast = async (req, res) => {
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
     let cast = credits.cast.map( (actor) => {
-        return {...actor, profile_path: getImageUrl(process.env.baseUrl, "w500", actor.profile_path)}
+        return {...actor, profile_path: getImageUrl(process.env.baseUrl, "w500", actor.profile_path) }
     })
     res.status(200).json(cast);
 }
@@ -227,7 +228,7 @@ exports.getCrew = async (req, res) => {
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
     let crew = credits.crew.map( (crewMember) => {
-        return {...crewMember, profile_path: getImageUrl(process.env.baseUrl, "w500", crewMember.profile_path)}
+        return {...crewMember, profile_path: getImageUrl(process.env.baseUrl, "w500", crewMember.profile_path) }
     })
     res.status(200).json(crew);
 }
@@ -290,7 +291,6 @@ exports.getFilm = async (req, res) => {
         director: director,
         release_year: year,
         poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-        backdrop_path: film.backdrop_path ? process.env.bannerBaseUrl + film.backdrop_path : process.env.greyPosterUrl,
         trailerLink: trailerLink,
         avgRating: avgRating,
         userRating: userRating,
@@ -331,7 +331,8 @@ exports.getActorInfo = async (req, res) => {
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 character: film.character,
-                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                rating: null
             }
         })
 
@@ -353,7 +354,8 @@ exports.getActorInfo = async (req, res) => {
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 job: film.job,
-                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                rating: null
             }
         })
 
@@ -398,9 +400,20 @@ exports.getDirectorInfo = async (req, res) => {
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 character: film.character,
-                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                rating: null
             }
         })
+
+
+        directorCast = [...directorCast].sort((a, b) => {
+            // Se b ha un anno e a no, b viene prima
+            if (b.release_year === null) return -1;
+            if (a.release_year === null) return 1;
+
+            // Ordina numericamente in modo decrescente
+            return b.release_year - a.release_year; //se è positivo, mette a prima di b; altrimento mette b prima di a
+        });
 
         let directorCrew = data.movie_credits.crew.map( (film) => {
             return {
@@ -408,9 +421,20 @@ exports.getDirectorInfo = async (req, res) => {
                 title: film.title,
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 job: film.job,
-                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path)
+                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+                rating: null
             }
         })
+
+        directorCrew = [...directorCrew].sort((a, b) => {
+            // Se b ha un anno e a no, b viene prima
+            if (b.release_year === null) return -1;
+            if (a.release_year === null) return 1;
+
+            // Ordina numericamente in modo decrescente
+            return b.release_year - a.release_year; //se è positivo, mette a prima di b; altrimento mette b prima di a
+        });
+
         const actorInfo = {
             personalInfo: directorPersonalInfo,
             cast: directorCast, //film in cui la persona ha svolto un ruolo di attore

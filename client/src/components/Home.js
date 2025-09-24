@@ -45,12 +45,7 @@ function Home(){
                 }
                 <h2 id="sottotitolo">slogan del sito</h2>
             </Box>
-            <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="400px">
-
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px'}}>
             <Card className="card">
                 <CardMedia
                 component="img"

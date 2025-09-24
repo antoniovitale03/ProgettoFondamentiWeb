@@ -62,7 +62,6 @@ function Header() {
                 <SearchIcon />
             </Button>
         </Box>,
-        <Button variant="contained" color="success" href="/log-a-film" style={{ textDecoration: 'none', color: "white" }}> + Log </Button>,
         <Button href="/">
             <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
         </Button>
@@ -78,7 +77,7 @@ function Header() {
     return (
         <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
             <Toolbar sx={{ width: "100%" }}>
-                <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
+                <Box sx={{ display: "flex", justifyContent: "space-evenly", flexGrow: 1 }}>
                     {
                         isLoggedIn ? headerItems.map((headerItem) => headerItem) :
                         notLoggedDefaultHeaderItems.map((headerItem) => headerItem)

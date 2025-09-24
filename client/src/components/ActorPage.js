@@ -8,18 +8,25 @@ import {Box, Grid} from "@mui/material";
 function ActorPage() {
     let { actorName } = useParams();
     actorName = actorName.replaceAll("-", " ");
+
     let { actorID } = useParams();
 
-    const [actorInfo, setActorInfo] = useState([])
+    const [actorPersonalInfo, setActorPersonalInfo] = useState([]);
+    const [actorCast, setActorCast] = useState([]);
+    const [actorCrew, setActorCrew] = useState([]);
     const {showNotification} = useNotification();
+
+    useDocumentTitle(actorName);
 
     //Effetto per trovare tutte le info dell'attore conoscendone l'id
     useEffect(() => {
         async function fetchActor(){
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`)
-                const actorInfo = response.data;
-                setActorInfo(actorInfo);
+                const actor = response.data;
+                setActorPersonalInfo(actor.personalInfo);
+                setActorCast(actor.cast);
+                setActorCrew(actor.crew);
             }catch(error){
                 showNotification(error.response.message, "error")
             }
@@ -29,23 +36,21 @@ function ActorPage() {
     }, [actorName, actorID]);
 
 
-
-    useDocumentTitle(actorName);
     return(
         <Box>
             <p>Info personali dell'attore</p>
-            <h1>{actorInfo.personalInfo?.name}</h1>
-            <img src={actorInfo.personalInfo?.profile_image} alt="Immagine dell'attore"/>
-            <p>Data di nascita: {actorInfo.personalInfo?.birthday}</p>
-            <p>Biografia: {actorInfo.personalInfo?.biography}</p>
+            <h1>{actorPersonalInfo.name}</h1>
+            <img src={actorPersonalInfo.profile_image} alt="Immagine dell'attore"/>
+            <p>Data di nascita: {actorPersonalInfo.birthday}</p>
+            <p>Biografia: {actorPersonalInfo.biography}</p>
 
-            {actorInfo?.cast?.length !== 0 ?
+            {actorCast.length !== 0 ?
                 <div>
-                <h1>Lista dei film in cui {actorInfo?.personalInfo?.name} ha performato come attore/attrice ({actorInfo?.cast?.length})</h1>
+                <h1>Lista dei film in cui {actorPersonalInfo.name} ha performato come attore/attrice ({actorCast.length})</h1>
 
-                <Grid container spacing={7}>
-                    {actorInfo.cast?.map((film, index) =>
-                        <Grid item key={index} xs={12} sm={6} md={4}>
+                <Grid container spacing={2}>
+                    {actorCast.map(film =>
+                        <Grid key={film._id} size={2}>
                             <FilmCard film={film} />
                         </Grid>
                     )}
@@ -53,18 +58,21 @@ function ActorPage() {
                 </div>: null
             }
 
-            {actorInfo?.crew?.length !== 0 ?
+            {actorCrew.length !== 0 ?
                 <Box>
-                    <h1>Lista dei film in cui {actorInfo.personalInfo?.name} ha svolto un ruolo tecnico ({actorInfo?.crew?.length}) </h1>
-                    <Grid container spacing={7}>
-                        {actorInfo.crew?.map((film, index) =>
-                            <Grid item key={index} xs={12} sm={6} md={4}>
+                    <h1>Lista dei film in cui {actorPersonalInfo.name} ha svolto un ruolo tecnico ({actorCrew.length}) </h1>
+                    <Grid container spacing={2}>
+                        {actorCrew.map(film =>
+                            <Grid key={film._id} size={2}>
                                 <FilmCard film={film} />
                             </Grid>
                         )}
                     </Grid>
-                </Box>: null
+                </Box> : <p>{actorPersonalInfo.name} non ha svolto in nessun film un ruolo tecnico</p>
             }
+
+
+
         </Box>
 
     )

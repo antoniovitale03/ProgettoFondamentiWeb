@@ -23,15 +23,16 @@ function SearchFilmResults() {
     }, [filmTitle]) // eseguo l'effetto ogni volta che cambia la query di ricerca
 
     return(
-        <Box>
+        <Box marginBottom={10}>
             {filmsFromSearch ?
                 <div>
                     <p>Risultati di ricerca per "<strong>{filmTitle}</strong>"</p>
                     <Grid container spacing={7}>
-                        { filmsFromSearch.map((film, index) =>
-                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        { filmsFromSearch.map(film =>
+                            <Grid key={film._id} size={2}>
                                 <FilmCard film={film} />
-                            </Grid>)}
+                            </Grid>
+                        )}
                     </Grid>
                 </div>
                 : <p>Nessun film trovato</p>

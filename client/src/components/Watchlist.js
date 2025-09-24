@@ -9,6 +9,7 @@ function Watchlist(){
     useDocumentTitle("Watchlist");
     const {showNotification} = useNotification();
     const [watchlistFilms, setWatchlistFilms] = useState([]);
+    const [r, setR] = useState(3382);
 
     useEffect(() => {
         const fetchWatchlist = async () => {
@@ -21,36 +22,32 @@ function Watchlist(){
             }
         }
         fetchWatchlist();
-    })
+    }, [r])
 
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
             showNotification(`${filmTitle} è stato rimosso dalla watchlist`, "success");
+            setR(r - 1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
     }
 
-
     return(
-        //Ogni film è un Grid "item"
-    //    xs={12} -> occupa 12 colonne (tutta la riga) su schermi extra-piccoli
-    //    sm={6}  -> occupa 6 colonne (2 per riga) su schermi piccoli
-    //    md={4}  -> occupa 4 colonne (3 per riga) su schermi medi
-    //    lg={3}  -> occupa 3 colonne (4 per riga) su schermi grandi
-        <Box>
-            {watchlistFilms.length === 0 ? <p>La tua watchlist è vuota. Aggiungi qualche film!</p> :
-                <Box>
+        <Box marginBottom={10}>
+            {watchlistFilms.length !== 0 ?
+                <>
                 <h1>Vuoi guardare {watchlistFilms.length} film</h1>
                 <Grid container spacing={2}>
-                    { [...watchlistFilms].reverse().map((film) =>
-                        <Grid item key={film._id} xs={12} sm={6} md={3} lg={3}>
+                    { [...watchlistFilms].reverse().map(film =>
+                        <Grid key={film._id} size={2}>
                             <FilmCard film={film} showRemoveButton={true} onRemove={removeFromWatchlist}/>
                         </Grid>)
                     }
                 </Grid>
-                </Box>
+                </>
+                : <p>La tua watchlist è vuota. Aggiungi qualche film!</p>
             }
         </Box>
     )

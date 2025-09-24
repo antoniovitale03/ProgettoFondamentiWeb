@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Film = require("../models/Film");
 require("dotenv").config();
 
+
 async function getFilmDirector(filmID) {
     // Chiamata usata per ottenere il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...), più
     //utile per ottenere solo
@@ -19,18 +20,11 @@ async function getFilmDirector(filmID) {
 
 exports.addReview = async (req, res) => {
     try{
-        const {title, release_year, review, reviewRating} = req.body;
+        const {film, review, reviewRating} = req.body;
         const userID = req.user.id;
-        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY_TMDB}&query=${title}`);
-        const data = await response.json();
-        let films = data.results;
-        if (!films) {
-            return res.status(400).json("Nessun film trovato." );
-        }
-        //trovo il film che corrisponde alla data di uscita che ho inserito, sempre se è corretta
-        let film = films.find((film) => new Date(film.release_date).getFullYear() === release_year);
-        if (!film) {
-            return res.status(400).json("Nessun film trovato.");
+        const user = await User.findById(userID);
+        if (!user) {
+            return res.status(400).send("Utente non trovato.");
         }
 
         //il film è stato trovato, quindi modifico l'url per mostrare la locandina
@@ -38,8 +32,8 @@ exports.addReview = async (req, res) => {
             {
                 filmID: film.id,
                 title: film.title,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
-                release_year: release_year,
+                poster_path: film.poster_path,
+                release_year: film.release_year,
                 review: review,
                 rating: reviewRating,
                 review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
@@ -59,12 +53,12 @@ exports.addReview = async (req, res) => {
         await Film.findOneAndUpdate(
             { _id: film.id },
             {
-                _id: film.id,
-                title: film.title,
-                release_date: release_year,
-                director: director,
-                poster_path: film.poster_path ? process.env.posterBaseUrl + film.poster_path : process.env.greyPosterUrl,
-            },
+                $set: {
+                    title: film.title,
+                    release_date: film.release_year,
+                    director: director,
+                    poster_path: film.poster_path,
+                }},
             {
                 upsert: true
             }
@@ -74,7 +68,6 @@ exports.addReview = async (req, res) => {
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
-
 
 }
 
@@ -111,7 +104,6 @@ exports.getReviews = async (req, res) => {
             return res.status(404).json({ message: "Utente non trovato." });
         }
         res.status(200).json(user.reviews);
-
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }

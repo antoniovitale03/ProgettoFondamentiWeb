@@ -1,7 +1,6 @@
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Box, Grid, Typography} from "@mui/material";
-import {NavLink} from "react-router-dom";
+import {Box, Grid} from "@mui/material";
 import ReviewCard from "./Cards/ReviewCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
@@ -39,23 +38,20 @@ function Recensioni(){
         }
     }
 
-    if (reviews.length === 0) {
-        return <Typography component="p">
-            Non hai ancora aggiunto nessuna recensione! Clicca
-            <NavLink to="/log-a-film"> qui </NavLink>
-            per recensire un film.
-        </Typography>;
-    }
     return (
         <Box>
-            <h1>Hai recensito {reviews.length} film</h1>
-            <Grid container spacing={2}>
-                { [...reviews].reverse().map((review, index) =>
-                    <Grid item key={index} size={6}>
-                    <ReviewCard review={review} showRemoveButton={true} onRemove={removeReview} />
+            {reviews.length !== 0 ?
+                <Box>
+                    <h1>Hai recensito {reviews.length} film</h1>
+                    <Grid container spacing={2}>
+                        { [...reviews].reverse().map(review =>
+                            <Grid item key={review.filmID} size={6}>
+                                <ReviewCard review={review} showRemoveButton={true} onRemove={removeReview} />
+                            </Grid>
+                        )}
                     </Grid>
-                )}
-            </Grid>
+                </Box> : <p>Non c'è ancora nessuna recensione!</p>
+            }
         </Box>
     )
 }

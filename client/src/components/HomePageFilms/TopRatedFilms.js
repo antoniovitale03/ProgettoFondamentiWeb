@@ -38,7 +38,7 @@ function TopRatedFilms() {
 
 
     return(
-        <Stack spacing={3}>
+        <Stack spacing={7}>
             <h1>Film più acclamati</h1>
 
             <Pagination
@@ -49,9 +49,9 @@ function TopRatedFilms() {
                 size="large"
             />
 
-            <Grid container spacing={7}>
-                { films?.map( (film, index) =>
-                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+            <Grid container spacing={2}>
+                { films?.map( film =>
+                    <Grid key={film._id} size={2}>
                         <FilmCard film={film} />
                     </Grid>
                 )}

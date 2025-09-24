@@ -4,7 +4,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import useDocumentTitle from "./useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
-import {Box, Button, Grid, Pagination} from "@mui/material";
+import {Box, Button, Grid, Pagination, Stack} from "@mui/material";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
@@ -40,7 +40,7 @@ function FilmsByYear(){
     };
 
     return(
-        <Box>
+        <Stack spacing={7} marginBottom={10}>
             <h1>Film usciti nel {year} </h1>
 
             <Pagination
@@ -52,8 +52,8 @@ function FilmsByYear(){
             />
 
             <Grid container spacing={7}>
-                { films?.map( (film, index) =>
-                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                { films?.map( film =>
+                    <Grid key={film._id} size={2}>
                     <FilmCard film={film} />
                     </Grid>
                 )}
@@ -66,7 +66,7 @@ function FilmsByYear(){
                 color="primary"
                 size="large"
             />
-        </Box>
+        </Stack>
     )
 }
 export default FilmsByYear;

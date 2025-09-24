@@ -36,15 +36,16 @@ function WatchedFilms(){
     }
 
     return(
-        <Box>
+        <Box marginBottom={10}>
             {watchedFilms.length === 0 ? <p>Non hai ancora visto nessun film</p>:
                 <Box>
                     <h1>Hai visto {watchedFilms.length} film</h1>
                     <Grid container spacing={2}>
-                        { [...watchedFilms].reverse().map((film, index) =>
-                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        { [...watchedFilms].reverse().map(film =>
+                            <Grid key={film._id} size={2}>
                                 <FilmCard film={film} showRemoveButton={true} onRemove={removeFromWatched}/>
-                            </Grid>)
+                            </Grid>
+                        )
                         }
                     </Grid>
                 </Box>

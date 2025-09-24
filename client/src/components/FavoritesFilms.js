@@ -8,6 +8,7 @@ import useDocumentTitle from "./useDocumentTitle"
 function FavoritesFilms(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
     const {showNotification} = useNotification();
+    const [r, setR] = useState(8834);
     useDocumentTitle("I miei film preferiti");
 
     useEffect(() => {
@@ -21,13 +22,13 @@ function FavoritesFilms(){
             }
         }
         fetchFavorites();
-    })
+    }, [r])
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
             showNotification(`${filmTitle} è stato rimosso dai preferiti`, "success");
-            //refresho la pagina
+            setR(r - 1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -36,13 +37,13 @@ function FavoritesFilms(){
 
 
     return(
-        <Box>
+        <Box marginBottom={10}>
             {favoritesFilms.length === 0 ? <div>Non hai ancora aggiunto nessun film nei preferiti.</div> :
                 <div>
                     <h1><strong>I tuoi 10 film preferiti</strong></h1>
                     <Grid container spacing={2}>
-                        { [...favoritesFilms].reverse().map((film, index) =>
-                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        { [...favoritesFilms].reverse().map(film =>
+                            <Grid key={film._id} size={2}>
                                 <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites} />
                             </Grid>)
                         }

@@ -23,12 +23,12 @@ function CrewPage(){
     }, [])
 
     return(
-        <Box>
+        <Box marginBottom={10}>
             <h1>Crew di "{filmTitle}" ({crew?.length} membri)</h1>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} marginBottom={10}>
                 {
-                    crew?.map((crewMember, index) =>
-                        <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                    crew?.map(crewMember =>
+                        <Grid key={crewMember.id} size={2}>
                             <CrewMemberCard crewMember={crewMember} />
                         </Grid>
                     )}

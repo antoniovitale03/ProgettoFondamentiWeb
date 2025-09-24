@@ -1,4 +1,4 @@
-import {Button, Card, CardContent, CardMedia, Grid, Rating} from "@mui/material";
+import {Box, Button, Card, CardContent, CardMedia, Grid, Rating} from "@mui/material";
 import {Link} from "react-router-dom";
 import * as React from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -12,35 +12,29 @@ function FilmCard({ film, showRemoveButton, onRemove }){
     const filmTitle = film.title.replaceAll(" ", "-"); //se ci sono spazi nel titolo del film li sostituisco con i trattini
     //es. The Matrix reindirizza all'url /film/The-Matrix piuttosto ch /film/The%Matrix
 
-
     return(
-        <Card sx={{ minHeight: '100%' }}> {/* ogni card ha la stessa altezza*/}
+        <Card sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}> {/* ogni card ha la stessa altezza* e ha la larghezza di tutto il grid Item */}
             <CardContent>
-                <Grid container spacing={2}>
-                    <Grid item size={10}>
+                {/* Contenuto Superiore (Titolo, Anno, Pulsante Rimuovi) */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <p>
-                    <Button component={Link} to={`/film/${filmTitle}/${film._id}`}>
-                        <strong>{film.title}</strong>
-                    </Button>
-                    {film.release_year ?
-                        <Button component={Link} to={`/films/${film.release_year}`}><strong>({film.release_year}) </strong></Button> : null
-                    }
+                        <Button component={Link} to={`/film/${filmTitle}/${film._id}`}>
+                            <strong>{film.title}</strong>
+                        </Button>
+                        {film.release_year ?
+                            <Button component={Link} to={`/films/${film.release_year}`}><strong>({film.release_year}) </strong></Button> : null
+                        }
                     </p>
-                    </Grid>
+                    <p>
+                        {showRemoveButton ?
+                            <Button onClick={() => onRemove(film._id, film.title)}>
+                                <ClearIcon />
+                            </Button> : null
+                        }
+                    </p>
+                </Box>
 
-                    <Grid item size={2}>
-                        <p>
-                            {showRemoveButton ?
-                                <Button onClick={() => onRemove(film._id, film.title)}>
-                                    <ClearIcon />
-                                </Button> : null
-                            }
-                        </p>
-                    </Grid>
-                </Grid>
-
-                <CardMedia component="img" image={film.poster_path} sx={{ objectFit: 'cover' }} onClick={ () => navigate(`/film/${filmTitle}/${film._id}`)}/>
-
+                <CardMedia component="img" image={film.poster_path} sx={{width: '100%', aspectRatio: '2 / 3', objectFit: 'cover' }} onClick={ () => navigate(`/film/${filmTitle}/${film._id}`)}/>
 
                 { film.director ?
                     <p>Diretto da:

@@ -14,7 +14,6 @@ import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
 import FilmPage from "./FilmPage";
 import FavoritesFilms from "./FavoritesFilms";
-import Log from "./Log";
 import CastPage from "./CastPage";
 import CrewPage from "./CrewPage";
 import ActorPage from "./ActorPage";
@@ -43,10 +42,10 @@ function UserPanel() {
     //                      <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
 
   return (
-      <Box style={{ display: 'flex', flexDirection: 'column', minHeight:'100%' }}>
+      <Box style={{ display: 'flex', flexDirection: 'column', height:'100%' }}>
           <Header />
           {/*Questa dice all'area main di crescere e occupare tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
-          <Container style={{ flexGrow: 1, maxWidth: '90%' }}>
+          <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: '50px' }}>
                   <Routes>
                       <Route path="/" element={<Home/>} />
                       <Route path="/profile" element={<Profile />} />
@@ -63,7 +62,6 @@ function UserPanel() {
                       <Route path="/archivio" element={<Archivio />} />
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
-                      <Route path="/log-a-film" element={<Log />} />
 
                       <Route path="/film/:filmTitle/:filmID/cast" element={<CastPage />} />
                       <Route path="/film/:filmTitle/:filmID/crew" element={<CrewPage />} />

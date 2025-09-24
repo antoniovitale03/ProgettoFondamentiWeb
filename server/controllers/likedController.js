@@ -10,11 +10,12 @@ exports.addToLiked = async (req, res) => {
         await Film.findOneAndUpdate(
             { _id: film.id },
             {
-                _id: film.id,
-                title: film.title,
-                release_year: film.release_year,
-                director: film.director,
-                poster_path: film.poster_path
+                $set: {
+                    title: film.title,
+                    release_year: film.release_year,
+                    director: film.director,
+                    poster_path: film.poster_path
+                }
             },
             {
                 upsert: true
