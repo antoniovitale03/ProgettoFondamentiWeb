@@ -16,7 +16,7 @@ function FilmCard({ film, showRemoveButton, onRemove }){
         <Card sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}> {/* ogni card ha la stessa altezza* e ha la larghezza di tutto il grid Item */}
             <CardContent>
                 {/* Contenuto Superiore (Titolo, Anno, Pulsante Rimuovi) */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <p>
                         <Button component={Link} to={`/film/${filmTitle}/${film._id}`}>
                             <strong>{film.title}</strong>

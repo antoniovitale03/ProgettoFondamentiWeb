@@ -5,7 +5,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 function ReviewCard({ review, showRemoveButton, onRemove }){
     return(
-        <Card style={{ marginBottom: 12 }}>
+        <Card style={{ marginBottom: 12, height: '100%', width: '100%' }}>
             <CardContent>
                 <Grid container spacing={2}>
                     <Grid item size={4}>

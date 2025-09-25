@@ -27,7 +27,7 @@ function SearchFilmResults() {
             {filmsFromSearch ?
                 <div>
                     <p>Risultati di ricerca per "<strong>{filmTitle}</strong>"</p>
-                    <Grid container spacing={7}>
+                    <Grid container spacing={2}>
                         { filmsFromSearch.map(film =>
                             <Grid key={film._id} size={2}>
                                 <FilmCard film={film} />

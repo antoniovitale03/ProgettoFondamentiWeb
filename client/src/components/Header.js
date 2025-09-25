@@ -63,7 +63,7 @@ function Header() {
 
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user.username}><Avatar src="../src/assets/images/logo512.png" /></Tooltip>} menuContent={menuItems}/>,
-        <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip> </NavLink>,
+        <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></NavLink>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
             <Button variant="contained" onClick={handleSearch}>
@@ -71,14 +71,14 @@ function Header() {
             </Button>
         </Box>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
+            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
     let notLoggedDefaultHeaderItems = [
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{height: '50px', width: 'auto' }}/>
+            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
 

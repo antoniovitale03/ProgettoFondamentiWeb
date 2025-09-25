@@ -88,6 +88,31 @@ async function getCollectionFilms(film){
     }else{ return null }
 }
 
+async function getCastCrewPreview(filmID){
+    let cast = [];
+    let crew = [];
+    const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
+    const credits = await creditsResponse.json();
+    if (credits.cast.length <= 6){
+        cast = credits.cast.map( actor => {
+            return {...actor, profile_path: getImageUrl(process.env.baseUrl, "w154", actor.profile_path) }})
+    }else{
+        cast = credits.cast.slice(0, 6).map( actor => {
+            return {...actor, profile_path: getImageUrl(process.env.baseUrl, "w154", actor.profile_path) }})
+    }
+
+    if (credits.crew.length <= 6){
+        crew = credits.crew.map( crewMember => {
+            return {...crewMember, profile_path: getImageUrl(process.env.baseUrl, "w154", crewMember.profile_path) }
+        })
+    }else{
+        crew = credits.crew.slice(0, 6).map( crewMember => {
+            return {...crewMember, profile_path: getImageUrl(process.env.baseUrl, "w154", crewMember.profile_path) }
+        })
+    }
+    return {cast: cast, crew: crew}
+}
+
 //le richieste sono paginate (prendo solo la prima pagina massimo 20 film da mostrare nel carosello).
 
 
@@ -213,11 +238,12 @@ exports.getFilmsByYear = async (req, res) => {
 //questa funzione serve per trovare un film conoscendo il suo ID di tmdb e il suo titolo, restituendo tutte le informazioni che
 //dovranno essere mostrate nella filmPage
 
+
 exports.getCast = async (req, res) => {
     const filmID = parseInt(req.params.filmID);
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
-    let cast = credits.cast.map( (actor) => {
+    let cast = credits.cast.map( actor => {
         return {...actor, profile_path: getImageUrl(process.env.baseUrl, "w500", actor.profile_path) }
     })
     res.status(200).json(cast);
@@ -227,7 +253,7 @@ exports.getCrew = async (req, res) => {
     const filmID = parseInt(req.params.filmID);
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
-    let crew = credits.crew.map( (crewMember) => {
+    let crew = credits.crew.map( crewMember => {
         return {...crewMember, profile_path: getImageUrl(process.env.baseUrl, "w500", crewMember.profile_path) }
     })
     res.status(200).json(crew);
@@ -266,6 +292,11 @@ exports.getFilm = async (req, res) => {
         revenue: film.revenue,
     }
 
+    //trovo la preview del cast e la crew (solo i primi 6 elementi)
+    const obj = await getCastCrewPreview(filmID);
+    let castPreview = obj.cast;
+    let crewPreview = obj.crew;
+
     //verifico se il film appartiene ad una saga, così da trovare gli altri film della saga
     const collectionFilms = await getCollectionFilms(film)
 
@@ -291,6 +322,8 @@ exports.getFilm = async (req, res) => {
         director: director,
         release_year: year,
         poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+        castPreview: castPreview,
+        crewPreview: crewPreview,
         trailerLink: trailerLink,
         avgRating: avgRating,
         userRating: userRating,

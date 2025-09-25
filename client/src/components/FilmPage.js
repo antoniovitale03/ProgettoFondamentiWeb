@@ -14,7 +14,7 @@ import {
     MenuItem,
     Rating,
     TextField, Tooltip,
-    Typography
+    Typography, Chip
 } from "@mui/material";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -49,6 +49,7 @@ function FilmPage(){
 
     const {showNotification} = useNotification();
     const [film, setFilm] = useState(null);
+
 
     //rating in quinti
     const [reviewRating, setReviewRating] = useState(0);
@@ -202,17 +203,6 @@ function FilmPage(){
     }, [filmTitle, filmID])
 
 
-
-    let genreMenuItems = (
-        <div>
-        {film?.genres.map( (genre, index) =>
-            <MenuItem key={index}>
-                <strong>{genre.name}</strong>
-            </MenuItem>
-        )}
-        </div>
-    )
-
     let detailsMenuItems = (
         <div>
             <MenuItem>
@@ -253,7 +243,7 @@ function FilmPage(){
 
     if(!film){
         return(
-            <div>Caricamento del film... </div>
+            <Box>Caricamento del film... </Box>
         )
     }
 
@@ -263,8 +253,8 @@ function FilmPage(){
                 {film?.title}
                 <Button component={Link} to={`/films/${film.release_year}`}>( {film.release_year} )</Button>
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', gap:6 }}>
-                <Box>
+            <Grid container spacing={2}>
+                <Grid size={4}>
                     <img src={film?.poster_path} alt="Locandina del film" />
                     <p>Diretto da
                         <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
@@ -288,16 +278,11 @@ function FilmPage(){
                     {film?.rent ?
                         <Box>
                             <h2>Noleggia</h2>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
                                 { film.rent.map( film =>
-                                        <Grid size={1}>
-                                            <Card sx={{ minHeight: '100%' }}>
-                                                <CardContent>
-                                                    <p><strong>{film.provider_name}</strong></p>
-                                                    <img src={film.logo_path} />
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
+                                    <Tooltip title={film.provider_name}>
+                                        <img src={film.logo_path} style={{ width: '100%' }} />
+                                    </Tooltip>
                                 )
                                 }
                             </Box>
@@ -308,31 +293,26 @@ function FilmPage(){
                     { film?.flatrate ?
                         <Box>
                             <h2>Guarda in streaming</h2>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
                                 { film.flatrate.map( film =>
-                                            <Card sx={{ minHeight: '100%' }}>
-                                                <CardContent>
-                                                    <p><strong>{film.provider_name}</strong></p>
-                                                    <img src={film.logo_path} />
-                                                </CardContent>
-                                            </Card>
+                                    <Tooltip title={film.provider_name}>
+                                        <img src={film.logo_path} style={{ width: '100%' }} />
+                                    </Tooltip>
+
                                 )
                                 }
-                                     </Box>
+                            </Box>
                         </Box> : null
                     }
 
                     { film?.buy ?
                         <Box>
                             <h2>Acquista</h2>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
                                 { film.buy.map( film =>
-                                        <Card sx={{ minHeight: '100%' }}>
-                                            <CardContent>
-                                                <p><strong>{film.provider_name}</strong></p>
-                                                <img src={film.logo_path} />
-                                            </CardContent>
-                                        </Card>
+                                    <Tooltip title={film.provider_name}>
+                                        <img src={film.logo_path} style={{ width: '100%' }} />
+                                    </Tooltip>
                                 )
                                 }
                             </Box>
@@ -342,48 +322,67 @@ function FilmPage(){
                     {/* Bottoni per gestire il film */}
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap:6 }}>
                         {watchlistButton === 1 ?
-                            <Button onClick={addToWatchlist}>
-                                <AccessTimeIcon />
-                            </Button> :
-                            <Button onClick={removeFromWatchlist}>
-                                <AccessTimeFilledIcon />
-                            </Button>
+                            <Tooltip title="Aggiungi alla watchlist">
+                                <Button onClick={addToWatchlist}>
+                                    <AccessTimeIcon />
+                                </Button>
+                            </Tooltip> :
+                            <Tooltip title="Rimuovi dalla watchlist">
+                                <Button onClick={removeFromWatchlist}>
+                                    <AccessTimeFilledIcon />
+                                </Button>
+                            </Tooltip>
                         }
                         {likedButton === 1 ?
-                            <Button onClick={addToLiked}>
-                                <ThumbUpOffAltIcon />
-                            </Button> :
-                            <Button onClick={removeFromLiked}>
-                                <ThumbUpIcon />
-                            </Button>
+                            <Tooltip title="Aggiungi ai film piaciuti">
+                                <Button onClick={addToLiked}>
+                                    <ThumbUpOffAltIcon />
+                                </Button>
+                            </Tooltip> :
+                            <Tooltip title="Rimuovi dai film piaciuti">
+                                <Button onClick={removeFromLiked}>
+                                    <ThumbUpIcon />
+                                </Button>
+                            </Tooltip>
                         }
 
                         {reviewButton === 1 ?
-                            <DropDownMenu buttonContent={<ReviewsOutlinedIcon />} menuContent={reviewMenuItems} />
+                            <Tooltip title="Aggiungi una recensione">
+                                <DropDownMenu buttonContent={<ReviewsOutlinedIcon />} menuContent={reviewMenuItems} />
+                            </Tooltip>
                             :
-                            <Button onClick={deleteReview}>
-                                <ReviewsIcon />
-                            </Button>
+                            <Tooltip title="Rimuovi una recensione">
+                                <Button onClick={deleteReview}>
+                                    <ReviewsIcon />
+                                </Button>
+                            </Tooltip>
                         }
 
-
-
                         {favoritesButton === 1 ?
-                            <Button onClick={addToFavorites}>
-                                <FavoriteBorderIcon />
-                            </Button> :
-                            <Button onClick={removeFromFavorites}>
-                                <FavoriteIcon />
-                            </Button>
+                            <Tooltip title="Aggiungi ai film preferiti">
+                                <Button onClick={addToFavorites}>
+                                    <FavoriteBorderIcon />
+                                </Button>
+                            </Tooltip>:
+                            <Tooltip title="Rimuovi dai film preferiti">
+                                <Button onClick={removeFromFavorites}>
+                                    <FavoriteIcon />
+                                </Button>
+                            </Tooltip>
                         }
 
                         {watchedButton === 1 ?
-                            <Button onClick={addToWatched}>
-                                <AddCircleOutlineIcon />
-                            </Button> :
-                            <Button onClick={removeFromWatched}>
-                                <RemoveCircleOutlineIcon />
-                            </Button>
+                            <Tooltip title="Aggiungi ai film visti">
+                                <Button onClick={addToWatched}>
+                                    <AddCircleOutlineIcon />
+                                </Button>
+                            </Tooltip>
+                             :
+                            <Tooltip title="Rimuovi dai film visti">
+                                <Button onClick={removeFromWatched}>
+                                    <RemoveCircleOutlineIcon />
+                                </Button>
+                            </Tooltip>
                         }
                         { /* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte
         //             {watchedButton === 0 ?
@@ -395,10 +394,10 @@ function FilmPage(){
         //             </div>
         //             */ }
                     </Box>
-                </Box>
+                </Grid>
 
                 {/* colonna di destra */}
-                <Box>
+                <Grid size={8}>
                     <p>{film.tagline}</p> {/* //slogan film */}
                     <p>{film.overview}</p> {/* //trama */}
                     {film?.trailerLink ?
@@ -408,55 +407,47 @@ function FilmPage(){
                             </Tooltip>
                         </Button> : null
                     }
-                    <Accordion>
+                    {film?.genres.map( genre => <Chip label={genre.name} /> ) }
+
+                    {/* Cast - Crew - Altre info */}
+                    <Accordion sx={{ width: '50%' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon/>}> {/*parte visibile e cliccabile */}
                             <Typography>Cast</Typography>
                         </AccordionSummary>
-                    </Accordion>
-                    <AccordionDetails> {/* parte visibile una volta cliccato il pannello*/}
-                        <ImageList cols={3} gap={2}>
-                            {/*
-                            {film?.cast.map((actor, index)=> (
-                                index < 6 ? (
-                                    <ImageListItem key={actor._id}>
-                                        <img
-                                            src={actor.poster_path}
-                                            alt={actor.name}
-                                        />
-                                        <ImageListItemBar
-                                            title = {actor.name}
-                                            subtitle = {actor.character}
-                                        />
-                                    </ImageListItem>
-                                ) :null
-                            ))
-                            }
-                            */}
-                        </ImageList>
-                        {/*
-                         {film.cast && film.cast.length > 6 && (
+                        <AccordionDetails> {/* parte visibile una volta cliccato il pannello*/}
+                            <ImageList cols={3} gap={7} >
+                                {film.castPreview.map((actor) =>
+                                        <ImageListItem key={actor.id} component={Link} to={`/actor/${actor.name.replaceAll(" ", "-")}/${actor.id}`}>
+                                            <img width='100%' height='100%' style={{ objectFit: 'cover' }}
+                                                 src={actor.profile_path}
+                                                 alt={actor.name}
+                                            />
+                                            <ImageListItemBar
+                                                title = {actor.name}
+                                                subtitle = {actor.character}
+                                            />
+                                        </ImageListItem>
+                                    )
+                                    }
+                            </ImageList>
                             <div>
-                                <NavLink to={`/film/${filmTitle}/cast`}>
+                                <NavLink to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/cast`}>
                                     Mostra altri...
                                 </NavLink>
                             </div>
-                        )}
-                         */}
-                    </AccordionDetails>
+                            </AccordionDetails>
+                    </Accordion>
 
-
-                    <Accordion>
+                    <Accordion sx={{ width: '50%' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                             <Typography>Crew</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <ImageList cols={3} gap={2}>
-                                {/*
-                                {film?.crew.map((crewMember,index)=>(
-                                    index < 6 ? (
-                                        <ImageListItem key={crewMember._id}>
+                            <ImageList cols={3} gap={7}>
+                                {film.crewPreview.map( crewMember =>
+                                        <ImageListItem key={crewMember.id}>
                                             <img
-                                                src={crewMember.poster_path}
+                                                src={crewMember.profile_path}
                                                 alt={crewMember.name}
                                             />
                                             <ImageListItemBar
@@ -464,96 +455,43 @@ function FilmPage(){
                                                 subtitle = {crewMember.job}
                                             />
                                         </ImageListItem>
-                                    ):null
-                                ))}
-                                */}
+                                    )
+                                    }
                             </ImageList>
-                            {/*
-                            {film.crew && film.crew.length > 6 && (
-                                <NavLink to={`/film/${filmTitle}/crew`}>
-                                    Mostra altri...
-                                </NavLink>
-                            )}
-                            */}
-                            <p>Ciao</p>
+                            <NavLink to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/crew`}>
+                                Mostra altri...
+                            </NavLink>
                         </AccordionDetails>
                     </Accordion>
 
-                    <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                            <Typography>Altre info</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {detailsMenuItems}
-                        </AccordionDetails>
-                    </Accordion>
-
-                </Box>
-            </Box>
+                        <Accordion sx={{ width: '50%' }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                                <Typography>Altre info</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                {detailsMenuItems}
+                            </AccordionDetails>
+                        </Accordion>
+                    <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
+                        Film simili a "{film.title}"
+                    </Button>
+                    { film?.collection ?
+                        <Box>
+                            <p>La saga completa</p>
+                            <Grid container spacing={2}>
+                                {film?.collection?.map( film =>
+                                        <Grid key={film._id} size={2}>
+                                            <FilmCard film={film} />
+                                        </Grid>
+                                )}
+                            </Grid>
+                        </Box> : null
+                    }
+                    </Grid>
+                </Grid>
         </Box>
-        //<Box>
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //             <div style={{ display:"flex", flexDirection: 'row' }}>
-        //                 <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/cast`}>
-        //                 Cast
-        //                 </Button>
-        //
-        //                 <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/crew`}>
-        //                     Crew
-        //                 </Button>
-        //
-        //                 <DropDownMenu buttonContent="Dettagli" menuContent={detailsMenuItems} />
-        //
-        //                 <DropDownMenu buttonContent="Generi" menuContent={genreMenuItems} />
-        //             </div>
-        //
-        //
-        //
 
-        //
-        //
-        //
-        //
-        //
-        //             <div>
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //             {/* mostro i film simili */}
-        //             <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
-        //                 Film simili a "{film.title}"
-        //             </Button>
-        //
-        //             { /* Se il film appartiene ad una saga, allora mostro anche gli altri film che vi appartengono */ }
-        //             { film?.collection ?
-        //                 <Box>
-        //                     <p>La saga completa</p>
-        //                     <Grid container spacing={2}>
-        //                         {film?.collection?.map( film =>
-        //                             <Grid key={film._id} size={2}>
-        //                                 <FilmCard film={film} />
-        //                             </Grid>
-        //                         )}
-        //                     </Grid>
-        //                 </Box> : null
-        //             }
-        //             </div>
-        //         </Box>
+
 
     )
 }

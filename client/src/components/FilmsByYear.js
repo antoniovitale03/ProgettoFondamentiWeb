@@ -51,10 +51,10 @@ function FilmsByYear(){
                 size="large"
             />
 
-            <Grid container spacing={7}>
+            <Grid container spacing={2}>
                 { films?.map( film =>
                     <Grid key={film._id} size={2}>
-                    <FilmCard film={film} />
+                        <FilmCard film={film} />
                     </Grid>
                 )}
             </Grid>
