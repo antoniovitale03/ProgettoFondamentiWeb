@@ -6,9 +6,9 @@ function getImageUrl(baseUrl, size, imagePath){
     if(imagePath){
         return `${baseUrl}/${size}/${imagePath}`;
     }else{
-        const width = parseInt(size.substring(1), 10); //w500 -> 500
+        const width = parseInt(size.slice(1)); //w500 -> 500
         const height = Math.round(width * 1.5);
-        return `https://placehold.co/${width}x${height}/EFEFEF/EFEFEF`;
+        return `https://placehold.co/${width}x${height}/EFEFEF/EFEFEF`; //locandina grigia
     }
 }
 
