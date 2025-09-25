@@ -1,43 +1,28 @@
-// barra di navigazione
-import { NavLink } from 'react-router-dom';// usiamo il componente NavLink invece che l'anchor tag <a>
-// className={({ isActive }) => ...}: Questa è la magia di NavLink. Invece di una semplice stringa, passiamo una funzione all'attributo className.
-// React Router chiama questa funzione e le passa un oggetto con una proprietà booleana: isActive.
-// isActive è true se l'URL corrente corrisponde al to del NavLink.
-// Usiamo un operatore ternario per restituire la classe 'nav-link active' se il link è attivo, altrimenti solo 'nav-link'
+
+import { NavLink } from 'react-router-dom';
 
 import {useAuth} from "../context/authContext";
-import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar} from "@mui/material";
+import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar, ListItemIcon, Divider, Tooltip} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import PersonIcon from '@mui/icons-material/Person'
+import ListIcon from '@mui/icons-material/List'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import RateReviewIcon from '@mui/icons-material/RateReview'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import Settings from '@mui/icons-material/Settings'
+import ArchiveIcon from '@mui/icons-material/Archive'
+
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import * as React from "react";
-import {Link} from "react-router-dom";
+
 
 
 function Header() {
     const {isLoggedIn, user, logout} = useAuth();
     const [title, setTitle] = useState("");
-
-    const userMenuLinks = ["/profile", "/watched", "/favorites", "/recensioni", "/watchlist"]
-    const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"]
-
-    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il tuo avatar", "Elimina il tuo account"]
-    const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
-
-    let userMenuItems = [
-        userMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{userMenuNames[index]}</MenuItem>),
-        <MenuItem component={Button} key={10102} onClick={logout}>
-        Logout
-        </MenuItem>
-    ]
-
-    let settingsMenuItems = [
-        settingsMenuLinks.map((menuLink, index) => <MenuItem component={NavLink} key={index} to={menuLink}>{settingsMenuNames[index]}</MenuItem>)
-    ]
-
 
     const navigate = useNavigate();
 
@@ -51,11 +36,34 @@ function Header() {
         }
     }
 
+    const userMenuLinks = ["/profile", "/watched", "/favorites", "/recensioni", "/watchlist"];
+    const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"];
+    const userMenuIcons = [<PersonIcon />, <ListIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>];
+
+
+    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il tuo avatar", "Elimina il tuo account"]
+    const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
+
+    let menuItems = [
+        userMenuLinks.map((menuLink, index) =>
+            <MenuItem component={NavLink} key={index} to={menuLink}>
+                <ListItemIcon>{userMenuIcons[index]}</ListItemIcon>{userMenuNames[index]}
+            </MenuItem>),
+        <Divider />,
+        settingsMenuLinks.map((menuLink, index) =>
+            <MenuItem component={NavLink} key={index} to={menuLink}>
+                <ListItemIcon><Settings /></ListItemIcon>{settingsMenuNames[index]}
+            </MenuItem>),
+        <Divider />,
+        <MenuItem component={Button} key={10102} onClick={logout}>
+        Logout
+        </MenuItem>
+    ]
+
+
     let headerItems = [
-        <Avatar alt="Travis Howard" src="../src/assets/images/logo512.png" />,
-        <DropDownMenu buttonContent={user?.username} menuContent={userMenuItems}/>,
-        <DropDownMenu buttonContent={<SettingsOutlinedIcon />} menuContent={settingsMenuItems}/>,
-        <Button component={Link} to="/archivio">Archivio</Button>,
+        <DropDownMenu buttonContent={<Tooltip title={user.username}><Avatar src="../src/assets/images/logo512.png" /></Tooltip>} menuContent={menuItems}/>,
+        <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip> </NavLink>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
             <Button variant="contained" onClick={handleSearch}>
@@ -77,7 +85,7 @@ function Header() {
     return (
         <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
             <Toolbar sx={{ width: "100%" }}>
-                <Box sx={{ display: "flex", justifyContent: "space-evenly", flexGrow: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", flexGrow: 1 }}>
                     {
                         isLoggedIn ? headerItems.map((headerItem) => headerItem) :
                         notLoggedDefaultHeaderItems.map((headerItem) => headerItem)
