@@ -2,39 +2,14 @@ import {useParams, Link, NavLink} from 'react-router-dom';
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext"
-import {
-    Accordion, AccordionDetails, AccordionSummary,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardMedia,
-    Divider,
-    Grid, ImageList, ImageListItem, ImageListItemBar,
-    MenuItem,
-    Rating,
-    TextField, Tooltip,
-    Typography, Chip
-} from "@mui/material";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import {Box, Button, Grid, Rating, Tooltip, Typography, Chip} from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import ReviewsIcon from '@mui/icons-material/Reviews';
-import ReviewsOutlinedIcon from '@mui/icons-material/ReviewsOutlined';
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import DropDownMenu from './DropDownMenu';
+
+
 import * as React from "react";
 import api from "../api";
-import FilmCard from "./Cards/FilmCard";
+
 import FilmProviders from "./FilmProviders";
 import CastCrewMoreInfo from "./CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
