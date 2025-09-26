@@ -11,7 +11,7 @@ function SearchFilmResults() {
     filmTitle = filmTitle.replaceAll("-", " ");
     useDocumentTitle(`Mostra risultati per ${filmTitle}`);
 
-    const [filmsFromSearch, setFilmsFromSearch] = useState([]);
+    const [filmsFromSearch, setFilmsFromSearch] = useState(null);
 
     useEffect( () => {
         async function fetchSearchResults(){

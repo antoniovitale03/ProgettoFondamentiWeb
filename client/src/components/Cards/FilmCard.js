@@ -9,16 +9,13 @@ function FilmCard({ film, showRemoveButton, onRemove }){
 
     const navigate = useNavigate();
 
-    const filmTitle = film.title.replaceAll(" ", "-"); //se ci sono spazi nel titolo del film li sostituisco con i trattini
-    //es. The Matrix reindirizza all'url /film/The-Matrix piuttosto ch /film/The%Matrix
-
     return(
         <Card sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}> {/* ogni card ha la stessa altezza* e ha la larghezza di tutto il grid Item */}
             <CardContent>
                 {/* Contenuto Superiore (Titolo, Anno, Pulsante Rimuovi) */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <p>
-                        <Button component={Link} to={`/film/${filmTitle}/${film._id}`}>
+                        <Button component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
                             <strong>{film.title}</strong>
                         </Button>
                         {film.release_year ?
@@ -34,7 +31,7 @@ function FilmCard({ film, showRemoveButton, onRemove }){
                     </p>
                 </Box>
 
-                <CardMedia component="img" image={film.poster_path} sx={{width: '100%', aspectRatio: '2 / 3', objectFit: 'cover' }} onClick={ () => navigate(`/film/${filmTitle}/${film._id}`)}/>
+                <CardMedia component="img" image={film.poster_path} sx={{width: '100%', aspectRatio: '2 / 3', objectFit: 'cover' }} onClick={ () => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}/>
 
                 { film.director ?
                     <p>Diretto da:
