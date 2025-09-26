@@ -44,6 +44,7 @@ function Home(){
                 : <h1 id="titolohome1"> Nome del sito</h1>
                 }
                 <h2 id="sottotitolo">slogan del sito</h2>
+                <p>ciao</p>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px'}}>
             <Card className="card">
