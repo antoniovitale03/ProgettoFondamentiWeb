@@ -11,7 +11,8 @@ import RateReviewIcon from '@mui/icons-material/RateReview'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import Settings from '@mui/icons-material/Settings'
 import ArchiveIcon from '@mui/icons-material/Archive'
-
+import BoltIcon from '@mui/icons-material/Bolt';
+import {Link} from "react-router-dom"
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
@@ -41,7 +42,7 @@ function Header() {
     const userMenuIcons = [<PersonIcon />, <ListIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>];
 
 
-    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il tuo avatar", "Elimina il tuo account"]
+    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
 
     let menuItems = [
@@ -62,7 +63,8 @@ function Header() {
 
 
     let headerItems = [
-        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src="../src/assets/images/logo512.png" /></Tooltip>} menuContent={menuItems}/>,
+        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001/${user?.avatar_path}`} /></Tooltip>} menuContent={menuItems}/>,
+        <Button component={Link} to="/activity"><BoltIcon/></Button>,
         <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></NavLink>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />

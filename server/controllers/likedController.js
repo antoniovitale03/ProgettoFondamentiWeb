@@ -1,6 +1,5 @@
 const Film = require("../models/Film");
 const User = require("../models/User");
-require('dotenv').config();
 
 exports.addToLiked = async (req, res) => {
     try{

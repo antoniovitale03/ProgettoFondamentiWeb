@@ -9,7 +9,6 @@ function Watchlist(){
     useDocumentTitle("Watchlist");
     const {showNotification} = useNotification();
     const [watchlistFilms, setWatchlistFilms] = useState([]);
-    const [r, setR] = useState(3382);
 
     useEffect(() => {
         const fetchWatchlist = async () => {
@@ -22,13 +21,15 @@ function Watchlist(){
             }
         }
         fetchWatchlist();
-    }, [r])
+    }, [watchlistFilms, showNotification])
 
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
-            showNotification(`${filmTitle} è stato rimosso dalla watchlist`, "success");
-            setR(r - 1);
+            showNotification(`"${filmTitle}" è stato rimosso dalla watchlist`, "success");
+            setWatchlistFilms(currentFilms =>
+                currentFilms.filter(film => film.id !== filmID)
+            );
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -37,16 +38,16 @@ function Watchlist(){
     return(
         <Box marginBottom={10}>
             {watchlistFilms.length !== 0 ?
-                <>
-                <h1>Vuoi guardare {watchlistFilms.length} film</h1>
-                <Grid container spacing={2}>
-                    { [...watchlistFilms].reverse().map(film =>
-                        <Grid key={film._id} size={2}>
-                            <FilmCard film={film} showRemoveButton={true} onRemove={removeFromWatchlist}/>
-                        </Grid>)
-                    }
-                </Grid>
-                </>
+                <Box>
+                    <h1>Vuoi guardare {watchlistFilms.length} film</h1>
+                    <Grid container spacing={2}>
+                        { [...watchlistFilms].reverse().map(film =>
+                            <Grid key={film._id} size={2}>
+                                <FilmCard film={film} showRemoveButton={true} onRemove={removeFromWatchlist}/>
+                            </Grid>)
+                        }
+                    </Grid>
+                </Box>
                 : <p>La tua watchlist è vuota. Aggiungi qualche film!</p>
             }
         </Box>

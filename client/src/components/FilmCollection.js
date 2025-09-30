@@ -4,7 +4,7 @@ import {Box, Grid} from "@mui/material";
 function FilmCollection({ film }){
     return(
         <Box>
-            { film?.collection ?
+            { film.collection &&
                 <Box>
                     <p>La saga completa</p>
                     <Grid container spacing={2}>
@@ -14,7 +14,7 @@ function FilmCollection({ film }){
                             </Grid>
                         )}
                     </Grid>
-                </Box> : null
+                </Box>
             }
         </Box>
     )

@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const Film = require("../models/Film");
-require('dotenv').config();
 
 exports.addToFavorites = async (req, res) => {
     try{

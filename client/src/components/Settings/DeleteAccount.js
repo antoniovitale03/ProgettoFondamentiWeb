@@ -8,17 +8,15 @@ import {useNotification} from "../../context/notificationContext";
 function DeleteAccount() {
 
     const [confirmEmail, setConfirmEmail] = useState("");
-    const [error, setError] = useState("");
     const {showNotification} = useNotification();
     const {sleep, logout} = useAuth();
 
     const navigate = useNavigate();
 
     const handleDeleteAccount = async (event) => {
-        event.preventDefault()
-        setError("");
+        event.preventDefault();
         try {
-            await api.delete(`http://localhost:5001/api/auth/delete-account/${confirmEmail}`)
+            await api.delete(`http://localhost:5001/api/user/delete-account/${confirmEmail}`)
             showNotification("Eliminazione dell'account avvenuta correttamente!", "success");
             await sleep(2000);
             logout();
@@ -34,7 +32,6 @@ function DeleteAccount() {
             <Box className="form-container">
                 <form onSubmit={handleDeleteAccount}>
                     <Typography component="h2">Elimina il tuo account</Typography>
-                    {error && <Typography component="p" className="error-message">{error}</Typography>}
                     <Typography component="p">Per confermare l'eliminazione del tuo account, inserisci la tua mail</Typography>
                     <FormControl>
                         <InputLabel htmlFor="email">Email</InputLabel>

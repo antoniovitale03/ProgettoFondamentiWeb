@@ -1,10 +1,11 @@
 import {useEffect} from "react";
-import LoginPage from "./components/Authentication/LoginPage";
+import LoginPage from "./components/Login/LoginPage";
 import UserPanel from "./components/UserPanel";
 import DefaultPanel from "./components/DefaultPanel";
-import {Route, Routes, Navigate} from "react-router-dom";
-import RegistrationPage from "./components/Authentication/RegistrationPage"
+import {Navigate, Route, Routes} from "react-router-dom";
+import RegistrationPage from "./components/Registration/RegistrationPage"
 import {useAuth} from "./context/authContext";
+import ForgotPasswordForm from "./components/Login/ForgotPasswordForm";
 // la componente principale App gestisce solo il routing per il percorso protetto dell'app (accessibile solo dopo il login)
 //per gestire il login uso localStorage in modo da salvare lo stato di login anche dopo aver chiuso il browser
 function App() {
@@ -12,20 +13,20 @@ function App() {
 
     //Effetto per verificare se il token è scaduto, nel caso si procede al logout
     useEffect(() => {
-        const handleLogout = () => logout()
 
         // Si mette in ascolto dell'evento "logout-event" lanciato da api.js
         // quando il refresh token fallisce, quindi esegue il logout
-        window.addEventListener('logout-event', handleLogout);
+        window.addEventListener('logout-event', () => logout());
 
         // Funzione di pulizia per rimuovere l'ascoltatore
-        return () => window.removeEventListener('logout-event', handleLogout);
+        return () => window.removeEventListener('logout-event', () => logout());
     }, [logout]);
 
    return(
         <Routes>
-            <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/" />} />
-            <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
+            <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/home" />} />
+            <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/home" />} />
+            <Route path="/forgot-password" element={<ForgotPasswordForm />} />
             <Route path="/*" element={isLoggedIn ? <UserPanel /> : <DefaultPanel /> } />
         </Routes>
     )

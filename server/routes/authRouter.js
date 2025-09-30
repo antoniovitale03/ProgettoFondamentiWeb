@@ -9,10 +9,11 @@ router.post("/registration/verify", authController.verifycode); //verifica codic
 router.post("/login", authController.login);
 router.post("/refresh", authController.refresh)
 router.post("/forgot-password", authController.forgotPassword) //imposto nuova password
+
+router.post("/modify-password", authMiddleware.verifyJWT, authController.modifyPassword)
+
 router.post("/logout", authController.logout);
-router.delete("/delete-account/:confirmEmail", authMiddleware.verifyJWT, authController.deleteAccount)
-router.get("/get-profile-data", authMiddleware.verifyJWT, authController.getProfileData)
-router.post("/update-profile", authMiddleware.verifyJWT, authController.updateProfile)
+
 
 
 module.exports = router;

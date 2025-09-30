@@ -18,7 +18,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 function FilmButtons({ film }) {
 
     const {showNotification} = useNotification();
-    //tutti i bottoni hanno stato 1 (aggiungi) o stato 0 (rimuovi)
+    //tutti i bottoni hanno stato true (aggiungi) o false (rimuovi)
     const [watchlistButton, setWatchlistButton] = useState(1);
     const [likedButton, setLikedButton] = useState(1);
     const [reviewButton, setReviewButton] = useState(1);

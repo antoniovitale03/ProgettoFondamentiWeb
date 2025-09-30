@@ -1,6 +1,7 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle"
-import {Avatar, Box, Button, Grid, Typography} from "@mui/material";
+import {Box, Button, Divider, Grid, Typography} from "@mui/material";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -14,10 +15,9 @@ function Profile(){
     const {showNotification} = useNotification();
     useDocumentTitle("Il mio profilo");
 
-    const [favoritesFilms, setFavoritesFilms] = useState([]);
-    const [watchedFilms, setWatchedFilms] = useState([]);
-    const [filmsReviews, setFilmsReviews] = useState([]);
-    const [r, setR] = useState(90332); //variabile di stato per tenere traccia di quando viene rimosso un film tra i preferiti
+    const [favoritesFilms, setFavoritesFilms] = useState(null);
+    const [watchedFilms, setWatchedFilms] = useState(null);
+    const [filmsReviews, setFilmsReviews] = useState(null);
 
     useEffect(() => {
         const fetchFavorites = async () => {
@@ -30,7 +30,7 @@ function Profile(){
             }
         }
         fetchFavorites();
-    }, [r])
+    }, [favoritesFilms, showNotification])
 
     useEffect(()=>{
         async function getWatchedFilms(){
@@ -44,7 +44,7 @@ function Profile(){
 
         }
         getWatchedFilms();
-    }, [])
+    }, [showNotification])
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -57,13 +57,14 @@ function Profile(){
             }
         }
         fetchReviews();
-    }, []);
+    }, [showNotification]);
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
             showNotification(`${filmTitle} è stato rimosso dai preferiti`, "success");
-            setR(r - 1);
+            setFavoritesFilms(currentFilms =>
+                currentFilms.filter(film => film.id !== filmID));
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -71,16 +72,20 @@ function Profile(){
     return (
         <Box>
             {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
-            {user.name && user.surname && <Typography component="p">{user.name} {user.surname}</Typography>}
-            <Avatar />
+            <img src={`http://localhost:5001/${user.avatar_path}`} style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} alt="Avatar"/>
             {user.biography && <Typography component="p">{user.biography}</Typography>}
-            {user.country && <Typography component="p">{user.country}</Typography>}
-            <Button href="/settings/modify-profile">Modifica il profilo</Button>
+            {user.country &&
+                <Typography component="p">
+                    <LocationOnIcon/> {user.country}
+                </Typography>
 
-            {favoritesFilms.length > 0 ?
-                <div>
+            }
+            <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button>
+
+            {favoritesFilms &&
+                <Box>
                     <h1>Film preferiti</h1>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                         {
                             [...favoritesFilms].reverse().map((film, index) =>
                             <Grid key={index} size={2}>
@@ -88,38 +93,41 @@ function Profile(){
                             </Grid>)
                         }
                     </Grid>
-                </div>
-                : null
+                    <Divider />
+                </Box>
             }
 
-            {watchedFilms.length > 0 ?
+
+
+            {watchedFilms &&
                 <div>
                     <h1>Ultimi film visti (4)</h1>
                     <Button component={Link} to="/lista-film">Vedi tutti i miei film visti</Button>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                         { [...watchedFilms].reverse().slice(0, 4).map((film, index) =>
                             <Grid key={index} size={2}>
                                 <FilmCard film={film}/>
                             </Grid>)
                         }
                     </Grid>
-                </div>: null
+                    <Divider />
+                </div>
             }
 
 
-            {filmsReviews.length > 0 ?
-                <Box sx={{ width: '90%' }}>
+            {filmsReviews &&
+                <Box>
                     <h1>Ultime recensioni fatte (4): </h1>
                     <Button component={Link} to="/recensioni">Vedi tutte le mie recensioni</Button>
                     <Grid container spacing={2}>
                         { [...filmsReviews].reverse().slice(0, 4).map(review =>
                             <Grid key={review.filmID} size={6}>
                                 <ReviewCard review={review}/>
-                            </Grid>)}
+                            </Grid>)
+                        }
                     </Grid>
-                </Box> : null
+                </Box>
             }
-
         </Box>
     )
 }

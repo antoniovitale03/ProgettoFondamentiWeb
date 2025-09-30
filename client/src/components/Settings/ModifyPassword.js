@@ -1,32 +1,28 @@
 import {Box, Button, FormControl, Input, InputLabel, Stack, Typography} from "@mui/material";
 import React, {useState} from "react";
 import api from "../../api";
-import {useAuth} from "../../context/authContext";
 import {useNotification} from "../../context/notificationContext";
+import {useNavigate} from "react-router-dom";
 
 function ModifyPassword() {
-    const {user, sleep} = useAuth();
+    const navigate = useNavigate();
     const {showNotification} = useNotification();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-    const [error, setError] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
-    const username = user.username;
 
     const handleModifyPassword = async (event) => {
         event.preventDefault();
-        setError(" ");
         try{
-            await api.post('http://localhost:5001/api/auth/forgot-password', {
-                username, oldPassword, newPassword, confirmNewPassword
+            await api.post('http://localhost:5001/api/auth/modify-password', {
+                oldPassword, newPassword, confirmNewPassword
             })
             showNotification("Password aggiornata correttamente", "success");
             //ri-renderizzo la pagina di login con le variabili di stato iniziali
-            setSuccessMessage("");
+            navigate("/");
         } catch(error){
-            setError(error.response.data)
+            showNotification(error.response.data, "error");
             setOldPassword("");
             setNewPassword("");
             setConfirmNewPassword("");
@@ -38,7 +34,6 @@ function ModifyPassword() {
             <Box className="form-container">
                 <form onSubmit={handleModifyPassword}>
                     <h1>Modifica la tua password</h1>
-                    {error && <Typography component="p" className="error-message">{error}</Typography>}
                     <Stack spacing={5}>
                         <FormControl>
                             <InputLabel hmtlFor="oldPassword">Vecchia password</InputLabel>
