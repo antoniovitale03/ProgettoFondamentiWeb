@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     favorites: [{ type: Number, ref: "Film" }],
     reviews: [{ type: String, ref: "Review" }],
     watched: [{ type: Number, ref: "Film" }],
+    activity: [{ type: String, ref: "Activity" }],
     following: [{ type: String }],
     followers: [{ type: String }],
 });

@@ -1,6 +1,7 @@
 const Review = require("../models/Review");
 const User = require("../models/User");
 const Film = require("../models/Film");
+const Activity = require("../models/Activity");
 require("dotenv").config();
 
 
@@ -23,12 +24,13 @@ exports.addReview = async (req, res) => {
         const {film, review, reviewRating} = req.body;
         const userID = req.user.id;
         const user = await User.findById(userID);
+        let avatar = user.avatar_path;
         if (!user) {
             return res.status(400).send("Utente non trovato.");
         }
 
         //il film è stato trovato, quindi modifico l'url per mostrare la locandina
-        const reviewDocument = await new Review(
+        const newReview = await new Review(
             {
                 filmID: film.id,
                 title: film.title,
@@ -39,12 +41,28 @@ exports.addReview = async (req, res) => {
                 review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
             }
         )
-        await reviewDocument.save();
+        await newReview.save();
+
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            username: req.user.username,
+            avatar: avatar,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_REVIEW',
+            rating: reviewRating,
+            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+        })
+
+        await newActivity.save();
+
+
         //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
         await User.findByIdAndUpdate(userID, {
             $addToSet: {
-                reviews: reviewDocument._id,
-                watched: film.id
+                reviews: newReview._id,
+                watched: film.id,
+                activity: newActivity._id
             }
         });
         //e aggiungo il rating (dovengo aggiungere un'oggetto film devo calcolare il regista)

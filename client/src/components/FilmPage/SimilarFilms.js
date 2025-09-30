@@ -1,9 +1,9 @@
 import {useParams} from "react-router-dom";
 import {React, useEffect, useState} from "react";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "../useDocumentTitle";
 import {Box, Grid, Pagination, Stack} from "@mui/material";
-import {useNotification} from "../context/notificationContext";
-import FilmCard from "./Cards/FilmCard";
+import {useNotification} from "../../context/notificationContext";
+import FilmCard from "../Cards/FilmCard";
 
 function SimilarFilms(){
 
@@ -49,7 +49,7 @@ function SimilarFilms(){
 
             <Grid container spacing={2}>
                 { films && films.map( film =>
-                    <Grid key={film._id} size={2}>
+                    <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
                         <FilmCard film={film} />
                     </Grid>)
                 }

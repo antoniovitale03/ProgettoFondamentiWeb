@@ -12,7 +12,7 @@ import Archivio from "./Archivio";
 import Recensioni from "./Recensioni";
 import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
-import FilmPage from "./FilmPage";
+import FilmPage from "./FilmPage/FilmPage";
 import FavoritesFilms from "./FavoritesFilms";
 import CastPage from "./CastPage";
 import CrewPage from "./CrewPage";
@@ -28,7 +28,7 @@ import UpcomingFilms from "./HomePageFilms/UpcomingFilms";
 import TopRatedFilms from "./HomePageFilms/TopRatedFilms";
 import NowPlayingFilms from "./HomePageFilms/NowPlayingFilms";
 import TrendingFilms from "./HomePageFilms/TrendingFilms";
-import SimilarFilms from "./SimilarFilms";
+import SimilarFilms from "./FilmPage/SimilarFilms";
 import Activity from "./Activity";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {

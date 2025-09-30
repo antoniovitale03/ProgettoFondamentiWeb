@@ -29,7 +29,7 @@ function SearchFilmResults() {
                     <p>Risultati di ricerca per "<strong>{filmTitle}</strong>"</p>
                     <Grid container spacing={2}>
                         { filmsFromSearch.map(film =>
-                            <Grid key={film._id} size={2}>
+                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
                                 <FilmCard film={film} />
                             </Grid>
                         )}

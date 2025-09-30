@@ -1,13 +1,16 @@
 const User = require("../models/User");
 const Film = require("../models/Film");
+const Activity = require("../models/Activity");
 
 exports.addToFavorites = async (req, res) => {
     try{
         const userID = req.user.id;
-        let {film} = req.body;
+        let { film } = req.body;
+
+        const user = await User.findById(userID);
+        let avatar = user.avatar_path;
 
         //controllo che venga rispettato il limite di 10 film preferiti
-        const user = await User.findById(userID)
         if (user.favorites.length >= 10){
             return res.status(500).json("Impossibile aggiungere il film. Hai superato il limite di 10 film nei preferiti");
         }
@@ -25,9 +28,22 @@ exports.addToFavorites = async (req, res) => {
             {
                 upsert: true
             });
+
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            username: req.user.username,
+            avatar: avatar,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_TO_FAVORITES',
+            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+        })
+
+        await newActivity.save();
+
         await User.findByIdAndUpdate(
             userID,
-            { $addToSet: { favorites: film.id } }
+            { $addToSet: { favorites: film.id, activity: newActivity._id } }
         )
         res.status(200).json(`"${film.title}" aggiunto alla lista dei favoriti!`);
 

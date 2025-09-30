@@ -5,10 +5,10 @@ import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../context/authContext";
+import profile from "../Profile";
 function ModifyProfile(){
 
     const {showNotification} = useNotification();
-    const navigate = useNavigate();
     const {user, setUser} = useAuth();
     //dati profilo
     const [profileData, setProfileData] = useState({
@@ -50,14 +50,13 @@ function ModifyProfile(){
             event.preventDefault();
             await api.post("http://localhost:5001/api/user/update-profile", profileData);
             let newUser = {...user,
-                username: user.username,
-                name: user.name,
-                surname: user.surname,
-                email: user.email,
-                biography: user.biography,
-                country: user.country,
+                username: profileData.username,
+                name: profileData.name,
+                surname: profileData.surname,
+                email: profileData.email,
+                biography: profileData.biography,
+                country: profileData.country,
             };
-            console.log(newUser);
             setUser(newUser);
             localStorage.setItem('user', JSON.stringify(newUser));
             showNotification("Profilo modificato con successo!", "success");
@@ -71,7 +70,7 @@ function ModifyProfile(){
         <Box className="page-container">
             <Box className="form-container">
                 <form onSubmit={handleSubmit}>
-                    <h1 style={{textAlign:"left"}}>Modifica il tuo profilo</h1>
+                    <h1 style={{ textAlign:"left" }}>Modifica il tuo profilo</h1>
                     <Stack spacing={4}>
                         <FormControl>
                             <InputLabel htmlFor="username">Username</InputLabel>

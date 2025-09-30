@@ -84,3 +84,16 @@ exports.uploadAvatar = async (req, res) => {
     res.status(200).json(filePath);
 }
 
+exports.removeAvatar = async (req, res) => {
+    const userID = req.user.id;
+    await User.findByIdAndUpdate(userID,
+        { $set: {avatar_path: null} },
+        )
+    res.status(200).json("Avatar rimosso.");
+}
+
+exports.getActivity = async (req, res) => {
+    const userID = req.user.id;
+    const user = await User.findById(userID).populate('activity');
+    res.status(200).json(user.activity);
+}

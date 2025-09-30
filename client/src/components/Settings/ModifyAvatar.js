@@ -1,10 +1,11 @@
-import {Box, Button} from "@mui/material";
+import {Avatar, Box, Button, Tooltip} from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { styled } from '@mui/material/styles';
 import {useState} from "react";
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import {useAuth} from "../../context/authContext";
+import CloseIcon from "@mui/icons-material/Close";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -63,23 +64,40 @@ function ModifyAvatar() {
 
             showNotification("Upload completato", "success");
             sleep(1500);
-            //navigate("/home");
 
         } catch (error) {
             alert('Errore nel caricamento!');
         }
     };
 
+
+    const handleRemoveAvatar = async () => {
+        try{
+            await api.post('http://localhost:5001/api/user/remove-avatar');
+            let newUser = {...user, avatar_path: null};
+            setUser(newUser);
+            localStorage.setItem('user', JSON.stringify(newUser));
+            showNotification("Avatar rimosso con successo!", "success");
+            sleep(1500);
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
+    }
     return(
         <Box>
-            {user.avatar_path &&
-                <Box>
-                    <p>Il tuo attuale avatar</p>
+            <p>Il tuo attuale avatar</p>
+            {
+                user.avatar_path ?
                     <img src={`http://localhost:5001/${user.avatar_path}`}
                          style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}
-                    />
-                </Box>
+                    /> :
+                <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}/>
             }
+            <Tooltip title="Rimuovi avatar">
+                <Button onClick={handleRemoveAvatar}>
+                    <CloseIcon />
+                </Button>
+            </Tooltip>
 
             {selectAvatarButton === 1 &&
                 <Button

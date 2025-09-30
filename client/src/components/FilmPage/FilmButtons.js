@@ -1,13 +1,13 @@
 import {Box, Button, Rating, TextField, Tooltip} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
-import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import api from "../../api";
+import {useNotification} from "../../context/notificationContext";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import DropDownMenu from "./DropDownMenu";
+import DropDownMenu from "../DropDownMenu";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import ReviewsIcon from "@mui/icons-material/Reviews";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";

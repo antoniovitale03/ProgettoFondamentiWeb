@@ -64,7 +64,7 @@ function Header() {
 
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001/${user?.avatar_path}`} /></Tooltip>} menuContent={menuItems}/>,
-        <Button component={Link} to="/activity"><BoltIcon/></Button>,
+        <Button component={Link} to="/activity"><Tooltip title="Activity"><BoltIcon/></Tooltip></Button>,
         <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></NavLink>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />

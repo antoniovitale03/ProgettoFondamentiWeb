@@ -1,10 +1,14 @@
 const Film = require("../models/Film");
 const User = require("../models/User");
+const Activity = require("../models/Activity");
 
 exports.addToWatched = async (req, res) => {
     try{
         const userID = req.user.id;
         const { film } = req.body;
+        const user = await User.findById(userID);
+        let avatar = user.avatar_path;
+
         await Film.findOneAndUpdate(
             { _id: film.id },
             {
@@ -20,9 +24,22 @@ exports.addToWatched = async (req, res) => {
                 upsert: true
             }
         )
+
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            username: req.user.username,
+            avatar: avatar,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_TO_WATCHED',
+            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+        })
+
+        await newActivity.save();
+
         //se ho visto un film eventualmente va rimosso dalla watchlist
         await User.findByIdAndUpdate(userID, {
-            $addToSet: { watched: film.id },
+            $addToSet: { watched: film.id, activity: newActivity._id },
             $pull: { watchlist: film.id }
         })
 
@@ -52,6 +69,7 @@ exports.removeFromWatched = async (req, res) => {
 exports.getWatched = async (req, res) => {
     const userID = req.user.id;
     const user = await User.findById(userID).populate('watched').populate('reviews');
+
     //per ogni film visto controllo se è stato anche piaciuto e il suo rating
     let watchedFilms = user.watched.map( watchedFilm => {
 

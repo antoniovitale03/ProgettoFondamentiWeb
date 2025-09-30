@@ -1,14 +1,14 @@
 import {useParams, Link} from 'react-router-dom';
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "../useDocumentTitle";
 import {useEffect, useState} from "react";
 import {Box, Button, Grid, Rating, Tooltip, Typography, Chip} from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import * as React from "react";
-import api from "../api";
+import api from "../../api";
 
 import FilmProviders from "./FilmProviders";
-import CastCrewMoreInfo from "./CastCrewMoreInfo";
+import CastCrewMoreInfo from "../CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
 import FilmButtons from "./FilmButtons";
 

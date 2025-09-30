@@ -1,12 +1,13 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle"
-import {Box, Button, Divider, Grid, Typography} from "@mui/material";
+import {Avatar, Box, Button, Divider, Grid, Tooltip, Typography} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import ReviewCard from "./Cards/ReviewCard";
+import CloseIcon from '@mui/icons-material/Close';
 import {Link} from "react-router-dom";
 
 function Profile(){
@@ -72,7 +73,13 @@ function Profile(){
     return (
         <Box>
             {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
-            <img src={`http://localhost:5001/${user.avatar_path}`} style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} alt="Avatar"/>
+            {
+                user.avatar_path ? <img src={`http://localhost:5001/${user.avatar_path}`} style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
+                    : <Avatar />
+            }
+
+
+
             {user.biography && <Typography component="p">{user.biography}</Typography>}
             {user.country &&
                 <Typography component="p">

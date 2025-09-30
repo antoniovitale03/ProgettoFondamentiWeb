@@ -1,11 +1,14 @@
 const Film = require('../models/Film');
 const User = require('../models/User');
+const Activity = require("../models/Activity");
 
 
 exports.addToWatchlist = async (req, res) => {
     try{
         const userID = req.user.id;
         let { film } = req.body;
+        const user = await User.findById(userID);
+        let avatar = user.avatar_path;
 
         //il server verifica se il film esiste già nella collezione films verificando l'id, se non esiste lo crea.
         // questo garantisce di avere sempre una sola copia dei dati di ogni film.
@@ -24,12 +27,26 @@ exports.addToWatchlist = async (req, res) => {
             }
         );
 
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            username: req.user.username,
+            avatar: avatar,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_TO_WATCHLIST',
+            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+        })
+
+        await newActivity.save();
+
         //per aggiungere l'id del film all'array watchlist dell'utente, uso $addToSet che
         // aggiunge un elemento a un array SOLO SE non è già presente (evitare duplicati)
         await User.findByIdAndUpdate(
             userID,
-            { $addToSet: { watchlist: film.id }
-            }) //con embedding avremmo fatto watchlist: film, aggiungendo l'intero oggetto film
+            { $addToSet: { watchlist: film.id, activity: newActivity._id }
+            })
+
+
 
         res.status(200).json(`"${film.title}" aggiunto alla watchlist!`);
     }catch(error){
