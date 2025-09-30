@@ -44,10 +44,10 @@ function FilmButtons({ film }) {
 
     const addToWatchlist = async (event) => {
         event.preventDefault();
-        setWatchlistButton(0);
         try{
-            await api.post("http://localhost:5001/api/films/watchlist/add-to-watchlist", { film })
-            showNotification(`${film.title} è stato aggiunto alla watchlist`, "success")
+            await api.post("http://localhost:5001/api/films/watchlist/add-to-watchlist", { film });
+            showNotification(`${film.title} è stato aggiunto alla watchlist`, "success");
+            setWatchlistButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -78,10 +78,10 @@ function FilmButtons({ film }) {
 
     const addToLiked = async (event) => {
         event.preventDefault();
-        setLikedButton(0);
         try{
-            await api.post('http://localhost:5001/api/films/liked/add-to-liked', { film })
-            showNotification(`${film.title} è stato aggiunto ai film piaciuti`, "success")
+            await api.post('http://localhost:5001/api/films/liked/add-to-liked', { film });
+            showNotification(`${film.title} è stato aggiunto ai film piaciuti`, "success");
+            setLikedButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -89,10 +89,10 @@ function FilmButtons({ film }) {
 
     const removeFromLiked = async (event) => {
         event.preventDefault();
-        setLikedButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/liked/remove-from-liked/${film.id}`)
-            showNotification(`${film.title} è stato rimosso dai film piaciuti`, "success")
+            await api.delete(`http://localhost:5001/api/films/liked/remove-from-liked/${film.id}`);
+            showNotification(`${film.title} è stato rimosso dai film piaciuti`, "success");
+            setLikedButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -101,10 +101,10 @@ function FilmButtons({ film }) {
 
     const deleteReview = async (event) => {
         event.preventDefault();
-        setReviewButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${film.id}`)
-            showNotification(`La recensione di ${film.title} è stata rimossa`, "success")
+            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${film.id}`);
+            showNotification(`La recensione di ${film.title} è stata rimossa`, "success");
+            setReviewButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -112,10 +112,10 @@ function FilmButtons({ film }) {
 
     const addToFavorites = async (event) => {
         event.preventDefault();
-        setFavoritesButton(0);
         try{
-            await api.post('http://localhost:5001/api/films/favorites/add-to-favorites', { film })
-            showNotification(`${film.title} è stato aggiunto ai film preferiti`, "success")
+            await api.post('http://localhost:5001/api/films/favorites/add-to-favorites', { film });
+            showNotification(`${film.title} è stato aggiunto ai film preferiti`, "success");
+            setFavoritesButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -123,10 +123,10 @@ function FilmButtons({ film }) {
 
     const removeFromFavorites = async (event) => {
         event.preventDefault();
-        setFavoritesButton(1);
         try{
-            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${film.id}`)
-            showNotification(`${film.title} è stato rimosso dai film preferiti`, "success")
+            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${film.id}`);
+            showNotification(`${film.title} è stato rimosso dai film preferiti`, "success");
+            setFavoritesButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -135,12 +135,12 @@ function FilmButtons({ film }) {
 
     const addToWatched = async (event) => {
         event.preventDefault();
-        setWatchedButton(0);
-        //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
-        setWatchlistButton(1);
         try{
             await api.post('http://localhost:5001/api/films/watched/add-to-watched', { film });
-            showNotification(`${film.title} è stato aggiunto ai film visti`, "success")
+            showNotification(`${film.title} è stato aggiunto ai film visti`, "success");
+            setWatchedButton(0);
+            //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
+            setWatchlistButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -148,10 +148,10 @@ function FilmButtons({ film }) {
 
     const removeFromWatched = async (event) => {
         event.preventDefault();
-        setWatchedButton(1);
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${film.id}`);
-            showNotification(`${film.title} è stato rimosso dai film visti`, "success")
+            showNotification(`${film.title} è stato rimosso dai film visti`, "success");
+            setWatchedButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
         }

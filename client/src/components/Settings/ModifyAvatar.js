@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Tooltip} from "@mui/material";
+import {Avatar, Box, Button, IconButton, Tooltip} from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { styled } from '@mui/material/styles';
 import {useState} from "react";
@@ -88,16 +88,19 @@ function ModifyAvatar() {
             <p>Il tuo attuale avatar</p>
             {
                 user.avatar_path ?
-                    <img src={`http://localhost:5001/${user.avatar_path}`}
-                         style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}
-                    /> :
+                    <Box sx={{ position: 'relative', width: 150, height: 150 }}>
+                        <Avatar src={`http://localhost:5001/${user.avatar_path}`}
+                             style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}
+                        />
+                        <IconButton onClick={handleRemoveAvatar} sx={{ position: 'absolute', top: 0, right: 0, backgroundColor: 'red' }}>
+                            <Tooltip title="Rimuovi avatar">
+                                <CloseIcon />
+                            </Tooltip>
+                        </IconButton>
+                    </Box>
+                     :
                 <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}/>
             }
-            <Tooltip title="Rimuovi avatar">
-                <Button onClick={handleRemoveAvatar}>
-                    <CloseIcon />
-                </Button>
-            </Tooltip>
 
             {selectAvatarButton === 1 &&
                 <Button

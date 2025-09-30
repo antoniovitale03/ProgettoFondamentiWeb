@@ -32,7 +32,7 @@ exports.addToFavorites = async (req, res) => {
         //aggiungo l'azione alle attività
         const newActivity = new Activity({
             username: req.user.username,
-            avatar: avatar,
+            avatar: avatar ? avatar : " ",
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_FAVORITES',

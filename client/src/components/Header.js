@@ -2,7 +2,7 @@
 import { NavLink } from 'react-router-dom';
 
 import {useAuth} from "../context/authContext";
-import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar, ListItemIcon, Divider, Tooltip} from "@mui/material";
+import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar, ListItemIcon, Divider, Tooltip, Input} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person'
 import ListIcon from '@mui/icons-material/List'
@@ -17,15 +17,19 @@ import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useNotification} from "../context/notificationContext";
 import * as React from "react";
+import api from "../api";
 
 
 
 function Header() {
     const {isLoggedIn, user, logout} = useAuth();
     const [title, setTitle] = useState("");
+    const [friend, setFriend] = useState("");
 
     const navigate = useNavigate();
+    const {showNotification} = useNotification();
 
     const handleSearch = async () => {
         try{
@@ -33,7 +37,17 @@ function Header() {
             navigate(`/search/${filmTitle}`);
             setTitle("");
         }catch(error){
+            showNotification(error.response.data, "error");
             setTitle("");
+        }
+    }
+
+    const handleAddFriend = async () => {
+        try{
+            await api.get(`http://localhost:5001/api/users/${friend}/follow`);
+
+        }catch(error){
+            showNotification(error.response.data, "error");
         }
     }
 
@@ -44,6 +58,17 @@ function Header() {
 
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
+
+    let addAfriend = (
+        <>
+            <Input type="string" value={friend} onChange={(event) => setFriend(event.target.value)}/>
+            <Button variant="contained" onClick={handleAddFriend}>
+                <SearchIcon />
+            </Button>
+        </>
+        )
+
+
 
     let menuItems = [
         userMenuLinks.map((menuLink, index) =>
@@ -72,6 +97,7 @@ function Header() {
                 <SearchIcon />
             </Button>
         </Box>,
+        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriend}></DropDownMenu>,
         <Button href="/">
             <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>

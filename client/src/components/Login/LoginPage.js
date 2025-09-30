@@ -14,13 +14,6 @@ function LoginPage() {
     // step = 1 per il login e step = 2 per l'impostazione della nuova password
     const [step, setStep] = useState(1);
 
-    useEffect(() => {
-        if(step === 1) {
-            navigate("/login");
-        }else{
-            navigate("/forgot-password/")
-        }
-    })
 
     const setData = (username) => {
         setUsername(username); //salvo l'oggetto username ricevuto da loginForm e lo salvo come variabile di stato per
