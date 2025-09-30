@@ -2,7 +2,7 @@ import {Routes, Route } from 'react-router-dom';
 import Profile from "./Profile";
 import Home from "./Home";
 import About from "./About";
-import DeleteAccount from "./Authentication/DeleteAccount";
+import DeleteAccount from "./Settings/DeleteAccount";
 import Header from "./Header";
 import Footer from "./Footer";
 import Contact from "./Contact";
@@ -18,10 +18,10 @@ import CastPage from "./CastPage";
 import CrewPage from "./CrewPage";
 import ActorPage from "./ActorPage";
 import DirectorPage from "./DirectorPage";
-import ModifyProfile from "./Authentication/ModifyProfile";
+import ModifyProfile from "./Settings/ModifyProfile";
 import {Container, Box} from "@mui/material";
-import ModifyPassword from "./Authentication/ModifyPassword";
-import ModifyAvatar from "./ModifyAvatar";
+import ModifyPassword from "./Settings/ModifyPassword";
+import ModifyAvatar from "./Settings/ModifyAvatar";
 import FilmsByYear from "./FilmsByYear";
 import CurrentPopularFilms from "./HomePageFilms/CurrentPopularFilms";
 import UpcomingFilms from "./HomePageFilms/UpcomingFilms";
@@ -29,6 +29,7 @@ import TopRatedFilms from "./HomePageFilms/TopRatedFilms";
 import NowPlayingFilms from "./HomePageFilms/NowPlayingFilms";
 import TrendingFilms from "./HomePageFilms/TrendingFilms";
 import SimilarFilms from "./SimilarFilms";
+import Activity from "./Activity";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
     // let paths = ["/", "/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist",
@@ -60,6 +61,7 @@ function UserPanel() {
                       <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
 
                       <Route path="/archivio" element={<Archivio />} />
+                      <Route path="/activity" element={<Activity />} />
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
 

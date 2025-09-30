@@ -8,7 +8,6 @@ import useDocumentTitle from "./useDocumentTitle"
 function FavoritesFilms(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
     const {showNotification} = useNotification();
-    const [r, setR] = useState(8834);
     useDocumentTitle("I miei film preferiti");
 
     useEffect(() => {
@@ -22,13 +21,15 @@ function FavoritesFilms(){
             }
         }
         fetchFavorites();
-    }, [r])
+    }, [favoritesFilms, showNotification]);
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(`${filmTitle} è stato rimosso dai preferiti`, "success");
-            setR(r - 1);
+            showNotification(`"${filmTitle}" è stato rimosso dai preferiti`, "success");
+            setFavoritesFilms(currentFilms =>
+                currentFilms.filter(film => film.id !== filmID)
+            );
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -39,7 +40,7 @@ function FavoritesFilms(){
     return(
         <Box marginBottom={10}>
             {favoritesFilms.length === 0 ? <div>Non hai ancora aggiunto nessun film nei preferiti.</div> :
-                <div>
+                <Box>
                     <h1><strong>I tuoi 10 film preferiti</strong></h1>
                     <Grid container spacing={2}>
                         { [...favoritesFilms].reverse().map(film =>
@@ -48,7 +49,7 @@ function FavoritesFilms(){
                             </Grid>)
                         }
                     </Grid>
-                </div>
+                </Box>
             }
         </Box>
     )

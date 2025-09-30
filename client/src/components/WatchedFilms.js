@@ -10,7 +10,6 @@ function WatchedFilms(){
     useDocumentTitle("Lista dei film visti");
     const {showNotification} = useNotification();
     const [watchedFilms, setWatchedFilms] = useState([]);
-    const [r, setR] = useState(23423);
 
     useEffect(() => {
         const getWatchedFilms = async () => {
@@ -23,13 +22,15 @@ function WatchedFilms(){
             }
         }
         getWatchedFilms();
-    }, [r])
+    }, [watchedFilms, showNotification]);
 
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
-            showNotification(`${filmTitle} è stato rimosso dai film visti`, "success");
-            setR(r - 1);
+            showNotification(`"${filmTitle}" è stato rimosso dai film visti`, "success");
+            setWatchedFilms(currentFilms =>
+                currentFilms.filter(film => film.id !== filmID)
+            );
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -37,7 +38,7 @@ function WatchedFilms(){
 
     return(
         <Box marginBottom={10}>
-            {watchedFilms.length === 0 ? <p>Non hai ancora visto nessun film</p>:
+            {watchedFilms.length === 0 ? <p>Non hai ancora visto nessun film</p> :
                 <Box>
                     <h1>Hai visto {watchedFilms.length} film</h1>
                     <Grid container spacing={2}>

@@ -9,8 +9,6 @@ function Recensioni(){
 
     useDocumentTitle("Le mie Recensioni");
     const [reviews, setReviews] = useState([]);
-    const [r, setR] = useState(32828); // variabile di stato che serve per tracciare quando una recensione viene rimossa
-    // (modificando r), cosi al variare della variabile di stato eseguo l'effetto per mostrare le recensioni.
 
     const {showNotification} = useNotification();
 
@@ -26,13 +24,15 @@ function Recensioni(){
             }
         }
         getReviews();
-    }, [r]);
+    }, [reviews, showNotification]);
 
     const removeReview = async (filmID, reviewTitle) => {
         try {
             await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
             showNotification(`La recensione di "${reviewTitle}" è stata rimossa`, "success");
-            setR(r - 1);
+            setReviews(currentReviews =>
+                currentReviews.filter(film => film.id !== filmID)
+            );
         }catch(error){
             showNotification(error.response.data, "error");
         }

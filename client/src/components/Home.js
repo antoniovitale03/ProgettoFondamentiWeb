@@ -9,7 +9,7 @@ import {useNotification} from "../context/notificationContext";
 
 function Home(){
     useDocumentTitle("Home")
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
     const {showNotification} = useNotification()
 
     const [currentPopularFilms, setCurrentPopularFilms] = useState({});
@@ -40,11 +40,11 @@ function Home(){
     return (
         <Box>
             <Box>
+                {!isLoggedIn ? <p>Utente non loggato</p> : null}
                 {user ? <Typography component="h6" >Benvenuto nella home, {user.username}!</Typography>
                 : <h1 id="titolohome1"> Nome del sito</h1>
                 }
                 <h2 id="sottotitolo">slogan del sito</h2>
-                <p>ciao</p>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px'}}>
             <Card className="card">

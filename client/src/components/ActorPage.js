@@ -28,9 +28,8 @@ function ActorPage() {
                 setActorCast(actor.cast);
                 setActorCrew(actor.crew);
             }catch(error){
-                showNotification(error.response.message, "error")
+                showNotification(error.response.data, "error")
             }
-
         }
         fetchActor();
     }, [actorName, actorID]);

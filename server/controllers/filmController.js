@@ -148,13 +148,12 @@ exports.getAllGenres = async (req, res) => {
 exports.getFilmsFromSearch = async (req, res) => {
     const { filmTitle } = req.body;
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
+    //const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}&language=en-EN`);
     const data = await response.json();
-    let films = data.results; //ottengo la lista di tutti i film che corrispondono alla ricerca
-    //aggiungo ad ogni film la proprietà che riguarda il regista, completo l'url per locandina e sfondo (se esistono) e
-    //converto release_date indicando solo l'anno di uscita senza mese e giorno
+    let films = data.results; //ottengo la lista dei risultati (film, serie tv e persone)
     films = films.map(async (film) => {  //array di Promise
-        const director = await getFilmDirector(film.id);
         const year = film.release_date ? new Date(film.release_date).getFullYear() : null;
+        let director = await getFilmDirector(film.id);
         return {
             title: film.title,
             _id: film.id,
@@ -162,8 +161,8 @@ exports.getFilmsFromSearch = async (req, res) => {
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
             release_year: year,
             rating: null
-        };
-    });
+            };
+         });
 
     films = await Promise.all(films);
     res.status(200).json(films);
@@ -279,6 +278,11 @@ exports.getFilm = async (req, res) => {
     //trovo il link Youtube del trailer
     const trailerLink = await getFilmTrailer(filmID);
 
+    //calcolo la durata del film in ore + minuti (film.runtime restituisce la durata in minuti)
+    const hours = Math.floor(film.runtime / 60);
+    const minutes = film.runtime % 60;
+    const duration = `${hours}h ${minutes}m`;
+
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
     const filmStatus = await getFilmStatus(user, filmID);
 
@@ -334,6 +338,7 @@ exports.getFilm = async (req, res) => {
         rent: rent,
         buy: buy,
         flatrate: flatrate,
+        duration: duration,
     }
     res.status(200).json(film);
 }

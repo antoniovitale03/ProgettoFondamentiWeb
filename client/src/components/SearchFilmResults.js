@@ -25,7 +25,7 @@ function SearchFilmResults() {
     return(
         <Box marginBottom={10}>
             {filmsFromSearch ?
-                <div>
+                <Box>
                     <p>Risultati di ricerca per "<strong>{filmTitle}</strong>"</p>
                     <Grid container spacing={2}>
                         { filmsFromSearch.map(film =>
@@ -34,7 +34,7 @@ function SearchFilmResults() {
                             </Grid>
                         )}
                     </Grid>
-                </div>
+                </Box>
                 : <p>Nessun film trovato</p>
             }
         </Box>

@@ -4,7 +4,7 @@ import * as React from "react";
 function FilmProviders({ film }) {
     return(
         <Box>
-        {film?.rent ?
+        {film && film.rent &&
             <Box>
                 <h2>Noleggia</h2>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
@@ -16,10 +16,9 @@ function FilmProviders({ film }) {
                     }
                 </Box>
             </Box>
-            : null
         }
 
-        { film?.flatrate ?
+        { film && film.flatrate &&
             <Box>
                 <h2>Guarda in streaming</h2>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
@@ -30,10 +29,10 @@ function FilmProviders({ film }) {
                     )
                     }
                 </Box>
-            </Box> : null
+            </Box>
         }
 
-        { film?.buy ?
+        { film && film.buy &&
             <Box>
                 <h2>Acquista</h2>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
@@ -44,7 +43,7 @@ function FilmProviders({ film }) {
                     )
                     }
                 </Box>
-            </Box> : null
+            </Box>
         }
         </Box>
     )

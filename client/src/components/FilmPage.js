@@ -1,11 +1,8 @@
-import {useParams, Link, NavLink} from 'react-router-dom';
+import {useParams, Link} from 'react-router-dom';
 import useDocumentTitle from "./useDocumentTitle";
 import {useEffect, useState} from "react";
-import {useNotification} from "../context/notificationContext"
 import {Box, Button, Grid, Rating, Tooltip, Typography, Chip} from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
-
-
 
 import * as React from "react";
 import api from "../api";
@@ -24,8 +21,6 @@ function FilmPage(){
     filmTitle = filmTitle.replaceAll("-", " ");
     useDocumentTitle(filmTitle);
 
-
-    const {showNotification} = useNotification();
     const [film, setFilm] = useState(null);
 
 
@@ -63,6 +58,7 @@ function FilmPage(){
                             <strong>{film?.director.name}</strong>
                         </Button>
                     </p>
+                    <p>Durata: {film.duration}</p>
 
                     { /* Rating */ }
                     {film.avgRating ?
@@ -78,6 +74,7 @@ function FilmPage(){
                         </Box> : null
                     }
 
+                    {/* piattaforme di streaming */}
                     <FilmProviders film={film} />
 
                     {/* Bottoni per gestire il film */}

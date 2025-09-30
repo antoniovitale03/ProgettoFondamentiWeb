@@ -48,7 +48,7 @@ function SimilarFilms(){
             />
 
             <Grid container spacing={2}>
-                { films?.map( film =>
+                { films && films.map( film =>
                     <Grid key={film._id} size={2}>
                         <FilmCard film={film} />
                     </Grid>)
