@@ -6,6 +6,8 @@ const authMiddleware = require("../middlewares/AuthMiddleware");
 
 // /api/user
 
+router.get("/get-followers-and-following", authMiddleware.verifyJWT, userController.getFollowersAndFollowing)
+router.get("/get-following", authMiddleware.verifyJWT, userController.getFollowing)
 
 router.delete("/delete-account/:confirmEmail", authMiddleware.verifyJWT, userController.deleteAccount)
 router.get("/get-profile-data", authMiddleware.verifyJWT, userController.getProfileData)
@@ -18,5 +20,7 @@ router.post('/upload-avatar', authMiddleware.verifyJWT, uploadAvatar.single('ava
 router.post("/remove-avatar", authMiddleware.verifyJWT, userController.removeAvatar)
 
 router.get("/get-activity", authMiddleware.verifyJWT, userController.getActivity)
+
+router.post("/:friendUsername/follow", authMiddleware.verifyJWT, userController.follow)
 
 module.exports = router;

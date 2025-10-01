@@ -81,7 +81,7 @@ exports.getWatchlist = async (req, res) => {
 
         //N.B. le proprietà dei film da mostrare nella pagina watchlist si trovano nella proprietà _doc dell'oggetto film
         let watchlist = user.watchlist.map( (film) => {
-            return {...film._doc, rating: null, date: null};
+            return {...film.toObject(), rating: null, date: null};
         })
 
         // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID

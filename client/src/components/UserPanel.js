@@ -30,6 +30,8 @@ import NowPlayingFilms from "./HomePageFilms/NowPlayingFilms";
 import TrendingFilms from "./HomePageFilms/TrendingFilms";
 import SimilarFilms from "./FilmPage/SimilarFilms";
 import Activity from "./Activity";
+import Following from "./Following"
+import Followers from "./Followers"
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
     // let paths = ["/", "/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist",
@@ -50,6 +52,9 @@ function UserPanel() {
                   <Routes>
                       <Route path="/" element={<Home/>} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route path="/:username/followers" element={<Followers />} />
+                      <Route path="/:username/following" element={ <Following /> } />
+
                       <Route path="/watched" element={<WatchedFilms />} />
                       <Route path="/favorites" element={<FavoritesFilms />} />
                       <Route path="/recensioni" element={<Recensioni />} />

@@ -73,12 +73,11 @@ exports.getFavorites = async (req, res) => {
         const userID = req.user.id;
         const user = await User.findById(userID).populate('favorites');
         if(!user) {
-            return res.status(404).json({ message: "Utente non trovato." });
+            return res.status(404).json("Utente non trovato.");
         }
         let favorites = user.favorites.map( (film) => {
             return {...film._doc, rating: null, date: null}
         })
-        favorites = await Promise.all(favorites);
         res.status(200).json(favorites);
 
     }catch(error){

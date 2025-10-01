@@ -1,4 +1,22 @@
 const User = require("../models/User");
+
+exports.getFollowersAndFollowing = async (req, res) => {
+    try{
+        const userID = req.user.id;
+        const user = await User.findById(userID);
+
+        res.status(200).json({followers: user.followers.length, following: user.following.length});
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}
+
+exports.getFollowing = async (req, res) => {
+    const userID = req.user.id;
+    const user = await User.findById(userID).populate('following');
+    res.status(200).json(user.following);
+}
+
 exports.deleteAccount = async (req, res) => {
     try{
         const userID = req.user.id;
@@ -96,4 +114,41 @@ exports.getActivity = async (req, res) => {
     const userID = req.user.id;
     const user = await User.findById(userID).populate('activity');
     res.status(200).json(user.activity);
+}
+
+exports.follow = async (req, res) => {
+    const userID = req.user.id;
+    const user = await User.findById(userID);
+    if(!user){
+        return res.status(404).json("Utente non trovato.");
+    }
+
+    const friendUsername = req.params.friendUsername;
+    const friend = await User.findOne({ username: friendUsername });
+
+    //controllo prima che il nome utente esista
+    if(!friend){
+        return res.status(404).json("Nome utente non esistente.");
+    }
+    let friendID = friend._id.toString();
+
+    //controllo che l'utente non stia seguendo se stesso
+    if (userID === friendID) {
+        return res.status(400).json("Non puoi seguire te stesso.");
+    }
+    //controllo che l'utente non stia già seguendo l'amico
+    if(user.following.find(id => id === friendID)){
+        return res.status(404).json(`Segui già "${friendUsername}"`)
+    }
+    try{
+        user.following.push(friendID);
+        friend.followers.push(userID);
+        await user.save();
+        await friend.save();
+
+        return res.status(200).json("Amico aggiunto con successo.");
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
+
 }

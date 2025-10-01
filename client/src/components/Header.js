@@ -2,7 +2,20 @@
 import { NavLink } from 'react-router-dom';
 
 import {useAuth} from "../context/authContext";
-import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar, ListItemIcon, Divider, Tooltip, Input} from "@mui/material";
+import {
+    Box,
+    TextField,
+    Button,
+    Avatar,
+    MenuItem,
+    Toolbar,
+    AppBar,
+    ListItemIcon,
+    Divider,
+    Tooltip,
+    Input,
+    InputLabel
+} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person'
 import ListIcon from '@mui/icons-material/List'
@@ -24,9 +37,9 @@ import api from "../api";
 
 
 function Header() {
-    const {isLoggedIn, user, logout} = useAuth();
+    const {isLoggedIn, user, setUser, logout} = useAuth();
     const [title, setTitle] = useState("");
-    const [friend, setFriend] = useState("");
+    const [friendUsername, setFriendUsername] = useState(""); //username dell'amico
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
@@ -42,10 +55,13 @@ function Header() {
         }
     }
 
-    const handleAddFriend = async () => {
+    const sendFriendRequest = async () => {
         try{
-            await api.get(`http://localhost:5001/api/users/${friend}/follow`);
-
+            await api.post(`http://localhost:5001/api/user/${friendUsername}/follow`);
+            showNotification(`Hai appena aggiunto "${friendUsername}" come amico`, "success");
+            let newUser = {...user, followingNum: user.followingNum + 1}
+            setUser(newUser);
+            localStorage.setItem("user", JSON.stringify(newUser));
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -61,8 +77,9 @@ function Header() {
 
     let addAfriend = (
         <>
-            <Input type="string" value={friend} onChange={(event) => setFriend(event.target.value)}/>
-            <Button variant="contained" onClick={handleAddFriend}>
+            <InputLabel>Username</InputLabel>
+            <Input type="string" value={friendUsername} onChange={(event) => setFriendUsername(event.target.value)}/>
+            <Button variant="contained" onClick={sendFriendRequest}>
                 <SearchIcon />
             </Button>
         </>

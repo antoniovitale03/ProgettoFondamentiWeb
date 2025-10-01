@@ -1,6 +1,18 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./useDocumentTitle"
-import {Avatar, Box, Button, Divider, Grid, Tooltip, Typography} from "@mui/material";
+import {
+    Avatar,
+    Input,
+    Box,
+    Button,
+    Divider,
+    Grid,
+    InputLabel,
+    ListItemIcon,
+    MenuItem,
+    Tooltip,
+    Typography
+} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {useEffect, useState} from "react";
 import api from "../api";
@@ -8,7 +20,16 @@ import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import ReviewCard from "./Cards/ReviewCard";
 import CloseIcon from '@mui/icons-material/Close';
-import {Link} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
+import logo from "../assets/images/AppLogo.png";
+import * as React from "react";
+import PersonIcon from "@mui/icons-material/Person";
+import ListIcon from "@mui/icons-material/List";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import SearchIcon from "@mui/icons-material/Search";
+import DropDownMenu from "./DropDownMenu";
 
 function Profile(){
     const {user} = useAuth();
@@ -19,6 +40,26 @@ function Profile(){
     const [favoritesFilms, setFavoritesFilms] = useState(null);
     const [watchedFilms, setWatchedFilms] = useState(null);
     const [filmsReviews, setFilmsReviews] = useState(null);
+
+    //numero di following e followers
+    const [followers, setFollowers] = useState(null);
+    const [following, setFollowing] = useState(null);
+
+    //effetto che calcola il numero di followers e persone seguite dall'utente (solo al primo rendering)
+    useEffect( () => {
+        async function fetchFollowersAndFollowing(){
+            try{
+                const response = await api.get(`http://localhost:5001/api/user/get-followers-and-following`);
+                const userData = await response.data;
+                setFollowers(userData.followers);
+                setFollowing(userData.following);
+            }catch(error){
+                showNotification(error.response.data, "error");
+            }
+        }
+        fetchFollowersAndFollowing();
+    }, [])
+
 
     useEffect(() => {
         const fetchFavorites = async () => {
@@ -31,7 +72,7 @@ function Profile(){
             }
         }
         fetchFavorites();
-    }, [favoritesFilms, showNotification])
+    }, [showNotification])
 
     useEffect(()=>{
         async function getWatchedFilms(){
@@ -63,9 +104,9 @@ function Profile(){
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(`${filmTitle} è stato rimosso dai preferiti`, "success");
+            showNotification(`"${filmTitle}" è stato rimosso dai preferiti`, "success");
             setFavoritesFilms(currentFilms =>
-                currentFilms.filter(film => film.id !== filmID));
+                currentFilms.filter(film => film._id !== filmID));
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -74,10 +115,9 @@ function Profile(){
         <Box>
             {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
             {
-                user.avatar_path ? <img src={`http://localhost:5001/${user.avatar_path}`} style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
+                user.avatar_path ? <Avatar src={`http://localhost:5001/${user.avatar_path}`} style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
                     : <Avatar />
             }
-
 
 
             {user.biography && <Typography component="p">{user.biography}</Typography>}
@@ -87,6 +127,17 @@ function Profile(){
                 </Typography>
 
             }
+
+            { followers === user.followersNum && following === user.followingNum ?
+                <Box>
+                    <Button component={Link} to={`/${user.username}/followers`} variant="contained" disabled={user.followersNum === 0}>{user.followersNum} Followers </Button>
+                    <Button component={Link} to={`/${user.username}/following`} variant="contained" disabled={user.followingNum === 0}>{user.followingNum} Following </Button>
+                </Box>
+                : null
+            }
+
+
+
             <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button>
 
             {favoritesFilms &&
@@ -94,8 +145,8 @@ function Profile(){
                     <h1>Film preferiti</h1>
                     <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                         {
-                            [...favoritesFilms].reverse().map((film, index) =>
-                            <Grid key={index} size={2}>
+                            [...favoritesFilms].reverse().map((film) =>
+                            <Grid key={film._id} size={2}>
                                 <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites}/>
                             </Grid>)
                         }
