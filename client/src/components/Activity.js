@@ -39,10 +39,10 @@ function Activity(){
                         <ListItem key={activity.id}>
                             <Typography component="p">
                                 <NavLink to={`/film/${activity.filmTitle}/${activity.filmID}`}>{activity.filmTitle}</NavLink>  aggiunto alla
-                                <NavLink to={'/watchlist'}> Watchlist</NavLink>   da
-                                <NavLink to={'/profile'}>{user.username}</NavLink>
+                                <NavLink to={`/${activity.username}/watchlist`}> Watchlist</NavLink>   da
+                                <NavLink to={`/${activity.username}/profile`}>{activity.username}</NavLink>
                                     <ListItemIcon>
-                                        <Avatar src={`http://localhost:5001/${user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
+                                        <Avatar src={`http://localhost:5001/${activity.avatar}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                                     </ListItemIcon>   in data {activity.date}
                             </Typography>
                         </ListItem>)

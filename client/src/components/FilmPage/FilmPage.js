@@ -95,7 +95,6 @@ function FilmPage(){
                     {film?.genres.map( genre => <Chip label={genre.name} /> ) }
 
 
-
                     <CastCrewMoreInfo film={film} />
 
                     <Button component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>

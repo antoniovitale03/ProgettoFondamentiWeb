@@ -27,7 +27,7 @@ function Followers() {
     } )
 
     return(
-        <Box sx={{ width: '70%', textAlign: 'center', margin: 'auto' }}>
+        <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto' }}>
             {
                 followers.map( user => <UserCard user={user} />)
             }

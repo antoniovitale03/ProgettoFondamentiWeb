@@ -30,7 +30,7 @@ exports.addToWatchlist = async (req, res) => {
         //aggiungo l'azione alle attività
         const newActivity = new Activity({
             username: req.user.username,
-            avatar: avatar ? avatar : " ",
+            avatar: avatar ? avatar : null,
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_WATCHLIST',
@@ -46,7 +46,12 @@ exports.addToWatchlist = async (req, res) => {
             { $addToSet: { watchlist: film.id, activity: newActivity._id }
             })
 
-
+        //l'attività va aggiunta anche a tutti gli amici che seguo
+        //aggiorno simultaneamente tutti gli utenti con _id contenuti nella lista user.following
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
 
         res.status(200).json(`"${film.title}" aggiunto alla watchlist!`);
     }catch(error){

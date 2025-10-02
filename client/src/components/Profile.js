@@ -36,7 +36,6 @@ function Profile(){
     const [favoritesFilms, setFavoritesFilms] = useState(null);
 
 
-
     useEffect( () => {
         async function fetchUser(){
             const response = await api.get(`http://localhost:5001/api/user/${username}/get-profile-info`);

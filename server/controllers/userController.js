@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const fs = require("fs");
+const path = require("path");
 
 exports.getProfileInfo = async (req, res) => {
     try{
@@ -34,7 +36,20 @@ exports.getFollowers = async (req, res) => {
 }
 
 exports.removeFromFollowing = async (req, res) => {
-    const userID = req.user.id;
+    try{
+        const userID = req.user.id; //id dell'utente che ha richiesto l'unfollow
+        const username = req.params.username; //username dell'utente da unfolloware
+
+        const userToUnfollow = await User.findOne({ username: username });
+
+        await Promise.all([
+            User.updateOne({ _id: userID }, { $pull: { following: userToUnfollow._id } }),
+            User.updateOne({ _id: userToUnfollow._id }, { $pull: { follower: userID } })
+        ]);
+        res.status(200).json("Rimozione avvenuta correttamente");
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
 }
 
 exports.deleteAccount = async (req, res) => {
@@ -110,24 +125,35 @@ exports.uploadAvatar = async (req, res) => {
         return res.status(400).send('Nessun file ricevuto.');
     }
 
-    // 3. Prendi l'indirizzo del file appena salvato
-    const filePath = `/uploads/avatars/${req.file.filename}`;
+    const filePath = `/avatars/${req.file.filename}`;
 
     //salvo l'indirizzo nel db
     await User.findByIdAndUpdate(userID,
         { $set: {avatar_path: filePath} },
         )
 
-    // 5. Rispondi al frontend che è tutto ok
     res.status(200).json(filePath);
 }
 
+
 exports.removeAvatar = async (req, res) => {
     const userID = req.user.id;
-    await User.findByIdAndUpdate(userID,
-        { $set: {avatar_path: null} },
-        )
-    res.status(200).json("Avatar rimosso.");
+    const user = await User.findById(userID);
+
+    //procedo a rimuovere fisicamente l'avatar dalla cartella del server
+    const filePath = path.join(__dirname, "..", "public", user.avatar_path); //__dirname è la cartella corrente (controllers)
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            return res.status(400).json("Errore durante l'eliminazione del file dal server.");
+        } else {
+            res.status(200).json("Avatar rimosso.");
+        }
+    });
+
+    //elimino anche nel DB
+    user.avatar_path = null;
+    await user.save();
+
 }
 
 exports.getActivity = async (req, res) => {

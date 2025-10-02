@@ -32,12 +32,12 @@ function Following() {
          }, [])
 
 
-    const removeFromFollowing = async (userID) => {
+    const removeFromFollowing = async (userID, username) => {
         try{
             await api.delete(`http://localhost:5001/api/user/${username}/remove-from-following`);
-            showNotification(`Hai rimosso ${username} dai seguiti`, "success");
+            showNotification(`Hai rimosso "${username}" dai seguiti`, "success");
             setFollowing(currentFollowing =>
-                currentFollowing.filter(user => user._id !== userID)
+                currentFollowing.filter(user => user.username !== username)
             );
         }catch(error){
             showNotification(error.response.data, "error");
@@ -45,7 +45,7 @@ function Following() {
     }
 
     return(
-        <Box sx={{ width: '70%', textAlign: 'center', margin: 'auto' }}>
+        <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto',  }}>
             {
                 following.map( user =>
                 <UserCard user={user} showRemoveButton={a === username} onRemove={removeFromFollowing} />)

@@ -28,6 +28,7 @@ function ModifyAvatar() {
     const [selectAvatarButton, setSelectAvatarButton] = useState(1);
     const [saveAvatarButton, setSaveAvatarButton] = useState(0);
 
+
     const {showNotification} = useNotification();
 
     // Funzione che si attiva quando l'utente seleziona un file
@@ -87,10 +88,10 @@ function ModifyAvatar() {
         <Box>
             <p>Il tuo attuale avatar</p>
             {
-                user.avatar_path ?
+                user?.avatar_path ?
                     <Box sx={{ position: 'relative', width: 150, height: 150 }}>
                         <Avatar src={`http://localhost:5001/${user.avatar_path}`}
-                             style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}
+                             sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}
                         />
                         <IconButton onClick={handleRemoveAvatar} sx={{ position: 'absolute', top: 0, right: 0, backgroundColor: 'red' }}>
                             <Tooltip title="Rimuovi avatar">
@@ -129,10 +130,9 @@ function ModifyAvatar() {
                         alt="Anteprima avatar"
                         style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }}
                     />
+                    <Button onClick={handleUpload}>Salva il tuo avatar</Button>
                 </Box>
             }
-
-            { saveAvatarButton === 1 && <Button onClick={handleUpload}>Salva il tuo avatar</Button> }
 
 
         </Box>
