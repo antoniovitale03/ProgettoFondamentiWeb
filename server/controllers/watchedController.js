@@ -27,8 +27,7 @@ exports.addToWatched = async (req, res) => {
 
         //aggiungo l'azione alle attività
         const newActivity = new Activity({
-            username: req.user.username,
-            avatar: avatar ? avatar : " ",
+            user: userID,
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_WATCHED',
@@ -42,6 +41,11 @@ exports.addToWatched = async (req, res) => {
             $addToSet: { watched: film.id, activity: newActivity._id },
             $pull: { watchlist: film.id }
         })
+
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
     }catch(error){

@@ -29,8 +29,7 @@ exports.addToWatchlist = async (req, res) => {
 
         //aggiungo l'azione alle attività
         const newActivity = new Activity({
-            username: req.user.username,
-            avatar: avatar ? avatar : null,
+            user: userID,
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_WATCHLIST',

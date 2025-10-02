@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Card, CardContent, Grid, Tooltip} from "@mui/material";
+import {Avatar, Box, Button, Card, CardContent, Grid, Tooltip, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -16,11 +16,13 @@ function UserCard({ user, showRemoveButton, onRemove }) {
                         <Button component={Link} to={`/${user.username}/profile`}>
                             <Avatar src={`http://localhost:5001/${user.avatar_path}`} />
                         </Button>
-
                     </Grid>
 
                 <Grid size={3}>
-                    <p>{user.username}</p>
+                    <p>
+                    <Typography component="a" href={`/${user.username}/profile`}>
+                        {user.username}</Typography>
+                    </p>
                         <Button component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>
                             {user.followers.length} Followers
                         </Button>

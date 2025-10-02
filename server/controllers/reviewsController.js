@@ -45,8 +45,7 @@ exports.addReview = async (req, res) => {
 
         //aggiungo l'azione alle attività
         const newActivity = new Activity({
-            username: req.user.username,
-            avatar: avatar ? avatar : " ",
+            user: userID,
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_REVIEW',
@@ -56,6 +55,10 @@ exports.addReview = async (req, res) => {
 
         await newActivity.save();
 
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
 
         //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
         await User.findByIdAndUpdate(userID, {

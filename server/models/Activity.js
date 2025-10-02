@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    avatar: { type: String, required: true },
+    user: {type: String, ref: "User", required: true},
     filmID: { type: Number, required: true }, //id di TMDB quindi può essere anche numero
     filmTitle: { type: String, required: true },
     action: { type: String, enum: ['ADD_TO_WATCHLIST', 'ADD_TO_FAVORITES', 'ADD_TO_WATCHED', 'ADD_REVIEW'], required: true }, // tipo di azione
@@ -10,6 +9,6 @@ const activitySchema = new mongoose.Schema({
     date: { type: String, required: true },
 })
 
-const Activity = mongoose.model("Activity", activitySchema);
+const Activity = mongoose.model("ActivityPage", activitySchema);
 
 module.exports = Activity;

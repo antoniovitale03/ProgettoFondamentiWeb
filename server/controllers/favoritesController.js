@@ -31,8 +31,7 @@ exports.addToFavorites = async (req, res) => {
 
         //aggiungo l'azione alle attività
         const newActivity = new Activity({
-            username: req.user.username,
-            avatar: avatar ? avatar : " ",
+            user: userID,
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_FAVORITES',
@@ -40,6 +39,11 @@ exports.addToFavorites = async (req, res) => {
         })
 
         await newActivity.save();
+
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
 
         await User.findByIdAndUpdate(
             userID,

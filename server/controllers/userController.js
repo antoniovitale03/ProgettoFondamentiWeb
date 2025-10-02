@@ -158,7 +158,12 @@ exports.removeAvatar = async (req, res) => {
 
 exports.getActivity = async (req, res) => {
     const userID = req.user.id;
-    const user = await User.findById(userID).populate('activity');
+    //popolo la proprietà activity e per ogni oggetto che ottengo popolo anche la proprietà user mostrando solo username e avatar_path
+    const user = await User.findById(userID)
+        .populate({
+            path: "activity",
+            populate: { path: "user", select: "username avatar_path" }
+        });
     res.status(200).json(user.activity);
 }
 

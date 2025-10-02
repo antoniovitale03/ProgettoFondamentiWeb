@@ -33,7 +33,7 @@ function Footer() {
 
     return (
         <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
-            <Toolbar sx={{ width: "100%" }}>
+            <Toolbar sx={{ width: "50%" }}>
                 <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
                     { footerItems.map((footerItem) => footerItem) }
                 </Box>

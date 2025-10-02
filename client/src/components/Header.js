@@ -115,20 +115,20 @@ function Header() {
         </Box>,
         <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriend}></DropDownMenu>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
     let notLoggedDefaultHeaderItems = [
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
 
     return (
-        <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
-            <Toolbar sx={{ width: "100%" }}>
+        <AppBar position="static" sx={{ backgroundColor:"lightsteelblue" }} >
+            <Toolbar>
                 <Box sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", flexGrow: 1 }}>
                     {
                         isLoggedIn ? headerItems.map((headerItem) => headerItem) :

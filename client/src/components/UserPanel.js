@@ -29,7 +29,7 @@ import TopRatedFilms from "./HomePageFilms/TopRatedFilms";
 import NowPlayingFilms from "./HomePageFilms/NowPlayingFilms";
 import TrendingFilms from "./HomePageFilms/TrendingFilms";
 import SimilarFilms from "./FilmPage/SimilarFilms";
-import Activity from "./Activity";
+import ActivityPage from "./ActivityPage";
 import Following from "./Following"
 import Followers from "./Followers"
 //la componente principale che gestisce tutti i percorsi
@@ -66,7 +66,7 @@ function UserPanel() {
                       <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
 
                       <Route path="/archivio" element={<Archivio />} />
-                      <Route path="/activity" element={<Activity />} />
+                      <Route path="/activity" element={<ActivityPage />} />
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
 
