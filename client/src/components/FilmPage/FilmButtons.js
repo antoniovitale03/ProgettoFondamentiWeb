@@ -12,8 +12,8 @@ import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import ReviewsIcon from "@mui/icons-material/Reviews";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 function FilmButtons({ film }) {
 
@@ -221,13 +221,13 @@ function FilmButtons({ film }) {
             {watchedButton === 1 ?
                 <Tooltip title="Aggiungi ai film visti">
                     <Button onClick={addToWatched}>
-                        <AddCircleOutlineIcon />
+                        <VisibilityOutlinedIcon />
                     </Button>
                 </Tooltip>
                 :
                 <Tooltip title="Rimuovi dai film visti">
                     <Button onClick={removeFromWatched}>
-                        <RemoveCircleOutlineIcon />
+                        <VisibilityIcon />
                     </Button>
                 </Tooltip>
             }

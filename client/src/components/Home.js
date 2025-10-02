@@ -12,12 +12,12 @@ function Home(){
     const {user, isLoggedIn} = useAuth();
     const {showNotification} = useNotification()
 
-    const [currentPopularFilms, setCurrentPopularFilms] = useState({});
-    const [upcomingFilms, setUpcomingFilms] = useState({});
-    const [topRatedFilms, setTopRatedFilms] = useState({});
-    const [nowPlayingFilms, setNowPlayingFilms] = useState({});
-    const [trendingFilms, setTrendingFilms] = useState({});
-    const [similarFilms, setSimilarFilms] = useState({});
+    const [currentPopularFilms, setCurrentPopularFilms] = useState(null);
+    const [upcomingFilms, setUpcomingFilms] = useState(null);
+    const [topRatedFilms, setTopRatedFilms] = useState(null);
+    const [nowPlayingFilms, setNowPlayingFilms] = useState(null);
+    const [trendingFilms, setTrendingFilms] = useState(null);
+    const [similarFilms, setSimilarFilms] = useState(null);
 
     useEffect(() => {
         async function homePageFilmInfo() {
@@ -58,17 +58,17 @@ function Home(){
             </Card>
             </Box>
 
-            {currentPopularFilms.length > 0 ? <Carosello films={currentPopularFilms} title="I film più popolari del momento" link={"/films/current-popular-films"}/> : null}
+            {currentPopularFilms && <Carosello films={currentPopularFilms} title="I film più popolari del momento" link={"/films/current-popular-films"}/>}
 
-            {upcomingFilms.length > 0 ? <Carosello films={upcomingFilms} title="Film in uscita in Italia" link={"/films/upcoming-films"}/> : null}
+            {upcomingFilms && <Carosello films={upcomingFilms} title="Film in uscita in Italia" link={"/films/upcoming-films"}/>}
 
-            {topRatedFilms.length > 0 ? <Carosello  films={topRatedFilms} title="Film più acclamati dalla critica" link={"/films/top-rated-films"}/> : null}
+            {topRatedFilms && <Carosello  films={topRatedFilms} title="Film più acclamati dalla critica" link={"/films/top-rated-films"}/> }
 
-            {nowPlayingFilms.length > 0 ? <Carosello films={nowPlayingFilms} title="Film attualmente al cinema" link={"/films/now-playing-films"} /> : null}
+            {nowPlayingFilms && <Carosello films={nowPlayingFilms} title="Film attualmente al cinema" link={"/films/now-playing-films"} /> }
 
-            {trendingFilms.length > 0 ? <Carosello films={trendingFilms} title="Film in tendenza questa settimana" link={"/films/trending-films"}/> : null}
+            {trendingFilms && <Carosello films={trendingFilms} title="Film in tendenza questa settimana" link={"/films/trending-films"}/>}
 
-            {similarFilms.length > 0 ? <Carosello films={similarFilms} title="Film simili a quelli che hai già visto" link={""}/> : null}
+            {similarFilms && <Carosello films={similarFilms} title="Film simili a quelli che hai già visto" link={""}/>}
 
         </Box>
     )

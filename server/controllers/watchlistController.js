@@ -73,19 +73,14 @@ exports.removeFromWatchlist = async (req, res) => {
 
 exports.getWatchlist = async (req, res) => {
     try{
-        const userID = req.user.id; //prendo l'id dell'utente da req.user fornito dal middleware verifyjwt
-        let user = await User.findById(userID).populate('watchlist').populate('reviews'); //trova l'utente con quell'id e popola l'array watchlist con i dati
+        const username = req.params.username;
+        let user = await User.findOne({ username: username }).populate('watchlist').populate('reviews'); //trova l'utente con quell'id e popola l'array watchlist con i dati
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
 
-        //N.B. le proprietà dei film da mostrare nella pagina watchlist si trovano nella proprietà _doc dell'oggetto film
-        let watchlist = user.watchlist.map( (film) => {
-            return {...film.toObject(), rating: null, date: null};
-        })
-
         // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID
-        res.status(200).json(watchlist);
+        res.status(200).json(user.watchlist.reverse());
 
     }catch(error){
         res.status(500).json("Errore interno del server.")

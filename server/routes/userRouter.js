@@ -5,9 +5,11 @@ const multer = require("multer");
 const authMiddleware = require("../middlewares/AuthMiddleware");
 
 // /api/user
+router.get("/:username/get-profile-info", userController.getProfileInfo)
+router.get("/:username/get-following", userController.getFollowing)
+router.get("/:username/get-followers", userController.getFollowers)
 
-router.get("/get-followers-and-following", authMiddleware.verifyJWT, userController.getFollowersAndFollowing)
-router.get("/get-following", authMiddleware.verifyJWT, userController.getFollowing)
+router.delete("/username/remove-from-following", authMiddleware.verifyJWT, userController.removeFromFollowing)
 
 router.delete("/delete-account/:confirmEmail", authMiddleware.verifyJWT, userController.deleteAccount)
 router.get("/get-profile-data", authMiddleware.verifyJWT, userController.getProfileData)

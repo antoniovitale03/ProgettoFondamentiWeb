@@ -116,12 +116,12 @@ exports.deleteReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
     try{
-        const userID = req.user.id;
-        let user = await User.findById(userID).populate('reviews');
+        const username = req.params.username;
+        let user = await User.findOne({ username: username }).populate('reviews');
         if (!user) {
-            return res.status(404).json({ message: "Utente non trovato." });
+            return res.status(404).json("Utente non trovato.");
         }
-        res.status(200).json(user.reviews);
+        res.status(200).json(user.reviews.reverse());
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }

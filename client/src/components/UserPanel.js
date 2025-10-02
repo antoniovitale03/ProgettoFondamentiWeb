@@ -9,7 +9,7 @@ import Contact from "./Contact";
 import Help from "./Help";
 import WatchedFilms from "./WatchedFilms";
 import Archivio from "./Archivio";
-import Recensioni from "./Recensioni";
+import Reviews from "./Reviews";
 import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
 import FilmPage from "./FilmPage/FilmPage";
@@ -40,7 +40,7 @@ function UserPanel() {
     //                  "/log-a-film", "/film/:filmTitle/cast", "film/:filmTitle/crew", "/actor/:actorName/:actorID",
     //                  "/director/:directorName/:directorID", "/about", "/contact", "/help"]
     //
-    //     let components = [ <Home />, <Profile/>, <WatchedFilms />, <FavoritesFilms/>, <Recensioni/>, <Watchlist/>, <ModifyProfile/>,
+    //     let components = [ <Home />, <Profile/>, <WatchedFilms />, <FavoritesFilms/>, <Reviews/>, <Watchlist/>, <ModifyProfile/>,
     //                      <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
     //                      <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
 
@@ -51,14 +51,14 @@ function UserPanel() {
           <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: '50px' }}>
                   <Routes>
                       <Route path="/" element={<Home/>} />
-                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/:username/profile" element={<Profile />} />
                       <Route path="/:username/followers" element={<Followers />} />
                       <Route path="/:username/following" element={ <Following /> } />
 
-                      <Route path="/watched" element={<WatchedFilms />} />
-                      <Route path="/favorites" element={<FavoritesFilms />} />
-                      <Route path="/recensioni" element={<Recensioni />} />
-                      <Route path="/watchlist" element={<Watchlist />} />
+                      <Route path="/:username/watched" element={<WatchedFilms />} />
+                      <Route path="/:username/favorites" element={<FavoritesFilms />} />
+                      <Route path="/:username/reviews" element={<Reviews />} />
+                      <Route path="/:username/watchlist" element={<Watchlist />} />
 
                       <Route path="/settings/modify-profile" element={ <ModifyProfile />} />
                       <Route path="/settings/modify-password" element={ <ModifyPassword />} />

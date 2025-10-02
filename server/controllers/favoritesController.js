@@ -70,15 +70,12 @@ exports.removeFromFavorites = async (req, res) => {
 
 exports.getFavorites = async (req, res) => {
     try{
-        const userID = req.user.id;
-        const user = await User.findById(userID).populate('favorites');
+        const username = req.params.username;
+        const user = await User.findOne({ username: username }).populate('favorites');
         if(!user) {
             return res.status(404).json("Utente non trovato.");
         }
-        let favorites = user.favorites.map( (film) => {
-            return {...film._doc, rating: null, date: null}
-        })
-        res.status(200).json(favorites);
+        res.status(200).json(user.favorites.reverse());
 
     }catch(error){
         res.status(500).json("Errore interno del server.");

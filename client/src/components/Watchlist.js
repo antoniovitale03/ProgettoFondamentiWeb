@@ -4,16 +4,22 @@ import FilmCard from "./Cards/FilmCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Box, Grid} from "@mui/material";
+import {useParams} from "react-router-dom";
+import {useAuth} from "../context/authContext";
 
 function Watchlist(){
-    useDocumentTitle("Watchlist");
+
+    const {user} = useAuth();
+    const {username} = useParams();
+
+    useDocumentTitle(`Watchlist di ${username}`);
     const {showNotification} = useNotification();
     const [watchlistFilms, setWatchlistFilms] = useState([]);
 
     useEffect(() => {
         const fetchWatchlist = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/watchlist/get-watchlist');
+                const response = await api.get(`http://localhost:5001/api/films/watchlist/get-watchlist/${username}`);
                 const films = await response.data;
                 setWatchlistFilms(films); // Salviamo i film nello stato
             }catch(error){
@@ -21,7 +27,7 @@ function Watchlist(){
             }
         }
         fetchWatchlist();
-    }, [watchlistFilms, showNotification])
+    }, [showNotification])
 
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
@@ -36,19 +42,27 @@ function Watchlist(){
     }
 
     return(
-        <Box marginBottom={10}>
+        <Box>
             {watchlistFilms.length !== 0 ?
                 <Box>
-                    <h1>Vuoi guardare {watchlistFilms.length} film</h1>
+                    {
+                        user.username === username ? <h1>Vuoi guardare {watchlistFilms.length} film </h1> : <h1>La watchlist di {username}</h1>
+                    }
                     <Grid container spacing={2}>
-                        { [...watchlistFilms].reverse().map(film =>
+                        { watchlistFilms.map(film =>
                             <Grid key={film._id} size={2}>
-                                <FilmCard film={film} showRemoveButton={true} onRemove={removeFromWatchlist}/>
+                                <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatchlist}/>
                             </Grid>)
                         }
                     </Grid>
                 </Box>
-                : <p>La tua watchlist è vuota. Aggiungi qualche film!</p>
+                :
+                <Box>
+                    {
+                        user.username === username ? <h1>La tua watchlist è vuota. Aggiungi qualche film!</h1> : <h1>{username} non ha ancora aggiunto nessun film alla watchlist</h1>
+                    }
+                </Box>
+
             }
         </Box>
     )

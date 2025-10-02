@@ -44,10 +44,10 @@ exports.registerdata = async (req, res) => {
 
         await sendMail(username, email, code);
 
-        res.status(201).json({ message: 'Utente registrato con successo!' });
+        res.status(201).json('Utente registrato con successo!');
 
     } catch (error) {
-        return res.status(500).json({ message: 'Errore del server.'});
+        return res.status(500).json('Errore del server.');
     }
 };
 
@@ -116,7 +116,6 @@ exports.login = async (req, res) => {
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
         //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
 
-        console.log(user);
         // Invia come riposta i dati dell'utente + accessToken (da salvare nel contesto)
         res.status(200).json({
                 id: user._id,
@@ -129,7 +128,7 @@ exports.login = async (req, res) => {
                 avatar_path: user.avatar_path,
                 followersNum: user.followers.length,
                 followingNum: user.following.length,
-                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel contesto
+                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel localStorage del browser
         });
     } catch (error) {
         res.status(500).json('Errore del server.');

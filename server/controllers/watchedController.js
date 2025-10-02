@@ -67,11 +67,11 @@ exports.removeFromWatched = async (req, res) => {
 }
 
 exports.getWatched = async (req, res) => {
-    const userID = req.user.id;
-    const user = await User.findById(userID).populate('watched').populate('reviews');
+    const username = req.params.username;
+    const user = await User.findOne({username: username}).populate('watched').populate('reviews');
 
     //per ogni film visto controllo se è stato anche piaciuto e il suo rating
-    let watchedFilms = user.watched.map( watchedFilm => {
+    let watchedFilms = user.watched.reverse().map( watchedFilm => {
 
         let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
         isLiked = isLiked === undefined ? false : true;
@@ -80,7 +80,6 @@ exports.getWatched = async (req, res) => {
         let rating = review !== undefined ? review.rating : null;
 
         return {...watchedFilm.toObject(),
-            director: null, //nella pagina dei film visti non mostro il regista di ogni film
             isLiked: isLiked,
             rating: rating,
         }

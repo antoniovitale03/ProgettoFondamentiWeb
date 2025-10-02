@@ -1,20 +1,40 @@
 const User = require("../models/User");
 
-exports.getFollowersAndFollowing = async (req, res) => {
+exports.getProfileInfo = async (req, res) => {
     try{
-        const userID = req.user.id;
-        const user = await User.findById(userID);
+        const username = req.params.username;
+        const user = await User.findOne({ username: username }).populate('favorites').populate('watched').populate('reviews');
+        const profile = {
+            avatar_path: user.avatar_path,
+            country: user.country,
+            biography: user.biography,
+            followers: user.followers.length,
+            following: user.following.length,
+            favorites: user.favorites.reverse(),
+            latestWatched: user.watched.reverse().slice(0, 10),
+            latestReviews: user.reviews.reverse().slice(0, 10)
+        }
+        res.status(200).json(profile);
 
-        res.status(200).json({followers: user.followers.length, following: user.following.length});
     }catch(error){
         res.status(500).json('Errore del server.');
     }
 }
 
 exports.getFollowing = async (req, res) => {
-    const userID = req.user.id;
-    const user = await User.findById(userID).populate('following');
+    const username = req.params.username;
+    const user = await User.findOne({ username: username }).populate('following');
     res.status(200).json(user.following);
+}
+
+exports.getFollowers = async (req, res) => {
+    const username = req.params.username;
+    const user = await User.findOne({ username: username }).populate('followers');
+    res.status(200).json(user.followers);
+}
+
+exports.removeFromFollowing = async (req, res) => {
+    const userID = req.user.id;
 }
 
 exports.deleteAccount = async (req, res) => {
@@ -150,5 +170,4 @@ exports.follow = async (req, res) => {
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
-
 }
