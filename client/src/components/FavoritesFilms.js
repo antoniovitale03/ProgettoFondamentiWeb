@@ -4,16 +4,20 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Box, Grid} from "@mui/material";
 import useDocumentTitle from "./useDocumentTitle"
+import {useParams} from "react-router-dom";
+import {useAuth} from "../context/authContext";
 
 function FavoritesFilms(){
     const [favoritesFilms, setFavoritesFilms] = useState([]);
     const {showNotification} = useNotification();
-    useDocumentTitle("I miei film preferiti");
+    const {user} = useAuth();
+    const {username} = useParams();
+    useDocumentTitle(`Film preferiti di ${username}`);
 
     useEffect(() => {
         const fetchFavorites = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/favorites/get-favorites');
+                const response = await api.get(`http://localhost:5001/api/films/favorites/get-favorites/${username}`);
                 const films = await response.data;
                 setFavoritesFilms(films);
             }catch(error){
@@ -21,7 +25,7 @@ function FavoritesFilms(){
             }
         }
         fetchFavorites();
-    }, [favoritesFilms, showNotification]);
+    }, [showNotification]);
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
@@ -36,20 +40,23 @@ function FavoritesFilms(){
     }
 
 
-
     return(
-        <Box marginBottom={10}>
-            {favoritesFilms.length === 0 ? <div>Non hai ancora aggiunto nessun film nei preferiti.</div> :
+        <Box>
+            {favoritesFilms.length !== 0 ?
                 <Box>
-                    <h1><strong>I tuoi 10 film preferiti</strong></h1>
+                {user.username === username ? <h1>I tuoi {favoritesFilms.length} film preferiti</h1> : <h1>{username} ha {favoritesFilms.length} film preferiti</h1>}
                     <Grid container spacing={2}>
-                        { [...favoritesFilms].reverse().map(film =>
+                        { favoritesFilms.map(film =>
                             <Grid key={film._id} size={2}>
-                                <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites} />
+                                <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromFavorites} />
                             </Grid>)
                         }
                     </Grid>
+                </Box>:
+                <Box>
+                    {user.username === username ? <h1>Non hai ancora aggiunto nessun film ai tuoi preferiti</h1> : <h1>{username} non ha ancora aggiunto nessun film ai suoi preferiti</h1>}
                 </Box>
+
             }
         </Box>
     )

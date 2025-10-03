@@ -24,8 +24,8 @@ function App() {
 
    return(
         <Routes>
-            <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/home" />} />
-            <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/home" />} />
+            <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/" />} />
+            <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/forgot-password" element={<ForgotPasswordForm />} />
             <Route path="/*" element={isLoggedIn ? <UserPanel /> : <DefaultPanel /> } />
         </Routes>

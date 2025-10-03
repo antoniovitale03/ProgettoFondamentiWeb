@@ -1,10 +1,14 @@
 const Film = require("../models/Film");
 const User = require("../models/User");
+const Activity = require("../models/Activity");
 
 exports.addToWatched = async (req, res) => {
     try{
         const userID = req.user.id;
         const { film } = req.body;
+        const user = await User.findById(userID);
+        let avatar = user.avatar_path;
+
         await Film.findOneAndUpdate(
             { _id: film.id },
             {
@@ -20,11 +24,28 @@ exports.addToWatched = async (req, res) => {
                 upsert: true
             }
         )
+
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            user: userID,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_TO_WATCHED',
+            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+        })
+
+        await newActivity.save();
+
         //se ho visto un film eventualmente va rimosso dalla watchlist
         await User.findByIdAndUpdate(userID, {
-            $addToSet: { watched: film.id },
+            $addToSet: { watched: film.id, activity: newActivity._id },
             $pull: { watchlist: film.id }
         })
+
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
     }catch(error){
@@ -50,10 +71,11 @@ exports.removeFromWatched = async (req, res) => {
 }
 
 exports.getWatched = async (req, res) => {
-    const userID = req.user.id;
-    const user = await User.findById(userID).populate('watched').populate('reviews');
+    const username = req.params.username;
+    const user = await User.findOne({username: username}).populate('watched').populate('reviews');
+
     //per ogni film visto controllo se è stato anche piaciuto e il suo rating
-    let watchedFilms = user.watched.map( watchedFilm => {
+    let watchedFilms = user.watched.reverse().map( watchedFilm => {
 
         let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
         isLiked = isLiked === undefined ? false : true;
@@ -62,7 +84,6 @@ exports.getWatched = async (req, res) => {
         let rating = review !== undefined ? review.rating : null;
 
         return {...watchedFilm.toObject(),
-            director: null, //nella pagina dei film visti non mostro il regista di ogni film
             isLiked: isLiked,
             rating: rating,
         }

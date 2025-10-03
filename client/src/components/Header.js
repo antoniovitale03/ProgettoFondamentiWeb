@@ -2,7 +2,20 @@
 import { NavLink } from 'react-router-dom';
 
 import {useAuth} from "../context/authContext";
-import {Box, TextField, Button, Avatar, MenuItem, Toolbar, AppBar, ListItemIcon, Divider, Tooltip} from "@mui/material";
+import {
+    Box,
+    TextField,
+    Button,
+    Avatar,
+    MenuItem,
+    Toolbar,
+    AppBar,
+    ListItemIcon,
+    Divider,
+    Tooltip,
+    Input,
+    InputLabel
+} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person'
 import ListIcon from '@mui/icons-material/List'
@@ -17,15 +30,19 @@ import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useNotification} from "../context/notificationContext";
 import * as React from "react";
+import api from "../api";
 
 
 
 function Header() {
-    const {isLoggedIn, user, logout} = useAuth();
+    const {isLoggedIn, user, setUser, logout} = useAuth();
     const [title, setTitle] = useState("");
+    const [friendUsername, setFriendUsername] = useState(""); //username dell'amico
 
     const navigate = useNavigate();
+    const {showNotification} = useNotification();
 
     const handleSearch = async () => {
         try{
@@ -33,17 +50,42 @@ function Header() {
             navigate(`/search/${filmTitle}`);
             setTitle("");
         }catch(error){
+            showNotification(error.response.data, "error");
             setTitle("");
         }
     }
 
-    const userMenuLinks = ["/profile", "/watched", "/favorites", "/recensioni", "/watchlist"];
+    const sendFriendRequest = async () => {
+        try{
+            await api.post(`http://localhost:5001/api/user/${friendUsername}/follow`);
+            showNotification(`Hai appena aggiunto "${friendUsername}" come amico`, "success");
+            let newUser = {...user, followingNum: user.followingNum + 1}
+            setUser(newUser);
+            localStorage.setItem("user", JSON.stringify(newUser));
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
+    }
+
+    const userMenuLinks = [`/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`];
     const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"];
     const userMenuIcons = [<PersonIcon />, <ListIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>];
 
-
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
+
+    let addAfriend = [
+        <Box>
+            <InputLabel>Username</InputLabel>
+            <Input type="string" value={friendUsername} onChange={(event) => setFriendUsername(event.target.value)}/>
+            <Button variant="contained" onClick={sendFriendRequest}>
+                <SearchIcon />
+            </Button>
+        </Box>
+
+        ]
+
+
 
     let menuItems = [
         userMenuLinks.map((menuLink, index) =>
@@ -63,8 +105,8 @@ function Header() {
 
 
     let headerItems = [
-        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001/${user?.avatar_path}`} /></Tooltip>} menuContent={menuItems}/>,
-        <Button component={Link} to="/activity"><BoltIcon/></Button>,
+        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`} /></Tooltip>} menuContent={menuItems}/>,
+        <Button component={Link} to="/activity"><Tooltip title="Activity"><BoltIcon/></Tooltip></Button>,
         <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></NavLink>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
@@ -72,21 +114,22 @@ function Header() {
                 <SearchIcon />
             </Button>
         </Box>,
+        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriend}></DropDownMenu>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
     let notLoggedDefaultHeaderItems = [
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
 
     return (
-        <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
-            <Toolbar sx={{ width: "100%" }}>
+        <AppBar position="static" sx={{ backgroundColor:"lightsteelblue" }} >
+            <Toolbar>
                 <Box sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", flexGrow: 1 }}>
                     {
                         isLoggedIn ? headerItems.map((headerItem) => headerItem) :

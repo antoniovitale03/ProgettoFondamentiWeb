@@ -53,7 +53,7 @@ api.interceptors.request.use(
     (config) => {
         //Recupera il token
         const user = JSON.parse(localStorage.getItem('user'));
-        const accessToken = user?.accessToken; // Assumendo che il token sia salvato qui
+        const accessToken = user?.accessToken;
 
         if (accessToken) {
             // Se il token esiste, aggiungilo agli header

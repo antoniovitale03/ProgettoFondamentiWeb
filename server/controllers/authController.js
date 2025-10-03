@@ -44,10 +44,10 @@ exports.registerdata = async (req, res) => {
 
         await sendMail(username, email, code);
 
-        res.status(201).json({ message: 'Utente registrato con successo!' });
+        res.status(201).json('Utente registrato con successo!');
 
     } catch (error) {
-        return res.status(500).json({ message: 'Errore del server.'});
+        return res.status(500).json('Errore del server.');
     }
 };
 
@@ -78,7 +78,7 @@ exports.login = async (req, res) => {
 
         // Trova l'utente nel DB tramite il suo username e confronta la password fornita dall'utente con quella hashata nel DB
 
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username: username });
         if (!user) {
             return res.status(400).json('Credenziali non valide.')
         }
@@ -116,7 +116,7 @@ exports.login = async (req, res) => {
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
         //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
 
-        // Invia come riposta i dati dell'utente + accessToken
+        // Invia come riposta i dati dell'utente + accessToken (da salvare nel contesto)
         res.status(200).json({
                 id: user._id,
                 username: user.username,
@@ -126,7 +126,9 @@ exports.login = async (req, res) => {
                 biography: user.biography,
                 country: user.country,
                 avatar_path: user.avatar_path,
-                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel contesto
+                followersNum: user.followers.length,
+                followingNum: user.following.length,
+                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel localStorage del browser
         });
     } catch (error) {
         res.status(500).json('Errore del server.');

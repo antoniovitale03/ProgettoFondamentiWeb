@@ -4,10 +4,15 @@ import {Box, Grid} from "@mui/material";
 import ReviewCard from "./Cards/ReviewCard";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
+import {useParams} from "react-router-dom";
+import {useAuth} from "../context/authContext";
 
-function Recensioni(){
+function Reviews(){
 
-    useDocumentTitle("Le mie Recensioni");
+    const {user} = useAuth();
+    const {username} = useParams();
+
+    useDocumentTitle(`Recensioni di ${username}`);
     const [reviews, setReviews] = useState([]);
 
     const {showNotification} = useNotification();
@@ -16,7 +21,7 @@ function Recensioni(){
     useEffect(() => {
         const getReviews = async () => {
             try{
-                const response = await api.get('http://localhost:5001/api/films/reviews/get-reviews');
+                const response = await api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`);
                 const reviews = await response.data;
                 setReviews(reviews); // Salviamo i film nello stato
             }catch(error){
@@ -24,7 +29,7 @@ function Recensioni(){
             }
         }
         getReviews();
-    }, [reviews, showNotification]);
+    }, [showNotification]);
 
     const removeReview = async (filmID, reviewTitle) => {
         try {
@@ -42,18 +47,21 @@ function Recensioni(){
         <Box>
             {reviews.length !== 0 ?
                 <Box>
-                    <h1>Hai recensito {reviews.length} film</h1>
+                    { user.username === username ? <h1>Hai recensito {reviews.length} film </h1> : <h1>{username} ha recensito {reviews.length} film</h1> }
                     <Grid container spacing={2}>
-                        { [...reviews].reverse().map(review =>
+                        { reviews.map(review =>
                             <Grid item key={review.filmID} size={6}>
-                                <ReviewCard review={review} showRemoveButton={true} onRemove={removeReview} />
+                                <ReviewCard review={review} showRemoveButton={user.username === username} onRemove={removeReview} />
                             </Grid>
                         )}
                     </Grid>
-                </Box> : <p>Non c'è ancora nessuna recensione!</p>
+                </Box> :
+                <Box>
+                    {user.username === username ? <h1>Non hai ancora recensito nessun film</h1> : <h1>{username} non ha ancora recensito nessun film</h1> }
+                </Box>
             }
         </Box>
     )
 }
 
-export default Recensioni;
+export default Reviews;
