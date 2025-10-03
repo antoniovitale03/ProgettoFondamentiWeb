@@ -26,7 +26,7 @@ function UserCard({ user, showRemoveButton, onRemove }) {
                         <Button component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>
                             {user.followers.length} Followers
                         </Button>
-                        <Button component={Link} to={`/${user.username}/followers`} disabled={user.following.length === 0}>
+                        <Button component={Link} to={`/${user.username}/following`} disabled={user.following.length === 0}>
                             {user.following.length} Following
                         </Button>
                 </Grid>

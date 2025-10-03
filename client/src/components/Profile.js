@@ -71,10 +71,8 @@ function Profile(){
                 </Typography>
             }
 
-                <Box>
-                    <Button component={Link} to={`/${username}/followers`} variant="contained" disabled={profile?.followers === 0}>{profile?.followers} Followers </Button>
-                    <Button component={Link} to={`/${username}/following`} variant="contained" disabled={profile?.following === 0}>{profile?.following} Following </Button>
-                </Box>
+            <Button component={Link} to={`/${username}/followers`} disabled={profile?.followers === 0}>{profile?.followers} Followers </Button>
+            <Button component={Link} to={`/${username}/following`} disabled={profile?.following === 0}>{profile?.following} Following </Button>
 
 
             {user.username === username && <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
