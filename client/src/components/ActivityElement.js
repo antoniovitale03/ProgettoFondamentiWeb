@@ -21,7 +21,7 @@ function ActivityElement({ activity }){
                 <Typography component="p">
                     <NavLink to={`/film/${activity.filmTitle}/${activity.filmID}`}>{activity.filmTitle}</NavLink>   aggiunto ai
                     <NavLink to={`/${activity.user.username}/favorites`}>Preferiti</NavLink>   da
-                    <NavLink to={`/${activity.user.username}/profile`}>{activity.username}</NavLink>
+                    <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
                         <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                     </ListItemIcon>   in data {activity.date}

@@ -16,7 +16,7 @@ router.get("/get-profile-data", authMiddleware.verifyJWT, userController.getProf
 router.post("/update-profile", authMiddleware.verifyJWT, userController.updateProfile)
 
 
-// 1. Dici a Multer dove salvare i file
+// Dici a Multer dove salvare i file
 const uploadAvatar = multer({ dest: 'public/avatars/' });
 router.post('/upload-avatar', authMiddleware.verifyJWT, uploadAvatar.single('avatar'), userController.uploadAvatar)
 router.post("/remove-avatar", authMiddleware.verifyJWT, userController.removeAvatar)

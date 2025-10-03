@@ -74,15 +74,16 @@ function Header() {
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
 
-    let addAfriend = (
-        <>
+    let addAfriend = [
+        <Box>
             <InputLabel>Username</InputLabel>
             <Input type="string" value={friendUsername} onChange={(event) => setFriendUsername(event.target.value)}/>
             <Button variant="contained" onClick={sendFriendRequest}>
                 <SearchIcon />
             </Button>
-        </>
-        )
+        </Box>
+
+        ]
 
 
 

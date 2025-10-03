@@ -164,7 +164,7 @@ exports.getActivity = async (req, res) => {
             path: "activity",
             populate: { path: "user", select: "username avatar_path" }
         });
-    res.status(200).json(user.activity);
+    res.status(200).json([...user.activity].reverse());
 }
 
 exports.follow = async (req, res) => {
