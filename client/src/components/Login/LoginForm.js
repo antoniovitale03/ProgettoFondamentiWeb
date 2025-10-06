@@ -4,11 +4,12 @@ import {useAuth} from "../../context/authContext";
 import {useNotification} from "../../context/notificationContext";
 import {NavLink} from "react-router-dom";
 import api from "../../api";
+import sleep from "../hooks/useSleep";
 
 
 function LoginForm({  setStep, email, setEmail }) {
 
-    const {sleep, setUser} = useAuth();
+    const {setUser} = useAuth();
     const {showNotification} = useNotification();
 
     const [password, setPassword] = useState("");

@@ -10,19 +10,23 @@ import {
     Typography
 } from "@mui/material";
 import DropDownMenu from "./DropDownMenu";
-import useDecades from "./useDecades";
-import useAllGenres from "./useAllGenres";
+import useDecades from "./hooks/useDecades";
+import useAllGenres from "./hooks/useAllGenres";
 
-function SearchFilters({filters, setFilters}){
+function SearchFilters({filters, setFilters, isLikedFilter}){
 
     const genres = useAllGenres();
     const decades = useDecades();
 
     const sortByMenu = [
-        <MenuItem><Checkbox checked={filters.sortByDate === "Dal più recente"} onChange={() => setFilters({...filters, sortByDate: "Dal più recente"})}
-        />Dal più recente</MenuItem>,
-        <MenuItem><Checkbox checked={filters.sortByDate === "Dal meno recente"} onChange={() => setFilters({...filters, sortByDate: "Dal meno recente" })}
-        />Dal meno recente</MenuItem>,
+        <MenuItem>
+            <Checkbox checked={filters.sortByDate === "Dal più recente"} onChange={() => setFilters({...filters, sortByDate: "Dal più recente"})}/>
+            Dal più recente
+        </MenuItem>,
+        <MenuItem>
+            <Checkbox checked={filters.sortByDate === "Dal meno recente"} onChange={() => setFilters({...filters, sortByDate: "Dal meno recente" })}/>
+            Dal meno recente
+        </MenuItem>,
         <MenuItem>
             <Checkbox checked={filters.sortByPopularity === "Dal più popolare"} onChange={() => setFilters({...filters, sortByPopularity: "Dal più popolare"}) } />
             Dal più popolare
@@ -36,6 +40,7 @@ function SearchFilters({filters, setFilters}){
 
     return(
         <Box sx={{ display: 'flex', justifyContent: 'space-evenly'}}>
+
             <FormControl sx={{ minWidth: 180 }}>
                 <InputLabel>Genere</InputLabel>
                 <Select value={filters.genre} variant="standard" onChange={(e) => setFilters({...filters, genre: e.target.value})}>
@@ -63,10 +68,13 @@ function SearchFilters({filters, setFilters}){
                 <DropDownMenu buttonContent="Ordina per" menuContent={sortByMenu} />
             </FormControl>
 
-            <FormControlLabel control={<Checkbox
-                checked={filters.isLiked}
-                onChange={() => setFilters({...filters, isLiked: !filters.isLiked})}
-            />} label={filters.isLiked === true ? "Film piaciuti" : "Film non piaciuti"} />
+            {isLikedFilter &&
+                <FormControlLabel control={<Checkbox
+                    checked={filters.isLiked}
+                    onChange={() => setFilters({...filters, isLiked: !filters.isLiked})}
+                />} label={filters.isLiked === true ? "Film piaciuti" : "Film non piaciuti"} />
+            }
+
 
         </Box>
     )

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import {Link, NavLink, useParams} from "react-router-dom";
 import ActivityElement from "./ActivityElement";
-import useDocumentTitle from "./useDocumentTitle"
+import useDocumentTitle from "./hooks/useDocumentTitle"
 
 function ActivityPage(){
 

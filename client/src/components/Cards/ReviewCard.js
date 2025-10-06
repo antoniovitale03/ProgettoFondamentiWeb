@@ -10,22 +10,27 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                 <Grid container spacing={2}>
                     <Grid item size={4}>
                         <p>
-                        <Button component={Link} to={`/film/${review.title}/${review.filmID}`}>
-                            <strong>{review.title}</strong></Button>
-                        {review.release_year &&
-                            <Button component={Link} to={`/films/${review.release_year}/page/1`}>
-                                <strong>     ({review.release_year})</strong>
+                        <Button component={Link} to={`/film/${review.film.title}/${review.film._id}`}>
+                            <strong>{review.film.title}</strong></Button>
+                        {review.film.release_year &&
+                            <Button component={Link} to={`/films/${review.film.release_year}/page/1`}>
+                                <strong>     ({review.film.release_year})</strong>
                             </Button>
                         }
                         </p>
-                        <Button component={Link} to={`/film/${review.title}/${review.filmID}`}>
-                            <CardMedia component="img" image={review.poster_path} alt="Locandina film"/>
+                        <Button component={Link} to={`/film/${review.film.title}/${review.film._id}`}>
+                            <CardMedia component="img" image={review.film.poster_path} alt="Locandina film"/>
                         </Button>
                     </Grid>
+
                     <Grid item size={7} sx={{ display: 'flex', flexDirection: 'column'}}>
                         <Typography component="p" sx={{ overflowWrap: 'break-word' }}>{review.review}</Typography>
                         <Box sx={{ marginTop: 'auto'}}>
-                            <Typography component="p">Il tuo voto: {<Rating name="rating" value={review.rating} readOnly/> }</Typography>
+                                {
+                                    review.rating !== 0 ?
+                                        <Typography component="p">Il tuo voto: {<Rating name="rating" value={review.rating} readOnly/> }</Typography>
+                                        : <Typography component="p">Non è stato aggiunto nessun voto per questa recensione</Typography>
+                                }
                             <Typography component="p">Data della recensione: {review.review_date}</Typography>
                         </Box>
 
@@ -33,7 +38,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                     {
                         showRemoveButton &&
                         <Grid item size={1}>
-                            <Button onClick={ () => onRemove(review.filmID, review.title) }>
+                            <Button onClick={ () => onRemove(review.film._id, review.film.title) }>
                                 <ClearIcon />
                             </Button>
                         </Grid>

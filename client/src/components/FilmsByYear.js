@@ -2,7 +2,7 @@ import {React, useEffect, useState} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
 import {Box, Button, Grid, Pagination, Stack} from "@mui/material";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';

@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {React, useEffect, useState} from "react";
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {Box, Grid, Pagination, Stack} from "@mui/material";
 import {useNotification} from "../../context/notificationContext";
 import FilmCard from "../Cards/FilmCard";

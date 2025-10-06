@@ -1,5 +1,5 @@
 import {useAuth} from "../context/authContext"
-import useDocumentTitle from "./useDocumentTitle"
+import useDocumentTitle from "./hooks/useDocumentTitle"
 import {
     Avatar,
     Input,

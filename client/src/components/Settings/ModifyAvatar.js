@@ -6,6 +6,7 @@ import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import {useAuth} from "../../context/authContext";
 import CloseIcon from "@mui/icons-material/Close";
+import sleep from "../hooks/useSleep";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -21,7 +22,7 @@ const VisuallyHiddenInput = styled('input')({
 
 function ModifyAvatar() {
 
-    const {user, setUser, sleep} = useAuth();
+    const {user, setUser} = useAuth();
     const [file, setFile] = useState(null); //file inserito
     const [preview, setPreview] = useState(null); //preview del file prima del salvataggio
 

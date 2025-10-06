@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Box, Grid} from "@mui/material";
 function DirectorPage() {
     let { directorName } = useParams();

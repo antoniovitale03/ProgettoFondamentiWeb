@@ -19,7 +19,6 @@ function ModifyPassword() {
                 oldPassword, newPassword, confirmNewPassword
             })
             showNotification("Password aggiornata correttamente", "success");
-            //ri-renderizzo la pagina di login con le variabili di stato iniziali
             navigate("/");
         } catch(error){
             showNotification(error.response.data, "error");

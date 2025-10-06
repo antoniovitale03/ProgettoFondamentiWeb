@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import api from "../../api";
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
 import {Box, Grid, Pagination, Stack} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";

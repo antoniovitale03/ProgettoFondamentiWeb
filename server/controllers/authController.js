@@ -25,6 +25,7 @@ async function sendMail(username, email, code) {
     });
 }
 
+
 exports.registerdata = async (req, res) => {
     try {
         const { username, email } = req.body;
@@ -42,7 +43,6 @@ exports.registerdata = async (req, res) => {
         }
 
         //se l'email e l'username non esistono ancora, invia alla mail il codice di verifica
-
         await sendMail(username, email, code);
 
         res.status(201).json('Utente registrato con successo!');
@@ -52,7 +52,7 @@ exports.registerdata = async (req, res) => {
     }
 };
 
-exports.verifyCode = async (req, res) => {
+exports.registrationVerify = async (req, res) => {
     try{
         const { username, email, password, verificationCode } = req.body;
 
@@ -130,7 +130,7 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.verifycode = async (req, res) => {
+exports.loginVerify = async (req, res) => {
     const { verificationCode } = req.body;
     if(verificationCode !== code) {
         return res.status(400).json("Codice di verifica non corretto.");
@@ -186,7 +186,7 @@ exports.setNewPassword = async (req, res) => {
              return res.status(400).json( 'Le password non corrispondono.');
          }
         const salt = await bcrypt.genSalt(10);
-         const hashedPassword = await bcrypt.hash(newPassword, salt);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
 
          user.password = hashedPassword;
          await user.save();

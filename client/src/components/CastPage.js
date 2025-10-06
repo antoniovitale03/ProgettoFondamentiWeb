@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import ActorCard from "./Cards/ActorCard"
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Box, Grid, Stack} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";

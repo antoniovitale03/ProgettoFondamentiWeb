@@ -3,7 +3,7 @@ import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Box, Grid} from "@mui/material";
-import useDocumentTitle from "./useDocumentTitle"
+import useDocumentTitle from "./hooks/useDocumentTitle"
 import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
 

@@ -4,7 +4,7 @@ import {Avatar, Box} from "@mui/material";
 import UserCard from "./Cards/UserCard";
 import {useNotification} from "../context/notificationContext";
 import {useParams} from "react-router-dom";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useAuth} from "../context/authContext";
 
 function Following() {

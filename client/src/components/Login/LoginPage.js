@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import '../../CSS/Form.css';
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {Box} from "@mui/material";
 import LoginForm from "./LoginForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
-import {useNavigate} from "react-router-dom";
 import VerificationForm from "../Registration/VerificationForm";
 import api from "../../api"
 import {useNotification} from "../../context/notificationContext";
-import {useAuth} from "../../context/authContext";
+import sleep from "../hooks/useSleep";
 
 function LoginPage() {
 
     const {showNotification} = useNotification();
-    const {sleep} = useAuth();
 
     //gestisco questa variabile di stato nel componente padre
     const [email, setEmail] = useState("");
@@ -23,9 +21,9 @@ function LoginPage() {
 
     const handleVerify = async (verificationCode) => {
         try{
-            await api.post('http://localhost:5001/api/auth/login/verify-code', { verificationCode });
+            await api.post('http://localhost:5001/api/auth/login/verify', { verificationCode });
             showNotification('Codice corretto! Ora verrai reindirizzato alla pagina di reimpostazione della password', "success");
-            await sleep(2000);
+            await sleep(3000);
             setStep(3);
         }catch(error){
             throw error.response.data;

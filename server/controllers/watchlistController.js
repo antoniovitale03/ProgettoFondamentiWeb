@@ -79,17 +79,36 @@ exports.removeFromWatchlist = async (req, res) => {
 exports.getWatchlist = async (req, res) => {
     try{
         const username = req.params.username;
-        let user = await User.findOne({ username: username }).populate('watchlist'); //trova l'utente con quell'id e popola l'array watchlist con i dati
+        const { genre, decade, minRating, sortByDate, sortByPopularity } = req.query;
+
+        let user = await User.findOne({ username: username }).populate('watchlist');
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
 
+        let watchlist = user.watchlist.reverse();
 
-        if(user.watchlist.length > 0){
-            res.status(200).json(user.watchlist.reverse());
-        }else{
-            res.status(200).json(null);
+        //Una volta che ottengo tutti i film visti, posso filtrare i risultati in base ai parametri
+        if(genre){
+            watchlist = watchlist.filter(film => film.genres.some(g => g.id === parseInt(genre)) )
         }
+
+        if(decade){
+            watchlist = watchlist.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
+        }
+
+        if(sortByDate){
+            watchlist = sortByDate === "Dal meno recente" ? watchlist.reverse() : watchlist
+        }
+
+        if (sortByPopularity){
+            watchlist = watchlist.sort((a,b) => b.popularity - a.popularity);
+        }
+
+        if(minRating){
+            watchlist = watchlist.filter( film => film.rating >= parseInt(minRating))
+        }
+        res.status(200).json(watchlist);
 
     }catch(error){
         res.status(500).json("Errore interno del server.")

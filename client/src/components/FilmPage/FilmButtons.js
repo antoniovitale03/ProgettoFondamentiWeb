@@ -60,6 +60,8 @@ function FilmButtons({ film }) {
             })
             showNotification(`La recensione di "${film.title}" è stata salvata correttamente!`)
             setReviewButton(0);
+            setReviewRating(0);
+            setReview("");
         }catch(error){
             showNotification(error.response.data, "error");
         }

@@ -77,7 +77,7 @@ exports.getWatched = async (req, res) => {
 
     const user = await User.findOne({ username: username }).populate('watched').populate('reviews');
 
-    //per ogni film visto controllo se è stato anche piaciuto e il suo rating
+    //per ogni film visto controllo se è stato anche piaciuto e il suo rating (di default mostro dal più recente)
     let watchedFilms = user.watched.reverse().map( watchedFilm => {
         let isLiked = user.liked.some( likedFilmId => likedFilmId === watchedFilm._id);//controllo se il film è anche piaciuto
         //uso some perchè mi serve il valore booleano (find restituisce l'elemento)
@@ -88,10 +88,6 @@ exports.getWatched = async (req, res) => {
             rating: review !== undefined ? review.rating : null,
         }
     })
-    //se la ricerca senza filtri non da risultati (array vuoto), significa che non ho ancora visto nessun film
-    if (genre === "" && decade === "" && minRating === 0 && sortByDate === "" && sortByPopularity === "" && isLiked === null && watchedFilms.length === 0) {
-        return res.status(400).json("Non hai ancora visto nessun film!");
-    }
 
     //Una volta che ottengo tutti i film visti, posso filtrare i risultati in base ai parametri
     if(genre){
@@ -103,11 +99,11 @@ exports.getWatched = async (req, res) => {
     }
 
     if(sortByDate){
-        watchedFilms = sortByDate === "Dal più recente" ? watchedFilms.reverse() : watchedFilms
+        watchedFilms = sortByDate === "Dal meno recente" ? watchedFilms.reverse() : watchedFilms
     }
 
     if (sortByPopularity){
-        watchedFilms = watchedFilms.sort((a,b) => b.popularity - a.popularity);
+        watchedFilms = sortByPopularity === "Dal più popolare" ? watchedFilms.sort((a,b) => b.popularity - a.popularity) : watchedFilms.sort((a,b) => a.popularity - b.popularity)
     }
 
     if(minRating){
@@ -118,10 +114,6 @@ exports.getWatched = async (req, res) => {
         watchedFilms = watchedFilms.filter(film => film.isLiked.toString() === isLiked)
     }
 
-    if(watchedFilms.length === 0){
-        res.status(400).json("Nessun risultato");
-    }else{
-        res.status(200).json(watchedFilms);
-    }
+    res.status(200).json(watchedFilms);
 
 }

@@ -31,10 +31,7 @@ exports.addReview = async (req, res) => {
         //il film è stato trovato, quindi modifico l'url per mostrare la locandina
         const newReview = await new Review(
             {
-                filmID: film.id,
-                title: film.title,
-                poster_path: film.poster_path,
-                release_year: film.release_year,
+                film: film.id,
                 review: review,
                 rating: reviewRating,
                 review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
@@ -96,18 +93,22 @@ exports.deleteReview = async (req, res) => {
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
 
-        const user = await User.findById(userID);
+        const user = await User.findById(userID).populate({
+            path: "reviews",
+            populate: { path: "film" }
+        });
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
 
         //trovo l'oggetto Recensione che voglio eliminare e ne calcolo l'id
-        const reviewDocument = await Review.findOne( { filmID: filmID });
+        let reviewObJ = user.reviews.find( review => review.film._id === filmID);
+        let reviewID = reviewObJ._id;
 
-        user.reviews = user.reviews.filter(id => id !== reviewDocument._id);
+        user.reviews = user.reviews.filter(id => id !== reviewID);
         await user.save();
 
-        await Review.findOneAndDelete( {_id: reviewDocument._id} );
+        await Review.findOneAndDelete( {_id: reviewID} );
         res.status(200).json("Recensione rimossa");
 
     }catch(error){
@@ -119,16 +120,35 @@ exports.deleteReview = async (req, res) => {
 exports.getReviews = async (req, res) => {
     try{
         const username = req.params.username;
-        let user = await User.findOne({ username: username }).populate('reviews');
+        const { genre, decade, minRating, sortByDate, sortByPopularity } = req.query;
+
+        let user = await User.findOne({ username: username}).populate({
+            path: "reviews",
+            populate: { path: "film" }
+        });
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
-        if(user.reviews.length > 0){
-            res.status(200).json(user.reviews.reverse());
-        }else{
-            res.status(200).json(null);
+
+        let reviews = user.reviews.reverse();
+        console.log(reviews);
+        if(genre){
+            reviews = reviews.filter(review => review.film.genres.some(g => g.id === parseInt(genre)) );
+        }
+        if(decade){
+            reviews = reviews.filter( review => review.film.release_year >= parseInt(decade) && review.film.release_year <= parseInt(decade) + 9 );
+        }
+        if(minRating){
+            reviews = reviews.filter(review => review.rating >= parseInt(minRating));
+        }
+        if(sortByDate){
+            reviews = sortByDate === "Dal meno recente" ? reviews.reverse() : reviews;
+        }
+        if(sortByPopularity){
+            reviews = reviews.sort()
         }
 
+        res.status(200).json(reviews);
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }

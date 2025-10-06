@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import "../../CSS/Form.css"
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {Box} from "@mui/material";
 import api from "../../api";
 import {useNavigate} from "react-router-dom";
 import {useNotification} from "../../context/notificationContext"
-import {useAuth} from "../../context/authContext";
+import sleep from "../hooks/useSleep";
 import RegistrationForm from "./RegistrationForm";
 import VerificationForm from "./VerificationForm";
 
@@ -13,7 +13,6 @@ function RegistrationPage() {
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
-    const {sleep} = useAuth();
     const [registrationData, setRegistrationData] = useState(null);
 
     // Stato per controllare lo stato di registrazione (1 = inserimento dati, 2 = codice di verifica)

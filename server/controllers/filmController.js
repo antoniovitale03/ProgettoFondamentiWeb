@@ -338,7 +338,6 @@ exports.getFilm = async (req, res) => {
         flatrate: flatrate,
         duration: duration,
     }
-    console.log(film);
     res.status(200).json(film);
 }
 

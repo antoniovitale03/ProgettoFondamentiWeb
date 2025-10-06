@@ -1,4 +1,4 @@
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
@@ -13,7 +13,7 @@ function WatchedFilms(){
 
     const {user} = useAuth();
     const {username} = useParams();
-    const showNotification = useNotification();
+    const {showNotification} = useNotification();
 
     const [numWatched, setNumWatched] = useState(null);
     const [watched, setWatched] = useState(null);
@@ -33,9 +33,8 @@ function WatchedFilms(){
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
             showNotification(`"${filmTitle}" è stato rimosso dai film visti`, "success");
-            setWatched(currentFilms =>
-                currentFilms.filter(film => film.id !== filmID)
-            );
+            setWatched(currentFilms => currentFilms.filter(film => film.id !== filmID));
+            setNumWatched(num => num - 1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -55,7 +54,7 @@ function WatchedFilms(){
                     if (filters.genre !== "") params.append("genre", filters.genre);
                     if (filters.decade !== "") params.append("decade", filters.decade);
                     if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-                    if (filters.sortByDate !== "") params.append("sortBy", filters.sortByDate);
+                    if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
                     if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
                     if (filters.isLiked !== null) params.append("isLiked", filters.isLiked); //parametro iniziale = false
 
@@ -73,14 +72,16 @@ function WatchedFilms(){
 
     return(
         <Box >
-            {numWatched !== 0 ?
+            {numWatched !== 0 && watched ?
                 <Stack spacing={7}>
-                    { user.username === username ? <h1>Hai visto {numWatched} film </h1> : <h1>{username} ha visto {watched.length} film</h1> }
+                    { user.username === username ? <h1>Hai visto {numWatched} film </h1> : <h1>{username} ha visto {numWatched} film</h1> }
 
-                    <SearchFilters filters={filters} setFilters={setFilters} />
+                    <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={true} />
+
+                    <p>{watched.length} film trovati</p>
 
                     <Grid container spacing={2}>
-                        { watched?.map(film =>
+                        { watched.map(film =>
                             <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatched}/>
                             </Grid>

@@ -1,6 +1,6 @@
 import CrewMemberCard from './Cards/CrewMemberCard'
 import {useParams} from "react-router-dom";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Box, Grid} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";

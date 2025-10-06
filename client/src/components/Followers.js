@@ -5,7 +5,7 @@ import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Box} from "@mui/material";
 import UserCard from "./Cards/UserCard";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 function Followers() {
 
     const {showNotification} = useNotification();

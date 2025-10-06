@@ -1,5 +1,5 @@
 import {useParams, Link} from 'react-router-dom';
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
 import {Box, Button, Grid, Rating, Tooltip, Typography, Chip} from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
@@ -79,6 +79,7 @@ function FilmPage(){
 
                     {/* Bottoni per gestire il film */}
                     <FilmButtons film={film} />
+
                 </Grid>
 
                 {/* colonna di destra */}

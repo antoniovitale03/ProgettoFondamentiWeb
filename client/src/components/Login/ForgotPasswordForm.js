@@ -2,16 +2,14 @@ import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import React, {useState} from "react";
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
-import {useAuth} from "../../context/authContext";
-import {useNavigate} from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import sleep from "../hooks/useSleep";
 
 function ForgotPasswordForm({ setStep, email, setEmail }) {
 
     useDocumentTitle("Hai dimenticato la tua password?");
     const {showNotification} = useNotification();
-    const {sleep} = useAuth();
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -26,8 +24,7 @@ function ForgotPasswordForm({ setStep, email, setEmail }) {
             await sleep(2500);
             setStep(1); //renderizzo di nuovo la pagina di login
         } catch(error){
-            showNotification(error.response.data, "error")
-            setEmail("");
+            showNotification(error.response.data, "error");
             setNewPassword("");
             setConfirmNewPassword("");
         }

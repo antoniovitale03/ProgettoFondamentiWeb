@@ -1,14 +1,13 @@
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
-import {useAuth} from "../../context/authContext";
 import React, {useState} from "react";
 import {Box, Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import {NavLink} from "react-router-dom";
+import sleep from "../hooks/useSleep";
 
 function RegistrationForm({ setRegistrationData, setStep }) {
 
     const {showNotification} = useNotification();
-    const {sleep} = useAuth();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -20,7 +19,7 @@ function RegistrationForm({ setRegistrationData, setStep }) {
         event.preventDefault();
         setButton("Verifica in corso...");
         try{
-            await api.post('http://localhost:5001/api/auth/registration/data', { username, email });
+            await api.post('http://localhost:5001/api/auth/registration', { username, email });
             // Se la chiamata ha successo, mostra il messaggio di successo e passa al secondo step
             showNotification("Abbiamo inviato un codice di verifica alla tua mail", "success");
             await sleep(2000);
@@ -40,8 +39,8 @@ function RegistrationForm({ setRegistrationData, setStep }) {
         <Box>
             <form onSubmit={handleSubmit}>
                 <h2>Registrazione</h2>
-                <Stack spacing={5}>
 
+                <Stack spacing={5}>
                     <FormControl>
                         <InputLabel htmlFor="username">Nome Utente</InputLabel>
                         <Input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required/>
