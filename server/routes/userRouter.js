@@ -9,20 +9,18 @@ router.get("/:username/get-profile-info", userController.getProfileInfo)
 router.get("/:username/get-following", userController.getFollowing)
 router.get("/:username/get-followers", userController.getFollowers)
 
-router.delete("/:username/remove-from-following", authMiddleware.verifyJWT, userController.removeFromFollowing)
+router.post("/:friendUsername/follow", authMiddleware.verifyJWT, userController.follow)
+router.delete("/:userId/unfollow", authMiddleware.verifyJWT, userController.unfollow)
 
 router.delete("/delete-account/:confirmEmail", authMiddleware.verifyJWT, userController.deleteAccount)
 router.get("/get-profile-data", authMiddleware.verifyJWT, userController.getProfileData)
 router.post("/update-profile", authMiddleware.verifyJWT, userController.updateProfile)
 
-
-// Dici a Multer dove salvare i file
+// Indico a Multer dove salvare i file
 const uploadAvatar = multer({ dest: 'public/avatars/' });
 router.post('/upload-avatar', authMiddleware.verifyJWT, uploadAvatar.single('avatar'), userController.uploadAvatar)
 router.post("/remove-avatar", authMiddleware.verifyJWT, userController.removeAvatar)
 
-router.get("/get-activity", authMiddleware.verifyJWT, userController.getActivity)
-
-router.post("/:friendUsername/follow", authMiddleware.verifyJWT, userController.follow)
+router.get("/:username/get-activity", userController.getActivity)
 
 module.exports = router;

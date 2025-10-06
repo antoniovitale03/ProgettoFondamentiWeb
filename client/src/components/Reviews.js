@@ -13,7 +13,7 @@ function Reviews(){
     const {username} = useParams();
 
     useDocumentTitle(`Recensioni di ${username}`);
-    const [reviews, setReviews] = useState([]);
+    const [reviews, setReviews] = useState(null);
 
     const {showNotification} = useNotification();
 
@@ -45,7 +45,7 @@ function Reviews(){
 
     return (
         <Box>
-            {reviews.length !== 0 ?
+            {reviews ?
                 <Box>
                     { user.username === username ? <h1>Hai recensito {reviews.length} film </h1> : <h1>{username} ha recensito {reviews.length} film</h1> }
                     <Grid container spacing={2}>

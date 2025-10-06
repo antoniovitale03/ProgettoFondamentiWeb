@@ -25,6 +25,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import Settings from '@mui/icons-material/Settings'
 import ArchiveIcon from '@mui/icons-material/Archive'
 import BoltIcon from '@mui/icons-material/Bolt';
+import HomeIcon from '@mui/icons-material/Home';
 import {Link} from "react-router-dom"
 import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
@@ -67,9 +68,9 @@ function Header() {
         }
     }
 
-    const userMenuLinks = [`/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`];
-    const userMenuNames = ["Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"];
-    const userMenuIcons = [<PersonIcon />, <ListIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>];
+    const userMenuLinks = ['/', `/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`];
+    const userMenuNames = ["Home", "Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"];
+    const userMenuIcons = [<HomeIcon />, <PersonIcon />, <ListIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>];
 
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
@@ -84,7 +85,6 @@ function Header() {
         </Box>
 
         ]
-
 
 
     let menuItems = [
@@ -106,7 +106,7 @@ function Header() {
 
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`} /></Tooltip>} menuContent={menuItems}/>,
-        <Button component={Link} to="/activity"><Tooltip title="Activity"><BoltIcon/></Tooltip></Button>,
+        <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
         <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></NavLink>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />

@@ -13,7 +13,7 @@ function Following() {
     const {username} = useParams();
     const {showNotification} = useNotification();
     const {user} = useAuth();
-    let a = user.username;
+    let myUsername = user.username;
 
     useDocumentTitle(`Seguiti di ${username}`);
 
@@ -29,12 +29,12 @@ function Following() {
                  }
              }
              fetchFollowing();
-         }, [])
+         }, [username]);
 
 
-    const removeFromFollowing = async (userID, username) => {
+    const unfollow = async (userId, username) => {
         try{
-            await api.delete(`http://localhost:5001/api/user/${username}/remove-from-following`);
+            await api.delete(`http://localhost:5001/api/user/${userId}/unfollow`);
             showNotification(`Hai rimosso "${username}" dai seguiti`, "success");
             setFollowing(currentFollowing =>
                 currentFollowing.filter(user => user.username !== username)
@@ -46,9 +46,10 @@ function Following() {
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto',  }}>
+            <h1>Persone seguite da {username}</h1>
             {
                 following.map( user =>
-                <UserCard user={user} showRemoveButton={a === username} onRemove={removeFromFollowing} />)
+                <UserCard user={user} showRemoveButton={myUsername === username} onUnfollow={unfollow} />)
             }
         </Box>
     )

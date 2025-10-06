@@ -7,7 +7,6 @@ exports.addToWatched = async (req, res) => {
         const userID = req.user.id;
         const { film } = req.body;
         const user = await User.findById(userID);
-        let avatar = user.avatar_path;
 
         await Film.findOneAndUpdate(
             { _id: film.id },
@@ -17,6 +16,8 @@ exports.addToWatched = async (req, res) => {
                         release_year: film.release_year,
                         director: film.director,
                         poster_path: film.poster_path,
+                        popularity: film.popularity,
+                        genres: film.genres,
                         date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
                     }
             },
@@ -47,7 +48,7 @@ exports.addToWatched = async (req, res) => {
             {$addToSet: { activity: newActivity._id }}
         )
 
-        res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
+        res.status(200).json(`"${film.title}" aggiunto alla lista dei film visti!`);
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
@@ -72,21 +73,55 @@ exports.removeFromWatched = async (req, res) => {
 
 exports.getWatched = async (req, res) => {
     const username = req.params.username;
-    const user = await User.findOne({username: username}).populate('watched').populate('reviews');
+    const { genre, decade, minRating, sortByDate, sortByPopularity, isLiked } = req.query;
+
+    const user = await User.findOne({ username: username }).populate('watched').populate('reviews');
 
     //per ogni film visto controllo se è stato anche piaciuto e il suo rating
     let watchedFilms = user.watched.reverse().map( watchedFilm => {
+        let isLiked = user.liked.some( likedFilmId => likedFilmId === watchedFilm._id);//controllo se il film è anche piaciuto
+        //uso some perchè mi serve il valore booleano (find restituisce l'elemento)
 
-        let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
-        isLiked = isLiked === undefined ? false : true;
-
-        let review = user.reviews.find( (review) => review.filmID === watchedFilm._id) // trovo la recensione (se esiste)
-        let rating = review !== undefined ? review.rating : null;
-
+        let review = user.reviews.find( review => review.filmID === watchedFilm._id); // trovo la recensione (se esiste)
         return {...watchedFilm.toObject(),
             isLiked: isLiked,
-            rating: rating,
+            rating: review !== undefined ? review.rating : null,
         }
     })
-    res.status(200).json(watchedFilms);
+    //se la ricerca senza filtri non da risultati (array vuoto), significa che non ho ancora visto nessun film
+    if (genre === "" && decade === "" && minRating === 0 && sortByDate === "" && sortByPopularity === "" && isLiked === null && watchedFilms.length === 0) {
+        return res.status(400).json("Non hai ancora visto nessun film!");
+    }
+
+    //Una volta che ottengo tutti i film visti, posso filtrare i risultati in base ai parametri
+    if(genre){
+        watchedFilms = watchedFilms.filter(film => film.genres.some(g => g.id === parseInt(genre)) )
+    }
+
+    if(decade){
+        watchedFilms = watchedFilms.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
+    }
+
+    if(sortByDate){
+        watchedFilms = sortByDate === "Dal più recente" ? watchedFilms.reverse() : watchedFilms
+    }
+
+    if (sortByPopularity){
+        watchedFilms = watchedFilms.sort((a,b) => b.popularity - a.popularity);
+    }
+
+    if(minRating){
+        watchedFilms = watchedFilms.filter( film => film.rating >= parseInt(minRating))
+    }
+
+    if(isLiked) {
+        watchedFilms = watchedFilms.filter(film => film.isLiked.toString() === isLiked)
+    }
+
+    if(watchedFilms.length === 0){
+        res.status(400).json("Nessun risultato");
+    }else{
+        res.status(200).json(watchedFilms);
+    }
+
 }

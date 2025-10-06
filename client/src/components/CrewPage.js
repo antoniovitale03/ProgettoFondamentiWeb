@@ -28,7 +28,7 @@ function CrewPage(){
             <Grid container spacing={2} marginBottom={10}>
                 {
                     crew?.map(crewMember =>
-                        <Grid key={crewMember.id} size={2}>
+                        <Grid key={crewMember.id} xs={12} sm={6} md={4} lg={3}>
                             <CrewMemberCard crewMember={crewMember} />
                         </Grid>
                     )}

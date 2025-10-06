@@ -14,14 +14,14 @@ function Watchlist(){
 
     useDocumentTitle(`Watchlist di ${username}`);
     const {showNotification} = useNotification();
-    const [watchlistFilms, setWatchlistFilms] = useState([]);
+    const [watchlist, setWatchlist] = useState(null);
 
     useEffect(() => {
         const fetchWatchlist = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/watchlist/get-watchlist/${username}`);
                 const films = await response.data;
-                setWatchlistFilms(films); // Salviamo i film nello stato
+                setWatchlist(films); // Salviamo i film nello stato
             }catch(error){
                 showNotification(error.response.data, "error");
             }
@@ -33,7 +33,7 @@ function Watchlist(){
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
             showNotification(`"${filmTitle}" è stato rimosso dalla watchlist`, "success");
-            setWatchlistFilms(currentFilms =>
+            setWatchlist(currentFilms =>
                 currentFilms.filter(film => film.id !== filmID)
             );
         }catch(error){
@@ -43,14 +43,14 @@ function Watchlist(){
 
     return(
         <Box>
-            {watchlistFilms.length !== 0 ?
+            {watchlist ?
                 <Box>
                     {
-                        user.username === username ? <h1>Vuoi guardare {watchlistFilms.length} film </h1> : <h1>La watchlist di {username}</h1>
+                        user.username === username ? <h1>Vuoi guardare {watchlist.length} film </h1> : <h1>La watchlist di {username}</h1>
                     }
                     <Grid container spacing={2}>
-                        { watchlistFilms.map(film =>
-                            <Grid key={film._id} size={2}>
+                        { watchlist.map(film =>
+                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatchlist}/>
                             </Grid>)
                         }

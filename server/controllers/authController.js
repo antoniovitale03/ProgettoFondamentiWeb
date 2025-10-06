@@ -7,6 +7,7 @@ require('dotenv').config();
 const code = Math.floor(100000 + Math.random() * 900000).toString();
 
 async function sendMail(username, email, code) {
+
     //attivo la password per le app nell'account google per poter inviare mail da av715... con nodemailer
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -51,14 +52,15 @@ exports.registerdata = async (req, res) => {
     }
 };
 
-exports.verifycode = async (req, res) => {
+exports.verifyCode = async (req, res) => {
     try{
         const { username, email, password, verificationCode } = req.body;
 
         //controlla se il codice inserito dall'utente(verificationCode) corrisponde a quello inviato via mail(code)
         if (verificationCode !== code) { //codice errato
-            return res.status(500).json( 'Codice di verifica errato.');
+            return res.status(400).json('Codice di verifica errato.');
         }
+
         //se il codice di verifica è corretto, puoi salvare l'utente nel DB
         //eseguo hash with salt della password
         const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
@@ -74,11 +76,11 @@ exports.verifycode = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
         // Trova l'utente nel DB tramite il suo username e confronta la password fornita dall'utente con quella hashata nel DB
 
-        const user = await User.findOne({ username: username });
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(400).json('Credenziali non valide.')
         }
@@ -121,19 +123,21 @@ exports.login = async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
-                name: user.name,
-                surname: user.surname,
-                biography: user.biography,
-                country: user.country,
-                avatar_path: user.avatar_path,
-                followersNum: user.followers.length,
-                followingNum: user.following.length,
                 accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel localStorage del browser
         });
     } catch (error) {
         res.status(500).json('Errore del server.');
     }
 };
+
+exports.verifycode = async (req, res) => {
+    const { verificationCode } = req.body;
+    if(verificationCode !== code) {
+        return res.status(400).json("Codice di verifica non corretto.");
+    }else{
+        return res.status(200).json("Codice di verifica corretto");
+    }
+}
 
 exports.refresh = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
@@ -146,8 +150,7 @@ exports.refresh = async (req, res) => {
 
     let payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
     if (payload.user.id !== user._id.toString()) return res.status(403).json("Errore nella verifica del refreshtoken")
-    payload = {user: payload.user}; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
-
+    payload = { user: payload.user }; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
 
     const newAccessToken = jwt.sign(
         payload,
@@ -159,35 +162,38 @@ exports.refresh = async (req, res) => {
 }
 
 exports.forgotPassword = async (req, res) => {
-    try {
-        const {username, email, newPassword, confirmNewPassword} = req.body;
+    try{
+        const { email } = req.body;
+        const user = await User.findOne({ email: email });
+        const username = user.username;
+        await sendMail(username, email, code);
+        res.status(200).json("Email inviata");
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}
 
-        //prima controllo che lo username esista
-        const user = await User.findOne({ username })
+exports.setNewPassword = async (req, res) => {
+    try{
+        const {email, newPassword, confirmNewPassword} = req.body;
+        const user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(400).json("L'utente non esiste");
-        }
-
-        //ora controllo che l'email inserita sia corretta
-        if (email !== user.email){
-            return res.status(400).json("L'email non è corretta");
+            return res.status(400).json("L' utente non esiste");
         }
 
         //dopodichè controllo che la nuova password e la sua conferma siano uguali
         if (newPassword !== confirmNewPassword) {
-            return res.status(400).json( 'Le password non corrispondono.');
-        }
-
+             return res.status(400).json( 'Le password non corrispondono.');
+         }
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
+         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-        user.password = hashedPassword;
-        await user.save();
+         user.password = hashedPassword;
+         await user.save();
 
-        res.status(200).json('Password aggiornata con successo.');
+         res.status(200).json('Password aggiornata con successo.');
 
-
-    }catch (error) {
+    }catch(error){
         res.status(500).json('Errore del server.');
     }
 }

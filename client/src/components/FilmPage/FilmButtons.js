@@ -46,7 +46,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post("http://localhost:5001/api/films/watchlist/add-to-watchlist", { film });
-            showNotification(`${film.title} è stato aggiunto alla watchlist`, "success");
+            showNotification(`"${film.title}" è stato aggiunto alla watchlist`, "success");
             setWatchlistButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -70,7 +70,7 @@ function FilmButtons({ film }) {
         setWatchlistButton(1);
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${film.id}`)
-            showNotification(`${film.title} è stato rimosso dalla watchlist`, "success")
+            showNotification(`"${film.title}" è stato rimosso dalla watchlist`, "success")
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -80,7 +80,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post('http://localhost:5001/api/films/liked/add-to-liked', { film });
-            showNotification(`${film.title} è stato aggiunto ai film piaciuti`, "success");
+            showNotification(`"${film.title}" è stato aggiunto ai film piaciuti`, "success");
             setLikedButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -91,7 +91,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`http://localhost:5001/api/films/liked/remove-from-liked/${film.id}`);
-            showNotification(`${film.title} è stato rimosso dai film piaciuti`, "success");
+            showNotification(`"${film.title}" è stato rimosso dai film piaciuti`, "success");
             setLikedButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -103,7 +103,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${film.id}`);
-            showNotification(`La recensione di ${film.title} è stata rimossa`, "success");
+            showNotification(`La recensione di "${film.title}" è stata rimossa`, "success");
             setReviewButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -114,7 +114,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post('http://localhost:5001/api/films/favorites/add-to-favorites', { film });
-            showNotification(`${film.title} è stato aggiunto ai film preferiti`, "success");
+            showNotification(`"${film.title}" è stato aggiunto ai film preferiti`, "success");
             setFavoritesButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -125,7 +125,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${film.id}`);
-            showNotification(`${film.title} è stato rimosso dai film preferiti`, "success");
+            showNotification(`"${film.title}" è stato rimosso dai film preferiti`, "success");
             setFavoritesButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -137,7 +137,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post('http://localhost:5001/api/films/watched/add-to-watched', { film });
-            showNotification(`${film.title} è stato aggiunto ai film visti`, "success");
+            showNotification(`"${film.title}" è stato aggiunto ai film visti`, "success");
             setWatchedButton(0);
             //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
             setWatchlistButton(1);
@@ -150,7 +150,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${film.id}`);
-            showNotification(`${film.title} è stato rimosso dai film visti`, "success");
+            showNotification(`"${film.title}" è stato rimosso dai film visti`, "success");
             setWatchedButton(1);
         }catch(error){
             showNotification(error.response.data, "error");

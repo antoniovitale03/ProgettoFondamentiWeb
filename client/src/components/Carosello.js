@@ -60,11 +60,11 @@ function Carosello({ films, title, link }){
         ))}
 
         </Box>
-        <Box sx={{mt:2, textAlign: "center"}}>
+        <Box sx={{mt:2, textAlign: "center", marginBottom: 5}}>
             <Button onClick={precedente} variant="outlined" disabled={indice === 0}>
                 <ArrowBackIosIcon />
             </Button>
-            <Button onClick={successiva} variant="outlined" sx={{ ml: 1 }}disabled={indice >= films.length - immvisibili }>
+            <Button onClick={successiva} variant="outlined" sx={{ ml: 1 }} disabled={indice >= films.length - immvisibili }>
                 <ArrowForwardIosIcon />
             </Button>
         </Box>

@@ -24,7 +24,6 @@ exports.addReview = async (req, res) => {
         const {film, review, reviewRating} = req.body;
         const userID = req.user.id;
         const user = await User.findById(userID);
-        let avatar = user.avatar_path;
         if (!user) {
             return res.status(400).send("Utente non trovato.");
         }
@@ -124,7 +123,12 @@ exports.getReviews = async (req, res) => {
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
-        res.status(200).json(user.reviews.reverse());
+        if(user.reviews.length > 0){
+            res.status(200).json(user.reviews.reverse());
+        }else{
+            res.status(200).json(null);
+        }
+
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }

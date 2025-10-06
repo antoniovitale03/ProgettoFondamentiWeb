@@ -8,7 +8,6 @@ exports.addToFavorites = async (req, res) => {
         let { film } = req.body;
 
         const user = await User.findById(userID);
-        let avatar = user.avatar_path;
 
         //controllo che venga rispettato il limite di 10 film preferiti
         if (user.favorites.length >= 10){
@@ -22,7 +21,9 @@ exports.addToFavorites = async (req, res) => {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
-                    poster_path: film.poster_path
+                    poster_path: film.poster_path,
+                    popularity: film.popularity,
+                    genres: film.genres
                 }
             },
             {
@@ -79,7 +80,12 @@ exports.getFavorites = async (req, res) => {
         if(!user) {
             return res.status(404).json("Utente non trovato.");
         }
-        res.status(200).json(user.favorites.reverse());
+        if(user.favorites.length > 0){
+            res.status(200).json(user.favorites.reverse());
+        }else{
+            res.status(200).json(null);
+        }
+
 
     }catch(error){
         res.status(500).json("Errore interno del server.");

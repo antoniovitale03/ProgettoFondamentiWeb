@@ -7,29 +7,24 @@ import {useNavigate} from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
 import useDocumentTitle from "../useDocumentTitle";
 
-function ForgotPasswordForm({ username, onSuccess }){
+function ForgotPasswordForm({ setStep, email, setEmail }) {
 
     useDocumentTitle("Hai dimenticato la tua password?");
     const {showNotification} = useNotification();
     const {sleep} = useAuth();
 
-    const [email, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
     const handleSetNewPassword = async (event) => {
         event.preventDefault();
         try{
-            await api.post('http://localhost:5001/api/auth/forgot-password', {
-                username, email, newPassword, confirmNewPassword
+            await api.post('http://localhost:5001/api/auth/set-new-password', {
+                email, newPassword, confirmNewPassword
             })
-            showNotification(<>
-                Password modificata correttamente!
-                <br />
-                Ora verrai reindirizzato alla pagina di login.
-            </>, "success")
+            showNotification("Password modificata correttamente! Ora verrai reindirizzato alla pagina di login", "success")
             await sleep(2500);
-            onSuccess(); //modifica della password avvenuta correttamente
+            setStep(1); //renderizzo di nuovo la pagina di login
         } catch(error){
             showNotification(error.response.data, "error")
             setEmail("");

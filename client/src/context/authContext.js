@@ -8,22 +8,6 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
     // Funzione per aggiornare lo stato e localStorage al login
 
-    //inserisco la funzione di login qui cosi posso salvare l'oggetto user nel contesto
-    const login = async (username, password) => {
-        try{
-            const response = await api.post('http://localhost:5001/api/auth/login', { username, password });
-
-            const user = await response.data; //data contiene i dati dell'utente + accessToken (che verranno salvati nella
-            // variabile di stato user e nella memoria locale del browser)
-
-            setUser(user);
-            localStorage.setItem('user', JSON.stringify(user));
-
-        }catch(error){
-            throw new Error(error.response.data);
-        }
-    };
-
 
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
@@ -42,7 +26,7 @@ export function AuthProvider({ children }) {
 
 
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, setUser, login, logout, isLoggedIn: !!user, sleep };
+    const value = { user, setUser, logout, isLoggedIn: !!user, sleep };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

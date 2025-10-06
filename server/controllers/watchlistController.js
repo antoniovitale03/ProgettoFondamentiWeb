@@ -8,7 +8,6 @@ exports.addToWatchlist = async (req, res) => {
         const userID = req.user.id;
         let { film } = req.body;
         const user = await User.findById(userID);
-        let avatar = user.avatar_path;
 
         //il server verifica se il film esiste già nella collezione films verificando l'id, se non esiste lo crea.
         // questo garantisce di avere sempre una sola copia dei dati di ogni film.
@@ -21,6 +20,8 @@ exports.addToWatchlist = async (req, res) => {
                     release_year: film.release_year,
                     director: film.director,
                     poster_path: film.poster_path,
+                    popularity: film.popularity,
+                    genres: film.genres
                 }},
             {
                 upsert: true // Se il documento non esiste sulla base del filtro, ne crea uno nuovo sulla base di update
@@ -78,13 +79,17 @@ exports.removeFromWatchlist = async (req, res) => {
 exports.getWatchlist = async (req, res) => {
     try{
         const username = req.params.username;
-        let user = await User.findOne({ username: username }).populate('watchlist').populate('reviews'); //trova l'utente con quell'id e popola l'array watchlist con i dati
+        let user = await User.findOne({ username: username }).populate('watchlist'); //trova l'utente con quell'id e popola l'array watchlist con i dati
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
 
-        // 4. Invia al frontend l'array 'watchlist' che ora contiene gli oggetti film completi, non più solo gli ID
-        res.status(200).json(user.watchlist.reverse());
+
+        if(user.watchlist.length > 0){
+            res.status(200).json(user.watchlist.reverse());
+        }else{
+            res.status(200).json(null);
+        }
 
     }catch(error){
         res.status(500).json("Errore interno del server.")

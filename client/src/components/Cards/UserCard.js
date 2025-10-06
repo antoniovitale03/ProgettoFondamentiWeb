@@ -1,13 +1,14 @@
-import {Avatar, Box, Button, Card, CardContent, Grid, Tooltip, Typography} from "@mui/material";
+import {Avatar, Box, Button, Card, CardContent, Grid, IconButton, Tooltip, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ReviewsIcon from "@mui/icons-material/Reviews";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CloseIcon from "@mui/icons-material/Close";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import * as React from "react";
-function UserCard({ user, showRemoveButton, onRemove }) {
+import BoltIcon from "@mui/icons-material/Bolt";
+function UserCard({ user, showRemoveButton, onUnfollow }) {
     return(
         <Card sx={{ marginBottom: 10 }}>
             <CardContent>
@@ -23,39 +24,44 @@ function UserCard({ user, showRemoveButton, onRemove }) {
                     <Typography component="a" href={`/${user.username}/profile`}>
                         {user.username}</Typography>
                     </p>
-                        <Button component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>
-                            {user.followers.length} Followers
-                        </Button>
-                        <Button component={Link} to={`/${user.username}/following`} disabled={user.following.length === 0}>
-                            {user.following.length} Following
-                        </Button>
+                    <Button component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>
+                        {user.followers.length} Followers
+                    </Button>
+                    <Button component={Link} to={`/${user.username}/following`} disabled={user.following.length === 0}>
+                        {user.following.length} Following
+                    </Button>
                 </Grid>
 
                 <Grid size={4}>
                     <Tooltip title={`Watchlist di ${user.username}`}>
-                        <Button component={Link} to={`/${user.username}/watchlist`}>
+                        <IconButton component={Link} to={`/${user.username}/watchlist`}>
                             <WatchLaterIcon />
-                        </Button>
+                        </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Film visti da ${user.username}`}>
-                        <Button component={Link} to={`/${user.username}/watched`}>
+                        <IconButton component={Link} to={`/${user.username}/watched`}>
                             <VisibilityIcon />
-                        </Button>
+                        </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Recensioni di ${user.username}`}>
-                        <Button component={Link} to={`/${user.username}/reviews`}>
+                        <IconButton component={Link} to={`/${user.username}/reviews`}>
                             <ReviewsIcon />
-                        </Button>
+                        </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Film preferiti di ${user.username}`}>
-                        <Button component={Link} to={`/${user.username}/favorites`}>
-                            <ThumbUpIcon />
-                        </Button>
+                        <IconButton component={Link} to={`/${user.username}/favorites`}>
+                            <FavoriteIcon />
+                        </IconButton>
                     </Tooltip>
 
+                    <Tooltip title={`Attività di ${user.username}`}>
+                        <IconButton component={Link} to={`/${user.username}/activity`}>
+                            <BoltIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
 
 
@@ -63,7 +69,7 @@ function UserCard({ user, showRemoveButton, onRemove }) {
                     showRemoveButton &&
                     <Grid size={3}>
                         <Tooltip title={`Rimuovi ${user.username} dai seguiti`}>
-                            <Button onClick={ () => onRemove(user._id, user.username) }>
+                            <Button onClick={ () => onUnfollow(user._id, user.username) }>
                                 <CloseIcon />
                             </Button>
                         </Tooltip>

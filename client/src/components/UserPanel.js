@@ -48,7 +48,7 @@ function UserPanel() {
       <Box style={{ display: 'flex', flexDirection: 'column', height:'100%' }}>
           <Header />
           {/*Questa dice all'area main di crescere e occupare tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
-          <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: '50px' }}>
+          <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: 50 }}>
                   <Routes>
                       <Route path="/" element={<Home/>} />
                       <Route path="/:username/profile" element={<Profile />} />
@@ -66,7 +66,7 @@ function UserPanel() {
                       <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
 
                       <Route path="/archivio" element={<Archivio />} />
-                      <Route path="/activity" element={<ActivityPage />} />
+                      <Route path="/:username/activity" element={<ActivityPage />} />
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
 

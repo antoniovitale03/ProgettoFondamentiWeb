@@ -148,7 +148,6 @@ exports.getAllGenres = async (req, res) => {
 exports.getFilmsFromSearch = async (req, res) => {
     const { filmTitle } = req.body;
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
-    //const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}&language=en-EN`);
     const data = await response.json();
     let films = data.results; //ottengo la lista dei risultati (film, serie tv e persone)
     films = films.map(async (film) => {  //array di Promise
@@ -160,7 +159,6 @@ exports.getFilmsFromSearch = async (req, res) => {
             director: director,
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
             release_year: year,
-            rating: null
             };
          });
 
@@ -170,26 +168,27 @@ exports.getFilmsFromSearch = async (req, res) => {
 
 exports.getArchiveFilms = async (req, res) => {
     try{
-        const { params } = req.body;
-        let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${params.page}`;
-        if (params.sortBy){
-            url += `&sort_by=${params.sortBy}`;
+        const {page, genre, decade, minRating, sortBy} = req.query;
+
+        let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`;
+        if (sortBy){
+            url += `&sort_by=${sortBy}`;
         }
-        if (params.genre){
-            url += `&with_genres=${params.genre}`;
+        if (genre){
+            url += `&with_genres=${genre}`;
         }
 
         // La decade deve essere tradotta in un intervallo di date
-        if(params.decade){
+        if(decade){
             //calcolo il primo e ultimo anno della decade (es. 1980s va da 1980 a 1989).
-            let firstYear = parseInt(params.decade);
+            let firstYear = parseInt(decade);
             let lastYear = firstYear + 9;
             url += `&primary_release_date.gte=${firstYear}-01-01`;
             url += `&primary_release_date.lte=${lastYear}-12-31`;
         }
 
-        if(params.minRating !== 0){
-            url += `&vote_average.gte=${params.minRating}`;
+        if(minRating !== 0){
+            url += `&vote_average.gte=${minRating}`;
         }
 
         const response = await fetch(url);
@@ -200,7 +199,6 @@ exports.getArchiveFilms = async (req, res) => {
                 _id: film.id, title: film.title,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                rating: null
             }
         })
 
@@ -340,6 +338,7 @@ exports.getFilm = async (req, res) => {
         flatrate: flatrate,
         duration: duration,
     }
+    console.log(film);
     res.status(200).json(film);
 }
 

@@ -37,7 +37,6 @@ function ActorPage() {
 
     return(
         <Box>
-            <p>Info personali dell'attore</p>
             <h1>{actorPersonalInfo.name}</h1>
             <img src={actorPersonalInfo.profile_image} alt="Immagine dell'attore"/>
             <p>Data di nascita: {actorPersonalInfo.birthday}</p>

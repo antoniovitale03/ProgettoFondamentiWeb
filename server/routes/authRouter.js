@@ -5,10 +5,12 @@ const authController = require('../controllers/authController');
 //   /api/auth
 
 router.post("/registration/data", authController.registerdata); //registrazione dati
-router.post("/registration/verify", authController.verifycode); //verifica codice
+router.post("/registration/verify", authController.verifyCode); //verifica codice
 router.post("/login", authController.login);
+router.post("/login/verify-code", authController.verifycode)
 router.post("/refresh", authController.refresh)
 router.post("/forgot-password", authController.forgotPassword) //imposto nuova password
+router.post("set-new-password", authController.setNewPassword)
 
 router.post("/modify-password", authMiddleware.verifyJWT, authController.modifyPassword)
 

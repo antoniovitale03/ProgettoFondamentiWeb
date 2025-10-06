@@ -9,6 +9,6 @@ const activitySchema = new mongoose.Schema({
     date: { type: String, required: true },
 })
 
-const Activity = mongoose.model("ActivityPage", activitySchema);
+const Activity = mongoose.model("Activity", activitySchema);
 
 module.exports = Activity;

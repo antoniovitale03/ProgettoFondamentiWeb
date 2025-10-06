@@ -19,16 +19,16 @@ function Followers() {
             try{
                 const response = await api.get(`http://localhost:5001/api/user/${username}/get-followers`);
                 setFollowers(response.data);
-                console.log(response.data);
             }catch(error){
                 showNotification(error.response.data, "error");
             }
         }
         fetchFollowers();
-    },[showNotification]);
+    },[username]);
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto' }}>
+            <h1>Followers di {username}</h1>
             {
                 followers.map( user => <UserCard user={user} />)
             }

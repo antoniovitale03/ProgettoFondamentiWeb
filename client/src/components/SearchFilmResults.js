@@ -9,7 +9,7 @@ function SearchFilmResults() {
 
     let {filmTitle} = useParams();
     filmTitle = filmTitle.replaceAll("-", " ");
-    useDocumentTitle(`Mostra risultati per ${filmTitle}`);
+    useDocumentTitle(`Mostra risultati per "${filmTitle}"`);
 
     const [filmsFromSearch, setFilmsFromSearch] = useState(null);
 
@@ -35,7 +35,7 @@ function SearchFilmResults() {
                         )}
                     </Grid>
                 </Box>
-                : <p>Nessun film trovato</p>
+                : <h1>Caricamento dei risultati...</h1>
             }
         </Box>
     )

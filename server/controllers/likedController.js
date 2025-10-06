@@ -13,7 +13,9 @@ exports.addToLiked = async (req, res) => {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
-                    poster_path: film.poster_path
+                    poster_path: film.poster_path,
+                    popularity: film.popularity,
+                    genres: film.genres
                 }
             },
             {
