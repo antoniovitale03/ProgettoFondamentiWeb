@@ -11,7 +11,7 @@ const filmSchema = new mongoose.Schema({
     },
     poster_path: {type: String, required: true},
     popularity: {type: Number, required: true},
-    genres: [{type: Object, required: true}],
+    genres: {type: Array, required: true},
     date: { type: String, default: null } //usato per indica la data di visione nella lista dei film visti
 })
 

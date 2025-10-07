@@ -8,10 +8,11 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
         <Card style={{ marginBottom: 10, height: '100%', width: '100%' }}>
             <CardContent>
                 <Grid container spacing={2}>
+
                     <Grid item size={4}>
                         <p>
                         <Button component={Link} to={`/film/${review.film.title}/${review.film._id}`}>
-                            <strong>{review.film.title}</strong></Button>
+                            <strong>{review.film.title} </strong></Button>
                         {review.film.release_year &&
                             <Button component={Link} to={`/films/${review.film.release_year}/page/1`}>
                                 <strong>     ({review.film.release_year})</strong>
@@ -29,7 +30,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                                 {
                                     review.rating !== 0 ?
                                         <Typography component="p">Il tuo voto: {<Rating name="rating" value={review.rating} readOnly/> }</Typography>
-                                        : <Typography component="p">Non è stato aggiunto nessun voto per questa recensione</Typography>
+                                        : <Typography component="p">Nessun voto per questa recensione</Typography>
                                 }
                             <Typography component="p">Data della recensione: {review.review_date}</Typography>
                         </Box>

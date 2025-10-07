@@ -1,26 +1,17 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./hooks/useDocumentTitle"
-import {
-    Avatar,
-    Input,
-    Box,
-    Button,
-    Divider,
-    Grid,
-    Typography
-} from "@mui/material";
+import {Avatar, Box, Button, Divider, Grid, Typography} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import InfoIcon from '@mui/icons-material/Info';
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import ReviewCard from "./Cards/ReviewCard";
-import CloseIcon from '@mui/icons-material/Close';
-import {Link, NavLink, useNavigate} from "react-router-dom";
-import logo from "../assets/images/AppLogo.png";
+import {Link} from "react-router-dom";
 import * as React from "react";
 import {useParams} from "react-router-dom";
-import Carosello from "./Carosello";
+
 function Profile(){
     const {user} = useAuth();
     const {username} = useParams();
@@ -75,7 +66,8 @@ function Profile(){
 
                 {user.username === username && <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
 
-                {favoritesFilms?.length > 0 &&
+                {
+                    favoritesFilms?.length > 0 &&
                     <Box>
                         <h1>Film preferiti</h1>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
@@ -90,10 +82,12 @@ function Profile(){
                     </Box>
                 }
 
-                {profile.latestWatched &&
+                {
+                    profile.latestWatched &&
                     <Box>
-                        <h1>Ultimi film visti </h1>
-                        <Button component={Link} to={`/${user.username}/watched`}>Vedi tutti i film visti</Button>
+                        <h1>Ultimi film visti
+                        <Button component={Link} to={`/${username}/watched`}> <InfoIcon /> Più dettagli </Button>
+                        </h1>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             { profile.latestWatched.map((film) =>
                                 <Grid key={film._id} size={2}>
@@ -105,16 +99,18 @@ function Profile(){
                     </Box>
                 }
 
-                {profile.latestReviews &&
+                {
+                    profile.latestReviews &&
                     <Box>
-                        <h1>Ultime recensioni: </h1>
-                        <Button component={Link} to={`/${user.username}/reviews`}>Vedi tutte le recensioni</Button>
+                        <h1>Ultime recensioni
+                        <Button component={Link} to={`/${username}/reviews`}><InfoIcon /> Più dettagli</Button>
+                        </h1>
                         <Grid container spacing={2}>
                             { profile.latestReviews.map(review =>
-                                <Grid key={review.filmID} size={6}>
+                                <Grid key={review.film._id} size={6}>
                                     <ReviewCard review={review}/>
-                                </Grid>)
-                            }
+                                </Grid>
+                            )}
                         </Grid>
                     </Box>
                 }

@@ -55,7 +55,6 @@ exports.addReview = async (req, res) => {
             {_id: {$in: user.following}},
             {$addToSet: { activity: newActivity._id }}
         )
-
         //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
         await User.findByIdAndUpdate(userID, {
             $addToSet: {
@@ -72,9 +71,10 @@ exports.addReview = async (req, res) => {
             {
                 $set: {
                     title: film.title,
-                    release_date: film.release_year,
+                    release_year: film.release_year,
                     director: director,
                     poster_path: film.poster_path,
+                    genres: film.genres
                 }},
             {
                 upsert: true
@@ -93,16 +93,13 @@ exports.deleteReview = async (req, res) => {
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
 
-        const user = await User.findById(userID).populate({
-            path: "reviews",
-            populate: { path: "film" }
-        });
+        const user = await User.findById(userID).populate('reviews');
         if (!user) {
             return res.status(404).json("Utente non trovato.");
         }
 
         //trovo l'oggetto Recensione che voglio eliminare e ne calcolo l'id
-        let reviewObJ = user.reviews.find( review => review.film._id === filmID);
+        let reviewObJ = user.reviews.find( review => review.film === filmID);
         let reviewID = reviewObJ._id;
 
         user.reviews = user.reviews.filter(id => id !== reviewID);
@@ -114,7 +111,6 @@ exports.deleteReview = async (req, res) => {
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
-
 }
 
 exports.getReviews = async (req, res) => {
@@ -131,7 +127,7 @@ exports.getReviews = async (req, res) => {
         }
 
         let reviews = user.reviews.reverse();
-        console.log(reviews);
+
         if(genre){
             reviews = reviews.filter(review => review.film.genres.some(g => g.id === parseInt(genre)) );
         }
@@ -147,7 +143,6 @@ exports.getReviews = async (req, res) => {
         if(sortByPopularity){
             reviews = reviews.sort()
         }
-
         res.status(200).json(reviews);
     }catch(error){
         res.status(500).json("Errore interno del server.");

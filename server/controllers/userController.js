@@ -6,7 +6,7 @@ const path = require("path");
 exports.getProfileInfo = async (req, res) => {
     try{
         const username = req.params.username;
-        const user = await User.findOne({ username: username }).populate('favorites').populate('watched').populate('reviews');
+        const user = await User.findOne({ username: username }).populate('favorites').populate('watched').populate({path: 'reviews', populate: {path: 'film'}});
         const profile = {
             avatar_path: user.avatar_path,
             country: user.country,
@@ -15,7 +15,7 @@ exports.getProfileInfo = async (req, res) => {
             following: user.following.length,
             favorites: user.favorites.length > 0 ? user.favorites.reverse() : null,
             latestWatched: user.watched.length > 0 ? user.watched.reverse().slice(0, 10) : null,
-            latestReviews: user.reviews.length > 0 ? user.reviews.reverse().slice(0, 10) : null
+            latestReviews: user.reviews.length > 0 ? user.reviews.slice(0, 10) : null
         }
         res.status(200).json(profile);
 

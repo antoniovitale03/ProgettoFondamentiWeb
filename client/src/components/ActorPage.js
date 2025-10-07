@@ -56,7 +56,8 @@ function ActorPage() {
                 </div>: null
             }
 
-            {actorCrew.length !== 0 ?
+            {
+                actorCrew.length !== 0 ?
                 <Box>
                     <h1>Lista dei film in cui {actorPersonalInfo.name} ha svolto un ruolo tecnico ({actorCrew.length}) </h1>
                     <Grid container spacing={2}>
@@ -68,9 +69,6 @@ function ActorPage() {
                     </Grid>
                 </Box> : <p>{actorPersonalInfo.name} non ha svolto in nessun film un ruolo tecnico</p>
             }
-
-
-
         </Box>
 
     )

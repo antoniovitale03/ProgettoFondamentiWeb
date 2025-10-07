@@ -2,7 +2,7 @@ import api from "../api";
 import {useEffect, useState} from "react";
 import {useAuth} from "../context/authContext";
 import {
-    Avatar,
+    Avatar, Box,
     Button,
     List,
     ListItem,
@@ -36,11 +36,15 @@ function ActivityPage(){
 
     return(
         activity ?
+            <Box>
+                <h1>Attività di {username}</h1>
                 <List sx={{ width: '60%' }}>
                     {activity?.map(activity =>
-                        <ActivityElement activity={activity} key={activity.id} />
+                        <ActivityElement activity={activity} key={activity.id}/>
                     )}
                 </List>
+            </Box>
+
                 : <h1>Ancora nessun'attività per {username}</h1>
     )
 }

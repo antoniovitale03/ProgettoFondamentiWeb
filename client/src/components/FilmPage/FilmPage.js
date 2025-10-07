@@ -23,13 +23,12 @@ function FilmPage(){
 
     const [film, setFilm] = useState(null);
 
-
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
         async function fetchFilm(){
             if (filmTitle && filmID) {
-                const response = await api.get(`http://localhost:5001/api/films/getFilm/${filmTitle}/${filmID}`);
+                const response = await api.get(`http://localhost:5001/api/films/get-film/${filmID}`);
                 const film = await response.data;
                 setFilm(film);
             }

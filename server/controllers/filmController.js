@@ -13,8 +13,7 @@ function getImageUrl(baseUrl, size, imagePath){
 }
 
 async function getFilmDirector(filmID) {
-    // Chiamata usata per ottenere il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...), più
-    //utile per ottenere solo
+    // Chiamata usata per ottenere il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...),
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
 
@@ -27,25 +26,14 @@ async function getFilmDirector(filmID) {
 }
 
 //vede se il film si trova in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
-async function getFilmStatus(user, filmID){
-    let isInWatchlist = user.watchlist.find( (id) => id === filmID )
-
-    let isLiked = user.liked.find( (id) => id === filmID )
-
-    let isReviewed = user.reviews.find( (review) => review.filmID === filmID )
-
-    let isFavorite = user.favorites.find( (id) => id === filmID )
-
-    let isWatched = user.watched.find( (id) => id === filmID )
-
+function getFilmStatus(user, filmID){
     return {
-        isInWatchlist: isInWatchlist === undefined ? false : true,
-        isLiked: isLiked === undefined ? false : true,
-        isReviewed: isReviewed === undefined ? false : true,
-        isFavorite: isFavorite === undefined ? false : true,
-        isWatched: isWatched === undefined ? false : true,
+        isInWatchlist: user.watchlist.some( (id) => id === filmID ),
+        isLiked: user.liked.some( (id) => id === filmID ),
+        isReviewed: user.reviews.some( review => review.film === filmID ),
+        isFavorite: user.favorites.some( (id) => id === filmID ),
+        isWatched: user.watched.some( (id) => id === filmID ),
     }
-
 }
 
 //trova il trailer YT del film
@@ -60,13 +48,12 @@ async function getFilmTrailer(filmID) {
 }
 
 //calcola il rating medio dle film e quello inserito dlal'utente durante la recensione
-async function getRating(user, film, filmID){
+function getRating(user, film, filmID){
     let avgRating = (film.vote_average)/2; //rating in quinti
     avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;  //lo blocco ad una cifra decimale (se è 0 lo setto a null)
 
     //calcolo il rating inserito dall'utente
-    user = await user.populate('reviews');
-    let review = user.reviews.find( (review) => review.filmID === filmID);
+    let review = user.reviews.find( (review) => review.film === filmID);
     let userRating = review !== undefined ? review.rating : null;
     return {avgRating, userRating};
 }
@@ -127,7 +114,6 @@ exports.getSimilarFilms = async (req, res) => {
             title: film.title,
             release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-            rating: null
         }
     })
     res.status(200).json(data);
@@ -257,21 +243,21 @@ exports.getCrew = async (req, res) => {
 }
 
 exports.getFilm = async (req, res) => {
-    const filmTitle = req.params.filmTitle;
     const filmID = parseInt(req.params.filmID);
     const userID = req.user.id;
-    let user = await User.findById(userID);
+    let user = await User.findById(userID).populate('reviews');
 
-    let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
+    let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}`);
     let film = await response.json();
+
 
     //trovo il regista e modifico la data d'uscita del film
     const director = await getFilmDirector(filmID); //oppure film.id
     const year = film.release_date ? new Date(film.release_date).getFullYear() : null;
 
 
-    //calcola il rating medio dle film e quello inserito dlal'utente durante la recensione
-    const {avgRating, userRating} = await getRating(user, film, filmID);
+    //calcola il rating medio del film e quello inserito dlal'utente durante la recensione
+    const {avgRating, userRating} = getRating(user, film, filmID);
 
     //trovo il link Youtube del trailer
     const trailerLink = await getFilmTrailer(filmID);
@@ -282,7 +268,7 @@ exports.getFilm = async (req, res) => {
     const duration = `${hours}h ${minutes}m`;
 
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
-    const filmStatus = await getFilmStatus(user, filmID);
+    const filmStatus = getFilmStatus(user, filmID);
 
     //ottengo i dettagli del film
     let filmDetails = {
@@ -306,16 +292,16 @@ exports.getFilm = async (req, res) => {
     response = await fetch(`https://api.themoviedb.org/3/movie/${film.id}/watch/providers?api_key=${process.env.API_KEY_TMDB}`);
     const data = await response.json();
 
-    const rent = data.results.IT?.rent?.map(film => {
-        return {...film, logo_path: getImageUrl(process.env.baseUrl, "w92", film.logo_path) }
+    const rent = data.results?.IT?.rent?.map(provider => {
+        return {...provider, logo_path: getImageUrl(process.env.baseUrl, "w92", provider.logo_path) }
     })
 
-    const flatrate = data.results.IT?.flatrate?.map(film => {
-        return {...film, logo_path: getImageUrl(process.env.baseUrl, "w92", film.logo_path) }
+    const flatrate = data.results?.IT?.flatrate?.map(provider => {
+        return {...provider, logo_path: getImageUrl(process.env.baseUrl, "w92", provider.logo_path) }
     })
 
-    const buy = data.results.IT?.buy?.map(film => {
-        return {...film, logo_path: getImageUrl(process.env.baseUrl, "w92", film.logo_path) }
+    const buy = data.results?.IT?.buy?.map(provider => {
+        return {...provider, logo_path: getImageUrl(process.env.baseUrl, "w92", provider.logo_path) }
     })
 
 

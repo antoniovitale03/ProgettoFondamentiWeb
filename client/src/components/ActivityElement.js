@@ -6,7 +6,7 @@ function ActivityElement({ activity }){
         return (
             <ListItem key={activity._id}>
                 <Typography component="p">
-                    <NavLink to={`/film/${activity.filmTitle}/${activity.filmID}`}>{activity.filmTitle}</NavLink>  aggiunto alla
+                    <NavLink to={`/film/${activity.filmTitle.replaceAll(" ", "-")}/${activity.filmID}`}>{activity.filmTitle}</NavLink>  aggiunto alla
                     <NavLink to={`/${activity.user.username}/watchlist`}> Watchlist</NavLink>   da
                     <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
@@ -19,7 +19,7 @@ function ActivityElement({ activity }){
         return(
             <ListItem key={activity._id}>
                 <Typography component="p">
-                    <NavLink to={`/film/${activity.filmTitle}/${activity.filmID}`}>{activity.filmTitle}</NavLink>   aggiunto ai
+                    <NavLink to={`/film/${activity.filmTitle.replaceAll(" ", "-")}/${activity.filmID}`}>{activity.filmTitle}</NavLink>   aggiunto ai
                     <NavLink to={`/${activity.user.username}/favorites`}>Preferiti</NavLink>   da
                     <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
@@ -31,7 +31,7 @@ function ActivityElement({ activity }){
     if (activity.action === "ADD_REVIEW") {
         return (
             <ListItem key={activity.id} sx={ {display: "flex", justifyContent:"flex-start" }}>
-                <NavLink to={`/film/${activity.filmTitle}/${activity.filmID}`}>{activity.filmTitle}</NavLink>   aggiunto alle
+                <NavLink to={`/film/${activity.filmTitle.replaceAll(" ", "-")}/${activity.filmID}`}>{activity.filmTitle}</NavLink>   aggiunto alle
                 <NavLink to={`/${activity.user.username}/reviews`}>Recensioni</NavLink>   da
                 <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                 <ListItemIcon>
@@ -44,7 +44,7 @@ function ActivityElement({ activity }){
     if (activity.action === "ADD_TO_WATCHED") {
         return (
             <ListItem key={activity.id} sx={ {display: "flex", justifyContent:"flex-start" }}>
-                <NavLink to={`/film/${activity.filmTitle}/${activity.filmID}`}>{activity.filmTitle}</NavLink>
+                <NavLink to={`/film/${activity.filmTitle.replaceAll(" ", "-")}/${activity.filmID}`}>{activity.filmTitle}</NavLink>
                 aggiunto ai
                 <NavLink to={`/${activity.user.username}/watched`}>Film visti</NavLink> da
                 <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>

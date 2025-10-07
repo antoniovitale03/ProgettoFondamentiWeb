@@ -35,6 +35,7 @@ function Reviews(){
                     const response = await api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`);
                     const films = await response.data;
                     setReviews(films);
+                    console.log(films);
                     setNumReviews(films.length);
                 }else{
                     const params = new URLSearchParams();

@@ -16,7 +16,6 @@ export function AuthProvider({ children }) {
         }catch(error){
             throw new Error(error.response.data);
         }
-
         //il server invierà un messaggio con cookie già scaduto, quindi viene scartato dal client
         setUser(null);
         localStorage.removeItem('user');
