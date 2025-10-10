@@ -46,7 +46,7 @@ exports.addReview = async (req, res) => {
             filmTitle: film.title,
             action: 'ADD_REVIEW',
             rating: reviewRating,
-            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+            date: Date.now()
         })
 
         await newActivity.save();
@@ -141,7 +141,12 @@ exports.getReviews = async (req, res) => {
             reviews = sortByDate === "Dal meno recente" ? reviews.reverse() : reviews;
         }
         if(sortByPopularity){
-            reviews = reviews.sort()
+            if(sortByPopularity === "Dal più popolare" ){
+                reviews = reviews.sort( (a,b) => a.film.popularity - b.film.popularity );
+            }
+            else{
+                reviews = reviews.sort( (a,b) => b.film.popularity - a.film.popularity );
+            }
         }
         res.status(200).json(reviews);
     }catch(error){

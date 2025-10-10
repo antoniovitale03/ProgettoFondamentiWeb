@@ -16,8 +16,8 @@ function Watchlist(){
 
     useDocumentTitle(`Watchlist di ${username}`);
     const {showNotification} = useNotification();
-    const [watchlist, setWatchlist] = useState(null);
-    const [numWatchlist, setNumWatchlist] = useState(null);
+    const [watchlist, setWatchlist] = useState([]);
+    const [numWatchlist, setNumWatchlist] = useState([]);
 
     const [filters, setFilters] = useState({
         genre: "",
@@ -69,7 +69,7 @@ function Watchlist(){
 
     return(
         <Box>
-            { numWatchlist !== 0 && watchlist ?
+            { numWatchlist !== 0 ?
                 <Stack spacing={7}>
                     { user.username === username ? <h1>Vuoi guardare {numWatchlist} film </h1> : <h1>{username} vuole guardare {numWatchlist} film</h1> }
 

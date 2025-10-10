@@ -14,7 +14,8 @@ import {
     Divider,
     Tooltip,
     Input,
-    InputLabel
+    InputLabel,
+    IconButton
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person'
@@ -68,9 +69,9 @@ function Header() {
         }
     }
 
-    const userMenuLinks = ['/', `/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`];
-    const userMenuNames = ["Home", "Il mio profilo", "La mia lista", "I miei preferiti", "Le mie recensioni", "Film da guardare"];
-    const userMenuIcons = [<HomeIcon />, <PersonIcon />, <ListIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>];
+    const userMenuLinks = ['/', `/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`, `/${user?.username}/lists`];
+    const userMenuNames = ["Home", "Il mio profilo", "Film visti", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Le mie liste"];
+    const userMenuIcons = [<HomeIcon />, <PersonIcon />, <VisibilityIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>, <ListIcon />];
 
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
@@ -79,15 +80,15 @@ function Header() {
         <Box>
             <InputLabel>Username</InputLabel>
             <Input type="string" value={friendUsername} onChange={(event) => setFriendUsername(event.target.value)}/>
-            <Button variant="contained" onClick={sendFriendRequest}>
+            <IconButton variant="contained" onClick={sendFriendRequest}>
                 <SearchIcon />
-            </Button>
+            </IconButton>
         </Box>
 
         ]
 
 
-    let menuItems = [
+    let menu = [
         userMenuLinks.map((menuLink, index) =>
             <MenuItem component={NavLink} key={index} to={menuLink}>
                 <ListItemIcon>{userMenuIcons[index]}</ListItemIcon>{userMenuNames[index]}
@@ -105,20 +106,21 @@ function Header() {
 
 
     let headerItems = [
-        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`} /></Tooltip>} menuContent={menuItems}/>,
+        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`} /></Tooltip>} menuContent={menu}/>,
         <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
-        <NavLink to="/archivio"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></NavLink>,
+        <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></Button>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
             <Button variant="contained" onClick={handleSearch}>
                 <SearchIcon />
             </Button>
         </Box>,
-        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriend}></DropDownMenu>,
-        <Button href="/">
-            <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriend} />,
+        <Button component={Link} to="/">
+            <Avatar src={logo} style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
+    
     let notLoggedDefaultHeaderItems = [
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,

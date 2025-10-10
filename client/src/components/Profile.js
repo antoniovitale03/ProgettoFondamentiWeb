@@ -17,6 +17,7 @@ function Profile(){
     const {username} = useParams();
 
     const {showNotification} = useNotification();
+
     useDocumentTitle(`Profilo di ${username}`);
 
     const [profile, setProfile] = useState(null);
@@ -32,7 +33,7 @@ function Profile(){
             setFavoritesFilms(profile.favorites);
         }
         fetchUser();
-    }, [])
+    }, [username])
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
@@ -67,7 +68,7 @@ function Profile(){
                 {user.username === username && <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
 
                 {
-                    favoritesFilms?.length > 0 &&
+                    favoritesFilms &&
                     <Box>
                         <h1>Film preferiti</h1>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>

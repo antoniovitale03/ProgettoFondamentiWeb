@@ -38,7 +38,7 @@ function ActivityPage(){
         activity ?
             <Box>
                 <h1>Attività di {username}</h1>
-                <List sx={{ width: '60%' }}>
+                <List sx={{ width: '90%' }}>
                     {activity?.map(activity =>
                         <ActivityElement activity={activity} key={activity.id}/>
                     )}

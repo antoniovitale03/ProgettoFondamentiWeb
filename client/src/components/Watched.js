@@ -9,14 +9,14 @@ import {useParams} from "react-router-dom";
 import SearchFilters from "./SearchFilters";
 import _ from "lodash"; //per la deep comparison
 
-function WatchedFilms(){
+function Watched(){
 
     const {user} = useAuth();
     const {username} = useParams();
     const {showNotification} = useNotification();
 
-    const [numWatched, setNumWatched] = useState(null);
-    const [watched, setWatched] = useState(null);
+    const [numWatched, setNumWatched] = useState([]);
+    const [watched, setWatched] = useState([]);
 
     const [filters, setFilters] = useState({
         genre: "",
@@ -27,7 +27,7 @@ function WatchedFilms(){
         isLiked: null
     });
 
-    useDocumentTitle(`Lista di ${username}`);
+    useDocumentTitle(`Film visti da ${username}`);
 
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
@@ -72,7 +72,7 @@ function WatchedFilms(){
 
     return(
         <Box >
-            {numWatched !== 0 && watched ?
+            { numWatched !== 0 ?
                 <Stack spacing={7}>
                     { user.username === username ? <h1>Hai visto {numWatched} film </h1> : <h1>{username} ha visto {numWatched} film</h1> }
 
@@ -101,4 +101,4 @@ function WatchedFilms(){
     )
 }
 
-export default WatchedFilms;
+export default Watched;

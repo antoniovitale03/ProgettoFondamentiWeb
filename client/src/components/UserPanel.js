@@ -7,8 +7,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Contact from "./Contact";
 import Help from "./Help";
-import WatchedFilms from "./WatchedFilms";
-import Archivio from "./Archivio";
+import Watched from "./Watched";
+import Archive from "./Archive";
 import Reviews from "./Reviews";
 import Watchlist from "./Watchlist";
 import SearchFilmResults from "./SearchFilmResults";
@@ -32,17 +32,10 @@ import SimilarFilms from "./FilmPage/SimilarFilms";
 import ActivityPage from "./ActivityPage";
 import Following from "./Following"
 import Followers from "./Followers"
+import Lists from "./Lists";
 //la componente principale che gestisce tutti i percorsi
 function UserPanel() {
-    // let paths = ["/", "/profile", "/lista-film", "/favorites", "/recensioni", "/watchlist",
-    //                  "/settings/modify-profile", "/settings/modify-password", "/settings/delete-account",
-    //                  "/settings/modify-avatar", "/archivio", "/search/:filmTitle", "/film/:filmTitle/:filmID",
-    //                  "/log-a-film", "/film/:filmTitle/cast", "film/:filmTitle/crew", "/actor/:actorName/:actorID",
-    //                  "/director/:directorName/:directorID", "/about", "/contact", "/help"]
-    //
-    //     let components = [ <Home />, <Profile/>, <WatchedFilms />, <FavoritesFilms/>, <Reviews/>, <Watchlist/>, <ModifyProfile/>,
-    //                      <ModifyPassword/>, <DeleteAccount/>, <ModifyAvatar/>, <Archivio/>, <SearchFilmResults />, <FilmPage />, <Log/>,
-    //                      <CastPage/>, <CrewPage/>, <ActorPage/>, <DirectorPage/>, <About/>, <Contact />, <Help/>]
+
 
   return (
       <Box style={{ display: 'flex', flexDirection: 'column', height:'100%' }}>
@@ -55,17 +48,18 @@ function UserPanel() {
                       <Route path="/:username/followers" element={<Followers />} />
                       <Route path="/:username/following" element={ <Following /> } />
 
-                      <Route path="/:username/watched" element={<WatchedFilms />} />
+                      <Route path="/:username/watched" element={<Watched />} />
                       <Route path="/:username/favorites" element={<FavoritesFilms />} />
                       <Route path="/:username/reviews" element={<Reviews />} />
                       <Route path="/:username/watchlist" element={<Watchlist />} />
+                      <Route path="/:username/lists" element={<Lists />  }/>
 
                       <Route path="/settings/modify-profile" element={ <ModifyProfile />} />
                       <Route path="/settings/modify-password" element={ <ModifyPassword />} />
                       <Route path="/settings/delete-account" element={<DeleteAccount />} />
                       <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
 
-                      <Route path="/archivio" element={<Archivio />} />
+                      <Route path="/archive" element={<Archive />} />
                       <Route path="/:username/activity" element={<ActivityPage />} />
                       <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                       <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />

@@ -1,4 +1,4 @@
-import {Box, Button, Rating, TextField, Tooltip} from "@mui/material";
+import {Box, Button, IconButton, Rating, TextField, Tooltip} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import api from "../../api";
@@ -14,6 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import FormatListBulletedAddIcon from '@mui/icons-material/FormatListBulletedAdd';
 
 function FilmButtons({ film }) {
 
@@ -24,15 +25,18 @@ function FilmButtons({ film }) {
     const [reviewButton, setReviewButton] = useState(1);
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
+    const [listButton, setListButton] = useState(1);
 
     useEffect(() => {
         async function fetchFilmStatus(){
             //renderizzo i bottoni in base allo stato attuale del film
-            setWatchlistButton(film?.filmStatus.isInWatchlist === true ? 0 : 1);
-            setLikedButton(film?.filmStatus.isLiked === true ? 0 : 1);
-            setReviewButton(film?.filmStatus.isReviewed === true ? 0 : 1);
-            setFavoritesButton(film?.filmStatus.isFavorite === true ? 0 : 1);
-            setWatchedButton(film?.filmStatus.isWatched === true ? 0 : 1);
+            if(film){
+                setWatchlistButton(film.status.isInWatchlist === true ? 0 : 1);
+                setLikedButton(film.status.isLiked === true ? 0 : 1);
+                setReviewButton(film.status.isReviewed === true ? 0 : 1);
+                setFavoritesButton(film.status.isFavorite === true ? 0 : 1);
+                setWatchedButton(film.status.isWatched === true ? 0 : 1);
+            }
         }
         fetchFilmStatus();
     }, [film])
@@ -170,69 +174,46 @@ function FilmButtons({ film }) {
 
     return(
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap:6 }}>
-            {watchlistButton === 1 ?
-                <Tooltip title="Aggiungi alla watchlist">
-                    <Button onClick={addToWatchlist}>
-                        <AccessTimeIcon />
-                    </Button>
-                </Tooltip> :
-                <Tooltip title="Rimuovi dalla watchlist">
-                    <Button onClick={removeFromWatchlist}>
-                        <AccessTimeFilledIcon />
-                    </Button>
-                </Tooltip>
-            }
-            {likedButton === 1 ?
-                <Tooltip title="Aggiungi ai film piaciuti">
-                    <Button onClick={addToLiked}>
-                        <ThumbUpOffAltIcon />
-                    </Button>
-                </Tooltip> :
-                <Tooltip title="Rimuovi dai film piaciuti">
-                    <Button onClick={removeFromLiked}>
-                        <ThumbUpIcon />
-                    </Button>
-                </Tooltip>
-            }
 
-            {reviewButton === 1 ?
-                <Tooltip title="Aggiungi una recensione">
-                    <DropDownMenu buttonContent={<ReviewsOutlinedIcon />} menuContent={reviewMenuItems} />
-                </Tooltip>
-                :
-                <Tooltip title="Rimuovi una recensione">
-                    <Button onClick={deleteReview}>
+            <Tooltip title={watchlistButton === 1 ? "Aggiungi alla watchlist" : "Rimuovi dalla watchlist"}>
+                <IconButton onClick={watchlistButton === 1 ? addToWatchlist : removeFromWatchlist}>
+                    {watchlistButton === 1 ? <AccessTimeIcon /> : <AccessTimeFilledIcon />}
+                </IconButton>
+            </Tooltip>
+
+            <Tooltip title={likedButton === 1 ? "Aggiungi ai film piaciuti" : "Rimuovi dai film piaciuti"}>
+                <IconButton onClick={likedButton === 1 ? addToLiked : removeFromLiked}>
+                    {likedButton === 1 ? <ThumbUpOffAltIcon/> : <ThumbUpIcon />}
+                </IconButton>
+            </Tooltip>
+
+            <Tooltip title={reviewButton === 1 ? "Aggiungi una recensione" : "Rimuovi la recensione"}>
+                {reviewButton === 1 ?
+                    <DropDownMenu buttonContent={<ReviewsOutlinedIcon />} menuContent={reviewMenuItems} /> :
+                    <IconButton onClick={deleteReview}>
                         <ReviewsIcon />
-                    </Button>
-                </Tooltip>
-            }
+                    </IconButton>
+                }
+            </Tooltip>
 
-            {favoritesButton === 1 ?
-                <Tooltip title="Aggiungi ai film preferiti">
-                    <Button onClick={addToFavorites}>
-                        <FavoriteBorderIcon />
-                    </Button>
-                </Tooltip>:
-                <Tooltip title="Rimuovi dai film preferiti">
-                    <Button onClick={removeFromFavorites}>
-                        <FavoriteIcon />
-                    </Button>
-                </Tooltip>
-            }
+            <Tooltip title={favoritesButton === 1 ? "Aggiungi ai film preferiti" : "Rimuovi dai film preferiti"}>
+                <IconButton onClick={favoritesButton === 1 ? addToFavorites : removeFromFavorites}>
+                    {favoritesButton === 1 ? <FavoriteBorderIcon /> : <FavoriteIcon />}
+                </IconButton>
+            </Tooltip>
 
-            {watchedButton === 1 ?
-                <Tooltip title="Aggiungi ai film visti">
-                    <Button onClick={addToWatched}>
-                        <VisibilityOutlinedIcon />
-                    </Button>
-                </Tooltip>
-                :
-                <Tooltip title="Rimuovi dai film visti">
-                    <Button onClick={removeFromWatched}>
-                        <VisibilityIcon />
-                    </Button>
-                </Tooltip>
-            }
+            <Tooltip title={watchedButton === 1 ? "Aggiungi ai film visti" : "Rimuovi dai film visti"}>
+                <IconButton onClick={watchedButton === 1 ? addToWatched : removeFromWatched}>
+                    {watchedButton === 1 ? <VisibilityOutlinedIcon /> : <VisibilityIcon />}
+                </IconButton>
+            </Tooltip>
+
+            <Tooltip title={listButton === 1 ? "Aggiungi alla lista" : "Rimuovi dalla lista"}>
+                <IconButton>
+                    <FormatListBulletedAddIcon />
+                </IconButton>
+            </Tooltip>
+
             { /* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte
         //             {watchedButton === 0 ?
         //             <Button onClick={addToWatched}>
@@ -241,7 +222,8 @@ function FilmButtons({ film }) {
         //             </Button>: null
         //             }
         //             </div>
-        //             */ }
+        //             */
+            }
         </Box>
     )
 }

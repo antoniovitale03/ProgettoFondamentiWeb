@@ -34,7 +34,7 @@ exports.addToWatchlist = async (req, res) => {
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_WATCHLIST',
-            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+            date: Date.now()
         })
 
         await newActivity.save();
@@ -108,6 +108,7 @@ exports.getWatchlist = async (req, res) => {
         if(minRating){
             watchlist = watchlist.filter( film => film.rating >= parseInt(minRating))
         }
+
         res.status(200).json(watchlist);
 
     }catch(error){

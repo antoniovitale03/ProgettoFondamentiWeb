@@ -39,7 +39,7 @@ function FilmCard({ film, showRemoveButton, onRemove }){
 
                 {film.date && <p>Data di ultima visione: {film.date}</p>}
 
-                { film.job && <p>Ruolo: {film.job}</p> }
+                { film.jobs && <p>Ruoli: {film.jobs.map( job => <>{job}   </>)}</p> }
 
                 <p>
                     { film.rating && <Rating name="rating" value={film.rating} precision={0.5} readOnly /> }

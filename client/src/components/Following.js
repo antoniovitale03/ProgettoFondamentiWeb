@@ -29,7 +29,7 @@ function Following() {
                  }
              }
              fetchFollowing();
-         }, [username]);
+         }, [username, showNotification]);
 
 
     const unfollow = async (userId, username) => {

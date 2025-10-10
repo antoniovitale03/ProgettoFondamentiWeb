@@ -24,7 +24,7 @@ function Followers() {
             }
         }
         fetchFollowers();
-    },[username]);
+    },[username, showNotification]);
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto' }}>

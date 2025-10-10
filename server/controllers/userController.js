@@ -3,6 +3,41 @@ const Activity = require("../models/Activity");
 const fs = require("fs");
 const path = require("path");
 
+function timeAgo(past) {
+    const now = new Date();
+    const diffMs = now - past; //differenza di tempo calcolata in millisecondi
+
+    if (diffMs < 0) return null;
+
+    const minute = 1000 * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const month = day * 30; // approssimato
+
+    if (diffMs < minute) return "1m";
+    if (diffMs < hour) {
+        const minutes = Math.floor(diffMs / minute);
+        return `${minutes}m`;
+    }
+    if (diffMs < day) {
+        const hours = Math.floor(diffMs / hour);
+        return `${hours}h`;
+    }
+    if (diffMs < week) {
+        const days = Math.floor(diffMs / day);
+        return `${days}d`;
+    }
+    if (diffMs < month) {
+        const weeks = Math.floor(diffMs / week);
+        return `${weeks}w`;
+    }
+    const months = Math.floor(diffMs / month);
+    if(months === 1 ) {
+        return `${months}mo`;
+    }else return null;
+    }
+
 exports.getProfileInfo = async (req, res) => {
     try{
         const username = req.params.username;
@@ -146,11 +181,9 @@ exports.getActivity = async (req, res) => {
             path: "activity",
             populate: { path: "user" }
         });
-    if(user.activity.length > 0){
-        res.status(200).json([...user.activity].reverse());
-    }else{
-        res.status(200).json(null);
-    }
+    user.activity = user.activity.filter( action => timeAgo(action.date) !== null ) //filtro per tutte le attività fino ad un mese fa
+    let activity = user.activity.map( action => {return{...action.toObject(), timeAgo: timeAgo(action.date)} });
+    res.status(200).json(activity.reverse());
 
 }
 

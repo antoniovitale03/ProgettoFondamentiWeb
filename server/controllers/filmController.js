@@ -1,10 +1,10 @@
-require('dotenv').config();
+
 const User = require('../models/User');
 
 //funzione che calcola l'url delle immagini
 function getImageUrl(baseUrl, size, imagePath){
     if(imagePath){
-        return `${baseUrl}/${size}/${imagePath}`;
+        return `${baseUrl}/${size}${imagePath}`;
     }else{
         const width = parseInt(size.slice(1)); //w500 -> 500
         const height = Math.round(width * 1.5);
@@ -105,18 +105,43 @@ async function getCastCrewPreview(filmID){
 
 //ottieni i film simili ad uno specifico film (con un certo ID)
 exports.getSimilarFilms = async (req, res) => {
-    const {filmID, pageNumber} = req.params;
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
-    const data = await response.json();
-    data.results = data.results.map( film => {
-        return {
+    const {filmID} = req.params;
+    const {page, genre, decade, minRating, sortByDate, sortByPopularity} = req.query;
+    const response = await  fetch(`https://api.themoviedb.org/3/movie/${filmID}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`);
+    let data = await response.json();
+    let films = data.results;
+
+    films = films.map( film => {
+        return {...film,
             _id: film.id,
-            title: film.title,
-            release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
+            release_year: new Date(film.release_date).getFullYear(),
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+    }})
+
+    if (genre){
+        films = films.filter( film => film.genre_ids.some(g => g === parseInt(genre) ));
+    }
+    if(decade){
+        films = films.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 );
+    }
+    if(minRating){
+        films = films.filter( film => (film.vote_average)/2 >= parseInt(minRating)); // il rating di default nell'api è in decimi
+    }
+    if(sortByPopularity){
+        if(sortByPopularity === "Dal più popolare"){
+            films = films.sort((a,b) => b.popularity - a.popularity); //descrescente
+        }else{
+            films = films.sort((a,b) => a.popularity - b.popularity);
         }
-    })
-    res.status(200).json(data);
+    }
+    if(sortByDate){
+        if(sortByDate === "Dal più recente"){
+            films = films.sort((a,b) => b.release_year - a.release_year);
+        }else{// dal meno recente
+            films = films.sort((a,b) => a.release_year - b.release_year);
+        }
+    }
+    res.status(200).json({films: films, totalPages: data.total_pages});
 }
 
 exports.getAllGenres = async (req, res) => {
@@ -154,12 +179,10 @@ exports.getFilmsFromSearch = async (req, res) => {
 
 exports.getArchiveFilms = async (req, res) => {
     try{
-        const {page, genre, decade, minRating, sortBy} = req.query;
+        const {page, genre, decade, minRating, sortByPopularity, sortByDate} = req.query;
 
         let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`;
-        if (sortBy){
-            url += `&sort_by=${sortBy}`;
-        }
+
         if (genre){
             url += `&with_genres=${genre}`;
         }
@@ -177,16 +200,33 @@ exports.getArchiveFilms = async (req, res) => {
             url += `&vote_average.gte=${minRating}`;
         }
 
+        if (sortByPopularity){
+            if(sortByPopularity === "Dal più popolare"){
+                url += `&sort_by=popularity.desc`;
+            }else{
+                url += `&sort_by=popularity.asc`; //Dal meno popolare
+            }
+        }
+
         const response = await fetch(url);
         let data = await response.json();
 
-        const films = data.results.map(film => {
+        let films = data.results.map(film => {
             return {
-                _id: film.id, title: film.title,
+                _id: film.id,
+                title: film.title,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
             }
         })
+
+        if(sortByDate){
+            if(sortByDate === "Dal più recente"){
+                films = films.sort((a,b) => b.release_year - a.release_year);
+            }else{// dal meno recente
+                films = films.sort((a,b) => a.release_year - b.release_year);
+            }
+        }
 
         res.status(200).json({
             films: films,
@@ -199,19 +239,54 @@ exports.getArchiveFilms = async (req, res) => {
 
 exports.getFilmsByYear = async (req, res) => {
     try{
-        const { year, page } = req.params;
-        //usando questa API posso ottenere 20 film per pagina
-        const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&primary_release_year=${year}&page=${page}&language=en-EN&sort_by=popularity.desc`);
+        const { year } = req.params;
+        const {page, genre, minRating, sortByPopularity, sortByDate} = req.query;
+        let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&primary_release_year=${year}&page=${page}&language=en-EN`
+        if(genre){
+            url += `&with_genres=${genre}`;
+        }
+
+        if(minRating !== 0){
+            url += `&vote_average.gte=${minRating}`;
+        }
+
+        if(sortByPopularity){
+            if(sortByPopularity === "Dal più popolare"){
+                url += `&sort_by=popularity.desc`;
+            }else{
+                url += `&sort_by=popularity.asc`; //Dal meno popolare
+            }
+        }
+
+        const response = await fetch(url);
         let data = await response.json();
-        data.results = data.results.map( film => {
+
+        let films = data.results.map( film => {
             return {
+                release_date: film.release_date,
                 _id: film.id,
                 title: film.title,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                rating: null
             }}
         )
-        data = {films: data.results, totalPages: data.total_pages}
+
+        if(sortByDate){
+            if(sortByDate === "Dal più recente"){
+                films = films.sort((a,b) => {
+                    const dateA = new Date(a.release_date);
+                    const dateB = new Date(b.release_date);
+                    return dateB - dateA;
+                })
+            }else{// dal meno recente
+                films = films.sort((a,b) => {
+                    const dateA = new Date(a.release_date);
+                    const dateB = new Date(b.release_date);
+                    return dateA - dateB;
+                });
+            }
+        }
+
+        data = { films: films, totalPages: data.total_pages }
         res.status(200).json(data); //invio l'array dei film e il numero totali di pagine
     }catch(error){
         res.status(200).json("Errore nel caricamento dei film")
@@ -268,7 +343,7 @@ exports.getFilm = async (req, res) => {
     const duration = `${hours}h ${minutes}m`;
 
     //controllo se il film è in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
-    const filmStatus = getFilmStatus(user, filmID);
+    const status = getFilmStatus(user, filmID);
 
     //ottengo i dettagli del film
     let filmDetails = {
@@ -316,7 +391,7 @@ exports.getFilm = async (req, res) => {
         avgRating: avgRating,
         userRating: userRating,
         genres: film.genres,
-        filmStatus: filmStatus,
+        status: status,
         details: filmDetails,
         collection: collectionFilms,
         rent: rent,
@@ -327,12 +402,10 @@ exports.getFilm = async (req, res) => {
     res.status(200).json(film);
 }
 
-
 //il server verifica se il film esiste già nella collezione films e se non esiste lo crea.
 // Questo garantisce di avere sempre una sola copia dei dati di ogni film.
 // Dopodichè aggiunge l'ID di quel film all'array watchlist dell'utente, ma solo se non è già presente per evitare duplicati. (associazione tramite riferimento)
 // N.B. usato id nell'api tmdb e _id in mongodb, in modo da poter effettuare populate()
-
 
 exports.getActorInfo = async (req, res) => {
     try{
@@ -354,7 +427,6 @@ exports.getActorInfo = async (req, res) => {
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 character: film.character,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                rating: null
             }
         })
 
@@ -377,7 +449,6 @@ exports.getActorInfo = async (req, res) => {
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 job: film.job,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                rating: null
             }
         })
 
@@ -388,13 +459,35 @@ exports.getActorInfo = async (req, res) => {
             return b.release_year - a.release_year;
         })
 
-        const actorInfo = {
+        actorCrew = actorCrew.reduce(( acc, film) => {
+            // estraggo l'id del film
+            const filmID = film._id;
+
+            // controllo se nell'accumulatore ha già la proprietà per quel film
+            if (acc[filmID]) {
+                //Se sì, aggiungi il nuovo 'job' all'array 'jobs'
+                acc[filmID].jobs.push(film.job);
+            } else {
+                // Se no, creo una nuova proprietà per il film
+                acc[filmID] = {
+                    ...film,
+                    jobs: [film.job]
+                };
+                // rimuovo la vecchia proprietà job
+                delete acc[filmID].job;
+            }
+            return acc;
+        }, {}); // L'oggetto vuoto {} è il valore iniziale dell'accumulatore
+
+        actorCrew = Object.values(actorCrew);
+
+        const actor = {
             personalInfo: actorPersonalInfo,
             cast: actorCast, //film in cui la persona ha svolto un ruolo di attore
             crew: actorCrew //film in cui la persona ha svotlo un ruolo più tecnico (sceneggiatore, scrittore, ecc...)
         }
 
-        res.status(200).json(actorInfo);
+        res.status(200).json(actor);
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
@@ -423,7 +516,6 @@ exports.getDirectorInfo = async (req, res) => {
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 character: film.character,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                rating: null
             }
         })
 
@@ -444,7 +536,6 @@ exports.getDirectorInfo = async (req, res) => {
                 release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
                 job: film.job,
                 poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                rating: null
             }
         })
 
@@ -457,12 +548,33 @@ exports.getDirectorInfo = async (req, res) => {
             return b.release_year - a.release_year; //se è positivo, mette a prima di b; altrimento mette b prima di a
         });
 
-        const actorInfo = {
+        directorCrew = directorCrew.reduce(( acc, film) => {
+            // estraggo l'id del film
+            const filmID = film._id;
+
+            // controllo se nell'accumulatore ha già la proprietà per quel film
+            if (acc[filmID]) {
+                //Se sì, aggiungi il nuovo 'job' all'array 'jobs'
+                acc[filmID].jobs.push(film.job);
+            } else {
+                // Se no, creo una nuova proprietà per il film
+                acc[filmID] = {
+                    ...film,
+                    jobs: [film.job]
+                };
+                // rimuovo la vecchia proprietà job
+                delete acc[filmID].job;
+            }
+            return acc;
+        }, {}); // L'oggetto vuoto {} è il valore iniziale dell'accumulatore
+
+        directorCrew = Object.values(directorCrew); //trasformo tra un oggetto che contiene altri oggetti in un array di oggetti
+        const directorInfo = {
             personalInfo: directorPersonalInfo,
             cast: directorCast, //film in cui la persona ha svolto un ruolo di attore
             crew: directorCrew //film in cui la persona ha svotlo un ruolo più tecnico (sceneggiatore, scrittore, ecc...)
         }
-        res.status(200).json(actorInfo);
+        res.status(200).json(directorInfo);
 
     }catch(error){
         res.status(500).json("Errore interno del server.");

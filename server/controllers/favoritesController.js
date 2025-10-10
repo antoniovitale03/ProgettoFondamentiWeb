@@ -36,7 +36,7 @@ exports.addToFavorites = async (req, res) => {
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_FAVORITES',
-            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+            date: Date.now()
         })
 
         await newActivity.save();
@@ -80,12 +80,8 @@ exports.getFavorites = async (req, res) => {
         if(!user) {
             return res.status(404).json("Utente non trovato.");
         }
-        if(user.favorites.length > 0){
-            res.status(200).json(user.favorites.reverse());
-        }else{
-            res.status(200).json(null);
-        }
 
+        res.status(200).json(user.favorites.reverse());
 
     }catch(error){
         res.status(500).json("Errore interno del server.");

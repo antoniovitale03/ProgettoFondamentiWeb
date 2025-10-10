@@ -32,7 +32,7 @@ exports.addToWatched = async (req, res) => {
             filmID: film.id,
             filmTitle: film.title,
             action: 'ADD_TO_WATCHED',
-            date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
+            date: Date.now()
         })
 
         await newActivity.save();

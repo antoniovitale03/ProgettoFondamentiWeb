@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import ActorCard from "./Cards/ActorCard"
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Box, Grid, Stack} from "@mui/material";
+import {Grid, Stack} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 
@@ -20,10 +20,10 @@ function CastPage(){
             setCast(data);
         }
         fetchCast();
-    }, [])
+    }, [filmTitle, filmID]);
 
     return(
-        <Box spacing={7} marginBottom={10}>
+        <Stack spacing={7} marginBottom={10}>
             <h1>Cast di "{filmTitle}" ( {cast?.length} attori )</h1>
             <Grid container spacing={2}>
                 {
@@ -33,7 +33,7 @@ function CastPage(){
                     </Grid>
                 )}
             </Grid>
-        </Box>
+        </Stack>
         )
 }
 

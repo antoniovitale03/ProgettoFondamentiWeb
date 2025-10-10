@@ -6,7 +6,7 @@ const activitySchema = new mongoose.Schema({
     filmTitle: { type: String, required: true },
     action: { type: String, enum: ['ADD_TO_WATCHLIST', 'ADD_TO_FAVORITES', 'ADD_TO_WATCHED', 'ADD_REVIEW'], required: true }, // tipo di azione
     rating: { type: Number }, //usato nel caso venga aggiunta una recensione
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
 })
 
 const Activity = mongoose.model("Activity", activitySchema);

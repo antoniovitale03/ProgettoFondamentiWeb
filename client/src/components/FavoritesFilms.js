@@ -8,7 +8,7 @@ import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
 
 function FavoritesFilms(){
-    const [favorites, setFavorites] = useState(null);
+    const [favorites, setFavorites] = useState([]);
     const {showNotification} = useNotification();
     const {user} = useAuth();
     const {username} = useParams();
@@ -25,7 +25,7 @@ function FavoritesFilms(){
             }
         }
         fetchFavorites();
-    }, [showNotification]);
+    }, [username, showNotification]);
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
@@ -42,7 +42,7 @@ function FavoritesFilms(){
 
     return(
         <Box>
-            {favorites ?
+            {favorites.length > 0 ?
                 <Box>
                 {user.username === username ? <h1>I tuoi {favorites.length} film preferiti</h1> : <h1>{username} ha {favorites.length} film preferiti</h1>}
                     <Grid container spacing={2}>

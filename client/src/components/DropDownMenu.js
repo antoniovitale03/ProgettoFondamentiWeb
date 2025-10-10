@@ -4,7 +4,7 @@ import {NavLink} from 'react-router-dom';
 import {useAuth} from "../context/authContext";
 import {useEffect, useState} from "react";
 import { useLocation } from 'react-router-dom';
-function DropDownMenu({buttonContent, menuContent } ) {
+function DropDownMenu({ buttonContent, menuContent } ) {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);

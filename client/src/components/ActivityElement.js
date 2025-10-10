@@ -11,7 +11,7 @@ function ActivityElement({ activity }){
                     <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
                         <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
-                    </ListItemIcon>   in data {activity.date}
+                    </ListItemIcon> {activity.timeAgo}
                 </Typography>
             </ListItem>)
     }
@@ -24,7 +24,7 @@ function ActivityElement({ activity }){
                     <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
                         <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
-                    </ListItemIcon>   in data {activity.date}
+                    </ListItemIcon> {activity.date}
                 </Typography>
             </ListItem>)
     }
@@ -36,9 +36,9 @@ function ActivityElement({ activity }){
                 <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                 <ListItemIcon>
                     <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
-                </ListItemIcon> con voto
-                <Rating name="read-only" value={activity.rating} readOnly />
-                in data {activity.date}
+                </ListItemIcon>
+                {activity.rating && <>con voto <Rating name="read-only" value={activity.rating} readOnly /></> }
+                {activity.timeAgo}
             </ListItem>)
     }
     if (activity.action === "ADD_TO_WATCHED") {
@@ -51,7 +51,7 @@ function ActivityElement({ activity }){
                 <ListItemIcon>
                     <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                 </ListItemIcon>
-                in data {activity.date}
+                {activity.timeAgo}
             </ListItem>)
     }
 }

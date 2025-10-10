@@ -15,8 +15,8 @@ function Reviews(){
     const {username} = useParams();
 
     useDocumentTitle(`Recensioni di ${username}`);
-    const [reviews, setReviews] = useState(null);
-    const [numReviews, setNumReviews] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [numReviews, setNumReviews] = useState(0);
 
     const {showNotification} = useNotification();
 
@@ -35,7 +35,6 @@ function Reviews(){
                     const response = await api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`);
                     const films = await response.data;
                     setReviews(films);
-                    console.log(films);
                     setNumReviews(films.length);
                 }else{
                     const params = new URLSearchParams();
@@ -71,7 +70,7 @@ function Reviews(){
 
     return (
         <Box>
-            {reviews ?
+            {numReviews !== 0 ?
                 <Box>
                     { user.username === username ? <h1>Hai recensito {numReviews} film </h1> : <h1>{username} ha recensito {numReviews} film</h1> }
 

@@ -14,7 +14,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                         <Button component={Link} to={`/film/${review.film.title}/${review.film._id}`}>
                             <strong>{review.film.title} </strong></Button>
                         {review.film.release_year &&
-                            <Button component={Link} to={`/films/${review.film.release_year}/page/1`}>
+                            <Button component={Link} to={`/films/${review.film.release_year}`}>
                                 <strong>     ({review.film.release_year})</strong>
                             </Button>
                         }

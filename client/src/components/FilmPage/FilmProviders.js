@@ -1,14 +1,14 @@
 import {Box, Tooltip} from "@mui/material";
 import * as React from "react";
 
-function FilmProviders({ film }) {
+function FilmProviders({ rent, flatrate, buy }) {
     return(
         <Box>
-        {film && film.rent &&
+        {rent &&
             <Box>
                 <h2>Noleggia</h2>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
-                    { film.rent.map( film =>
+                    { rent.map( film =>
                         <Tooltip title={film.provider_name}>
                             <img src={film.logo_path} style={{ width: '100%' }} />
                         </Tooltip>
@@ -18,11 +18,11 @@ function FilmProviders({ film }) {
             </Box>
         }
 
-        { film && film.flatrate &&
+        { flatrate &&
             <Box>
                 <h2>Guarda in streaming</h2>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
-                    { film.flatrate.map( film =>
+                    { flatrate.map( film =>
                         <Tooltip title={film.provider_name}>
                             <img src={film.logo_path} />
                         </Tooltip>
@@ -32,11 +32,11 @@ function FilmProviders({ film }) {
             </Box>
         }
 
-        { film && film.buy &&
+        { buy &&
             <Box>
                 <h2>Acquista</h2>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
-                    { film.buy.map( film =>
+                    { buy.map( film =>
                         <Tooltip title={film.provider_name}>
                             <img src={film.logo_path} style={{ width: '100%' }} />
                         </Tooltip>

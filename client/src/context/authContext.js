@@ -8,7 +8,6 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
     // Funzione per aggiornare lo stato e localStorage al login
 
-
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
         try{

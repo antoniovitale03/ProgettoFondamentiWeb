@@ -60,21 +60,23 @@ function FilmPage(){
                     <p>Durata: {film.duration}</p>
 
                     { /* Rating */ }
-                    {film.avgRating ?
+                    {
+                        film.avgRating &&
                         <Box>
                             <p>Rating medio: {film.avgRating}</p>
                             <Rating name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
-                        </Box> : null
+                        </Box>
                     }
-                    {film.userRating ?
+                    {
+                        film.userRating &&
                         <Box>
                             <p>Il mio rating: </p>
                             <Rating name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
-                        </Box> : null
+                        </Box>
                     }
 
                     {/* piattaforme di streaming */}
-                    <FilmProviders film={film} />
+                    <FilmProviders rent={film.rent} flatrate={film.flatrate} buy={film.buy} />
 
                     {/* Bottoni per gestire il film */}
                     <FilmButtons film={film} />
@@ -85,12 +87,12 @@ function FilmPage(){
                 <Grid size={8}>
                     <p>{film.tagline}</p> {/* //slogan film */}
                     <p>{film.overview}</p> {/* //trama */}
-                    {film?.trailerLink ?
+                    {film?.trailerLink &&
                         <Button component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
                             <Tooltip title="Trailer">
                                 <YouTubeIcon />
                             </Tooltip>
-                        </Button> : null
+                        </Button>
                     }
                     {film?.genres.map( genre => <Chip label={genre.name} /> ) }
 
@@ -101,7 +103,7 @@ function FilmPage(){
                         Film simili a "{film.title}"
                     </Button>
 
-                    <FilmCollection film={film} />
+                    <FilmCollection collection={film.collection} />
 
                     </Grid>
                 </Grid>
