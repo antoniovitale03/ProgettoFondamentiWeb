@@ -9,7 +9,6 @@ import {
     Select,
     Typography
 } from "@mui/material";
-import DropDownMenu from "./DropDownMenu";
 import useDecades from "./hooks/useDecades";
 import useAllGenres from "./hooks/useAllGenres";
 
@@ -68,8 +67,11 @@ function SearchFilters({filters, setFilters, decadeFilter, isLikedFilter}){
                 <Rating name="minRating" value={filters.minRating} onChange={ (e) => setFilters({...filters, minRating: e.target.value, page: 1}) } precision={0.5}/>
             </FormControl>
 
-            <FormControl sx={{ minWidth: 190 }} >
-                <DropDownMenu buttonContent="Ordina per" menuContent={sortByMenu} />
+            <FormControl sx={{ minWidth: 180 }}>
+                <InputLabel>Ordina per </InputLabel>
+                <Select value="" variant="standard" onChange={ (e) => setFilters({...filters, sortBy: e.target.value, page: 1}) }>
+                    {sortByMenu}
+                </Select>
             </FormControl>
 
             {

@@ -1,4 +1,4 @@
-import {Box, Button, IconButton, Rating, TextField, Tooltip} from "@mui/material";
+import {Box, Button, Checkbox, IconButton, MenuItem, Rating, TextField, Tooltip} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import api from "../../api";
@@ -15,6 +15,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import FormatListBulletedAddIcon from '@mui/icons-material/FormatListBulletedAdd';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 function FilmButtons({ film }) {
 
@@ -25,7 +27,33 @@ function FilmButtons({ film }) {
     const [reviewButton, setReviewButton] = useState(1);
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
-    const [listButton, setListButton] = useState(1);
+    const [lists, setLists] = useState([]);
+
+    const [isReviewMenuOpen, setIsReviewMenuOpen] = useState(false);
+    const [isListMenuOpen, setIsListMenuOpen] = useState(false);
+
+
+    const handleList = async (list) => {
+        if(list.isInList === true){
+            await api.delete(`http://localhost:5001/api/films/lists/remove-from-list/${film._id}/${list.listName}`);
+            showNotification(`"${film.title}" rimosso dalla lista "${list.listName}"`);
+        }else{
+            await api.get(`http://localhost:5001/api/films/lists/add-to-list/${film._id}/${list.listName}`);
+            showNotification(`"${film.title}" aggiunto dalla lista "${list.listName}"`);
+        }
+        setLists(prevLists => prevLists.map(l => l.listName === list.listName ? {...l, isInList: !l.isInList} : l));
+    }
+
+    const listsMenu = [
+        lists?.map( list =>
+        <MenuItem key={list.listName}>
+            <IconButton onClick={ () => handleList(list) }>
+                {list.isInList ? <RemoveIcon /> : <AddIcon />}
+            </IconButton>
+            {list.listName}
+        </MenuItem>
+        )
+    ]
 
     useEffect(() => {
         async function fetchFilmStatus(){
@@ -36,6 +64,7 @@ function FilmButtons({ film }) {
                 setReviewButton(film.status.isReviewed === true ? 0 : 1);
                 setFavoritesButton(film.status.isFavorite === true ? 0 : 1);
                 setWatchedButton(film.status.isWatched === true ? 0 : 1);
+                setLists(film.status.listsNames);
             }
         }
         fetchFilmStatus();
@@ -59,6 +88,7 @@ function FilmButtons({ film }) {
 
     const addReview = async (film, review, reviewRating) => {
         try {
+            setIsReviewMenuOpen(false);
             await api.post('http://localhost:5001/api/films/reviews/add-review', {
                 film, review, reviewRating
             })
@@ -187,14 +217,15 @@ function FilmButtons({ film }) {
                 </IconButton>
             </Tooltip>
 
-            <Tooltip title={reviewButton === 1 ? "Aggiungi una recensione" : "Rimuovi la recensione"}>
                 {reviewButton === 1 ?
-                    <DropDownMenu buttonContent={<ReviewsOutlinedIcon />} menuContent={reviewMenuItems} /> :
-                    <IconButton onClick={deleteReview}>
-                        <ReviewsIcon />
-                    </IconButton>
+                    <DropDownMenu buttonContent={<Tooltip title="Aggiungi una recensione"><ReviewsOutlinedIcon /></Tooltip>}
+                                  menuContent={reviewMenuItems} isMenuOpen={isReviewMenuOpen} setIsMenuOpen={setIsReviewMenuOpen} /> :
+                    <Tooltip title="Rimuovi la recensione">
+                        <IconButton onClick={deleteReview}>
+                            <ReviewsIcon />
+                        </IconButton>
+                    </Tooltip>
                 }
-            </Tooltip>
 
             <Tooltip title={favoritesButton === 1 ? "Aggiungi ai film preferiti" : "Rimuovi dai film preferiti"}>
                 <IconButton onClick={favoritesButton === 1 ? addToFavorites : removeFromFavorites}>
@@ -208,10 +239,10 @@ function FilmButtons({ film }) {
                 </IconButton>
             </Tooltip>
 
-            <Tooltip title={listButton === 1 ? "Aggiungi alla lista" : "Rimuovi dalla lista"}>
-                <IconButton>
-                    <FormatListBulletedAddIcon />
-                </IconButton>
+
+            <Tooltip title="Aggiungi o rimuovi dalla lista">
+                <DropDownMenu buttonContent={<Tooltip title="Aggiungi o rimuovi da una o più liste"><FormatListBulletedAddIcon /> </Tooltip>}
+                              menuContent={listsMenu} isMenuOpen={isListMenuOpen} setIsMenuOpen={setIsListMenuOpen} />
             </Tooltip>
 
             { /* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte

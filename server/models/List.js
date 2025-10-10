@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const listSchema = new mongoose.Schema({
-    name: { type: String, required: true, unique: true },
+    userID: { type: String, ref: "User", required: true },
+    name: { type: String, required: true },
     films: [{type: String, ref:"Film"}],
 })
 

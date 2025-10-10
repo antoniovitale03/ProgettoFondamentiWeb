@@ -42,6 +42,9 @@ function Header() {
     const {isLoggedIn, user, setUser, logout} = useAuth();
     const [title, setTitle] = useState("");
     const [friendUsername, setFriendUsername] = useState(""); //username dell'amico
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [isAddFriendMenuOpen, setIsAddFriendMenuOpen] = useState(false);
+
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
@@ -59,6 +62,8 @@ function Header() {
 
     const sendFriendRequest = async () => {
         try{
+            setIsAddFriendMenuOpen(false);
+            setFriendUsername("");
             await api.post(`http://localhost:5001/api/user/${friendUsername}/follow`);
             showNotification(`Hai appena aggiunto "${friendUsername}" come amico`, "success");
             let newUser = {...user, followingNum: user.followingNum + 1}
@@ -76,7 +81,7 @@ function Header() {
     const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
     const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
 
-    let addAfriend = [
+    let addAfriendMenu = [
         <Box>
             <InputLabel>Username</InputLabel>
             <Input type="string" value={friendUsername} onChange={(event) => setFriendUsername(event.target.value)}/>
@@ -88,14 +93,14 @@ function Header() {
         ]
 
 
-    let menu = [
+    let userMenu = [
         userMenuLinks.map((menuLink, index) =>
-            <MenuItem component={NavLink} key={index} to={menuLink}>
+            <MenuItem component={Link} key={656} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
                 <ListItemIcon>{userMenuIcons[index]}</ListItemIcon>{userMenuNames[index]}
             </MenuItem>),
         <Divider />,
         settingsMenuLinks.map((menuLink, index) =>
-            <MenuItem component={NavLink} key={index} to={menuLink}>
+            <MenuItem component={Link} key={45645} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
                 <ListItemIcon><Settings /></ListItemIcon>{settingsMenuNames[index]}
             </MenuItem>),
         <Divider />,
@@ -106,7 +111,8 @@ function Header() {
 
 
     let headerItems = [
-        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`} /></Tooltip>} menuContent={menu}/>,
+        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`}/></Tooltip>}
+                      menuContent={userMenu} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
         <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
         <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></Button>,
         <Box component="form" onSubmit={handleSearch}>
@@ -115,7 +121,7 @@ function Header() {
                 <SearchIcon />
             </Button>
         </Box>,
-        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriend} />,
+        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
         <Button component={Link} to="/">
             <Avatar src={logo} style={{ height: '50px', width: 'auto' }}/>
         </Button>

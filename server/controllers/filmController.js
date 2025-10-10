@@ -21,18 +21,20 @@ async function getFilmDirector(filmID) {
     const directorObject = credits.crew.find( (member) => member.job === 'Director');
 
     // 4. Estrai il nome (gestendo il caso in cui non venga trovato)
-    const director = directorObject ? { name: directorObject.name, id:directorObject.id } : null;
-    return director;
+    return directorObject ? {name: directorObject.name, id: directorObject.id} : null;
 }
 
 //vede se il film si trova in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
 function getFilmStatus(user, filmID){
     return {
-        isInWatchlist: user.watchlist.some( (id) => id === filmID ),
-        isLiked: user.liked.some( (id) => id === filmID ),
+        isInWatchlist: user.watchlist.includes(filmID),
+        isLiked: user.liked.includes(filmID),
         isReviewed: user.reviews.some( review => review.film === filmID ),
-        isFavorite: user.favorites.some( (id) => id === filmID ),
-        isWatched: user.watched.some( (id) => id === filmID ),
+        isFavorite: user.favorites.includes(filmID),
+        isWatched: user.watched.includes(filmID),
+        listsNames: user.lists.map( list => {
+        return {listName: list.name, isInList: list.films.includes(filmID) }}
+        )
     }
 }
 
@@ -320,7 +322,7 @@ exports.getCrew = async (req, res) => {
 exports.getFilm = async (req, res) => {
     const filmID = parseInt(req.params.filmID);
     const userID = req.user.id;
-    let user = await User.findById(userID).populate('reviews');
+    let user = await User.findById(userID).populate('reviews').populate('lists');
 
     let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}`);
     let film = await response.json();

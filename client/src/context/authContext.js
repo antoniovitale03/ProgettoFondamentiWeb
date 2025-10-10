@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
     // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
     const value = { user, setUser, logout, isLoggedIn: !!user };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>; // children in questo caso è la componente App
 }
 
 // Custom hook per un accesso facilitato

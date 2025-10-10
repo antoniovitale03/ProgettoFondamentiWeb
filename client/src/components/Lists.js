@@ -18,12 +18,15 @@ function Lists(){
 
     const [listName, setListName] = useState("");
     const [lists, setLists] = useState([]);
+    const [isAddListMenuOpen, setIsAddListMenuOpen] = useState(false);
 
     const createList = async (e) => {
         e.preventDefault();
         try{
+            setIsAddListMenuOpen(false);
+            setListName("");
             await api.post(`http://localhost:5001/api/films/lists/create-list/${listName}`);
-            showNotification(`Lista "${listName}" creata`)
+            showNotification(`Lista "${listName}" creata`);
         }catch(error){
             showNotification(error.response.data, "error");
             setListName("");
@@ -59,10 +62,11 @@ function Lists(){
     return (
         <Box>
             {user.username === username ? <h1>Le tue liste</h1> : <h1>Liste di {username}</h1>}
-            {user.username === username && <DropDownMenu buttonContent="Crea una lista " menuContent={menuContent} /> }
+            {user.username === username && <DropDownMenu buttonContent="Crea una lista " menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} /> }
 
             {
-                lists.map((list) => <p>{list.name}</p>  )
+                lists.map((list) =>
+                    <Carosello films={list.films} title={list.name} link={""} />   )
             }
 
         </Box>
