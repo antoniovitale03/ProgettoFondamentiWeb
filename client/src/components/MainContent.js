@@ -1,5 +1,5 @@
 import {useAuth} from "../context/authContext";
-import {Container} from "@mui/material";
+import {Box, Container} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import Home from "./Home";
 import Profile from "./Profile";
@@ -36,10 +36,10 @@ import Help from "./Help";
 
 function MainContent() {
     {/*Il main Content  occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
-    const {isLoggedIn} = useAuth();
+    const { isLoggedIn } = useAuth();
     if (isLoggedIn) {
         return (
-            <Container sx={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: 50 }}>
+            <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: 50 }}>
                 <Routes>
                     <Route path="/" element={<Home/>} />
                     <Route path="/:username/profile" element={<Profile />} />
@@ -85,7 +85,7 @@ function MainContent() {
             </Container>
         )
     }else return(
-        <Container style={{ flexGrow:1, maxWidth:'90%', marginTop: '50px', marginBottom: 50 }}>
+        <Container style={{ flexGrow: 1, maxWidth:'90%', marginTop: '50px', marginBottom: 50 }}>
                 <Routes>
                     <Route path="/" element={<Home/>} />
                     <Route path="/archive" element={<Archive />} />
