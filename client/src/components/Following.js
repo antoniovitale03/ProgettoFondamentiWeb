@@ -1,6 +1,6 @@
 import api from "../api";
 import {useEffect, useState} from "react";
-import {Avatar, Box} from "@mui/material";
+import {Box} from "@mui/material";
 import UserCard from "./Cards/UserCard";
 import {useNotification} from "../context/notificationContext";
 import {useParams} from "react-router-dom";
@@ -8,7 +8,6 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useAuth} from "../context/authContext";
 
 function Following() {
-
 
     const {username} = useParams();
     const {showNotification} = useNotification();
@@ -20,7 +19,7 @@ function Following() {
     const [following, setFollowing] = useState([]);
 
     useEffect( () => {
-             async function fetchFollowing(){
+             const fetchFollowing = async () => {
                  try{
                      const response = await api.get(`http://localhost:5001/api/user/${username}/get-following`);
                      setFollowing(response.data);
@@ -35,7 +34,7 @@ function Following() {
     const unfollow = async (userId, username) => {
         try{
             await api.delete(`http://localhost:5001/api/user/${userId}/unfollow`);
-            showNotification(`Hai rimosso "${username}" dai seguiti`, "success");
+            showNotification(<p>Hai rimosso <a href={`/${username}/profile`}>{username}</a> dai seguiti</p>, "success");
             setFollowing(currentFollowing =>
                 currentFollowing.filter(user => user.username !== username)
             );

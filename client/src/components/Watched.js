@@ -32,7 +32,7 @@ function Watched(){
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
-            showNotification(`"${filmTitle}" è stato rimosso dai film visti`, "success");
+            showNotification(<p>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`}>film visti</a></p>, "success");
             setWatched(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatched(num => num - 1);
         }catch(error){
@@ -82,7 +82,7 @@ function Watched(){
 
                     <Grid container spacing={2}>
                         { watched.map(film =>
-                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatched}/>
                             </Grid>
                         )

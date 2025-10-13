@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
-import {React, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
-import {Box, Grid, Pagination, Stack} from "@mui/material";
+import {Grid, Pagination, Stack} from "@mui/material";
 import {useNotification} from "../../context/notificationContext";
 import FilmCard from "../Cards/FilmCard";
 import SearchFilters from "../SearchFilters";
@@ -25,7 +25,7 @@ function SimilarFilms(){
     });
 
     useEffect(() => {
-        async function fetchSimilarFilms(){
+        const fetchSimilarFilms = async () => {
             try{
                 const params = new URLSearchParams();
                 params.append("page", filters.page);
@@ -43,7 +43,7 @@ function SimilarFilms(){
             }
         }
         fetchSimilarFilms();
-    }, [filters, showNotification])
+    }, [filmTitle, filmID, filters, showNotification])
 
     const handlePageChange = (event, value) => {
         setFilters({...filters, page: value});
@@ -77,7 +77,7 @@ function SimilarFilms(){
             <Grid container spacing={2}>
                 { similarFilms.length > 0 &&
                     similarFilms.map( film =>
-                    <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <FilmCard film={film} />
                     </Grid>)
                 }

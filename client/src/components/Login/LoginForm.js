@@ -22,7 +22,6 @@ function LoginForm({  setStep, email, setEmail }) {
             // variabile di stato user e nella memoria locale del browser)
 
             setUser(user);
-            localStorage.setItem('user', JSON.stringify(user));
 
         } catch (error) {
             showNotification(error.response.data, "error")

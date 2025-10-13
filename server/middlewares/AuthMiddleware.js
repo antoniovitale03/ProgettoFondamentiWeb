@@ -9,7 +9,7 @@
 
 const jwt = require('jsonwebtoken');
 
-exports.verifyJWT = function(req, res, next) {
+exports.verifyJWT = async (req, res, next) => {
     // 1. Legge l'accessToken dall'header della richiesta
     const authHeader = req.headers.authorization || req.headers.Authorization;
     if (!authHeader?.startsWith('Bearer ')) {
@@ -17,7 +17,6 @@ exports.verifyJWT = function(req, res, next) {
     }
 
     const accessToken = authHeader.split(' ')[1];
-
 
     try {
         // Decodifichiamo il token usando il tuo segreto ed estraiamo il payload

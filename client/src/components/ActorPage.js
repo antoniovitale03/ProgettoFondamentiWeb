@@ -17,7 +17,7 @@ function ActorPage() {
     useDocumentTitle(actorName);
 
     useEffect(() => {
-        async function fetchActor(){
+        const fetchActor = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`)
                 const actor = response.data;
@@ -44,7 +44,7 @@ if(actor){
 
                     <Grid container spacing={2}>
                         {actor.cast.map(film =>
-                            <Grid key={film._id} size={2}>
+                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} />
                             </Grid>
                         )}
@@ -58,7 +58,7 @@ if(actor){
                         <h1>Film in cui {actor.personalInfo.name} ha svolto un ruolo tecnico ({actor.crew.length}) </h1>
                         <Grid container spacing={2}>
                             {actor.crew.map(film =>
-                                <Grid key={film._id} size={2}>
+                                <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                     <FilmCard film={film} />
                                 </Grid>
                             )}

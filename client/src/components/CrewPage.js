@@ -14,13 +14,13 @@ function CrewPage(){
     useDocumentTitle(`Crew di "${filmTitle}"`);
 
     useEffect( () => {
-        async function fetchCrew(){
+        const fetchCrew = async () => {
             const response = await api.get(`http://localhost:5001/api/films/get-crew/${filmID}`);
             let data = await response.data;
             setCrew(data);
         }
         fetchCrew();
-    }, [])
+    }, [filmTitle, filmID])
 
     return(
         <Box marginBottom={10}>
@@ -28,7 +28,7 @@ function CrewPage(){
             <Grid container spacing={2} marginBottom={10}>
                 {
                     crew?.map(crewMember =>
-                        <Grid key={crewMember.id} xs={12} sm={6} md={4} lg={3}>
+                        <Grid key={crewMember.id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                             <CrewMemberCard crewMember={crewMember} />
                         </Grid>
                     )}

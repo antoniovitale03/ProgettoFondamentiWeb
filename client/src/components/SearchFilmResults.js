@@ -3,7 +3,9 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useParams} from "react-router-dom";
 import {Box, Grid} from "@mui/material";
 import {useEffect, useState} from "react";
+import {useNotification} from "../context/notificationContext";
 import api from "../api";
+import SearchFilters from "./SearchFilters";
 //questo componente serve a mostrare i risultati di ricerca di un film
 function SearchFilmResults() {
 
@@ -11,25 +13,48 @@ function SearchFilmResults() {
     filmTitle = filmTitle.replaceAll("-", " ");
     useDocumentTitle(`Mostra risultati per "${filmTitle}"`);
 
-    const [filmsFromSearch, setFilmsFromSearch] = useState(null);
+    const {showNotification} = useNotification();
+    const [films, setFilms] = useState(null);
+    const [filters, setFilters] = useState({
+        genre: "",
+        decade: "",
+        minRating: 0,
+        sortByDate: "",
+        sortByPopularity: ""
+    });
 
     useEffect( () => {
-        async function fetchSearchResults(){
-            const response = await api.post('http://localhost:5001/api/films/get-film-search-results', { filmTitle });
-            let films = await response.data;
-            setFilmsFromSearch(films);
+        const fetchSearchResults = async () => {
+            try{
+                const params = new URLSearchParams();
+                if (filters.genre !== "") params.append("genre", filters.genre)
+                if (filters.decade !== "") params.append("decade", filters.decade)
+                if (filters.minRating !== 0) params.append("minRating", filters.minRating)
+                if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate)
+                if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity)
+                const response = await api.get(`http://localhost:5001/api/films/get-search-results/${filmTitle}?${params.toString()}`);
+                let films = await response.data;
+                setFilms(films);
+            }catch(error){
+                showNotification(error.response.data, "error");
+            }
         }
         fetchSearchResults();
-    }, [filmTitle]) // eseguo l'effetto ogni volta che cambia la query di ricerca
+    }, [filmTitle, filters, showNotification]) // eseguo l'effetto ogni volta che cambia la query di ricerca
 
     return(
         <Box marginBottom={10}>
-            {filmsFromSearch ?
+            {films ?
                 <Box>
-                    <p>Risultati di ricerca per "<strong>{filmTitle}</strong>"</p>
+                    <h1>Risultati di ricerca per "<strong>{filmTitle}</strong>"</h1>
+
+                    <p>{films.length} film trovati</p>
+
+                    <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
+
                     <Grid container spacing={2}>
-                        { filmsFromSearch.map(film =>
-                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                        { films.map(film =>
+                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} />
                             </Grid>
                         )}

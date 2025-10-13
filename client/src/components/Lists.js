@@ -26,23 +26,20 @@ function Lists(){
             setIsAddListMenuOpen(false);
             setListName("");
             await api.post(`http://localhost:5001/api/films/lists/create-list/${listName}`);
+            showNotification(<p>Lista <a href={`/${user.username}/${listName}/list`}>{listName}</a> creata</p>, "success");
             showNotification(`Lista "${listName}" creata`);
         }catch(error){
             showNotification(error.response.data, "error");
             setListName("");
         }
-
-
     }
 
     useEffect(() => {
-        async function getLists(){
+        const getLists = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/lists/get-lists/${username}`);
                 const lists = await response.data;
                 setLists(lists);
-                console.log(lists);
-
             }catch(error){
                 showNotification(error.response.data, "error");
             }
@@ -59,17 +56,28 @@ function Lists(){
             </IconButton>
         </Box>
     ]
+
     return (
-        <Box>
-            {user.username === username ? <h1>Le tue liste</h1> : <h1>Liste di {username}</h1>}
-            {user.username === username && <DropDownMenu buttonContent="Crea una lista " menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} /> }
+        lists.length > 0 ?
+            <Box>
+                { user.username === username ? <h1>Le tue liste</h1> : <h1>Liste di {username}</h1> }
+                { user.username === username && <DropDownMenu buttonContent="Crea una nuova lista" menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} /> }
 
-            {
-                lists.map((list) =>
-                    <Carosello films={list.films} title={list.name} link={""} />   )
-            }
+                {
+                    lists.map((list) =>
+                        list.films.length > 0 && <Carosello films={list.films} title={list.name} link={`/${username}/${list.name.replaceAll(" ", "-")}/list`} />   )
+                }
+            </Box>:
+            user.username === username ?
+                <Box>
+                    <h1>Non hai ancora creato nessuna lista</h1>
+                    <DropDownMenu buttonContent="Crea una nuova lista" menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} />
+                </Box>:
+            <h1>{username} non ha creato ancora nessuna lista</h1>
 
-        </Box>
+
+
+
     )
 }
 

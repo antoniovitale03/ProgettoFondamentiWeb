@@ -14,7 +14,7 @@ function CastPage(){
     useDocumentTitle(`Cast di "${filmTitle}"`);
 
     useEffect( () => {
-        async function fetchCast(){
+        const fetchCast = async () => {
             const response = await api.get(`http://localhost:5001/api/films/get-cast/${filmID}`);
             let data = await response.data;
             setCast(data);
@@ -28,7 +28,7 @@ function CastPage(){
             <Grid container spacing={2}>
                 {
                     cast?.map(actor =>
-                    <Grid key={actor.id} xs={12} sm={6} md={4} lg={3}>
+                    <Grid key={actor.id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <ActorCard actor={actor}/>
                     </Grid>
                 )}

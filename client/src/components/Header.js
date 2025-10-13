@@ -1,6 +1,3 @@
-
-import { NavLink } from 'react-router-dom';
-
 import {useAuth} from "../context/authContext";
 import {
     Box,
@@ -37,9 +34,8 @@ import * as React from "react";
 import api from "../api";
 
 
-
 function Header() {
-    const {isLoggedIn, user, setUser, logout} = useAuth();
+    const {isLoggedIn, user, logout} = useAuth();
     const [title, setTitle] = useState("");
     const [friendUsername, setFriendUsername] = useState(""); //username dell'amico
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -65,10 +61,7 @@ function Header() {
             setIsAddFriendMenuOpen(false);
             setFriendUsername("");
             await api.post(`http://localhost:5001/api/user/${friendUsername}/follow`);
-            showNotification(`Hai appena aggiunto "${friendUsername}" come amico`, "success");
-            let newUser = {...user, followingNum: user.followingNum + 1}
-            setUser(newUser);
-            localStorage.setItem("user", JSON.stringify(newUser));
+            showNotification(<p>Hai appena aggiunto <a href={`/${friendUsername}/profile`}>{friendUsername}</a> come amico</p>, "success");
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -95,15 +88,15 @@ function Header() {
 
     let userMenu = [
         userMenuLinks.map((menuLink, index) =>
-            <MenuItem component={Link} key={656} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
+            <MenuItem component={Link} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
                 <ListItemIcon>{userMenuIcons[index]}</ListItemIcon>{userMenuNames[index]}
             </MenuItem>),
-        <Divider />,
+        <Divider key="divider1"/>,
         settingsMenuLinks.map((menuLink, index) =>
-            <MenuItem component={Link} key={45645} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
+            <MenuItem component={Link} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
                 <ListItemIcon><Settings /></ListItemIcon>{settingsMenuNames[index]}
             </MenuItem>),
-        <Divider />,
+        <Divider key="divider2" />,
         <MenuItem component={Button} key={10102} onClick={logout}>
         Logout
         </MenuItem>
@@ -128,11 +121,14 @@ function Header() {
     ]
     
     let notLoggedDefaultHeaderItems = [
+        <IconButton component={Link} to={"/archive"}>
+            <ArchiveIcon />
+        </IconButton>,
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
-        <Button href="/">
+        <IconButton component={Link} to={"/"}>
             <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
-        </Button>
+        </IconButton>
     ]
 
     return (

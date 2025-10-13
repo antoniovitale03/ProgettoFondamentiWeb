@@ -16,7 +16,7 @@ router.post("/set-new-password", authController.setNewPassword)
 
 router.post("/modify-password", authMiddleware.verifyJWT, authController.modifyPassword)
 
-router.post("/logout", authController.logout);
+router.get("/logout", authMiddleware.verifyJWT, authController.logout);
 
 
 

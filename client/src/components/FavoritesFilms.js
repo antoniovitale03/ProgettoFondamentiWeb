@@ -30,7 +30,7 @@ function FavoritesFilms(){
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(`"${filmTitle}" è stato rimosso dai preferiti`, "success");
+            showNotification(<p><a href={`/film/${filmTitle}/${filmID}`}>{filmTitle}</a> rimosso dai tuoi preferiti</p>, "success");
             setFavorites(currentFilms =>
                 currentFilms.filter(film => film.id !== filmID)
             );
@@ -47,7 +47,7 @@ function FavoritesFilms(){
                 {user.username === username ? <h1>I tuoi {favorites.length} film preferiti</h1> : <h1>{username} ha {favorites.length} film preferiti</h1>}
                     <Grid container spacing={2}>
                         { favorites.map(film =>
-                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromFavorites} />
                             </Grid>)
                         }

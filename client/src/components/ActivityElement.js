@@ -24,7 +24,7 @@ function ActivityElement({ activity }){
                     <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
                         <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
-                    </ListItemIcon> {activity.date}
+                    </ListItemIcon> {activity.timeAgo}
                 </Typography>
             </ListItem>)
     }

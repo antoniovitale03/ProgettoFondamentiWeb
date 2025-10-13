@@ -16,7 +16,7 @@ function UpcomingFilms() {
 
 
     useEffect( () => {
-        async function fetchUpComingFilms() {
+        const fetchUpComingFilms = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/home/get-upcoming-films/page/${currentPage}`);
                 let data = response.data;
@@ -27,7 +27,7 @@ function UpcomingFilms() {
             }
         }
         fetchUpComingFilms();
-    }, [currentPage]);
+    }, [currentPage, showNotification]);
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -49,7 +49,7 @@ function UpcomingFilms() {
 
             <Grid container spacing={2}>
                 { films?.map( film =>
-                    <Grid key={film._id} size={2}>
+                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <FilmCard film={film} />
                     </Grid>
                 )}

@@ -4,7 +4,6 @@ const Film = require("../models/Film");
 const Activity = require("../models/Activity");
 require("dotenv").config();
 
-
 async function getFilmDirector(filmID) {
     // Chiamata usata per ottenere il cast (tutti gli attori) e la crew (regista, sceneggiatore, scrittore, ...), più
     //utile per ottenere solo
@@ -15,8 +14,7 @@ async function getFilmDirector(filmID) {
     const directorObject = credits.crew.find( (member) => member.job === 'Director');
 
     // 4. Estrai il nome (gestendo il caso in cui non venga trovato)
-    const director = directorObject ? {name: directorObject.name, id:directorObject.id} : null;
-    return director;
+    return directorObject ? {name: directorObject.name, id: directorObject.id} : null;
 }
 
 exports.addReview = async (req, res) => {

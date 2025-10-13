@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {useAuth} from "../context/authContext";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Box} from "@mui/material";
@@ -15,7 +14,7 @@ function Followers() {
     const [followers, setFollowers] = useState([]);
 
     useEffect( () => {
-        async function fetchFollowers(){
+        const fetchFollowers = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/user/${username}/get-followers`);
                 setFollowers(response.data);

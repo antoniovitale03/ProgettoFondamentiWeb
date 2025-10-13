@@ -26,7 +26,7 @@ function Profile(){
 
 
     useEffect( () => {
-        async function fetchUser(){
+        const fetchUser = async () => {
             const response = await api.get(`http://localhost:5001/api/user/${username}/get-profile-info`);
             const profile = await response.data;
             setProfile(profile);
@@ -38,7 +38,7 @@ function Profile(){
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(`"${filmTitle}" è stato rimosso dai preferiti`, "success");
+            showNotification(<p>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`}>preferiti</a> </p>, "success");
             setFavoritesFilms(currentFilms =>
                 currentFilms.filter(film => film._id !== filmID));
         }catch(error){
@@ -74,7 +74,7 @@ function Profile(){
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             {
                                 favoritesFilms.map((film) =>
-                                    <Grid key={film._id} size={2}>
+                                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                         <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites}/>
                                     </Grid>)
                             }
@@ -91,7 +91,7 @@ function Profile(){
                         </h1>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             { profile.latestWatched.map((film) =>
-                                <Grid key={film._id} size={2}>
+                                <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                     <FilmCard film={film}/>
                                 </Grid>)
                             }
@@ -115,6 +115,8 @@ function Profile(){
                         </Grid>
                     </Box>
                 }
+
+
             </Box>
         )
     }

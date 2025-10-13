@@ -80,7 +80,7 @@ function Archive(){
 
                     <Grid container spacing={2}>
                         {archive.map(film => (
-                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} />
                             </Grid>
                         ))}

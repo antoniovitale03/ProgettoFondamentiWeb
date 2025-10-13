@@ -33,7 +33,7 @@ function getFilmStatus(user, filmID){
         isFavorite: user.favorites.includes(filmID),
         isWatched: user.watched.includes(filmID),
         listsNames: user.lists.map( list => {
-        return {listName: list.name, isInList: list.films.includes(filmID) }}
+        return { listName: list.name, isInList: list.films.includes(filmID) }}
         )
     }
 }
@@ -159,30 +159,58 @@ exports.getAllGenres = async (req, res) => {
 //N.B per ogni film mostro solo locandina, titolo, data di uscita e regista
 
 exports.getFilmsFromSearch = async (req, res) => {
-    const { filmTitle } = req.body;
+    const filmTitle = req.params.filmTitle;
+    const {genre, decade, minRating, sortByDate, sortByPopularity} = req.query;
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
     const data = await response.json();
     let films = data.results; //ottengo la lista dei risultati (film, serie tv e persone)
     films = films.map(async (film) => {  //array di Promise
-        const year = film.release_date ? new Date(film.release_date).getFullYear() : null;
+        const release_year = film.release_date ? new Date(film.release_date).getFullYear() : null;
         let director = await getFilmDirector(film.id);
+        delete film.release_date;
         return {
-            title: film.title,
+            ...film,
             _id: film.id,
             director: director,
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-            release_year: year,
+            release_year: release_year,
             };
          });
-
     films = await Promise.all(films);
+
+    if(genre){
+        films = films.filter( film => film.genre_ids.includes(parseInt(genre) ));
+    }
+
+    if(decade){
+        films = films.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 );
+    }
+
+    if(minRating){
+        films = films.filter( film => (film.vote_average)/2 >= parseInt(minRating));
+    }
+
+    if(sortByDate){
+        if(sortByDate === "Dal più recente"){
+            films = films.sort((a,b) => b.release_year - a.release_year);
+        }else{
+            films = films.sort((a,b) => a.release_year - b.release_year);
+        }
+    }
+
+    if(sortByPopularity){
+        if(sortByPopularity === "Dal più popolare"){
+            films = films.sort((a,b) => b.popularity - a.popularity);
+        }else{
+            films = films.sort((a,b) => a.popularity - b.popularity);
+        }
+    }
     res.status(200).json(films);
 }
 
 exports.getArchiveFilms = async (req, res) => {
     try{
         const {page, genre, decade, minRating, sortByPopularity, sortByDate} = req.query;
-
         let url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`;
 
         if (genre){
@@ -198,7 +226,7 @@ exports.getArchiveFilms = async (req, res) => {
             url += `&primary_release_date.lte=${lastYear}-12-31`;
         }
 
-        if(minRating !== 0){
+        if(minRating){
             url += `&vote_average.gte=${minRating}`;
         }
 
@@ -209,7 +237,6 @@ exports.getArchiveFilms = async (req, res) => {
                 url += `&sort_by=popularity.asc`; //Dal meno popolare
             }
         }
-
         const response = await fetch(url);
         let data = await response.json();
 

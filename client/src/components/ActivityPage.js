@@ -1,30 +1,18 @@
 import api from "../api";
 import {useEffect, useState} from "react";
-import {useAuth} from "../context/authContext";
-import {
-    Avatar, Box,
-    Button,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Rating,
-    Typography
-} from "@mui/material";
-import {Link, NavLink, useParams} from "react-router-dom";
+import {Box, List} from "@mui/material";
+import {useParams} from "react-router-dom";
 import ActivityElement from "./ActivityElement";
 import useDocumentTitle from "./hooks/useDocumentTitle"
 
 function ActivityPage(){
 
     const [activity, setActivity] = useState(null);
-    const {user} = useAuth();
     const {username} = useParams();
     useDocumentTitle(`Attività di ${username}`)
 
     useEffect(() => {
-        async function fetchActivity(){
+        const fetchActivity = async () => {
             const response = await api.get(`http://localhost:5001/api/user/${username}/get-activity`);
             let activity = await response.data;
             setActivity(activity);

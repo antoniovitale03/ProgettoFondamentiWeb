@@ -17,7 +17,7 @@ function DirectorPage() {
     useDocumentTitle(directorName.replaceAll("-", " "));
 
     useEffect(() => {
-        async function fetchDirector() {
+        const fetchDirector = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-director-info/${directorID}`);
                 const director = response.data;
@@ -45,7 +45,7 @@ function DirectorPage() {
                         <h1>Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</h1>
                         <Grid container spacing={2}>
                             { director.cast.map(film =>
-                                <Grid key={film._id} size={2}>
+                                <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                     <FilmCard film={film} />
                                 </Grid>)
                             }
@@ -60,7 +60,7 @@ function DirectorPage() {
                         <Grid container spacing={2}>
                             {
                                 director.crew.map((film) =>
-                                <Grid key={film._id} size={2}>
+                                <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                     <FilmCard film={film} />
                                 </Grid>
                             )}

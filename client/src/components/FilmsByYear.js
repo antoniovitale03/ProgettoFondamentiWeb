@@ -25,7 +25,7 @@ function FilmsByYear(){
 
     //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
-        async function fetchFilmsByYear(){
+        const fetchFilmsByYear = async () => {
             try{
                 const params = new URLSearchParams();
                 params.append("page", filters.page);
@@ -73,7 +73,7 @@ function FilmsByYear(){
             <Grid container spacing={2}>
                 {
                     films.map( film =>
-                    <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <FilmCard film={film} />
                     </Grid>
                 )}

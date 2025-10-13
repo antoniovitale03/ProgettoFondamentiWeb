@@ -1,11 +1,10 @@
-import {useEffect} from "react";
 import LoginPage from "./components/Login/LoginPage";
-import UserPanel from "./components/UserPanel";
-import DefaultPanel from "./components/DefaultPanel";
+import Panel from "./components/Panel";
 import {Navigate, Route, Routes} from "react-router-dom";
 import RegistrationPage from "./components/Registration/RegistrationPage"
 import {useAuth} from "./context/authContext";
 import ForgotPasswordForm from "./components/Login/ForgotPasswordForm";
+import {useEffect} from "react";
 // la componente principale App gestisce solo il routing per il percorso protetto dell'app (accessibile solo dopo il login)
 //per gestire il login uso localStorage in modo da salvare lo stato di login anche dopo aver chiuso il browser
 function App() {
@@ -21,12 +20,12 @@ function App() {
         return () => window.removeEventListener('logout-event', () => logout());
     }, [logout]);
 
-   return(
+    return(
         <Routes>
             <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/" />} />
             <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-            <Route path="/*" element={isLoggedIn ? <UserPanel /> : <DefaultPanel /> } />
+            <Route path="/*" element={<Panel /> } />
         </Routes>
     )
 }

@@ -25,7 +25,6 @@ async function sendMail(username, email, code) {
     });
 }
 
-
 exports.registerdata = async (req, res) => {
     try {
         const { username, email } = req.body;
@@ -103,16 +102,16 @@ exports.login = async (req, res) => {
         const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"}) // verrà salvato nella memoria locale del browser
         const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"}) // verrà salvato nel DB
 
-        //salvo il refreshtoken nel DB nella proprietà refreshToken dell'utente
+        //salvo il refreshtoken nel DB nel documento utente
         user.refreshToken = refreshToken;
         await user.save();
 
-        //inserisco il refreshtoken nel cookie per inviarlo al browser
+        //in questo modo il browser potrà inserire il refreshtoken nel cookie solo quando fa richiesta a /api/auth/refresh
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000,// 7 giorni in ms
-            path: '/api/auth/refresh' //il refreshtoken viene inviato in un percorso sicuro
+            path: '/api/auth/refresh'
         })
 
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
@@ -143,7 +142,6 @@ exports.refresh = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
 
-
     const user = await User.findOne({ refreshToken });
     if (!user) return res.status(403).json("Il refresh token non corrisponde a nessun utente")
 
@@ -158,7 +156,6 @@ exports.refresh = async (req, res) => {
         { expiresIn: '15m' }
     );
     res.json(newAccessToken); //token aggiornato
-
 }
 
 exports.forgotPassword = async (req, res) => {
@@ -229,22 +226,23 @@ exports.modifyPassword = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-    //devo invalidare il refreshToken eliminandolo dal DB e l'access Token inviando al client un cookie già scaduto, così
-    // verrà automaticamente scartato.
+    //devo invalidare il refreshToken eliminandolo dal DB e dal browser
+    // il server non gestisce l'access token, per cui il frontend dopo aver
+    // eseguito questa API chiama setUser(null), invalidando di fatto l'access token (che è salvato
+    // nel contesto)
     try {
-        let refreshToken = req.cookies.refreshToken;
+        const userID = req.user.id;
 
-        const user = await User.findOne({ refreshToken: refreshToken });
-        if (user) {
-            //Rimuovo il refresh token dal documento dell'utente nel DB
-            user.refreshToken = '';
-            await user.save();
-        }
+        await User.findByIdAndUpdate(userID,
+            {$set: {refreshToken: " "}
+            });
 
-        res.cookie('accessToken', '', {
+        res.clearCookie('refreshToken', {
             httpOnly: true,
-            expires: new Date(0)
-        });
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000,// 7 giorni in ms
+            path: '/api/auth/refresh'
+        })
 
         res.status(200).json('Logout effettuato con successo.');
     }

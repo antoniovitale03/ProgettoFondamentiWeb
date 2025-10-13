@@ -11,15 +11,16 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
 
                     <Grid item size={4}>
                         <p>
-                        <Button component={Link} to={`/film/${review.film.title}/${review.film._id}`}>
+                        <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
                             <strong>{review.film.title} </strong></Button>
-                        {review.film.release_year &&
+                        {
+                            review.film.release_year &&
                             <Button component={Link} to={`/films/${review.film.release_year}`}>
                                 <strong>     ({review.film.release_year})</strong>
                             </Button>
                         }
                         </p>
-                        <Button component={Link} to={`/film/${review.film.title}/${review.film._id}`}>
+                        <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
                             <CardMedia component="img" image={review.film.poster_path} alt="Locandina film"/>
                         </Button>
                     </Grid>

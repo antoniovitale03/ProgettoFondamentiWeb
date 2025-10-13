@@ -24,7 +24,7 @@ router.get("/get-crew/:filmID", filmController.getCrew);
 
 router.get("/get-all-genres", filmController.getAllGenres)
 router.get("/get-archive", filmController.getArchiveFilms)
-router.post("/get-film-search-results", filmController.getFilmsFromSearch )
+router.get("/get-search-results/:filmTitle", filmController.getFilmsFromSearch )
 router.get("/get-film/:filmID", authMiddleware.verifyJWT, filmController.getFilm)
 router.get("/get-films/:year", authMiddleware.verifyJWT, filmController.getFilmsByYear)
 

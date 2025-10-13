@@ -59,7 +59,7 @@ function Watchlist(){
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
-            showNotification(`"${filmTitle}" è stato rimosso dalla watchlist`, "success");
+            showNotification(<p>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`}>watchlist</a></p>, "success");
             setWatchlist(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatchlist(num => num - 1);
         }catch(error){
@@ -79,7 +79,7 @@ function Watchlist(){
 
                     <Grid container spacing={2}>
                         { watchlist?.map(film =>
-                            <Grid key={film._id} xs={12} sm={6} md={4} lg={3}>
+                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatchlist}/>
                             </Grid>)
                         }
