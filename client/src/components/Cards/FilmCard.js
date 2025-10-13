@@ -11,7 +11,7 @@ function FilmCard({ film, showRemoveButton, onRemove }){
     const navigate = useNavigate();
 
     return(
-        <Card sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}> {/* ogni card ha la stessa altezza* e ha la larghezza di tutto il grid Item */}
+        <Card sx={{ height: '100%', width: '100%', marginBottom: 10 }}> {/* ogni card ha la stessa altezza* e ha la larghezza di tutto il grid Item */}
             <CardContent>
                 {/* Contenuto Superiore (Titolo, Anno, Pulsante Rimuovi) */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -39,12 +39,12 @@ function FilmCard({ film, showRemoveButton, onRemove }){
 
                 {film.date && <p>Data di ultima visione: {film.date}</p>}
 
-                { film.job && <p>Ruolo: {film.job}</p> }
+                { film.jobs && <p>Ruoli: {film.jobs.map( job => <>{job}   </>)}</p> }
 
                 <p>
-                    { film.rating === null ? null : <Rating name="rating" value={film.rating} precision={0.5} readOnly /> }
+                    { film.rating && <Rating name="rating" value={film.rating} precision={0.5} readOnly /> }
 
-                    { film.isLiked === true ? <ThumbUpIcon /> : null }
+                    { film.isLiked === true && <ThumbUpIcon /> }
                 </p>
             </CardContent>
         </Card>

@@ -16,27 +16,25 @@ function Carosello({ films, title, link }){
         const navigate = useNavigate();
 
         //ora inseriamo le funzioni per poter cambiare immagine
-        const successiva = () => setIndice((i)=>(i + 1) % films.length);
+        const successiva = () => setIndice(i => (i + 1) % films.length);
 
-        const precedente = () => setIndice((i)=>(i - 1 + films.length) % films.length);
-
+        const precedente = () => setIndice(i => (i - 1 + films.length) % films.length);
 
           return(
-        //creiamo il contenitore e le card
     <>
         <Typography component="p">
             <strong>
                 {title}
             </strong>
-            {link !== "" ? <Button component={Link} to={link}>
+            {link && <Button component={Link} to={link}>
                 <InfoOutlineIcon /> più dettagli
-            </Button> : null }
-
+            </Button>
+            }
         </Typography>
 
         <Box sx={{textAlign: "center", maxWidth: "100%", display: "flex", overflow: "hidden", gap: 1, justifyContent: "center", marginLeft: "20px"}}>
-            {films.slice(indice, indice + immvisibili).map((film, index) => (
-            <Card key={index}>
+            {films.slice(indice, indice + immvisibili).map(film => (
+            <Card key={film.title}>
                 <CardContent>
                     <Button component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
                             <strong>{film.title}</strong>
@@ -45,7 +43,7 @@ function Carosello({ films, title, link }){
                             <strong>({film.release_year})</strong>
                     </Button>
 
-                    <CardMedia key={index} component="img" image={film.poster_path}
+                    <CardMedia component="img" image={film.poster_path}
                         onClick={() => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}
                         sx={{
                             width: 400,
@@ -54,17 +52,16 @@ function Carosello({ films, title, link }){
                             borderRadius: 5
                         }}
                     />
-                    {film.release_date ? <Typography component="p"><strong>In uscita il {film.release_date}</strong></Typography> : null }
                 </CardContent>
             </Card>
         ))}
-
         </Box>
-        <Box sx={{mt:2, textAlign: "center"}}>
+
+        <Box sx={{mt:2, textAlign: "center", marginBottom: 5}}>
             <Button onClick={precedente} variant="outlined" disabled={indice === 0}>
                 <ArrowBackIosIcon />
             </Button>
-            <Button onClick={successiva} variant="outlined" sx={{ ml: 1 }}disabled={indice >= films.length - immvisibili }>
+            <Button onClick={successiva} variant="outlined" sx={{ ml: 1 }} disabled={indice >= films.length - immvisibili }>
                 <ArrowForwardIosIcon />
             </Button>
         </Box>

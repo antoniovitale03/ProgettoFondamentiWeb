@@ -7,7 +7,7 @@ const NotificationContext = createContext(null);
 
 
 export function NotificationProvider({ children }) {
-    const [open, setOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState('success'); // 'success', 'error', 'warning', 'info'
 
@@ -15,7 +15,7 @@ export function NotificationProvider({ children }) {
     const showNotification = (newMessage, newSeverity) => {
         setMessage(newMessage);
         setSeverity(newSeverity);
-        setOpen(true);
+        setIsOpen(true);
     };
 
     // Funzione per chiudere la notifica
@@ -23,17 +23,15 @@ export function NotificationProvider({ children }) {
         if (reason === 'clickaway') {
             return;
         }
-        setOpen(false);
+        setIsOpen(false);
     };
 
-    // Il valore fornito dal context
-    const value = { showNotification };
 
     return (
-        <NotificationContext.Provider value={value}>
+        <NotificationContext.Provider value={{ showNotification }}>
             {children}
             <Snackbar
-                open={open}  //aperto o chiuso
+                open={isOpen}  //aperto o chiuso
                 autoHideDuration={4000} // Si chiude dopo 4 secondi
                 onClose={handleClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }} // Posizione

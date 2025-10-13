@@ -5,11 +5,13 @@ import {Box, FormControl, InputLabel, Typography, Input, Button} from "@mui/mate
 import "../../CSS/Form.css"
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
+import sleep from "../hooks/useSleep";
+
 function DeleteAccount() {
 
     const [confirmEmail, setConfirmEmail] = useState("");
     const {showNotification} = useNotification();
-    const {sleep, logout} = useAuth();
+    const {logout} = useAuth();
 
     const navigate = useNavigate();
 

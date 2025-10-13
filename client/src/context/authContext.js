@@ -1,54 +1,35 @@
-import React, {createContext, useState, useContext} from 'react';
-import api from "../api"
+import React, {createContext, useState, useContext, useEffect} from 'react';
+import api from "../api";
+import {useNavigate} from "react-router-dom";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
-    // Funzione per aggiornare lo stato e localStorage al login
+    //converto l'oggetto JSON in oggetto JS per poterlo salvare nella variabile di stato
 
-    //inserisco la funzione di login qui cosi posso salvare l'oggetto user nel contesto
-    const login = async (username, password) => {
-        try{
-            const response = await api.post('http://localhost:5001/api/auth/login', { username, password });
-
-            const user = await response.data; //data contiene i dati dell'utente + accessToken (che verranno salvati nella
-            // variabile di stato user e nella memoria locale del browser)
-
-            setUser(user);
-            localStorage.setItem('user', JSON.stringify(user));
-
-        }catch(error){
-            throw new Error(error.response.data);
-        }
-    };
-
-
+    const navigate = useNavigate();
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
-        try{
-            await api.post('http://localhost:5001/api/auth/logout')
-        }catch(error){
-            throw new Error(error.response.data);
-        }
-
-        //il server invierà un messaggio con cookie già scaduto, quindi viene scartato dal client
-        setUser(null);
-        localStorage.removeItem('user');
+            await api.get('http://localhost:5001/api/auth/logout');
+            setUser(null);
+            navigate("/");
     };
 
-    const sleep = (t) => new Promise(res => setTimeout(res, t))
+    // Ogni volta che viene modificato user (es. dopo il login o logout), aggiorno anche localStorage
+    useEffect(() => {
+        if (user) localStorage.setItem("user", JSON.stringify(user)); //trasformo l'oggetto JS in un JSON per ptoerlo salvare nel localStorage
+        else localStorage.removeItem("user");
+    }, [user]);
 
 
-    // Dati e funzioni che vogliamo rendere disponibili a tutta l'app
-    const value = { user, setUser, login, logout, isLoggedIn: !!user, sleep };
-
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{user, setUser, logout, isLoggedIn: Boolean(user)}}>
+        {children}
+    </AuthContext.Provider>; // children è la componente App
 }
 
 // Custom hook per un accesso facilitato
 export function useAuth() {
     return useContext(AuthContext)
 }
-

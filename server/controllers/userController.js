@@ -1,4 +1,76 @@
 const User = require("../models/User");
+const Activity = require("../models/Activity");
+const fs = require("fs");
+const path = require("path");
+
+function timeAgo(past) {
+    const now = new Date();
+    const diffMs = now - past; //differenza di tempo calcolata in millisecondi
+
+    if (diffMs < 0) return null;
+
+    const minute = 1000 * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const month = day * 30; // approssimato
+
+    if (diffMs < minute) return "1m";
+    if (diffMs < hour) {
+        const minutes = Math.floor(diffMs / minute);
+        return `${minutes}m`;
+    }
+    if (diffMs < day) {
+        const hours = Math.floor(diffMs / hour);
+        return `${hours}h`;
+    }
+    if (diffMs < week) {
+        const days = Math.floor(diffMs / day);
+        return `${days}d`;
+    }
+    if (diffMs < month) {
+        const weeks = Math.floor(diffMs / week);
+        return `${weeks}w`;
+    }
+    const months = Math.floor(diffMs / month);
+    if(months === 1 ) {
+        return `${months}mo`;
+    }else return null;
+    }
+
+exports.getProfileInfo = async (req, res) => {
+    try{
+        const username = req.params.username;
+        const user = await User.findOne({ username: username }).populate('favorites').populate('watched').populate({path: 'reviews', populate: {path: 'film'}});
+        const profile = {
+            avatar_path: user.avatar_path,
+            country: user.country,
+            biography: user.biography,
+            followers: user.followers.length,
+            following: user.following.length,
+            favorites: user.favorites.length > 0 ? user.favorites.reverse() : null,
+            latestWatched: user.watched.length > 0 ? user.watched.reverse().slice(0, 10) : null,
+            latestReviews: user.reviews.length > 0 ? user.reviews.slice(0, 10) : null
+        }
+        res.status(200).json(profile);
+
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}
+
+exports.getFollowing = async (req, res) => {
+    const username = req.params.username;
+    const user = await User.findOne({ username: username }).populate('following');
+    res.status(200).json(user.following);
+}
+
+exports.getFollowers = async (req, res) => {
+    const username = req.params.username;
+    const user = await User.findOne({username: username}).populate('followers');
+    res.status(200).json(user.followers);
+}
+
 exports.deleteAccount = async (req, res) => {
     try{
         const userID = req.user.id;
@@ -72,15 +144,99 @@ exports.uploadAvatar = async (req, res) => {
         return res.status(400).send('Nessun file ricevuto.');
     }
 
-    // 3. Prendi l'indirizzo del file appena salvato
-    const filePath = `/uploads/avatars/${req.file.filename}`;
+    //la cartella public è da omettere nel percorso perchè già configurata per il delivery di file static
+    // con app.use(express.static("public"))
+    const filePath = `/avatars/${req.file.filename}`;
 
     //salvo l'indirizzo nel db
-    await User.findByIdAndUpdate(userID,
-        { $set: {avatar_path: filePath} },
-        )
+    await User.findByIdAndUpdate(userID, { $set: {avatar_path: filePath} })
 
-    // 5. Rispondi al frontend che è tutto ok
     res.status(200).json(filePath);
 }
 
+exports.removeAvatar = async (req, res) => {
+    const userID = req.user.id;
+    const user = await User.findById(userID);
+
+    //procedo a rimuovere fisicamente l'avatar dalla cartella del server
+    const filePath = path.join(__dirname, "..", "public", user.avatar_path); //__dirname è la cartella corrente (controllers)
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            return res.status(400).json("Errore durante l'eliminazione del file dal server.");
+        } else {
+            res.status(200).json("Avatar rimosso.");
+        }
+    });
+
+    //elimino anche nel DB
+    user.avatar_path = null;
+    await user.save();
+
+}
+
+exports.getActivity = async (req, res) => {
+    const username = req.params.username;
+    //popolo la proprietà activity e per ogni oggetto che ottengo popolo anche la proprietà user
+    const user = await User.findOne({ username: username}).populate({
+            path: "activity",
+            populate: { path: "user" }
+        });
+    user.activity = user.activity.filter( action => timeAgo(action.date) !== null ) //filtro per tutte le attività fino ad un mese fa
+    let activity = user.activity.map( action => {return{...action.toObject(), timeAgo: timeAgo(action.date)} });
+    res.status(200).json(activity.reverse());
+
+}
+
+exports.follow = async (req, res) => {
+    try{
+    const userID = req.user.id;
+    const friendUsername = req.params.friendUsername;
+
+    const user = await User.findById(userID);
+    if(!user){
+        return res.status(404).json("Utente non trovato.");
+    }
+
+    const friend = await User.findOne({ username: friendUsername });
+
+    //controllo prima che il nome utente esista
+    if(!friend){
+        return res.status(404).json("Nome utente non esistente.");
+    }
+    let friendID = friend._id.toString();
+
+    //controllo che l'utente non stia seguendo se stesso
+    if (userID === friendID) return res.status(400).json("Non puoi seguire te stesso.");
+
+    //controllo che l'utente non stia già seguendo l'amico
+    if(user.following.find(id => id === friendID)) return res.status(404).json(`Segui già "${friendUsername}"`);
+
+    await User.findByIdAndUpdate(userID, { $addToSet: { following: friendID } });
+
+    await User.findByIdAndUpdate(friendID, { $addToSet: { followers: userID } });
+
+        return res.status(200).json("Amico aggiunto con successo.");
+    }catch(error){
+        res.status(500).json("Errore interno del server.");
+    }
+}
+
+exports.unfollow = async (req, res) => {
+    try{
+        const userToUnfollowID = req.params.userId;
+        const userID = req.user.id; //id dell'utente che ha richiesto l'unfollow
+
+        await User.findByIdAndUpdate(userToUnfollowID, {$pull: {follower: userID }} );
+
+        await User.findByIdAndUpdate(userID, { $pull: {following: userToUnfollowID} } );
+
+        //rimuovo anche tutte le attività inerenti all'utente unfollowato
+        const activitiesToRemove = await Activity.find({ user: userToUnfollowID });
+        const IdsToRemove = activitiesToRemove.map( activity => activity._id );
+        await User.findByIdAndUpdate(userID, { $pull: { activity: { $in: IdsToRemove } }});
+
+        res.status(200).json("Rimozione avvenuta correttamente");
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}

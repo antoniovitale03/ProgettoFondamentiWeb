@@ -1,13 +1,13 @@
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
-import {useAuth} from "../../context/authContext";
 import React, {useState} from "react";
 import {Box, Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
 import {NavLink} from "react-router-dom";
+import sleep from "../hooks/useSleep";
 
-function RegistrationForm({ onSuccess }){
+function RegistrationForm({ setRegistrationData, setStep }) {
+
     const {showNotification} = useNotification();
-    const {sleep} = useAuth();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -15,19 +15,16 @@ function RegistrationForm({ onSuccess }){
 
     const [button, setButton] = useState("Registrati");
 
-    //gestisce l'invio dei dati iniziali
     const handleSubmit = async (event) => {
         event.preventDefault();
         setButton("Verifica in corso...");
         try{
-            await api.post('http://localhost:5001/api/auth/registration/data', {
-                username,
-                email
-            })
+            await api.post('http://localhost:5001/api/auth/registration', { username, email });
             // Se la chiamata ha successo, mostra il messaggio di successo e passa al secondo step
-            showNotification("Abbiamo inviato un codice di verifica alla tua mail.", "success");
+            showNotification("Abbiamo inviato un codice di verifica alla tua mail", "success");
             await sleep(2000);
-            onSuccess({ username, email, password });
+            setRegistrationData({username, email, password});
+            setStep(2);
         }catch(error){
             showNotification(error.response.data, "error")
             //in caso di errore (email o username già esistenti), mostro l'errore e resetto i dati di input
@@ -42,6 +39,7 @@ function RegistrationForm({ onSuccess }){
         <Box>
             <form onSubmit={handleSubmit}>
                 <h2>Registrazione</h2>
+
                 <Stack spacing={5}>
                     <FormControl>
                         <InputLabel htmlFor="username">Nome Utente</InputLabel>

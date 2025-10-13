@@ -19,27 +19,27 @@ function CastCrewMoreInfo({ film }) {
         <div>
             <MenuItem>
                 <h4>Original language: </h4>
-                <p>{film?.details.original_language}</p>
+                <p>{film.details.original_language}</p>
             </MenuItem>
             <MenuItem>
                 <h4>Original country: </h4>
-                <p>{film?.details.origin_country?.[0]}</p>
+                <p>{film.details.origin_country?.[0]}</p>
             </MenuItem>
             <MenuItem>
                 <h4>Spoken languages: </h4>
-                { film?.details.spoken_languages?.map( (language) => <p> {language} </p>) }
+                { film.details.spoken_languages?.map( (language) => <p> {language} </p>) }
             </MenuItem>
             <MenuItem>
                 <h4>Production Companies:</h4>
-                { film?.details.production_companies?.map( e => <p> {e.name}({e.country}), </p>) }
+                { film.details.production_companies?.map( e => <p> {e.name}({e.country}), </p>) }
             </MenuItem>
             <MenuItem>
                 <h4>Revenue: </h4>
-                <p>{film?.details.revenue}</p>
+                <p>{film.details.revenue}</p>
             </MenuItem>
             <MenuItem>
                 <h4>Budget: </h4>
-                <p>{film?.details.budget}</p>
+                <p>{film.details.budget}</p>
             </MenuItem>
         </div>
     )

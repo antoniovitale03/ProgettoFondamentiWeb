@@ -1,10 +1,13 @@
 const Film = require("../models/Film");
 const User = require("../models/User");
+const Activity = require("../models/Activity");
 
 exports.addToWatched = async (req, res) => {
     try{
         const userID = req.user.id;
         const { film } = req.body;
+        const user = await User.findById(userID);
+
         await Film.findOneAndUpdate(
             { _id: film.id },
             {
@@ -13,6 +16,8 @@ exports.addToWatched = async (req, res) => {
                         release_year: film.release_year,
                         director: film.director,
                         poster_path: film.poster_path,
+                        popularity: film.popularity,
+                        genres: film.genres,
                         date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
                     }
             },
@@ -20,13 +25,30 @@ exports.addToWatched = async (req, res) => {
                 upsert: true
             }
         )
+
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            user: userID,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_TO_WATCHED',
+            date: Date.now()
+        })
+
+        await newActivity.save();
+
         //se ho visto un film eventualmente va rimosso dalla watchlist
         await User.findByIdAndUpdate(userID, {
-            $addToSet: { watched: film.id },
+            $addToSet: { watched: film.id, activity: newActivity._id },
             $pull: { watchlist: film.id }
         })
 
-        res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film visti!`  });
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
+
+        res.status(200).json(`"${film.title}" aggiunto alla lista dei film visti!`);
     }catch(error){
         res.status(500).json("Errore interno del server.");
     }
@@ -50,22 +72,48 @@ exports.removeFromWatched = async (req, res) => {
 }
 
 exports.getWatched = async (req, res) => {
-    const userID = req.user.id;
-    const user = await User.findById(userID).populate('watched').populate('reviews');
-    //per ogni film visto controllo se è stato anche piaciuto e il suo rating
-    let watchedFilms = user.watched.map( watchedFilm => {
+    const username = req.params.username;
+    const { genre, decade, minRating, sortByDate, sortByPopularity, isLiked } = req.query;
 
-        let isLiked = user.liked.find( (likedFilm) => likedFilm === watchedFilm._id)//controllo se il film è anche piaciuto
-        isLiked = isLiked === undefined ? false : true;
+    const user = await User.findOne({ username: username }).populate('watched').populate('reviews');
 
-        let review = user.reviews.find( (review) => review.filmID === watchedFilm._id) // trovo la recensione (se esiste)
-        let rating = review !== undefined ? review.rating : null;
+    //per ogni film visto controllo se è stato anche piaciuto e il suo rating (di default mostro dal più recente)
+    let watchedFilms = user.watched.reverse().map( watchedFilm => {
+        let isLiked = user.liked.some( likedFilmId => likedFilmId === watchedFilm._id);//controllo se il film è anche piaciuto
+        //uso some perchè mi serve il valore booleano (find restituisce l'elemento)
 
+        let review = user.reviews.find( review => review.filmID === watchedFilm._id); // trovo la recensione (se esiste)
         return {...watchedFilm.toObject(),
-            director: null, //nella pagina dei film visti non mostro il regista di ogni film
             isLiked: isLiked,
-            rating: rating,
+            rating: review !== undefined ? review.rating : null,
         }
     })
+
+    //Una volta che ottengo tutti i film visti, posso filtrare i risultati in base ai parametri
+    if(genre){
+        watchedFilms = watchedFilms.filter(film => film.genres.some(g => g.id === parseInt(genre)) )
+    }
+
+    if(decade){
+        watchedFilms = watchedFilms.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
+    }
+
+    if(sortByDate){
+        watchedFilms = sortByDate === "Dal meno recente" ? watchedFilms.reverse() : watchedFilms
+    }
+
+    if (sortByPopularity){
+        watchedFilms = sortByPopularity === "Dal più popolare" ? watchedFilms.sort((a,b) => b.popularity - a.popularity) : watchedFilms.sort((a,b) => a.popularity - b.popularity)
+    }
+
+    if(minRating){
+        watchedFilms = watchedFilms.filter( film => film.rating >= parseInt(minRating))
+    }
+
+    if(isLiked) {
+        watchedFilms = watchedFilms.filter(film => film.isLiked.toString() === isLiked)
+    }
+
     res.status(200).json(watchedFilms);
+
 }

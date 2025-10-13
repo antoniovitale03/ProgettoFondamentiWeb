@@ -7,6 +7,7 @@ require('dotenv').config();
 const code = Math.floor(100000 + Math.random() * 900000).toString();
 
 async function sendMail(username, email, code) {
+
     //attivo la password per le app nell'account google per poter inviare mail da av715... con nodemailer
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -41,24 +42,24 @@ exports.registerdata = async (req, res) => {
         }
 
         //se l'email e l'username non esistono ancora, invia alla mail il codice di verifica
-
         await sendMail(username, email, code);
 
-        res.status(201).json({ message: 'Utente registrato con successo!' });
+        res.status(201).json('Utente registrato con successo!');
 
     } catch (error) {
-        return res.status(500).json({ message: 'Errore del server.'});
+        return res.status(500).json('Errore del server.');
     }
 };
 
-exports.verifycode = async (req, res) => {
+exports.registrationVerify = async (req, res) => {
     try{
         const { username, email, password, verificationCode } = req.body;
 
         //controlla se il codice inserito dall'utente(verificationCode) corrisponde a quello inviato via mail(code)
         if (verificationCode !== code) { //codice errato
-            return res.status(500).json( 'Codice di verifica errato.');
+            return res.status(400).json('Codice di verifica errato.');
         }
+
         //se il codice di verifica è corretto, puoi salvare l'utente nel DB
         //eseguo hash with salt della password
         const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
@@ -74,11 +75,11 @@ exports.verifycode = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
         // Trova l'utente nel DB tramite il suo username e confronta la password fornita dall'utente con quella hashata nel DB
 
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(400).json('Credenziali non valide.')
         }
@@ -101,42 +102,45 @@ exports.login = async (req, res) => {
         const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"}) // verrà salvato nella memoria locale del browser
         const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"}) // verrà salvato nel DB
 
-        //salvo il refreshtoken nel DB nella proprietà refreshToken dell'utente
+        //salvo il refreshtoken nel DB nel documento utente
         user.refreshToken = refreshToken;
         await user.save();
 
-        //inserisco il refreshtoken nel cookie per inviarlo al browser
+        //in questo modo il browser potrà inserire il refreshtoken nel cookie solo quando fa richiesta a /api/auth/refresh
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000,// 7 giorni in ms
-            path: '/api/auth/refresh' //il refreshtoken viene inviato in un percorso sicuro
+            path: '/api/auth/refresh'
         })
 
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
         //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
 
-        // Invia come riposta i dati dell'utente + accessToken
+        // Invia come riposta i dati dell'utente + accessToken (da salvare nel contesto)
         res.status(200).json({
                 id: user._id,
                 username: user.username,
                 email: user.email,
-                name: user.name,
-                surname: user.surname,
-                biography: user.biography,
-                country: user.country,
-                avatar_path: user.avatar_path,
-                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel contesto
+                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel localStorage del browser
         });
     } catch (error) {
         res.status(500).json('Errore del server.');
     }
 };
 
+exports.loginVerify = async (req, res) => {
+    const { verificationCode } = req.body;
+    if(verificationCode !== code) {
+        return res.status(400).json("Codice di verifica non corretto.");
+    }else{
+        return res.status(200).json("Codice di verifica corretto");
+    }
+}
+
 exports.refresh = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
-
 
     const user = await User.findOne({ refreshToken });
     if (!user) return res.status(403).json("Il refresh token non corrisponde a nessun utente")
@@ -144,8 +148,7 @@ exports.refresh = async (req, res) => {
 
     let payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
     if (payload.user.id !== user._id.toString()) return res.status(403).json("Errore nella verifica del refreshtoken")
-    payload = {user: payload.user}; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
-
+    payload = { user: payload.user }; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
 
     const newAccessToken = jwt.sign(
         payload,
@@ -153,39 +156,41 @@ exports.refresh = async (req, res) => {
         { expiresIn: '15m' }
     );
     res.json(newAccessToken); //token aggiornato
-
 }
 
 exports.forgotPassword = async (req, res) => {
-    try {
-        const {username, email, newPassword, confirmNewPassword} = req.body;
+    try{
+        const { email } = req.body;
+        const user = await User.findOne({ email: email });
+        const username = user.username;
+        await sendMail(username, email, code);
+        res.status(200).json("Email inviata");
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}
 
-        //prima controllo che lo username esista
-        const user = await User.findOne({ username })
+exports.setNewPassword = async (req, res) => {
+    try{
+        const {email, newPassword, confirmNewPassword} = req.body;
+        const user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(400).json("L'utente non esiste");
-        }
-
-        //ora controllo che l'email inserita sia corretta
-        if (email !== user.email){
-            return res.status(400).json("L'email non è corretta");
+            return res.status(400).json("L' utente non esiste");
         }
 
         //dopodichè controllo che la nuova password e la sua conferma siano uguali
         if (newPassword !== confirmNewPassword) {
-            return res.status(400).json( 'Le password non corrispondono.');
-        }
-
+             return res.status(400).json( 'Le password non corrispondono.');
+         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-        user.password = hashedPassword;
-        await user.save();
+         user.password = hashedPassword;
+         await user.save();
 
-        res.status(200).json('Password aggiornata con successo.');
+         res.status(200).json('Password aggiornata con successo.');
 
-
-    }catch (error) {
+    }catch(error){
         res.status(500).json('Errore del server.');
     }
 }
@@ -221,22 +226,23 @@ exports.modifyPassword = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-    //devo invalidare il refreshToken eliminandolo dal DB e l'access Token inviando al client un cookie già scaduto, così
-    // verrà automaticamente scartato.
+    //devo invalidare il refreshToken eliminandolo dal DB e dal browser
+    // il server non gestisce l'access token, per cui il frontend dopo aver
+    // eseguito questa API chiama setUser(null), invalidando di fatto l'access token (che è salvato
+    // nel contesto)
     try {
-        let refreshToken = req.cookies.refreshToken;
+        const userID = req.user.id;
 
-        const user = await User.findOne({ refreshToken: refreshToken });
-        if (user) {
-            //Rimuovo il refresh token dal documento dell'utente nel DB
-            user.refreshToken = '';
-            await user.save();
-        }
+        await User.findByIdAndUpdate(userID,
+            {$set: {refreshToken: " "}
+            });
 
-        res.cookie('accessToken', '', {
+        res.clearCookie('refreshToken', {
             httpOnly: true,
-            expires: new Date(0)
-        });
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000,// 7 giorni in ms
+            path: '/api/auth/refresh'
+        })
 
         res.status(200).json('Logout effettuato con successo.');
     }

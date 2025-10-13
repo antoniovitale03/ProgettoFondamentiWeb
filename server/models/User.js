@@ -15,8 +15,11 @@ const userSchema = new mongoose.Schema({
     favorites: [{ type: Number, ref: "Film" }],
     reviews: [{ type: String, ref: "Review" }],
     watched: [{ type: Number, ref: "Film" }],
-    following: [{ type: String }],
-    followers: [{ type: String }],
+    lists: [{ type: String, ref: "List" }],
+    activity: [{ type: String, ref: "Activity" }],
+    //proprietà che fanno self-reference
+    following: [{ type: String, ref: "User" }],
+    followers: [{ type: String, ref: "User" }],
 });
 
 

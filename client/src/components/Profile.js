@@ -1,135 +1,126 @@
 import {useAuth} from "../context/authContext"
-import useDocumentTitle from "./useDocumentTitle"
-import {Box, Button, Divider, Grid, Typography} from "@mui/material";
+import useDocumentTitle from "./hooks/useDocumentTitle"
+import {Avatar, Box, Button, Divider, Grid, Typography} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import InfoIcon from '@mui/icons-material/Info';
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import ReviewCard from "./Cards/ReviewCard";
 import {Link} from "react-router-dom";
+import * as React from "react";
+import {useParams} from "react-router-dom";
 
 function Profile(){
     const {user} = useAuth();
+    const {username} = useParams();
 
     const {showNotification} = useNotification();
-    useDocumentTitle("Il mio profilo");
+
+    useDocumentTitle(`Profilo di ${username}`);
+
+    const [profile, setProfile] = useState(null);
 
     const [favoritesFilms, setFavoritesFilms] = useState(null);
-    const [watchedFilms, setWatchedFilms] = useState(null);
-    const [filmsReviews, setFilmsReviews] = useState(null);
 
-    useEffect(() => {
-        const fetchFavorites = async () => {
-            try{
-                const response = await api.get('http://localhost:5001/api/films/favorites/get-favorites');
-                const films = await response.data;
-                setFavoritesFilms(films);
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
+
+    useEffect( () => {
+        const fetchUser = async () => {
+            const response = await api.get(`http://localhost:5001/api/user/${username}/get-profile-info`);
+            const profile = await response.data;
+            setProfile(profile);
+            setFavoritesFilms(profile.favorites);
         }
-        fetchFavorites();
-    }, [favoritesFilms, showNotification])
-
-    useEffect(()=>{
-        async function getWatchedFilms(){
-            try{
-                const response = await api.get('http://localhost:5001/api/films/watched/get-watched')
-                const watchedFilms = await response.data;
-                setWatchedFilms(watchedFilms)
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
-
-        }
-        getWatchedFilms();
-    }, [showNotification])
-
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try{
-                const response = await api.get('http://localhost:5001/api/films/reviews/get-reviews');
-                const reviews = await response.data;
-                setFilmsReviews(reviews); // Salviamo i film nello stato
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
-        }
-        fetchReviews();
-    }, [showNotification]);
+        fetchUser();
+    }, [username])
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(`${filmTitle} è stato rimosso dai preferiti`, "success");
+            showNotification(<p>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`}>preferiti</a> </p>, "success");
             setFavoritesFilms(currentFilms =>
-                currentFilms.filter(film => film.id !== filmID));
+                currentFilms.filter(film => film._id !== filmID));
         }catch(error){
             showNotification(error.response.data, "error");
         }
     }
-    return (
-        <Box>
-            {user && <Typography component="p">Benvenuto nel profilo, {user.username}!</Typography>}
-            <img src={`http://localhost:5001/${user.avatar_path}`} style={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} alt="Avatar"/>
-            {user.biography && <Typography component="p">{user.biography}</Typography>}
-            {user.country &&
-                <Typography component="p">
-                    <LocationOnIcon/> {user.country}
-                </Typography>
 
-            }
-            <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button>
+    if(profile){
+        return (
+            <Box>
+                {user.username === username ? <Typography component="h1">Il tuo profilo</Typography> : <Typography component="h1">Profilo di {username}</Typography>}
+                {
+                    profile.avatar_path ? <Avatar src={`http://localhost:5001/${profile.avatar_path}`} sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
+                        : <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
+                }
 
-            {favoritesFilms &&
-                <Box>
-                    <h1>Film preferiti</h1>
-                    <Grid container spacing={2} sx={{ marginBottom: 3 }}>
-                        {
-                            [...favoritesFilms].reverse().map((film, index) =>
-                            <Grid key={index} size={2}>
-                                <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites}/>
-                            </Grid>)
-                        }
-                    </Grid>
-                    <Divider />
-                </Box>
-            }
+                {profile.biography && <Typography component="p">{profile.biography}</Typography>}
+                {profile.country &&
+                    <Typography component="p">
+                        <LocationOnIcon/> {profile.country}
+                    </Typography>
+                }
+
+                <Button component={Link} to={`/${username}/followers`} disabled={profile.followers === 0}>{profile.followers} Followers </Button>
+                <Button component={Link} to={`/${username}/following`} disabled={profile.following === 0}>{profile.following} Following </Button>
+
+                {user.username === username && <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
+
+                {
+                    favoritesFilms &&
+                    <Box>
+                        <h1>Film preferiti</h1>
+                        <Grid container spacing={2} sx={{ marginBottom: 3 }}>
+                            {
+                                favoritesFilms.map((film) =>
+                                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
+                                        <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites}/>
+                                    </Grid>)
+                            }
+                        </Grid>
+                        <Divider />
+                    </Box>
+                }
+
+                {
+                    profile.latestWatched &&
+                    <Box>
+                        <h1>Ultimi film visti
+                        <Button component={Link} to={`/${username}/watched`}> <InfoIcon /> Più dettagli </Button>
+                        </h1>
+                        <Grid container spacing={2} sx={{ marginBottom: 3 }}>
+                            { profile.latestWatched.map((film) =>
+                                <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
+                                    <FilmCard film={film}/>
+                                </Grid>)
+                            }
+                        </Grid>
+                        <Divider />
+                    </Box>
+                }
+
+                {
+                    profile.latestReviews &&
+                    <Box>
+                        <h1>Ultime recensioni
+                        <Button component={Link} to={`/${username}/reviews`}><InfoIcon /> Più dettagli</Button>
+                        </h1>
+                        <Grid container spacing={2}>
+                            { profile.latestReviews.map(review =>
+                                <Grid key={review.film._id} size={6}>
+                                    <ReviewCard review={review}/>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </Box>
+                }
 
 
+            </Box>
+        )
+    }
 
-            {watchedFilms &&
-                <div>
-                    <h1>Ultimi film visti (4)</h1>
-                    <Button component={Link} to="/lista-film">Vedi tutti i miei film visti</Button>
-                    <Grid container spacing={2} sx={{ marginBottom: 3 }}>
-                        { [...watchedFilms].reverse().slice(0, 4).map((film, index) =>
-                            <Grid key={index} size={2}>
-                                <FilmCard film={film}/>
-                            </Grid>)
-                        }
-                    </Grid>
-                    <Divider />
-                </div>
-            }
-
-
-            {filmsReviews &&
-                <Box>
-                    <h1>Ultime recensioni fatte (4): </h1>
-                    <Button component={Link} to="/recensioni">Vedi tutte le mie recensioni</Button>
-                    <Grid container spacing={2}>
-                        { [...filmsReviews].reverse().slice(0, 4).map(review =>
-                            <Grid key={review.filmID} size={6}>
-                                <ReviewCard review={review}/>
-                            </Grid>)
-                        }
-                    </Grid>
-                </Box>
-            }
-        </Box>
-    )
 }
 
 export default Profile;
