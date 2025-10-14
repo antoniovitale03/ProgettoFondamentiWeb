@@ -1,4 +1,4 @@
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Typography} from "@mui/material";
 function About(){
     useDocumentTitle("About")

@@ -1,14 +1,15 @@
 const User = require("../models/User");
 const Film = require("../models/Film");
-require('dotenv').config();
+const Activity = require("../models/Activity");
 
 exports.addToFavorites = async (req, res) => {
     try{
         const userID = req.user.id;
-        let {film} = req.body;
+        let { film } = req.body;
+
+        const user = await User.findById(userID);
 
         //controllo che venga rispettato il limite di 10 film preferiti
-        const user = await User.findById(userID)
         if (user.favorites.length >= 10){
             return res.status(500).json("Impossibile aggiungere il film. Hai superato il limite di 10 film nei preferiti");
         }
@@ -20,15 +21,34 @@ exports.addToFavorites = async (req, res) => {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
-                    poster_path: film.poster_path
+                    poster_path: film.poster_path,
+                    popularity: film.popularity,
+                    genres: film.genres
                 }
             },
             {
                 upsert: true
             });
+
+        //aggiungo l'azione alle attività
+        const newActivity = new Activity({
+            user: userID,
+            filmID: film.id,
+            filmTitle: film.title,
+            action: 'ADD_TO_FAVORITES',
+            date: Date.now()
+        })
+
+        await newActivity.save();
+
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
+        )
+
         await User.findByIdAndUpdate(
             userID,
-            { $addToSet: { favorites: film.id } }
+            { $addToSet: { favorites: film.id, activity: newActivity._id } }
         )
         res.status(200).json(`"${film.title}" aggiunto alla lista dei favoriti!`);
 
@@ -55,16 +75,13 @@ exports.removeFromFavorites = async (req, res) => {
 
 exports.getFavorites = async (req, res) => {
     try{
-        const userID = req.user.id;
-        const user = await User.findById(userID).populate('favorites');
+        const username = req.params.username;
+        const user = await User.findOne({ username: username }).populate('favorites');
         if(!user) {
-            return res.status(404).json({ message: "Utente non trovato." });
+            return res.status(404).json("Utente non trovato.");
         }
-        let favorites = user.favorites.map( (film) => {
-            return {...film._doc, rating: null, date: null}
-        })
-        favorites = await Promise.all(favorites);
-        res.status(200).json(favorites);
+
+        res.status(200).json(user.favorites.reverse());
 
     }catch(error){
         res.status(500).json("Errore interno del server.");

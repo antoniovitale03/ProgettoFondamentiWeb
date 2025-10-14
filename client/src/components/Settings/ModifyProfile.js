@@ -5,11 +5,11 @@ import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../context/authContext";
+import profile from "../Profile";
 function ModifyProfile(){
 
     const {showNotification} = useNotification();
-    const navigate = useNavigate();
-    const {updateUser} = useAuth();
+    const {user, setUser} = useAuth();
     //dati profilo
     const [profileData, setProfileData] = useState({
         username: "",
@@ -20,13 +20,12 @@ function ModifyProfile(){
         country: ""
     });
 
-    const [error, setError] = useState("");
 
     //creo un effetto che carica i dati del profilo al caricamento della pagina
     useEffect(() => {
         async function fetchProfileData(){
             try{
-                const response = await api.get("http://localhost:5001/api/auth/get-profile-data");
+                const response = await api.get("http://localhost:5001/api/user/get-profile-data");
                 let profileData = response.data;
                 setProfileData(profileData);
             }catch(error){
@@ -49,9 +48,17 @@ function ModifyProfile(){
     const handleSubmit = async (event) => {
         try{
             event.preventDefault();
-            const response = await api.post("http://localhost:5001/api/auth/update-profile", profileData);
-            let user = response.data;
-            updateUser(user);
+            await api.post("http://localhost:5001/api/user/update-profile", profileData);
+            let newUser = {...user,
+                username: profileData.username,
+                name: profileData.name,
+                surname: profileData.surname,
+                email: profileData.email,
+                biography: profileData.biography,
+                country: profileData.country,
+            };
+            setUser(newUser);
+            localStorage.setItem('user', JSON.stringify(newUser));
             showNotification("Profilo modificato con successo!", "success");
         }catch(error){
             showNotification(error.response.data, "error");
@@ -63,8 +70,7 @@ function ModifyProfile(){
         <Box className="page-container">
             <Box className="form-container">
                 <form onSubmit={handleSubmit}>
-                    <h1 style={{textAlign:"left"}}>Modifica il tuo profilo</h1>
-                    {error && <Typography component="p" className="error-message">{error}</Typography>}
+                    <h1 style={{ textAlign:"left" }}>Modifica il tuo profilo</h1>
                     <Stack spacing={4}>
                         <FormControl>
                             <InputLabel htmlFor="username">Username</InputLabel>

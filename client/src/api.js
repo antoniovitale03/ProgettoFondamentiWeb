@@ -16,7 +16,7 @@ api.interceptors.response.use(
             originalRequest._retry = true; // Marca come tentativo di retry
 
             try {
-                // Fai la chiamata per ottenere un nuovo access token
+                // Nel cookie della richiesta è gia presente il refresh token
                 const response = await api.post('http://localhost:5001/api/auth/refresh');
                 const accessToken = response.data;
 
@@ -31,9 +31,6 @@ api.interceptors.response.use(
 
                 // Aggiorna anche l'header della richiesta originale che stai per ritentare
                 originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-
-                // Salva il nuovo token nello stato globale (es. AuthContext)
-                // authContext.setToken(newAccessToken);
 
                 // Se il refresh ha successo, ritenta la richiesta originale
                 return api(originalRequest);
@@ -53,7 +50,7 @@ api.interceptors.request.use(
     (config) => {
         //Recupera il token
         const user = JSON.parse(localStorage.getItem('user'));
-        const accessToken = user?.accessToken; // Assumendo che il token sia salvato qui
+        const accessToken = user?.accessToken;
 
         if (accessToken) {
             // Se il token esiste, aggiungilo agli header

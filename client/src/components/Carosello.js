@@ -16,19 +16,18 @@ function Carosello({ films, title, link }){
         const navigate = useNavigate();
 
         //ora inseriamo le funzioni per poter cambiare immagine
-        const successiva = () => setIndice((i)=>(i + 1) % films.length);
+        const successiva = () => setIndice(i => (i + 1) % films.length);
 
-        const precedente = () => setIndice((i)=>(i - 1 + films.length) % films.length);
-
+        const precedente = () => setIndice(i => (i - 1 + films.length) % films.length);
 
           return(
-        //creiamo il contenitore e le card
     <>
     <Box className="carosello">
         <Typography component="p">
             <strong style={{fontSize:"50px", color:"#cad2c5"}}>
                 {title}
             </strong>
+<<<<<<< HEAD
             {link !== "" ? <Button sx={{ color:"#cad2c5"}} component={Link} to={link}>
                 <InfoOutlineIcon/> sfoglia tutti
             </Button> : null }
@@ -43,6 +42,19 @@ function Carosello({ films, title, link }){
             alignItems:"center", overflow:"hidden"}} key={index} sx={{backgroundColor:"#a4c3b2ff"}}>
                 <CardContent className="riquadro">
                     <Button sx={{color:"#344e41", fontSize:"20px", fontWeight:"bold" }} component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
+=======
+            {link && <Button component={Link} to={link}>
+                <InfoOutlineIcon /> più dettagli
+            </Button>
+            }
+        </Typography>
+
+        <Box sx={{textAlign: "center", maxWidth: "100%", display: "flex", overflow: "hidden", gap: 1, justifyContent: "center", marginLeft: "20px"}}>
+            {films.slice(indice, indice + immvisibili).map(film => (
+            <Card key={film.title}>
+                <CardContent>
+                    <Button component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
+>>>>>>> master
                             <strong>{film.title}</strong>
                     </Button>
                     <Button sx={{color:"#344e41", fontSize:"20px"}} component={Link} to={`/films/${film.release_year}`}>
@@ -50,15 +62,18 @@ function Carosello({ films, title, link }){
                     </Button>
                     
 
+<<<<<<< HEAD
                     <CardMedia className="box" key={index} component="img" image={film.poster_path}
+=======
+                    <CardMedia component="img" image={film.poster_path}
+>>>>>>> master
                         onClick={() => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}
                     />
-                    {film.release_date ? <Typography component="p"><strong>In uscita il {film.release_date}</strong></Typography> : null }
                 </CardContent>
             </Card>
         ))}
-
         </Box>
+<<<<<<< HEAD
         <Box sx={{mt:2, textAlign: "center"}}>
             <Button onClick={precedente} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor:" #52796f", backgroundColor: "none"}}disabled={indice >= films.length - immvisibili }>
                 <ArrowCircleLeftIcon sx={{fontSize:"xxx-large", }} />
@@ -66,6 +81,15 @@ function Carosello({ films, title, link }){
 
             <Button onClick={successiva} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor:" #52796f", backgroundColor: "none"}}disabled={indice >= films.length - immvisibili }>
                 <ArrowCircleRightIcon sx={{fontSize:"xxx-large"}} />
+=======
+
+        <Box sx={{mt:2, textAlign: "center", marginBottom: 5}}>
+            <Button onClick={precedente} variant="outlined" disabled={indice === 0}>
+                <ArrowBackIosIcon />
+            </Button>
+            <Button onClick={successiva} variant="outlined" sx={{ ml: 1 }} disabled={indice >= films.length - immvisibili }>
+                <ArrowForwardIosIcon />
+>>>>>>> master
             </Button>
         </Box>
         </Box>

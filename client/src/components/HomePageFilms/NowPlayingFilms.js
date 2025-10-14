@@ -1,8 +1,8 @@
-import {React, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import api from "../../api";
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
-import {Box, Grid, Pagination, Stack} from "@mui/material";
+import {Grid, Pagination, Stack} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
 function NowPlayingFilms() {
@@ -16,7 +16,7 @@ function NowPlayingFilms() {
 
 
     useEffect( () => {
-        async function fetchNowPlayingFilms() {
+        const fetchNowPlayingFilms = async () => {
             try{
                 const response = await api.get(`http://localhost:5001/api/films/home/get-now-playing-films/page/${currentPage}`);
                 let data = response.data;
@@ -27,7 +27,7 @@ function NowPlayingFilms() {
             }
         }
         fetchNowPlayingFilms();
-    }, [currentPage]);
+    }, [currentPage, showNotification]);
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -48,7 +48,7 @@ function NowPlayingFilms() {
 
             <Grid container spacing={2}>
                 { films?.map( film =>
-                    <Grid key={film._id} size={2}>
+                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <FilmCard film={film} />
                     </Grid>
                 )}

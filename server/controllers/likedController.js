@@ -1,6 +1,5 @@
 const Film = require("../models/Film");
 const User = require("../models/User");
-require('dotenv').config();
 
 exports.addToLiked = async (req, res) => {
     try{
@@ -14,7 +13,9 @@ exports.addToLiked = async (req, res) => {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
-                    poster_path: film.poster_path
+                    poster_path: film.poster_path,
+                    popularity: film.popularity,
+                    genres: film.genres
                 }
             },
             {

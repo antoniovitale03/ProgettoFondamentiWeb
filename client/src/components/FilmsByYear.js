@@ -1,12 +1,11 @@
-import {React, useEffect, useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
-import {Box, Button, Grid, Pagination, Stack} from "@mui/material";
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { Grid, Pagination, Stack} from "@mui/material";
+import SearchFilters from "./SearchFilters";
 
 function FilmsByYear(){
     let {year} = useParams();
@@ -14,15 +13,27 @@ function FilmsByYear(){
 
     const {showNotification} = useNotification();
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [films, setFilms] = useState([]); // Per salvare l'elenco dei film
+    const [filters, setFilters] = useState({
+        page: 1,
+        genre: "",
+        minRating: 0,
+        sortByPopularity: "",
+        sortByDate: ""
+    });
+    const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0); // Per il numero totale di pagine
 
     //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
-        async function fetchFilmsByYear(){
+        const fetchFilmsByYear = async () => {
             try{
-                const response = await api.get(`http://localhost:5001/api/films/${year}/page/${currentPage}`); //caricamento paginato dei film
+                const params = new URLSearchParams();
+                params.append("page", filters.page);
+                if(filters.genre !== "") params.append("genre", filters.genre);
+                if(filters.minRating !== 0) params.append("minRating", filters.minRating);
+                if(filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
+                if(filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
+                const response = await api.get(`http://localhost:5001/api/films/get-films/${year}?${params.toString()}`);
                 let data = response.data;
                 setFilms(data.films);
                 setTotalPages(data.totalPages);
@@ -31,41 +42,53 @@ function FilmsByYear(){
             }
         }
         fetchFilmsByYear();
-    }, [currentPage]);
+    }, [filters, year, showNotification]);
 
 
     const handlePageChange = (event, value) => {
-        setCurrentPage(value);
+        setFilters({...filters, page: value});
         window.scrollTo(0, 0);
     };
 
     return(
         <Stack spacing={7} marginBottom={10}>
+
             <h1>Film usciti nel {year} </h1>
 
-            <Pagination
-                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-                size="large"
-            />
+            {films.length > 0 &&
+                <Pagination
+                    count={totalPages > 500 ? 500 : totalPages}
+                    page={filters.page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="large"
+                />
+            }
+
+            <SearchFilters filters={filters} setFilters={setFilters} decadeFilter={false} isLikedFilter={false} />
+
+            <p>{films.length * totalPages} film trovati</p>
+
 
             <Grid container spacing={2}>
-                { films?.map( film =>
-                    <Grid key={film._id} size={2}>
+                {
+                    films.map( film =>
+                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <FilmCard film={film} />
                     </Grid>
                 )}
             </Grid>
 
-            <Pagination
-                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-                size="large"
-            />
+            {
+                films.length > 0 &&
+                <Pagination
+                    count={totalPages > 500 ? 500 : totalPages}
+                    page={filters.page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="large"
+                />
+            }
         </Stack>
     )
 }

@@ -1,6 +1,6 @@
 import {useAuth} from "../context/authContext"
-import useDocumentTitle from "./useDocumentTitle";
-import {Box, Typography, Card, CardMedia} from "@mui/material";
+import useDocumentTitle from "./hooks/useDocumentTitle";
+import {Box, Typography} from "@mui/material";
 import '../CSS/home.css'
 import Carosello from "./Carosello"
 import {useEffect, useState} from "react";
@@ -12,30 +12,22 @@ function Home(){
     const {user} = useAuth();
     const {showNotification} = useNotification()
 
-    const [currentPopularFilms, setCurrentPopularFilms] = useState({});
-    const [upcomingFilms, setUpcomingFilms] = useState({});
-    const [topRatedFilms, setTopRatedFilms] = useState({});
-    const [nowPlayingFilms, setNowPlayingFilms] = useState({});
-    const [trendingFilms, setTrendingFilms] = useState({});
-    const [similarFilms, setSimilarFilms] = useState({});
+    const [films, setFilms] = useState(null);
 
     useEffect(() => {
-        async function homePageFilmInfo() {
+        const homePageFilmInfo = async () => {
             try{
-                const response = await api.get("http://localhost:5001/api/films/home/get-home-page-film-info");
+                const param = new URLSearchParams();
+                if(user) param.append("userID", user.id)
+                const response = await api.get(`http://localhost:5001/api/films/home/get-home-page-films?${param.toString()}`);
                 let films = await response.data;
-                setCurrentPopularFilms(films.currentPopularFilms);
-                setUpcomingFilms(films.upcomingFilms);
-                setTopRatedFilms(films.topRatedFilms);
-                setNowPlayingFilms(films.nowPlayingFilms);
-                setTrendingFilms(films.trendingFilms);
-                setSimilarFilms(films.similarFilms);
+                setFilms(films);
             }catch(error){
                 showNotification("Errore nel caricamento dei film", "error")
             }
         }
         homePageFilmInfo();
-    }, [])
+    }, [user, showNotification])
 
     return (
     <>
@@ -43,6 +35,7 @@ function Home(){
             <Box>
                 <h1 id="titolo1">Nome del sito</h1>
                 <h2 id="sottotitolo">slogan del sito</h2>
+<<<<<<< HEAD
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px'}}>
             <Card sx={{borderRadius:"60px"}} className="card">
@@ -65,6 +58,21 @@ function Home(){
 
             {similarFilms.length > 0 ? <Carosello films={similarFilms} title="Film simili a quelli che hai già visto ↪️" link={""}/> : null}
 
+=======
+            </Box>
+
+            {
+                films &&
+                <Box>
+                <Carosello films={films.currentPopularFilms} title="I film più popolari del momento" link={"/films/current-popular-films"}/>
+                <Carosello films={films.upcomingFilms} title="Film in uscita in Italia" link={"/films/upcoming-films"}/>
+                <Carosello  films={films.topRatedFilms} title="Film più acclamati dalla critica" link={"/films/top-rated-films"}/>
+                <Carosello films={films.nowPlayingFilms} title="Film attualmente al cinema" link={"/films/now-playing-films"} />
+                <Carosello films={films.trendingFilms} title="Film in tendenza questa settimana" link={"/films/trending-films"}/>
+                { films.similarFilms && <Carosello films={films.similarFilms} title="Film simili a quelli che hai già visto" />}
+                </Box>
+        }
+>>>>>>> master
         </Box>
         </>
     )
