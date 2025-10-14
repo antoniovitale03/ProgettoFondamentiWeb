@@ -13,21 +13,21 @@ function Footer() {
         <AppBar position="static" sx= {{ backgroundColor:"#52796f" }} >
             <Toolbar sx={{ width: "50%" }}>
                 <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
-                    <Button component={Link} to="/about">About</Button>,
-                    <Button component={Link} to="/contact">Contact</Button>,
-                    <Button component={Link} to="/help">Help</Button>,
+                    <Button component={Link} to="/about">About</Button>
+                    <Button component={Link} to="/contact">Contact</Button>
+                    <Button component={Link} to="/help">Help</Button>
                     <IconButton component={Link} to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
                         <GitHubIcon />
-                    </IconButton>,
+                    </IconButton>
                     <IconButton component={Link} to="link di LinkedIn" target="_blank" rel="noreferrer">
                         <LinkedInIcon />
-                    </IconButton>,
+                    </IconButton>
                     <IconButton component={Link} to="link di Instagram" target="_blank" rel="noreferrer">
                         <InstagramIcon />
-                    </IconButton>,
+                    </IconButton>
                     <IconButton component={Link} to="link di Facebook" target="_blank" rel="noreferrer">
                         <FacebookIcon />
-                    </IconButton>,
+                    </IconButton>
                     <IconButton component={Link} to="link di X" target="_blank" rel="noreferrer">
                         <XIcon />
                     </IconButton>

@@ -258,7 +258,7 @@ function FilmButtons({ film }) {
 
 
             <Tooltip title="Aggiungi o rimuovi dalla lista">
-                <DropDownMenu buttonContent={<Tooltip title="Aggiungi o rimuovi da una o più liste"><FormatListBulletedAddIcon /> </Tooltip>}
+                <DropDownMenu buttonContent={<Tooltip title="Aggiungi o rimuovi da una o più liste"><IconButton><FormatListBulletedAddIcon /></IconButton> </Tooltip>}
                               menuContent={listsMenu} isMenuOpen={isListMenuOpen} setIsMenuOpen={setIsListMenuOpen} />
             </Tooltip>
 

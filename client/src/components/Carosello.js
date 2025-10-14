@@ -53,12 +53,15 @@ function Carosello({ films, title, link }){
         ))}
         </Box>
 
-        <Button onClick={precedente} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor:" #52796f", backgroundColor: "none"}} disabled={indice >= films.length - immvisibili }>
-            <ArrowCircleLeftIcon sx={{fontSize:"xxx-large", }} />
-        </Button>
-        <Button onClick={successiva} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor:" #52796f", backgroundColor: "none"}} disabled={indice >= films.length - immvisibili }>
-            <ArrowCircleRightIcon sx={{fontSize:"xxx-large"}} />
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Button onClick={precedente} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor: "none" }} disabled={indice === 0 }>
+                <ArrowCircleLeftIcon sx={{fontSize:"xxx-large", }} />
+            </Button>
+            <Button onClick={successiva} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor: "none"}} disabled={indice >= films.length - immvisibili }>
+                <ArrowCircleRightIcon sx={{fontSize:"xxx-large"}} />
+            </Button>
+        </Box>
+
     </Box>
     );
 }
