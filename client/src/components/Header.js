@@ -11,8 +11,6 @@ import RateReviewIcon from '@mui/icons-material/RateReview'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import Settings from '@mui/icons-material/Settings'
 import ArchiveIcon from '@mui/icons-material/Archive'
-
-import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -71,19 +69,19 @@ function Header() {
             </Button>
         </Box>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <img src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
     let notLoggedDefaultHeaderItems = [
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
         <Button href="/">
-            <img src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <img src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
 
     return (
-        <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
+        <AppBar position="static" sx= {{ backgroundColor:"#52796f", height:"100px" }} >
             <Toolbar sx={{ width: "100%" }}>
                 <Box sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", flexGrow: 1 }}>
                     {

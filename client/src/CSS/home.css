@@ -1,15 +1,85 @@
-
+body{
+    background-color: #354f52;
+    
+}
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Prosto+One&family=Vast+Shadow&display=swap');
 
 #titolohome1{
+
     text-align: center;
 }
 #sottotitolo{
     text-align: center;
+    font-family: 'Prosto One';
 
 }
 
 .card{
-    width: 500px;
-   
+    max-width:max-content;
+    max-height: 50%;
+    width: 90%;
+    height: 60%;
+}
+.box {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 17vw;
+  height: 45vh;
+  object-fit: "fill";
+  border-radius:30px;
+  
 }
 
+.box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+title{
+    font-size: 50;
+    font-family: 'Prosto One';
+}
+#titolo1{
+    text-align: center;
+    color: #cad2c5;
+    font-size: 50px;
+    font-family: 'Prosto One';
+}
+.riquadro{
+    width:15vw; 
+    text-overflow:"ellipsis" 
+}
+.carosello{
+    width: 90vw;
+    min-width: 90vw;
+   
+}
+p{
+    color: #cad2c5
+}
+
+
+
+
+/*
+palette1
+#004643 sfondo
+#0C1618 scuro 
+#94E8B4 chiaro
+
+palette2
+#374A67 scuro
+#8EB8E5 chiaro
+#7C99B4 dettagli
+
+palette3
+#114B5F scuro
+#028090 sfondo
+#E4FDE1 chiaro
+
+/* CSS HEX 
+--viridian: #6b9080ff;
+--cambridge-blue: #a4c3b2ff;
+--mint-green: #cce3deff;
+--azure-web: #eaf4f4ff;
+--mint-cream: #f6fff8ff;
+
+*/

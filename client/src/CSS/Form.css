@@ -6,6 +6,20 @@
     padding: 2rem;
     flex-grow: 1; /* per spostare il footer in basso */
     min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.sfondologin::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: inherit;
+    background-position: inherit;
+    filter: blur(8px); /* <-- intensità della sfocatura */
+    transform: scale(1.05); /* evita bordi visibili */
+    z-index: 0;
 }
 
 .form-container form {
@@ -15,7 +29,7 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    background-color: #a4c3b2ff;
     min-width: 350px;
     max-width: 350px;
     width: 100%;
@@ -30,6 +44,7 @@ textarea {
 .form-container h2 {
     text-align: center;
     margin-top: 0;
+    color:#344e41
 }
 
 .form-group {
@@ -49,8 +64,8 @@ textarea {
     margin-top: 2rem;
     padding: 0.75rem;
     border: none;
-    border-radius: 4px;
-    background-color: #007bff;
+    border-radius: 20px;
+    background-color: #344e41;
     color: white;
     font-size: 1rem;
     font-weight: bold;
@@ -59,7 +74,7 @@ textarea {
 }
 
 .form-container button:hover {
-    background-color: #0056b3;
+    background-color: black;
 }
 
 .error-message {
@@ -76,6 +91,9 @@ textarea {
 
 /*classe creata per gestire l'allineamento a destra */
 .forgot-password-container{
+    background-color: #344e41;
+    padding: 0.5%;
+    border-radius: 20px;
     display: flex;
     justify-content: flex-end;
     margin-top: 15px;
@@ -101,7 +119,7 @@ button.link-style-button {
     margin-top: 10px;
 
     /* Applica l'aspetto di un link */
-    color: #000000; /* Nero */
+    color: white; /* Nero */
     text-decoration: none;
     font-family: inherit;
     font-size: 0.85rem; /* Più piccolo */
@@ -114,4 +132,22 @@ button.link-style-button {
 button.link-style-button:hover {
     background: none;
     text-decoration: underline;
+}
+.registration-login-link{
+    background-color: #000000;
+    padding:0.5%;
+    color:white
+}
+.qui{
+    color:white
+}
+
+
+.sfondologin {
+    position: relative;
+    min-height: 100vh;
+    background-image: url("http://i.imgur.com/Abm0wRq.jpg");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden; /* evita che la sfocatura esca dai bordi */
 }

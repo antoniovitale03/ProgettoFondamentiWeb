@@ -64,6 +64,7 @@ function LoginPage() {
     }
 
     return (
+            <Box className="sfondologin">
             <Box className="form-container">
                 <form onSubmit={step === 1 ? handleSubmit : handleForgotPassword}>
                     <h2>{ step === 1 ? "Login" : "Imposta una nuova password" }</h2>
@@ -115,12 +116,14 @@ function LoginPage() {
                                 type="button" // 'type="button"' è importante per non inviare il form
                                 className="link-style-button" // Una classe per lo stile, per farlo sembrare un link
                                 onClick={() => setStep(2)}
+                                sx={{color:"white"}}
                             >
                                 Hai dimenticato la password?
                             </Button>
                         </Box>
-                        <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </Typography>
+                        <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink className="qui" to="/registration">qui</NavLink> per registrarti. </Typography>
                     </>)}
+            </Box>
             </Box>
     )
 }
