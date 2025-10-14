@@ -10,7 +10,7 @@ import {Link} from "react-router-dom";
 function Footer() {
 
     return (
-        <AppBar position="static" sx= {{ backgroundColor:"lightsteelblue" }} >
+        <AppBar position="static" sx= {{ backgroundColor:"#52796f" }} >
             <Toolbar sx={{ width: "50%" }}>
                 <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
                     <Button component={Link} to="/about">About</Button>,

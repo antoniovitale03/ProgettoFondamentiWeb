@@ -116,7 +116,7 @@ function Header() {
         </Box>,
         <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
         <Button component={Link} to="/">
-            <Avatar src={logo} style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
     
@@ -127,12 +127,12 @@ function Header() {
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
         <IconButton component={Link} to={"/"}>
-            <Avatar src={logo} alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="logo" style={{ height: '50px', width: 'auto' }}/>
         </IconButton>
     ]
 
     return (
-        <AppBar position="static" sx={{ backgroundColor:"lightsteelblue" }} >
+        <AppBar position="static" sx= {{ backgroundColor:"#52796f", height:"100px" }} >
             <Toolbar>
                 <Box sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", flexGrow: 1 }}>
                     {

@@ -64,11 +64,11 @@ function LoginForm({  setStep, email, setEmail }) {
             </form>
 
             <Box className="forgot-password-container">
-                <Button className="link-style-button" onClick={handleForgotPassword} disabled={email === ""}>
+                <Button className="link-style-button" onClick={handleForgotPassword} sx={{ color: "white" }} disabled={email === ""}>
                     Hai dimenticato la password?
                 </Button>
             </Box>
-            <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration">qui</NavLink> per registrarti. </Typography>
+            <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration" className="qui">qui</NavLink> per registrarti. </Typography>
         </Box>
     )
 }

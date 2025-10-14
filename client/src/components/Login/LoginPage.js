@@ -34,6 +34,7 @@ function LoginPage() {
     useDocumentTitle("Login");
 
     return (
+        <Box className="sfondologin">
             <Box className="form-container">
                 {
                     step === 1 ? <LoginForm setStep={setStep} email={email} setEmail={setEmail} /> :
@@ -41,6 +42,7 @@ function LoginPage() {
                             step === 3 ? <ForgotPasswordForm setStep={setStep} email={email} setEmail={setEmail} /> : null
                 }
             </Box>
+        </Box>
     )
 }
 
