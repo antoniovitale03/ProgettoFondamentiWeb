@@ -1,0 +1,2 @@
+package-lock.json merge=ours #per ignorare il package-lock.json durante i merge (resta nella repo)
+#eseguire git config --global merge.ours.driver true
