@@ -1,5 +1,5 @@
 import {useAuth} from "../context/authContext";
-import {Box, Container} from "@mui/material";
+import {Container} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import Home from "./Home";
 import Profile from "./Profile";
@@ -33,9 +33,8 @@ import SimilarFilms from "./FilmPage/SimilarFilms";
 import About from "./About";
 import Contact from "./Contact";
 import Help from "./Help";
-
+//*Il main Content  occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
 function MainContent() {
-    {/*Il main Content  occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
     const { isLoggedIn } = useAuth();
     if (isLoggedIn) {
         return (

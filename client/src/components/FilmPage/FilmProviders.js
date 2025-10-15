@@ -11,7 +11,7 @@ function FilmProviders({ rent, buy, flatrate }) {
                 <Box className="box">
                     { rent.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img className="img" src={film.logo_path}/>
+                            <img className="img" src={film.logo_path} alt=""/>
                         </Tooltip>
                     )
                     }
@@ -25,7 +25,7 @@ function FilmProviders({ rent, buy, flatrate }) {
                 <Box className="box">
                     { flatrate.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img className="img" src={film.logo_path} />
+                            <img className="img" src={film.logo_path} alt=""/>
                         </Tooltip>
                     )
                     }
@@ -39,7 +39,7 @@ function FilmProviders({ rent, buy, flatrate }) {
                 <Box className="box">
                     { buy.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img className="img" src={film.logo_path}/>
+                            <img className="img" src={film.logo_path} alt=""/>
                         </Tooltip>
                     )
                     }

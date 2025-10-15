@@ -1,11 +1,9 @@
-import {Box, Button, FormControl, Input, InputLabel, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, Stack, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import "../../CSS/Form.css"
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
-import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../context/authContext";
-import profile from "../Profile";
 function ModifyProfile(){
 
     const {showNotification} = useNotification();
@@ -34,7 +32,7 @@ function ModifyProfile(){
 
         }
         fetchProfileData();
-    }, [])
+    }, [showNotification])
 
     // funzione per gestire le modifiche in ogni campo di input
     const handleInputChange = (event) => {

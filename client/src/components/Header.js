@@ -25,7 +25,6 @@ import ArchiveIcon from '@mui/icons-material/Archive'
 import BoltIcon from '@mui/icons-material/Bolt';
 import HomeIcon from '@mui/icons-material/Home';
 import {Link} from "react-router-dom"
-import logo from "../assets/images/AppLogo.png"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
