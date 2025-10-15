@@ -25,15 +25,19 @@ function FilmButtons({ film }) {
     const [reviewButton, setReviewButton] = useState(1);
     const [favoritesButton, setFavoritesButton] = useState(1);
     const [watchedButton, setWatchedButton] = useState(1);
+    const [lists, setLists] = useState([])
 
     useEffect(() => {
-        async function fetchFilmStatus(){
+        const fetchFilmStatus = async () => {
             //renderizzo i bottoni in base allo stato attuale del film
-            setWatchlistButton(film?.filmStatus.isInWatchlist === true ? 0 : 1);
-            setLikedButton(film?.filmStatus.isLiked === true ? 0 : 1);
-            setReviewButton(film?.filmStatus.isReviewed === true ? 0 : 1);
-            setFavoritesButton(film?.filmStatus.isFavorite === true ? 0 : 1);
-            setWatchedButton(film?.filmStatus.isWatched === true ? 0 : 1);
+            if(film){
+                setWatchlistButton(film.status.isInWatchlist === true ? 0 : 1);
+                setLikedButton(film.status.isLiked === true ? 0 : 1);
+                setReviewButton(film.status.isReviewed === true ? 0 : 1);
+                setFavoritesButton(film.status.isFavorite === true ? 0 : 1);
+                setWatchedButton(film.status.isWatched === true ? 0 : 1);
+                setLists(film.status.listsNames);
+            }
         }
         fetchFilmStatus();
     }, [film])

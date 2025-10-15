@@ -1,4 +1,4 @@
-import FilmCard from "./Cards/FilmCard";
+import FilmCard from "../Cards/FilmCard";
 import {Box, Grid, Typography} from "@mui/material";
 
 function FilmCollection({ film }){

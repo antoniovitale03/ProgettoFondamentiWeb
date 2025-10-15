@@ -1,17 +1,16 @@
 import {useParams, Link} from 'react-router-dom';
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
-import {useNotification} from "../context/notificationContext"
 import {Box,Button,Grid,Rating,Tooltip,Typography, Chip, Stack}from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import * as React from "react";
-import api from "../api";
+import api from "../../api";
 import FilmProviders from "./FilmProviders";
-import CastCrewMoreInfo from "./CastCrewMoreInfo";
+import CastCrewMoreInfo from "../CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
-import FilmButtons from "./FilmButtons";
-import "../CSS/FilmPage.css"
+import FilmButtons from "../FilmButtons";
+import '../../CSS/FilmPage.css';
 
 // /film/filmTitle/filmID
 function FilmPage(){
@@ -23,7 +22,6 @@ function FilmPage(){
     useDocumentTitle(filmTitle);
 
 
-    const {showNotification} = useNotification();
     const [film, setFilm] = useState(null);
 
 
@@ -32,7 +30,7 @@ function FilmPage(){
     useEffect( () => {
         async function fetchFilm(){
             if (filmTitle && filmID) {
-                const response = await api.get(`http://localhost:5001/api/films/getFilm/${filmTitle}/${filmID}`);
+                const response = await api.get(`http://localhost:5001/api/films/get-film/${filmID}`);
                 const film = await response.data;
                 setFilm(film);
             }

@@ -1,6 +1,6 @@
 import {Box, Tooltip} from "@mui/material";
 import * as React from "react";
-import "../CSS/FilmProviders.css"
+import '../../CSS/FilmPage.css';
 
 function FilmProviders({ film }) {
     return(

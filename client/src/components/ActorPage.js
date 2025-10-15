@@ -1,4 +1,4 @@
-import useDocumentTitle from "./useDocumentTitle";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
