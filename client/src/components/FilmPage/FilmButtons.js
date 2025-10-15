@@ -1,4 +1,4 @@
-import {Box, IconButton,Rating, TextField, Tooltip} from "@mui/material";
+import {Box, IconButton, MenuItem, Rating, TextField, Tooltip} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import api from "../../api";
@@ -14,11 +14,16 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import FormatListBulletedAddIcon from '@mui/icons-material/FormatListBulletedAdd';
 import "../../CSS/FilmButton.css"
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from '@mui/icons-material/Remove';
+import {useAuth} from "../../context/authContext"
 
 function FilmButtons({ film }) {
 
     const {showNotification} = useNotification();
+    const {user} = useAuth();
     //tutti i bottoni hanno stato 1 (aggiungi) o stato 0 (rimuovi)
     const [watchlistButton, setWatchlistButton] = useState(1);
     const [likedButton, setLikedButton] = useState(1);
@@ -29,6 +34,12 @@ function FilmButtons({ film }) {
 
     const [isReviewMenuOpen, setIsReviewMenuOpen] = useState(false);
     const [isListsMenuOpen, setIsListsMenuOpen] = useState(false);
+
+    const [review, setReview] = useState("");
+
+    //rating in quinti
+    const [reviewRating, setReviewRating] = useState(0);
+
 
     useEffect(() => {
         const fetchFilmStatus = async () => {
@@ -45,39 +56,24 @@ function FilmButtons({ film }) {
         fetchFilmStatus();
     }, [film])
 
-    const [review, setReview] = useState("");
-
-    //rating in quinti
-    const [reviewRating, setReviewRating] = useState(0);
 
     const addToWatchlist = async (event) => {
         event.preventDefault();
         try{
             await api.post("http://localhost:5001/api/films/watchlist/add-to-watchlist", { film });
-            showNotification(`${film.title} è stato aggiunto alla watchlist`, "success");
+            showNotification(<strong>"{film.title}" è stato aggiunto alla <a href={`/${user.username}/watchlist`}>watchlist</a></strong>, "success");
             setWatchlistButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
         }
     }
 
-    const addReview = async (film, review, reviewRating) => {
-        try {
-            await api.post('http://localhost:5001/api/films/reviews/add-review', {
-                film, review, reviewRating
-            })
-            showNotification(`La recensione di "${film.title}" è stata salvata correttamente!`)
-            setReviewButton(0);
-        }catch(error){
-            showNotification(error.response.data, "error");
-        }
-    }
 
     const removeFromWatchlist = async (event) => {
         event.preventDefault();
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${film.id}`);
-            showNotification(`${film.title} è stato rimosso dalla watchlist`, "success");
+            showNotification(<strong>"{film.title}" è stato rimosso dalla <a href={`/${user.username}/watchlist`}>watchlist</a></strong>, "success")
             setWatchlistButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -88,7 +84,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post('http://localhost:5001/api/films/liked/add-to-liked', { film });
-            showNotification(`${film.title} è stato aggiunto ai film piaciuti`, "success");
+            showNotification(<strong>"${film.title}" è stato aggiunto ai film piaciuti</strong>, "success");
             setLikedButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -98,8 +94,8 @@ function FilmButtons({ film }) {
     const removeFromLiked = async (event) => {
         event.preventDefault();
         try{
-            await api.delete(`http://localhost:5001/api/films/liked/remove-from-liked/${film.id}`)
-            showNotification(`${film.title} è stato rimosso dai film piaciuti`, "success")
+            await api.delete(`http://localhost:5001/api/films/liked/remove-from-liked/${film.id}`);
+            showNotification(<strong>"${film.title}" è stato rimosso dai film piaciuti</strong>, "success");
             setLikedButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -107,11 +103,36 @@ function FilmButtons({ film }) {
 
     }
 
+    const addReview = async (film, review, reviewRating) => {
+        try {
+            setIsReviewMenuOpen(false);
+            await api.post('http://localhost:5001/api/films/reviews/add-review', {
+                film, review, reviewRating
+            });
+            showNotification(<strong>Hai aggiunto "{film.title}" alle tue <a href={`/${user.username}/reviews`}>recensioni</a></strong>, "success");
+            setReviewButton(0);
+            setReviewRating(0);
+            setReview("");
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
+    }
+
+    const reviewMenuItems = (<>
+            <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
+            <Rating name="review-rating" value={reviewRating} onChange={(event, rating) => setReviewRating(rating)} precision={0.5} />
+            <IconButton onClick={() => addReview(film, review, reviewRating)}>
+                Salva
+            </IconButton>
+        </>
+    )
+
+
     const deleteReview = async (event) => {
         event.preventDefault();
         try{
-            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${film.id}`)
-            showNotification(`La recensione di ${film.title} è stata rimossa`, "success")
+            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${film.id}`);
+            showNotification(<strong>Hai rimosso "{film.title}" dalle tue <a href={`/${user.username}/reviews`}>recensioni</a></strong>, "success");
             setReviewButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -121,8 +142,8 @@ function FilmButtons({ film }) {
     const addToFavorites = async (event) => {
         event.preventDefault();
         try{
-            await api.post('http://localhost:5001/api/films/favorites/add-to-favorites', { film })
-            showNotification(`${film.title} è stato aggiunto ai film preferiti`, "success")
+            await api.post('http://localhost:5001/api/films/favorites/add-to-favorites', { film });
+            showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <a href={`/${user.username}/favorites`}>preferiti</a></strong>, "success")
             setFavoritesButton(0);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -132,8 +153,8 @@ function FilmButtons({ film }) {
     const removeFromFavorites = async (event) => {
         event.preventDefault();
         try{
-            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${film.id}`)
-            showNotification(`${film.title} è stato rimosso dai film preferiti`, "success")
+            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${film.id}`);
+            showNotification(<strong>"{film.title}" è stato rimosso dai tuoi <a href={`/${user.username}/favorites`}>preferiti</a></strong>, "success")
             setFavoritesButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -145,7 +166,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post('http://localhost:5001/api/films/watched/add-to-watched', { film });
-            showNotification(`${film.title} è stato aggiunto ai film visti`, "success")
+            showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <a href={`/${user.username}/watched`}>film visti</a></strong>, "success")
             setWatchedButton(0);
             //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
             setWatchlistButton(1);
@@ -158,21 +179,53 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${film.id}`);
-            showNotification(`${film.title} è stato rimosso dai film visti`, "success")
+            showNotification(<strong>"{film.title}" è stato rimosso dai tuoi <a href={`/${user.username}/watched`}>film visti</a></strong>, "success")
             setWatchedButton(1);
         }catch(error){
             showNotification(error.response.data, "error");
         }
     }
 
-    const reviewMenuItems = (<>
-            <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
-            <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
-            <IconButton onClick={() => addReview(film, review, reviewRating)}>
-                Salva
-            </IconButton>
-        </>
-    )
+
+    const addToList = async (list) => {
+        try{
+            await api.post(`http://localhost:5001/api/films/lists/add-to-list/${list.listName}`, {film});
+            showNotification(<strong>"{film.title}" aggiunto alla lista <a href={`/${user.username}/${list.listName}/list`}>{list.listName}</a></strong>, "success")
+            setIsListsMenuOpen(false);
+            setLists(prevLists => prevLists.map(l => l.listName === list.listName ? {...l, isInList: !l.isInList} : l));
+        }catch(error){
+            showNotification(error.response.data, "error")
+        }
+    }
+
+    const removeFromList = async (list) => {
+        try{
+            await api.delete(`http://localhost:5001/api/films/lists/remove-from-list/${film._id}/${list.listName}`);
+            showNotification(<strong>"{film.title}" rimosso dalla lista <a href={`/${user.username}/${list.listName}/list`}>{list.listName}</a></strong>, "success")
+            setIsListsMenuOpen(false);
+            setLists(prevLists => prevLists.map(l => l.listName === list.listName ? {...l, isInList: !l.isInList} : l));
+        }catch(error){
+            showNotification(error.response.data, "error")
+        }
+    }
+
+    const listsMenu = [
+        lists?.map( list =>
+            <MenuItem key={list.listName}>
+                <IconButton onClick={ () => {
+                    if (list.isInList) {
+                        removeFromList(list);
+                    } else {
+                        addToList(list);
+                    }
+                } }>
+                    {list.isInList ? <RemoveIcon /> : <AddIcon />}
+                </IconButton>
+                {list.listName}
+            </MenuItem>
+        )
+    ]
+
     return(
         <Box className="box-button">
                 <Tooltip title={watchlistButton === 1 ? "Aggiungi alla watchlist" : "Rimuovi dalla watchlist"}>
@@ -192,17 +245,15 @@ function FilmButtons({ film }) {
                     </IconButton>
                 </Tooltip>
 
-            <Tooltip title={reviewButton === 1 ? "Aggiungi una recensione" : "Rimuovi una recensione"}>
-                {reviewButton === 1 ?
-                    <DropDownMenu buttonContent={<ReviewsOutlinedIcon className="icon"/>}
-                    menuContent={reviewMenuItems}
-                    isMenuOpen={isReviewMenuOpen} setIsMenuOpen={setIsReviewMenuOpen}
-                    />:
+            {reviewButton === 1 ?
+                <DropDownMenu buttonContent={<Tooltip title="Aggiungi una recensione"><ReviewsOutlinedIcon className="icon" /></Tooltip>}
+                              menuContent={reviewMenuItems} isMenuOpen={isReviewMenuOpen} setIsMenuOpen={setIsReviewMenuOpen} /> :
+                <Tooltip title="Rimuovi la recensione">
                     <IconButton onClick={deleteReview}>
-                        <ReviewsIcon className="icon" />
+                        <ReviewsIcon className="icon"/>
                     </IconButton>
-                }
-            </Tooltip>
+                </Tooltip>
+            }
 
             <Tooltip title={favoritesButton === 1 ? "Aggiungi ai film preferiti" : "Rimuovi dai film preferiti"}>
                 <IconButton onClick={favoritesButton === 1 ? addToFavorites : removeFromFavorites}>
@@ -221,15 +272,11 @@ function FilmButtons({ film }) {
                     }
                 </IconButton>
             </Tooltip>
-            { /* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte
-        //             {watchedButton === 0 ?
-        //             <Button onClick={addToWatched}>
-        //                 <VisibilityIcon />
-        //                 <p>L'ho rivisto di nuovo</p>
-        //             </Button>: null
-        //             }
-        //             </div>
-        //             */ }
+
+            <Tooltip title="Aggiungi o rimuovi dalla lista">
+                <DropDownMenu buttonContent={<Tooltip title="Aggiungi o rimuovi da una o più liste"><IconButton><FormatListBulletedAddIcon className="icon"/></IconButton> </Tooltip>}
+                              menuContent={listsMenu} isMenuOpen={isListsMenuOpen} setIsMenuOpen={setIsListsMenuOpen} />
+            </Tooltip>
         </Box>
     )
 }

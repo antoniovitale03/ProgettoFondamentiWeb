@@ -61,7 +61,7 @@ function Header() {
             setIsAddFriendMenuOpen(false);
             setFriendUsername("");
             await api.post(`http://localhost:5001/api/user/${friendUsername}/follow`);
-            showNotification(<p>Hai appena aggiunto <a href={`/${friendUsername}/profile`}>{friendUsername}</a> come amico</p>, "success");
+            showNotification(<strong>Hai appena aggiunto <a href={`/${friendUsername}/profile`}>{friendUsername}</a> come amico</strong>, "success");
         }catch(error){
             showNotification(error.response.data, "error");
         }

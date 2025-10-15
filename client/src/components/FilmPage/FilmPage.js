@@ -101,7 +101,6 @@ function FilmPage(){
                     </Stack>
 
 
-
                     <CastCrewMoreInfo film={film} />
 
                     <Button sx={{margin:"15px",border: "1px solid black", fontSize:"13px"}} component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
