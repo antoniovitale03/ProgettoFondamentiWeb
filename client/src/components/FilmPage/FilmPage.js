@@ -9,7 +9,7 @@ import api from "../../api";
 import FilmProviders from "./FilmProviders";
 import CastCrewMoreInfo from "../CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
-import FilmButtons from "../FilmButtons";
+import FilmButtons from "./FilmButtons";
 import '../../CSS/FilmPage.css';
 
 // /film/filmTitle/filmID
@@ -56,8 +56,9 @@ function FilmPage(){
                     </Button>
                 </p>
             </Typography>
+            <p>Durata: {film.duration}</p>
             <Grid container spacing={4}>
-                <Grid xs={12} sm={4} size={4}>
+                <Grid size={{xs: 12, sm: 6, md: 4, lg:3}}>
 
                     <img className="locandina" src={film?.poster_path} alt="Locandina del film" />
                     {/* Bottoni per gestire il film */}
@@ -65,20 +66,20 @@ function FilmPage(){
 
 
                     { /* Rating */ }
-                    {film.avgRating ?
+                    {film.avgRating &&
                         <Box className="valutazione">
                             <p className="rating">Rating medio:  {film.avgRating}</p>
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
-                        </Box> : null
+                        </Box>
                     }
-                    {film.userRating ?
+                    {film.userRating &&
                         <Box className="valutazione">
                             <p className="rating">Il mio rating: </p>
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
-                        </Box> : null
+                        </Box>
                     }
 
-                    <FilmProviders film={film} />
+                    <FilmProviders rent={film.rent} flatrate={film.flatrate} buy={film.buy} />
 
 
                 </Grid>
@@ -88,12 +89,12 @@ function FilmPage(){
                     <p className="testo">{film.tagline}</p> {/* //slogan film */}
                     <p className="testo">{film.overview}</p> {/* //trama */}
                     <Stack className="stack" direction="row" spacing={1}>
-                        {film?.trailerLink ?
+                        {film?.trailerLink &&
                         <Button sx={{padding:"0"}} component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
                             <Tooltip title="Trailer">
                                 <YouTubeIcon sx={{display:"flex", color:"red",fontSize:{xs:"20px", md:"2vw"}, padding: 0}}/>
                             </Tooltip>
-                        </Button> : null
+                        </Button>
                     }
                     {film?.genres.map( genre =>
                         <Chip sx={{fontSize:"clamp(13px,1.2vw,25px)"}} label={genre.name} />) }
@@ -107,7 +108,7 @@ function FilmPage(){
                       🎬 Film simili a "{film.title}"
                     </Button>
 
-                    <FilmCollection film={film} />
+                    <FilmCollection collection={film.collection} />
 
                     </Grid>
                 </Grid>

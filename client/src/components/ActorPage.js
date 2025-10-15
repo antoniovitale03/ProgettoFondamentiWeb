@@ -11,9 +11,7 @@ function ActorPage() {
 
     let { actorID } = useParams();
 
-    const [actorPersonalInfo, setActorPersonalInfo] = useState([]);
-    const [actorCast, setActorCast] = useState([]);
-    const [actorCrew, setActorCrew] = useState([]);
+    const [actor, setActor] = useState(null);
     const {showNotification} = useNotification();
 
     useDocumentTitle(actorName);
@@ -23,10 +21,8 @@ function ActorPage() {
         async function fetchActor(){
             try{
                 const response = await api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`)
-                const actor = response.data;
-                setActorPersonalInfo(actor.personalInfo);
-                setActorCast(actor.cast);
-                setActorCrew(actor.crew);
+                const actor = await response.data;
+                setActor(actor);
             }catch(error){
                 showNotification(error.response.message, "error")
             }
@@ -35,52 +31,52 @@ function ActorPage() {
         fetchActor();
     }, [actorName, actorID]);
 
-
+if (actor){
     return(
         <Box>
-            <Typography sx={{fontSize:{xs:"25px", md:"2.2vw"}, margin:"20px", fontWeight:"bold"}}>{actorPersonalInfo.name}</Typography>
+            <Typography sx={{fontSize:{xs:"25px", md:"2.2vw"}, margin:"20px", fontWeight:"bold"}}>{actor.personalInfo.name}</Typography>
             <Grid container spacing={1} alignItems="flex-start">
                 <Grid xs={12} sm={6} md={4}>
-                    <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={actorPersonalInfo.profile_image} alt="Immagine dell'attore"/>
+                    <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={actor.personalInfo.profile_image} alt="Immagine dell'attore"/>
                 </Grid>
                 <Grid xs={12} sm={6} md={8} size={8}>
-                    <p style={{fontSize:{xs:"15px", md:"1,5vw"}}}> Data di nascita: {actorPersonalInfo.birthday}</p>
-                    <p style ={{flexWrap:"wrap", fontSize:{xs:"15px", md:"1,5vw"}}}>Biografia: {actorPersonalInfo.biography}</p>
+                    <p style={{fontSize:{xs:"15px", md:"1,5vw"}}}> Data di nascita: {actor.personalInfo.birthday}</p>
+                    <p style ={{flexWrap:"wrap", fontSize:{xs:"15px", md:"1,5vw"}}}>Biografia: {actor.personalInfo.biography}</p>
                 </Grid>
             </Grid>
 
-            {actorCast.length !== 0 ?
+            {actor.cast.length > 0 &&
                 <div>
-                <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {actorPersonalInfo.name} ha performato come attore/attrice ({actorCast.length})</Typography>
+                <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {actor.personalInfo.name} ha performato come attore/attrice ({actor.cast.length})</Typography>
 
                 <Grid container spacing={2}>
-                    {actorCast.map(film =>
+                    {actor.cast.map(film =>
                         <Grid key={film._id} xs={12} sm={6} md={4} size={2}>
                             <FilmCard film={film}/>
                         </Grid>
                     )}
                 </Grid>
-                </div>: null
+                </div>
             }
 
-            {actorCrew.length !== 0 ?
+            {actor.crew.length !== 0 ?
                 <Box>
-                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}} >Lista dei film in cui {actorPersonalInfo.name} ha svolto un ruolo tecnico ({actorCrew.length}) </Typography>
+                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}} >Lista dei film in cui {actor.personalInfo.name} ha svolto un ruolo tecnico ({actor.crew.length}) </Typography>
                     <Grid container spacing={2}>
-                        {actorCrew.map(film =>
+                        {actor.crew.map(film =>
                             <Grid key={film._id} xs={12} sm={6} md={4} size={2} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}}>
                                 <FilmCard film={film} sx={{height:"100%"}} />
                             </Grid>
                         )}
                     </Grid>
-                </Box> : <Typography sx={{fontSize:{xs:"15px", md:"1,5vw"}, margin:"20px", fontWeight:"bold"}}>{actorPersonalInfo.name} non ha svolto in nessun film un ruolo tecnico</Typography>
+                </Box> : <Typography sx={{fontSize:{xs:"15px", md:"1,5vw"}, margin:"20px", fontWeight:"bold"}}>{actor.personalInfo.name} non ha svolto in nessun film un ruolo tecnico</Typography>
             }
 
 
 
         </Box>
 
-    )
+    )}
 }
 
 export default ActorPage;
