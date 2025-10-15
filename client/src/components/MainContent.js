@@ -33,7 +33,7 @@ import SimilarFilms from "./FilmPage/SimilarFilms";
 import About from "./About";
 import Contact from "./Contact";
 import Help from "./Help";
-//*Il main Content  occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
+//*Il main Content occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
 function MainContent() {
     const { isLoggedIn } = useAuth();
     if (isLoggedIn) {
