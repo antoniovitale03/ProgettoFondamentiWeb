@@ -1,0 +1,34 @@
+.box-button{
+    display: flex;
+    max-width: 100%;
+    height: auto;
+    flex-wrap: wrap;
+    padding: 2px;
+    border: 1px solid darkgreen;
+    justify-content: space-around;
+}
+
+.icon{
+    font-size: 1.8vw;
+    padding: 1px;
+    color: black;
+}
+@media (max-width: 900px) {
+    .box-button .icon{
+        font-size: 13px;
+        color: black;
+    }
+}
+
+.time-icon{
+    color: violet;
+}
+.thumb-icon{
+    color: blue;
+}
+.favorite-icon{
+    color: red;
+}
+.remove-icon{
+    color: green;
+}

@@ -1,49 +1,51 @@
 import {Box, Tooltip} from "@mui/material";
 import * as React from "react";
+import "../CSS/FilmProviders.css"
 
-function FilmProviders({ rent, flatrate, buy }) {
+function FilmProviders({ film }) {
     return(
         <Box>
-        {rent &&
+        {film?.rent ?
             <Box>
-                <h2>Noleggia</h2>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
-                    { rent.map( film =>
+                <p className="text">Noleggia</p>
+                <Box className="box">
+                    { film.rent.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img src={film.logo_path} style={{ width: '100%' }} />
+                            <img className="img" src={film.logo_path}/>
                         </Tooltip>
                     )
                     }
                 </Box>
             </Box>
+            : null
         }
 
-        { flatrate &&
+        { film?.flatrate ?
             <Box>
-                <h2>Guarda in streaming</h2>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
-                    { flatrate.map( film =>
+                <p className="text">Guarda in streaming</p>
+                <Box className="box">
+                    { film.flatrate.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img src={film.logo_path} />
+                            <img className="img" src={film.logo_path} />
                         </Tooltip>
                     )
                     }
                 </Box>
-            </Box>
+            </Box> : null
         }
 
-        { buy &&
+        { film?.buy ?
             <Box>
-                <h2>Acquista</h2>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 1 }}>
-                    { buy.map( film =>
+                <p className="text">Acquista</p>
+                <Box className="box">
+                    { film.buy.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img src={film.logo_path} style={{ width: '100%' }} />
+                            <img className="img" src={film.logo_path}/>
                         </Tooltip>
                     )
                     }
                 </Box>
-            </Box>
+            </Box> : null
         }
         </Box>
     )

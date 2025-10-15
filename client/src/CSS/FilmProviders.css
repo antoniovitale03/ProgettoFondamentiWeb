@@ -1,0 +1,25 @@
+.box{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1vw;
+}
+
+.img{
+    width: 5vw;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid black;
+}
+
+.text{
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.3vw;
+}
+@media (max-width: 600px){
+    .text{
+        font-size: 13px;
+    }
+}

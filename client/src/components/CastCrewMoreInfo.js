@@ -19,42 +19,42 @@ function CastCrewMoreInfo({ film }) {
         <div>
             <MenuItem>
                 <h4>Original language: </h4>
-                <p>{film.details.original_language}</p>
+                <p>{film?.details.original_language}</p>
             </MenuItem>
             <MenuItem>
                 <h4>Original country: </h4>
-                <p>{film.details.origin_country?.[0]}</p>
+                <p>{film?.details.origin_country?.[0]}</p>
             </MenuItem>
-            <MenuItem>
-                <h4>Spoken languages: </h4>
-                { film.details.spoken_languages?.map( (language) => <p> {language} </p>) }
+            <MenuItem sx={{flexWrap:"wrap"}}>
+                <h4 style={{margin:"0"}}>Spoken languages: </h4>
+                { film?.details.spoken_languages?.map( (language) => <p> {language} </p>) }
             </MenuItem>
-            <MenuItem>
-                <h4>Production Companies:</h4>
-                { film.details.production_companies?.map( e => <p> {e.name}({e.country}), </p>) }
+            <MenuItem sx={{flexWrap:"wrap"}}>
+                <h4 style={{margin:"0"}}>Production Companies: </h4>
+                { film?.details.production_companies?.map( e => <p style={{margin:"0"}}> {e.name}({e.country}), </p>) }
             </MenuItem>
             <MenuItem>
                 <h4>Revenue: </h4>
-                <p>{film.details.revenue}</p>
+                <p>{film?.details.revenue}</p>
             </MenuItem>
             <MenuItem>
                 <h4>Budget: </h4>
-                <p>{film.details.budget}</p>
+                <p>{film?.details.budget}</p>
             </MenuItem>
         </div>
     )
 
     return (
         <Box>
-            <Accordion sx={{ width: '50%' }}>
+            <Accordion sx={{width:{xs:"200px", md:"35vw"} }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}> {/*parte visibile e cliccabile */}
-                    <Typography>Cast</Typography>
+                    <Typography sx={{fontSize:{xs:"12px", md:"1vw"}}}>Cast</Typography>
                 </AccordionSummary>
                 <AccordionDetails> {/* parte visibile una volta cliccato il pannello*/}
                     <ImageList cols={3} gap={7} >
                         {film.castPreview.map((actor) =>
                             <ImageListItem key={actor.id} component={Link} to={`/actor/${actor.name.replaceAll(" ", "-")}/${actor.id}`}>
-                                <img width='100%' height='100%' style={{ objectFit: 'cover' }}
+                                <img style={{ objectFit: 'cover'}}
                                      src={actor.profile_path}
                                      alt={actor.name}
                                 />
@@ -67,16 +67,16 @@ function CastCrewMoreInfo({ film }) {
                         }
                     </ImageList>
                     <div>
-                        <NavLink to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/cast`}>
+                        <NavLink style={{textDecoration:"none", color:"blue"}} to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/cast`}>
                             Mostra altri...
                         </NavLink>
                     </div>
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{ width: '50%' }}>
+            <Accordion sx={{width:{xs:"200px", md:"35vw"} }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                    <Typography>Crew</Typography>
+                    <Typography sx={{fontSize:{xs:"12px", md:"1vw"}}}>Crew</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <ImageList cols={3} gap={7}>
@@ -94,15 +94,15 @@ function CastCrewMoreInfo({ film }) {
                         )
                         }
                     </ImageList>
-                    <NavLink to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/crew`}>
+                    <NavLink style={{textDecoration:"none", color:"blue"}} to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/crew`}>
                         Mostra altri...
                     </NavLink>
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{ width: '50%' }}>
+            <Accordion sx={{width:{xs:"200px", md:"35vw"}}}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                    <Typography>Altre info</Typography>
+                    <Typography sx={{fontSize:{xs:"12px", md:"1vw"}}}>Altre info</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     {detailsMenuItems}
