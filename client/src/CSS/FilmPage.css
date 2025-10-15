@@ -1,0 +1,65 @@
+.locandina{
+    display: block;
+    object-fit: contain;
+    height: auto;
+    width: 100%;
+}
+@media (max-width: 600px){
+    .locandina{
+        display: block;
+        height: auto;
+        max-width: 100%;
+    }
+
+}
+
+
+.valutazione{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+}
+.rating {
+    font-size: 1.2vw;
+    flex-wrap: nowrap; /* Non manda a capo il testo */
+}
+@media (max-width: 900px){
+    .valutazione{
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 900px){
+    .rating {
+        font-size: 12px;
+        margin-bottom: 1px;
+    }
+}
+
+
+.testo{
+    display: flex;
+    gap: 5px;
+    font-size: 1.5vw;
+    overflow-wrap: break-word;
+    margin-top: 0;
+}
+@media (max-width: 600px){
+    .testo{
+        font-size: 15px;
+    }
+}
+
+
+
+.stack{
+    align-items: center;
+    margin: 5px;
+}
+@media (max-width: 600px){
+    .stack{
+        flex-wrap: wrap;
+        gap: 2px;
+    }
+}
