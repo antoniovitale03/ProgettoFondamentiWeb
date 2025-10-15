@@ -1,4 +1,4 @@
-import {Box, Button, Rating, TextField, Tooltip} from "@mui/material";
+import {Box, IconButton,Rating, TextField, Tooltip} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import api from "../api";
@@ -14,6 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import "../CSS/FilmButton.css"
 
 function FilmButtons({ film }) {
 
@@ -160,75 +161,78 @@ function FilmButtons({ film }) {
     const reviewMenuItems = (<>
             <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
             <Rating name="review-rating" value={reviewRating} onChange={(event,rating) => setReviewRating(rating)} precision={0.5} />
-            <Button onClick={() => addReview(film, review, reviewRating)}>
+            <IconButton onClick={() => addReview(film, review, reviewRating)}>
                 Salva
-            </Button>
+            </IconButton>
         </>
     )
-
     return(
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap:6 }}>
+        <Box className="box-button">
             {watchlistButton === 1 ?
                 <Tooltip title="Aggiungi alla watchlist">
-                    <Button onClick={addToWatchlist}>
-                        <AccessTimeIcon />
-                    </Button>
+                    <IconButton onClick={addToWatchlist}>
+                        <AccessTimeIcon className="icon"/>
+                    </IconButton>
                 </Tooltip> :
                 <Tooltip title="Rimuovi dalla watchlist">
-                    <Button onClick={removeFromWatchlist}>
-                        <AccessTimeFilledIcon />
-                    </Button>
+                    <IconButton onClick={removeFromWatchlist}>
+                        <AccessTimeFilledIcon className="icon time-icon"/>
+                    </IconButton>
                 </Tooltip>
             }
             {likedButton === 1 ?
                 <Tooltip title="Aggiungi ai film piaciuti">
-                    <Button onClick={addToLiked}>
-                        <ThumbUpOffAltIcon />
-                    </Button>
+                    <IconButton onClick={addToLiked}>
+                        <ThumbUpOffAltIcon className="icon"/>
+                    </IconButton>
                 </Tooltip> :
                 <Tooltip title="Rimuovi dai film piaciuti">
-                    <Button onClick={removeFromLiked}>
-                        <ThumbUpIcon />
-                    </Button>
+                    <IconButton onClick={removeFromLiked}>
+                        <ThumbUpIcon className="icon thumb-icon"/>
+                    </IconButton>
                 </Tooltip>
             }
 
             {reviewButton === 1 ?
-                <Tooltip title="Aggiungi una recensione">
-                    <DropDownMenu buttonContent={<ReviewsOutlinedIcon />} menuContent={reviewMenuItems} />
-                </Tooltip>
+                    <DropDownMenu buttonContent={
+                        <Tooltip title="Aggiungi una recensione">
+                            <IconButton>
+                                <ReviewsOutlinedIcon className="icon"/>
+                            </IconButton>
+                        </Tooltip>
+                        } menuContent={reviewMenuItems} />
                 :
                 <Tooltip title="Rimuovi una recensione">
-                    <Button onClick={deleteReview}>
-                        <ReviewsIcon />
-                    </Button>
+                    <IconButton onClick={deleteReview}>
+                        <ReviewsIcon className="icon"/>
+                    </IconButton>
                 </Tooltip>
             }
 
             {favoritesButton === 1 ?
                 <Tooltip title="Aggiungi ai film preferiti">
-                    <Button onClick={addToFavorites}>
-                        <FavoriteBorderIcon />
-                    </Button>
+                    <IconButton onClick={addToFavorites}>
+                        <FavoriteBorderIcon className="icon"/>
+                    </IconButton>
                 </Tooltip>:
                 <Tooltip title="Rimuovi dai film preferiti">
-                    <Button onClick={removeFromFavorites}>
-                        <FavoriteIcon />
-                    </Button>
+                    <IconButton onClick={removeFromFavorites}>
+                        <FavoriteIcon className="icon favorite-icon"/>
+                    </IconButton>
                 </Tooltip>
             }
 
             {watchedButton === 1 ?
                 <Tooltip title="Aggiungi ai film visti">
-                    <Button onClick={addToWatched}>
-                        <AddCircleOutlineIcon />
-                    </Button>
+                    <IconButton onClick={addToWatched}>
+                        <AddCircleOutlineIcon className="icon"/>
+                    </IconButton>
                 </Tooltip>
                 :
                 <Tooltip title="Rimuovi dai film visti">
-                    <Button onClick={removeFromWatched}>
-                        <RemoveCircleOutlineIcon />
-                    </Button>
+                    <IconButton onClick={removeFromWatched}>
+                        <RemoveCircleOutlineIcon className="icon remove-icon"/>
+                    </IconButton>
                 </Tooltip>
             }
             { /* se aggiungo il film a quelli visti, lo posso riaggiungere se lo vedo altre volte
