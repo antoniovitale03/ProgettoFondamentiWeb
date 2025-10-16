@@ -5,10 +5,11 @@ import {Box,Button,Grid,Rating,Tooltip,Typography, Chip, Stack}from "@mui/materi
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import api from "../../api";
 import FilmProviders from "./FilmProviders";
-import CastCrewMoreInfo from "../CastCrewMoreInfo";
+import CastCrewMoreInfo from "./CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
 import FilmButtons from "./FilmButtons";
 import '../../CSS/FilmPage.css';
+import {useNotification} from "../../context/notificationContext"
 
 // /film/filmTitle/filmID
 function FilmPage(){
@@ -18,7 +19,7 @@ function FilmPage(){
 
     filmTitle = filmTitle.replaceAll("-", " ");
     useDocumentTitle(filmTitle);
-
+    const {showNotification} = useNotification();
 
     const [film, setFilm] = useState(null);
 
@@ -26,20 +27,15 @@ function FilmPage(){
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
-        async function fetchFilm(){
-            if (filmTitle && filmID) {
-                const response = await api.get(`http://localhost:5001/api/films/get-film/${filmID}`);
-                const film = await response.data;
-                setFilm(film);
-            }
-        }
-        fetchFilm();
+        api.get(`http://localhost:5001/api/films/get-film/${filmID}`)
+            .then(response => setFilm(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID])
 
 
     if(!film){
         return(
-            <Box>Caricamento del film... </Box>
+            <Typography component="h1">Caricamento del film... </Typography>
         )
     }
 
@@ -48,13 +44,13 @@ function FilmPage(){
             <Typography variant="h4" sx={{ textAlign: "center" }}>
                 {film?.title}
                 <Button component={Link} to={`/films/${film.release_year}`}>( {film.release_year} )</Button>
-                <p style={{margin:"0",fontSize:"clamp(18px,1.5vw,25px)"}}>Diretto da
+                <Typography component="p" style={{margin:"0",fontSize:"clamp(18px,1.5vw,25px)"}}>Diretto da
                     <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
                         <strong>{film?.director.name}</strong>
                     </Button>
-                </p>
+                </Typography>
             </Typography>
-            <p>Durata: {film.duration}</p>
+            <Typography component="p">Durata: {film.duration}</Typography>
             <Grid container spacing={4}>
                 <Grid size={{xs: 12, sm: 6, md: 4, lg:3}}>
 
@@ -66,13 +62,13 @@ function FilmPage(){
                     { /* Rating */ }
                     {film.avgRating &&
                         <Box className="valutazione">
-                            <p className="rating">Rating medio:  {film.avgRating}</p>
+                            <Typography component="p" className="rating">Rating medio:  {film.avgRating}</Typography>
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
                         </Box>
                     }
-                    {film.userRating !== 0 &&
+                    {film.userRating &&
                         <Box className="valutazione">
-                            <p className="rating">Il mio rating: </p>
+                            <Typography component="p" className="rating">Il mio rating:  </Typography>
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"}, alignItems:"center"}} name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
                         </Box>
                     }
@@ -84,8 +80,8 @@ function FilmPage(){
 
                 {/* colonna di destra */}
                 <Grid size={{ xs: 12, sm: 8}}>
-                    <p className="testo">{film.tagline}</p> {/* //slogan film */}
-                    <p className="testo">{film.overview}</p> {/* //trama */}
+                    <Typography component="p" className="testo">{film.tagline}</Typography> {/* //slogan film */}
+                    <Typography component="p" className="testo">{film.overview}</Typography> {/* //trama */}
                     <Stack className="stack" direction="row" spacing={1}>
                         {film.trailerLink &&
                         <Button sx={{padding:"0"}} component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">

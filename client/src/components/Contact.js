@@ -5,7 +5,7 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 function Contact () {
     useDocumentTitle("Contact");
     return (
-        <Typography variant="p">Qui inseriamo le nostre informazioni di contatto (email istituzionale del poliba) e/o un form in cui l'utente può inviarci un messaggio.</Typography>
+        <Typography component="p">Qui inseriamo le nostre informazioni di contatto (email istituzionale del poliba) e/o un form in cui l'utente può inviarci un messaggio.</Typography>
     )
 }
 

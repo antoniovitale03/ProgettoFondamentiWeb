@@ -32,7 +32,7 @@ function Header() {
         }
     }
 
-    const sendFriendRequest = async () => {
+    const sendFriendRequest = () => {
         setIsAddFriendMenuOpen(false);
         setFriendUsername("");
         api.post(`http://localhost:5001/api/user/${friendUsername}/follow`)
@@ -48,15 +48,13 @@ function Header() {
                 <SearchIcon />
             </IconButton>
         </Box>
-
         ]
-
 
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`}/></Tooltip>}
                       menuContent={<UserMenu setIsUserMenuOpen={setIsUserMenuOpen} />} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
-        <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
-        <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></Button>,
+        <IconButton href={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></IconButton>,
+        <IconButton href="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></IconButton>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
             <Button variant="contained" onClick={handleSearch}>
@@ -64,18 +62,18 @@ function Header() {
             </Button>
         </Box>,
         <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
-        <Button component={Link} to="/">
+        <IconButton href="/">
             <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" style={{ height: '50px', width: 'auto' }}/>
-        </Button>
+        </IconButton>
     ]
     
     let notLoggedDefaultHeaderItems = [
-        <IconButton component={Link} to={"/archive"}>
+        <IconButton href="/archive">
             <ArchiveIcon />
         </IconButton>,
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
-        <IconButton component={Link} to={"/"}>
+        <IconButton href="/">
             <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="" style={{ height: '50px', width: 'auto' }}/>
         </IconButton>
     ]

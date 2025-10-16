@@ -44,8 +44,7 @@ function FilmButtons({ film }) {
 
 
     useEffect(() => {
-        const fetchFilmStatus = async () => {
-            //renderizzo i bottoni in base allo stato attuale del film
+            //renderizzo i bottoni in base allo stato attuale del film (ogni volta che carico un film)
             if(film){
                 setButtons({
                     watchlist: film.status.isInWatchlist,
@@ -56,8 +55,6 @@ function FilmButtons({ film }) {
                     lists: film.status.lists,
                 });
             }
-        }
-        fetchFilmStatus();
     }, [film])
 
 
@@ -122,13 +119,13 @@ function FilmButtons({ film }) {
         }
     }
 
-    const reviewMenuItems = (<>
+    const reviewMenuItems = (<Box>
             <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
             <Rating name="review-rating" value={reviewRating} onChange={(event, rating) => setReviewRating(rating)} precision={0.5} />
             <IconButton onClick={() => addReview(film, review, reviewRating)}>
                 Salva
             </IconButton>
-        </>
+        </Box>
     )
 
 
@@ -204,7 +201,7 @@ function FilmButtons({ film }) {
     const removeFromList = async (list) => {
         try{
             await api.delete(`http://localhost:5001/api/films/lists/remove-from-list/${film._id}/${list.name}`);
-            showNotification(<strong>"{film.title}" rimosso dalla lista <a href={`/${user.username}/${list.name}/list`} style={{ color: 'green' }}>{list.name}</a></strong>, "success")
+            showNotification(<strong>"{film.title}" rimosso da <a href={`/${user.username}/${list.name}/list`} style={{ color: 'green' }}>"{list.name}"</a></strong>, "success")
             setIsListsMenuOpen(false);
             setButtons({...buttons, lists: buttons.lists.map(l => l.name === list.name ? {...l, isInList: !l.isInList} : l)});
         }catch(error){

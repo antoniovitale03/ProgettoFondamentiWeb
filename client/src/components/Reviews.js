@@ -1,6 +1,6 @@
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import ReviewCard from "./Cards/ReviewCard";
 import SearchFilters from "./SearchFilters";
 import {useNotification} from "../context/notificationContext";
@@ -8,6 +8,7 @@ import api from "../api";
 import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
 import _ from "lodash";
+import GetParams from "./hooks/useGetSearchParams";
 
 function Reviews(){
 
@@ -29,36 +30,25 @@ function Reviews(){
     });
 
     useEffect(() => {
-        const getReviews = async () => {
-            try{
-                if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
-                    const response = await api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`);
-                    const films = await response.data;
-                    setReviews(films);
-                    setNumReviews(films.length);
-                }else{
-                    const params = new URLSearchParams();
-                    if (filters.genre !== "") params.append("genre", filters.genre);
-                    if (filters.decade !== "") params.append("decade", filters.decade);
-                    if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-                    if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-                    if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-
-                    const response = await api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}?${params.toString()}`);
-                    const films = await response.data;
-                    setReviews(films);
-                }
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
+        if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
+            api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`)
+                .then(response => {
+                    setReviews(response.data);
+                    setNumReviews(response.data.length);
+                })
+                .catch(error => showNotification(error.response.data, "error"));
+        }else{
+            const params = GetParams(filters);
+            api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}?${params.toString()}`)
+                .then(response => setReviews(response.data))
+                .catch(error => showNotification(error.response.data, "error"));
         }
-        getReviews();
     }, [username, filters, showNotification]);
 
     const removeReview = async (filmID, reviewTitle) => {
         try {
             await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
-            showNotification(<p>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></p>, "success");
+            showNotification(<strong>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
             setReviews(currentReviews =>
                 currentReviews.filter(review => review.film._id !== filmID)
             );
@@ -72,11 +62,14 @@ function Reviews(){
         <Box>
             {numReviews !== 0 ?
                 <Box>
-                    { user.username === username ? <h1>Hai recensito {numReviews} film </h1> : <h1>{username} ha recensito {numReviews} film</h1> }
+                    { user.username === username ?
+                        <Typography component="h1">Hai recensito {numReviews} film </Typography>
+                        : <Typography component="h1">{username} ha recensito {numReviews} film</Typography>
+                    }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
 
-                    <p>{reviews.length} recensioni trovate</p>
+                    <Typography component="p">{reviews.length} recensioni trovate</Typography>
 
                     <Grid container spacing={2}>
                         { reviews.map(review =>
@@ -87,7 +80,10 @@ function Reviews(){
                     </Grid>
                 </Box> :
                 <Box>
-                    {user.username === username ? <h1>Non hai ancora recensito nessun film</h1> : <h1>{username} non ha ancora recensito nessun film</h1> }
+                    {user.username === username ?
+                        <Typography component="h1">Non hai ancora recensito nessun film</Typography>
+                        : <Typography component="h1">{username} non ha ancora recensito nessun film</Typography>
+                    }
                 </Box>
             }
         </Box>

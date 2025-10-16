@@ -1,7 +1,7 @@
 import CrewMemberCard from './Cards/CrewMemberCard'
 import {useParams} from "react-router-dom";
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -23,7 +23,7 @@ function CrewPage(){
 
     return(
         <Box marginBottom={10}>
-            <h1>Crew di "{filmTitle}" ({crew?.length} membri)</h1>
+            <Typography component="h1">Crew di "{filmTitle}" ({crew?.length} membri)</Typography>
             <Grid container spacing={2} marginBottom={10}>
                 {
                     crew?.map(crewMember =>

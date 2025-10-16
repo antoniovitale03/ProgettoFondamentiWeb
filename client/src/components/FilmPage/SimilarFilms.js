@@ -25,24 +25,20 @@ function SimilarFilms(){
     });
 
     useEffect(() => {
-        const fetchSimilarFilms = async () => {
-            try{
-                const params = new URLSearchParams();
-                params.append("page", filters.page);
-                if (filters.genre !== "") params.append("genre", filters.genre);
-                if (filters.decade !== "") params.append("decade", filters.decade);
-                if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-                if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-                if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-                const response = await fetch(`http://localhost:5001/api/films/get-similar-films/${filmID}?${params.toString()}`);
-                const data = await response.json();
+        const params = new URLSearchParams();
+        params.append("page", filters.page);
+        if (filters.genre !== "") params.append("genre", filters.genre);
+        if (filters.decade !== "") params.append("decade", filters.decade);
+        if (filters.minRating !== 0) params.append("minRating", filters.minRating);
+        if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
+        if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
+        fetch(`http://localhost:5001/api/films/get-similar-films/${filmID}?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
                 setSimilarFilms(data.films);
                 setTotalPages(data.totalPages);
-            }catch(error){
-                showNotification("Errore nel caricamento dei film simili", "error");
-            }
-        }
-        fetchSimilarFilms();
+            })
+            .catch(() => showNotification("Errore nel caricamento dei film simili", "error"));
     }, [filmTitle, filmID, filters, showNotification])
 
     const handlePageChange = (event, value) => {

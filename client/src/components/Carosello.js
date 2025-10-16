@@ -8,19 +8,19 @@ import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 
 function Carosello({ films, title, link }){
 
-        //abbiamo bisogno di uno stato che tenga conto dell'indice
-        const [indice, setIndice] = useState(0);
-        //numero di immagini visibili a schermo
-        const immvisibili = 5;
+    //abbiamo bisogno di uno stato che tenga conto dell'indice
+    const [indice, setIndice] = useState(0);
+    //numero di immagini visibili a schermo
+    const immvisibili = 5;
 
-        const navigate = useNavigate();
+    const navigate = useNavigate();
+    //ora inseriamo le funzioni per poter cambiare immagine
 
-        //ora inseriamo le funzioni per poter cambiare immagine
-        const successiva = () => setIndice(i => (i + 1) % films.length);
+    const successiva = () => setIndice(i => Math.min(i + 1, films.length - immvisibili));
 
-        const precedente = () => setIndice(i => (i - 1 + films.length) % films.length);
+    const precedente = () => setIndice(i => Math.max(i - 1, 0));
 
-          return(
+    return(
     <Box className="carosello">
         <Typography component="p">
             <strong style={{fontSize:"50px", color:"#cad2c5"}}>

@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Box, InputLabel, Input, IconButton} from "@mui/material";
+import {Box, InputLabel, Input, IconButton, Typography} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import DropDownMenu from "./DropDownMenu";
 import {useEffect, useState} from "react";
@@ -20,13 +20,13 @@ function Lists(){
     const [lists, setLists] = useState([]);
     const [isAddListMenuOpen, setIsAddListMenuOpen] = useState(false);
 
-    const createList = async (e) => {
-        e.preventDefault();
+    const createList = async (event) => {
+        event.preventDefault();
         try{
             setIsAddListMenuOpen(false);
             setListName("");
             await api.post(`http://localhost:5001/api/films/lists/create-list/${listName}`);
-            showNotification(<p>Lista <a href={`/${user.username}/${listName}/list`} style={{ color: 'green' }}>{listName}</a> creata</p>, "success");
+            showNotification(<strong>Lista <a href={`/${user.username}/${listName}/list`} style={{ color: 'green' }}>{listName}</a> creata</strong>, "success");
             showNotification(`Lista "${listName}" creata`);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -53,7 +53,7 @@ function Lists(){
     return (
         lists.length > 0 ?
             <Box>
-                { user.username === username ? <h1>Le tue liste</h1> : <h1>Liste di {username}</h1> }
+                { user.username === username ? <Typography component="h1">Le tue liste</Typography> : <Typography component="h1">Liste di {username}</Typography> }
                 { user.username === username && <DropDownMenu buttonContent="Crea una nuova lista" menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} /> }
 
                 {
@@ -63,10 +63,10 @@ function Lists(){
             </Box>:
             user.username === username ?
                 <Box>
-                    <h1>Non hai ancora creato nessuna lista</h1>
+                    <Typography component="h1">Non hai ancora creato nessuna lista</Typography>
                     <DropDownMenu buttonContent="Crea una nuova lista" menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} />
                 </Box>:
-            <h1>{username} non ha creato ancora nessuna lista</h1>
+                <Typography component="h1">{username} non ha creato ancora nessuna lista</Typography>
 
 
 

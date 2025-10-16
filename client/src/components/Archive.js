@@ -5,7 +5,7 @@ import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import FilmCard from "./Cards/FilmCard";
 import SearchFilters from "./SearchFilters";
-
+import GetParams from "./hooks/useGetSearchParams";
 
 function Archive(){
     useDocumentTitle("Archive");
@@ -26,29 +26,16 @@ function Archive(){
 
     //effetto che ricerca i film ogni volta che i filtri cambiano o viene cambia la pagina di ricerca dei film
     useEffect(() => {
-        const fetchArchiveFilms = async () => {
-            try{
-                //costruisco i parametri di ricerca che vengono usati di default per mostrare i film al primo caricamento
-                //della pagina
-                const params = new URLSearchParams();
-                params.append("page", filters.page) //page non può mai essere null
-                if (filters.genre !== "") params.append("genre", filters.genre);
-                if (filters.decade !== "") params.append("decade", filters.decade);
-                if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-                if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-                if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-
-                const response = await api.get(`http://localhost:5001/api/films/get-archive?${params.toString()}`);
-
+        const params = GetParams(filters);
+        api.get(`http://localhost:5001/api/films/get-archive?${params.toString()}`)
+            .then(response => {
                 setArchive(response.data.films);
                 setTotalPages(response.data.totalPages);
-
-            }catch(error){
-                showNotification("Errore nel caricamento dei film", "error");
+            })
+            .catch(error => {
+                showNotification(error.response.data, "error");
                 setTotalPages(0);
-            }
-        }
-        fetchArchiveFilms();
+            });
     }, [filters, showNotification]);
 
     const handlePageChange = (event, value) => {

@@ -65,7 +65,7 @@ function ModifyAvatar() {
             setSelectAvatarButton(1);
 
             showNotification("Upload completato", "success");
-            sleep(1500);
+            await sleep(1500);
 
         } catch (error) {
             alert('Errore nel caricamento!');

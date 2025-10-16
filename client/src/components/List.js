@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import api from "../api";
-import {Grid, Stack} from "@mui/material";
+import {Grid, Stack, Typography} from "@mui/material";
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useNotification} from "../context/notificationContext";
@@ -26,7 +26,7 @@ function List(){
     const removeFromList = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/lists/remove-from-list/${filmID}/${listName}`);
-            showNotification(<p>"{filmTitle}" rimosso dalla lista {listName}</p>)
+            showNotification(<strong>"{filmTitle}" rimosso da "{listName}"</strong>)
             setList( currentList => currentList.filter( film => film._id !== filmID) );
         }catch(error){
             showNotification(error.response.data, "error");
@@ -35,8 +35,8 @@ function List(){
 
     return(
         <Stack spacing={7}>
-            <h1>Lista "{listName}" di {username}</h1>
-            <p>{list.length} film</p>
+            <Typography componenet="h1">Lista "{listName}" di {username}</Typography>
+            <Typography componenet="p">{list.length} film</Typography>
 
             <Grid container spacing={2}>
                 {

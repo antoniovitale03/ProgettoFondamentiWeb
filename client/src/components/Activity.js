@@ -1,13 +1,13 @@
 import {Avatar, ListItem, ListItemIcon, Rating, Typography} from "@mui/material";
-import {NavLink} from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 
-function ActivityElement({ activity }){
+function Activity({ activity }){
     if (activity.action === "ADD_TO_WATCHLIST") {
         return (
             <ListItem key={activity._id}>
                 <Typography component="p">
-                    <NavLink to={`/film/${activity.filmTitle.replaceAll(" ", "-")}/${activity.filmID}`}>{activity.filmTitle}</NavLink>  aggiunto alla
-                    <NavLink to={`/${activity.user.username}/watchlist`}> Watchlist</NavLink>   da
+                    <NavLink to={`/film/${activity.filmTitle.replaceAll(" ", "-")}/${activity.filmID}`} style={{ color: 'green', marginRight: 10}}>{activity.filmTitle}</NavLink>aggiunto alla
+                    <NavLink to={`/${activity.user.username}/watchlist`}>Watchlist</NavLink>   da
                     <NavLink to={`/${activity.user.username}/profile`}>{activity.user.username}</NavLink>
                     <ListItemIcon>
                         <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
@@ -56,4 +56,4 @@ function ActivityElement({ activity }){
     }
 }
 
-export default ActivityElement;
+export default Activity;

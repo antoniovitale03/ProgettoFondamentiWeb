@@ -6,6 +6,7 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
 import { Grid, Pagination, Stack} from "@mui/material";
 import SearchFilters from "./SearchFilters";
+import GetParams from "./hooks/useGetSearchParams";
 
 function FilmsByYear(){
     let {year} = useParams();
@@ -25,12 +26,7 @@ function FilmsByYear(){
 
     //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
-        const params = new URLSearchParams();
-        params.append("page", filters.page);
-        if(filters.genre !== "") params.append("genre", filters.genre);
-        if(filters.minRating !== 0) params.append("minRating", filters.minRating);
-        if(filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-        if(filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
+        const params = GetParams(filters);
         api.get(`http://localhost:5001/api/films/get-films/${year}?${params.toString()}`)
             .then(response => {
                 setFilms(response.data.films);

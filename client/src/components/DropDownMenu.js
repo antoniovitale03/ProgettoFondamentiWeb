@@ -2,7 +2,7 @@ import {Box, Button, Menu} from '@mui/material';
 function DropDownMenu({ buttonContent, menuContent, isMenuOpen, setIsMenuOpen } ) {
     return (
         <Box>
-            <Button aria-haspopup="true" onClick={(event) => setIsMenuOpen(event.currentTarget)}>
+            <Button onClick={(event) => setIsMenuOpen(event.currentTarget)}>
                 {buttonContent}
             </Button>
             <Menu anchorEl={isMenuOpen} open={isMenuOpen} onClose={ () => setIsMenuOpen(false)}>

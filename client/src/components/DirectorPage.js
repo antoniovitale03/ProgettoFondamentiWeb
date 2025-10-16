@@ -30,17 +30,17 @@ if(director){
                     <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={director.personalInfo.profile_image} alt="Immagine del direttore"/>
                 </Grid>
                 <Grid size={{ xs:12, sm:6, md:8 }}>
-                    {director.personalInfo.birthday && <p style={{fontSize: "clamp(15px,1vw,20px)"}}>Data di nascita: {director.personalInfo.birthday}</p> }
-                    {director.personalInfo.place_of_birth && <p style={{fontSize: "clamp(15px,1vw,20px)"}}>Luogo di nascita: {director.personalInfo.place_of_birth}</p>}
-                    <p style ={{flexWrap:"wrap", fontSize:"clamp(15px,1vw,20px)"}}>Biografia: {director.personalInfo.biography}</p>
+                    {director.personalInfo.birthday && <Typography component="p" style={{fontSize: "clamp(15px,1vw,20px)"}}>Data di nascita: {director.personalInfo.birthday}</Typography> }
+                    {director.personalInfo.place_of_birth && <Typography component="p" style={{fontSize: "clamp(15px,1vw,20px)"}}>Luogo di nascita: {director.personalInfo.place_of_birth}</Typography>}
+                    <Typography component="p" style={{flexWrap:"wrap", fontSize:"clamp(15px,1vw,20px)"}}>Biografia: {director.personalInfo.biography}</Typography>
                 </Grid>
             </Grid>
 
 
 
             {director.cast.length !== 0 ?
-                <div>
-                    <h1>Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</h1>
+                <Box>
+                    <Typography component="h1">Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</Typography>
                     <Grid container spacing={2}>
                         { director.cast.map(film =>
                             <Grid key={film._id} size={{ xs:12, sm:6, md:4 }} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}} >
@@ -48,7 +48,7 @@ if(director){
                             </Grid>)
                         }
                     </Grid>
-                </div>
+                </Box>
                 : <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>{director.personalInfo.name} non ha performato in nessun film come attore/attrice</Typography>
             }
 

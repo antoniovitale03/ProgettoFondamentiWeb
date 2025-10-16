@@ -1,16 +1,16 @@
 import api from "../api";
 import {useEffect, useState} from "react";
-import {Box, List} from "@mui/material";
+import {Box, List, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
-import ActivityElement from "./ActivityElement";
+import Activity from "./Activity";
 import useDocumentTitle from "./hooks/useDocumentTitle"
 import {useNotification} from "../context/notificationContext";
 
 function ActivityPage(){
-    const {showNotification} = useNotification()
+    const {showNotification} = useNotification();
     const [activity, setActivity] = useState(null);
     const {username} = useParams();
-    useDocumentTitle(`Attività di ${username}`)
+    useDocumentTitle(`Attività di ${username}`);
 
     useEffect(() => {
         api.get(`http://localhost:5001/api/user/${username}/get-activity`)
@@ -22,10 +22,10 @@ function ActivityPage(){
     return(
         activity ?
             <Box>
-                <h1>Attività di {username}</h1>
+                <Typography component="h1">Attività di {username}</Typography>
                 <List sx={{ width: '90%' }}>
                     {activity?.map(activity =>
-                        <ActivityElement activity={activity} key={activity.id}/>
+                        <Activity activity={activity} key={activity.id}/>
                     )}
                 </List>
             </Box>

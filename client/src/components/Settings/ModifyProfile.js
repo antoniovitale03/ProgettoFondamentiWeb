@@ -1,4 +1,4 @@
-import {Box, Button, FormControl, Input, InputLabel, Stack, TextField} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, Stack, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import "../../CSS/Form.css"
 import api from "../../api";
@@ -68,7 +68,7 @@ function ModifyProfile(){
         <Box className="page-container">
             <Box className="form-container">
                 <form onSubmit={handleSubmit}>
-                    <h1 style={{ textAlign:"left" }}>Modifica il tuo profilo</h1>
+                    <Typography component="p" style={{ textAlign:"left" }}>Modifica il tuo profilo</Typography>
                     <Stack spacing={4}>
                         <FormControl>
                             <InputLabel htmlFor="username">Username</InputLabel>

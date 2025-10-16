@@ -44,7 +44,7 @@ function LoginForm({  setStep, email, setEmail }) {
     return(
         <Box>
             <form onSubmit={handleLogin}>
-                <h2>Login</h2>
+                <Typography component="h2">Login</Typography>
                     <Stack spacing={5}>
 
                         <FormControl>

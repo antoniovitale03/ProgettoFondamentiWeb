@@ -1,6 +1,6 @@
 import api from "../api";
 import {useEffect, useState} from "react";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import UserCard from "./Cards/UserCard";
 import {useNotification} from "../context/notificationContext";
 import {useParams} from "react-router-dom";
@@ -28,7 +28,7 @@ function Following() {
     const unfollow = async (userId, username) => {
         try{
             await api.delete(`http://localhost:5001/api/user/${userId}/unfollow`);
-            showNotification(<p>Hai rimosso <a href={`/${username}/profile`} style={{ color: 'green' }}>{username}</a> dai seguiti</p>, "success");
+            showNotification(<strong>Hai rimosso <a href={`/${username}/profile`} style={{ color: 'green' }}>{username}</a> dai seguiti</strong>, "success");
             setFollowing(currentFollowing =>
                 currentFollowing.filter(user => user.username !== username)
             );
@@ -39,7 +39,7 @@ function Following() {
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto',  }}>
-            <h1>Persone seguite da {username}</h1>
+            <Typography component="h1">Persone seguite da {username}</Typography>
             {
                 following.map( user =>
                 <UserCard user={user} showRemoveButton={myUsername === username} onUnfollow={unfollow} />)

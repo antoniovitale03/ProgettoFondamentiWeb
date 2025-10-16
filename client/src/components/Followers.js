@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import UserCard from "./Cards/UserCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 function Followers() {
@@ -21,7 +21,7 @@ function Followers() {
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto' }}>
-            <h1>Followers di {username}</h1>
+            <Typography component="h1">Followers di {username}</Typography>
             {
                 followers.map( user => <UserCard user={user} />)
             }

@@ -28,7 +28,7 @@ function Profile(){
         api.get(`http://localhost:5001/api/user/${username}/get-profile-info`)
             .then(response => {
                 setProfile(response.data);
-                setFavoritesFilms(profile.favorites);
+                setFavoritesFilms(response.data.favorites);
             })
         .catch(error => showNotification(error.response.data, "error"));
     }, [username])
@@ -36,7 +36,7 @@ function Profile(){
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(<p>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a> </p>, "success");
+            showNotification(<strong>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a> </strong>, "success");
             setFavoritesFilms(currentFilms =>
                 currentFilms.filter(film => film._id !== filmID));
         }catch(error){
@@ -84,9 +84,9 @@ function Profile(){
                 {
                     profile.latestWatched &&
                     <Box>
-                        <h1>Ultimi film visti
+                        <Typography component="h1">Ultimi film visti
                         <Button component={Link} to={`/${username}/watched`}> <InfoIcon /> Più dettagli </Button>
-                        </h1>
+                        </Typography>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             { profile.latestWatched.map((film) =>
                                 <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
@@ -101,9 +101,9 @@ function Profile(){
                 {
                     profile.latestReviews &&
                     <Box>
-                        <h1>Ultime recensioni
+                        <Typography component="h1">Ultime recensioni
                         <Button component={Link} to={`/${username}/reviews`}><InfoIcon /> Più dettagli</Button>
-                        </h1>
+                        </Typography>
                         <Grid container spacing={2}>
                             { profile.latestReviews.map(review =>
                                 <Grid key={review.film._id} size={6}>

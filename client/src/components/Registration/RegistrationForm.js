@@ -1,7 +1,7 @@
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import React, {useState} from "react";
-import {Box, Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, Stack, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import sleep from "../hooks/useSleep";
 
@@ -38,7 +38,7 @@ function RegistrationForm({ setRegistrationData, setStep }) {
     return (
         <Box>
             <form onSubmit={handleSubmit}>
-                <h2>Registrazione</h2>
+                <Typography component="h2">Registrazione</Typography>
 
                 <Stack spacing={5}>
                     <FormControl>
@@ -62,7 +62,7 @@ function RegistrationForm({ setRegistrationData, setStep }) {
                 }
 
             </form>
-            <p className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </p>
+            <Typography component="p" className="registration-login-link">Hai già un account? Clicca <NavLink to="/login">qui</NavLink> per loggarti. </Typography>
         </Box>
 
     )

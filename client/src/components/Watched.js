@@ -3,11 +3,12 @@ import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import {Box, Grid, Stack} from "@mui/material";
+import {Box, Grid, Stack, Typography} from "@mui/material";
 import {useAuth} from "../context/authContext";
 import {useParams} from "react-router-dom";
 import SearchFilters from "./SearchFilters";
 import _ from "lodash"; //per la deep comparison
+import GetParams from "./hooks/useGetSearchParams";
 
 function Watched(){
 
@@ -32,7 +33,7 @@ function Watched(){
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
-            showNotification(<p>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></p>, "success");
+            showNotification(<strong>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></strong>, "success");
             setWatched(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatched(num => num - 1);
         }catch(error){
@@ -41,32 +42,19 @@ function Watched(){
     }
 
     useEffect(() => {
-        const getWatchedFilms = async () => {
-            try{
-                //primo rendering del componente, filtri nulli
-                if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: "", isLiked: null})){
-                    const response = await api.get(`http://localhost:5001/api/films/watched/get-watched/${username}`);
-                    const films = await response.data;
-                    setWatched(films);
-                    setNumWatched(films.length);
-                }else{
-                    const params = new URLSearchParams();
-                    if (filters.genre !== "") params.append("genre", filters.genre);
-                    if (filters.decade !== "") params.append("decade", filters.decade);
-                    if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-                    if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-                    if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-                    if (filters.isLiked !== null) params.append("isLiked", filters.isLiked); //parametro iniziale = false
-
-                    const response = await api.get(`http://localhost:5001/api/films/watched/get-watched/${username}?${params.toString()}`);
-                    const films = await response.data;
-                    setWatched(films);
-                }
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
+        if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: "", isLiked: null})){
+            api.get(`http://localhost:5001/api/films/watched/get-watched/${username}`)
+                .then(response => {
+                    setWatched(response.data);
+                    setNumWatched(response.data.length);
+                })
+                .catch(error => showNotification(error.response.data, "error"));
+        }else{
+            const params = GetParams(filters);
+            api.get(`http://localhost:5001/api/films/watched/get-watched/${username}?${params.toString()}`)
+            .then(response => setWatched(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
         }
-        getWatchedFilms();
     }, [filters, username, showNotification]);
 
 
@@ -74,11 +62,11 @@ function Watched(){
         <Box >
             { numWatched !== 0 ?
                 <Stack spacing={7}>
-                    { user.username === username ? <h1>Hai visto {numWatched} film </h1> : <h1>{username} ha visto {numWatched} film</h1> }
+                    { user.username === username ? <Typography component="h1">Hai visto {numWatched} film </Typography> : <Typography component="h1">{username} ha visto {numWatched} film</Typography> }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={true} />
 
-                    <p>{watched.length} film trovati</p>
+                    <Typography component="p">{watched.length} film trovati</Typography>
 
                     <Grid container spacing={2}>
                         { watched.map(film =>
@@ -92,8 +80,8 @@ function Watched(){
                 </Stack> :
                 <Box>
                     { user.username === username ?
-                        <h1>Non hai ancora visto nessun film</h1> :
-                        <h1>{username} non ha ancora visto nessun film</h1>
+                        <Typography component="h1">Non hai ancora visto nessun film</Typography> :
+                        <Typography component="h1">{username} non ha ancora visto nessun film</Typography>
                     }
                 </Box>
             }

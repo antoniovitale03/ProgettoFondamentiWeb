@@ -1,11 +1,12 @@
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useParams} from "react-router-dom";
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import SearchFilters from "./SearchFilters";
+import GetParams from "./hooks/useGetSearchParams";
 //questo componente serve a mostrare i risultati di ricerca di un film
 function SearchFilmResults() {
 
@@ -24,12 +25,7 @@ function SearchFilmResults() {
     });
 
     useEffect( () => {
-        const params = new URLSearchParams();
-        if (filters.genre !== "") params.append("genre", filters.genre)
-        if (filters.decade !== "") params.append("decade", filters.decade)
-        if (filters.minRating !== 0) params.append("minRating", filters.minRating)
-        if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate)
-        if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity)
+        const params = GetParams(filters);
         api.get(`http://localhost:5001/api/films/get-search-results/${filmTitle}?${params.toString()}`)
             .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
@@ -39,9 +35,9 @@ function SearchFilmResults() {
         <Box marginBottom={10}>
             {films ?
                 <Box>
-                    <h1>Risultati di ricerca per "<strong>{filmTitle}</strong>"</h1>
+                    <Typography component="h1">Risultati di ricerca per "<strong>{filmTitle}</strong>"</Typography>
 
-                    <p>{films.length} film trovati</p>
+                    <Typography component="p">{films.length} film trovati</Typography>
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
 
@@ -53,7 +49,7 @@ function SearchFilmResults() {
                         )}
                     </Grid>
                 </Box>
-                : <h1>Caricamento dei risultati...</h1>
+                : <Typography component="h1">Caricamento dei risultati...</Typography>
             }
         </Box>
     )

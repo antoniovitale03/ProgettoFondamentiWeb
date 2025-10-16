@@ -5,7 +5,7 @@ import MainContent from "./MainContent";
 //la componente principale che gestisce tutti i percorsi
 function Panel() {
   return (
-      <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <Header />
           <MainContent />
           <Footer />

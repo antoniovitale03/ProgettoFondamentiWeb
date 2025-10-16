@@ -10,7 +10,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                 <Grid container spacing={2}>
 
                     <Grid size={4}>
-                        <p>
+                        <Typography component="p">
                         <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
                             <strong>{review.film.title} </strong></Button>
                         {
@@ -19,7 +19,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                                 <strong>     ({review.film.release_year})</strong>
                             </Button>
                         }
-                        </p>
+                        </Typography>
                         <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
                             <CardMedia component="img" image={review.film.poster_path} alt="Locandina film"/>
                         </Button>

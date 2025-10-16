@@ -1,4 +1,4 @@
-import {Box, Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, Stack, Typography} from "@mui/material";
 import React, {useState} from "react";
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
@@ -32,7 +32,7 @@ function ModifyPassword() {
         <Box className="page-container">
             <Box className="form-container">
                 <form onSubmit={handleModifyPassword}>
-                    <h1>Modifica la tua password</h1>
+                    <Typography component="h1">Modifica la tua password</Typography>
                     <Stack spacing={5}>
                         <FormControl>
                             <InputLabel hmtlFor="oldPassword">Vecchia password</InputLabel>

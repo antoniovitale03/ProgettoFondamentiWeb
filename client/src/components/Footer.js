@@ -1,4 +1,4 @@
-import {Box, Button, Toolbar, AppBar, IconButton} from "@mui/material";
+import {Box, Button, Toolbar, AppBar, IconButton, Typography} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -8,7 +8,6 @@ import {Link} from "react-router-dom";
 
 
 function Footer() {
-
     return (
         <AppBar position="static" sx= {{ backgroundColor:"#52796f" }} >
             <Toolbar sx={{ width: "50%" }}>
@@ -33,7 +32,7 @@ function Footer() {
                     </IconButton>
                 </Box>
             </Toolbar>
-            <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>
+            <Typography component="p">© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</Typography>
         </AppBar>
 
     )

@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import api from "../../api";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
-import {Grid, Pagination, Stack} from "@mui/material";
+import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
 function NowPlayingFilms() {
@@ -31,7 +31,7 @@ function NowPlayingFilms() {
 
     return(
         <Stack spacing={7}>
-            <h1>Film attualmente al cinema</h1>
+            <Typography component="h1">Film attualmente al cinema</Typography>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB

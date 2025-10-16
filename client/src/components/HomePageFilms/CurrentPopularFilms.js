@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import api from "../../api";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
-import {Grid, Pagination, Stack} from "@mui/material";
+import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 import SearchFilters from "../SearchFilters";
 
@@ -22,7 +22,6 @@ function CurrentPopularFilms() {
         sortByDate: "",
         sortByPopularity: "",
     });
-
 
     useEffect( () => {
         const params = new URLSearchParams();
@@ -47,7 +46,7 @@ function CurrentPopularFilms() {
 
     return(
         <Stack spacing={7}>
-            <h1>Film popolari del momento</h1>
+            <Typography component="h1">Film popolari del momento</Typography>
 
             <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
 
@@ -62,7 +61,7 @@ function CurrentPopularFilms() {
             }
 
 
-            <p>{films.length * totalPages} film trovati</p>
+            <Typography component="p">{films.length * totalPages} film trovati</Typography>
 
             <Grid container spacing={2}>
                 { films?.map( film =>

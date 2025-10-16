@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import ActorCard from "./Cards/ActorCard"
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Grid, Stack} from "@mui/material";
+import {Grid, Stack, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -12,18 +12,17 @@ function CastPage(){
     const [cast, setCast] = useState([]);
     const {showNotification} = useNotification();
 
-
     useDocumentTitle(`Cast di "${filmTitle}"`);
 
     useEffect( () => {
         api.get(`http://localhost:5001/api/films/get-cast/${filmID}`)
-            .then((response) => setCast(response.data))
-            .catch((error) => showNotification(error.response.data, "error"));
+            .then(response => setCast(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID]);
 
     return(
         <Stack spacing={7} marginBottom={10}>
-            <h1>Cast di "{filmTitle}" ( {cast?.length} attori )</h1>
+            <Typography component="h1">Cast di "{filmTitle}" ( {cast?.length} attori )</Typography>
             <Grid container spacing={2}>
                 {
                     cast?.map(actor =>

@@ -1,4 +1,4 @@
-import {Button, FormControl, Input, InputLabel, Stack} from "@mui/material";
+import {Button, FormControl, Input, InputLabel, Stack, Typography} from "@mui/material";
 import React, {useState} from "react";
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
@@ -32,7 +32,7 @@ function ForgotPasswordForm({ setStep, email, setEmail }) {
 
     return(
         <form onSubmit={handleSetNewPassword}>
-            <h2>Imposta la nuova password</h2>
+            <Typography component="h2">Imposta la nuova password</Typography>
             <Stack spacing={5}>
                 <FormControl>
                     <InputLabel htmlFor="email">Email</InputLabel>

@@ -1,6 +1,6 @@
 import {MuiOtpInput} from "mui-one-time-password-input";
 import React, {useState} from "react";
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import {useNotification} from "../../context/notificationContext";
 
@@ -25,7 +25,7 @@ function VerificationForm({ onVerify }){
 
     return (
         <form onSubmit={handleVerify}>
-            <h3>Codice di verifica</h3>
+            <Typography component="h3">Codice di verifica</Typography>
             <MuiOtpInput
                 value={verificationCode}
                 onChange={setVerificationCode}

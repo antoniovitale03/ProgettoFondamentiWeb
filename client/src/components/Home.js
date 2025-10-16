@@ -26,16 +26,13 @@ function Home(){
         <Box>
             <Box>
                 {user ? <Typography component="h6" >Benvenuto nella home, {user.username}!</Typography>
-                : <h1 id="titolo1"> Nome del sito</h1>
+                : <Typography component="h1" id="titolo1"> Nome del sito</Typography>
                 }
-                <h2 id="sottotitolo">slogan del sito</h2>
+                <Typography component="h2" id="sottotitolo">slogan del sito</Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px'}}>
                 <Card sx={{borderRadius:"60px"}} className="card">
-                    <CardMedia
-                        component="img"
-                        image="http://i.imgur.com/Abm0wRq.jpg"
-                    />
+                    <CardMedia component="img" image="http://i.imgur.com/Abm0wRq.jpg" />
                 </Card>
             </Box>
 
