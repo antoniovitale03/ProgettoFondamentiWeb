@@ -1,5 +1,4 @@
 import {Box, Tooltip} from "@mui/material";
-import * as React from "react";
 import '../../CSS/FilmPage.css';
 
 function FilmProviders({ rent, buy, flatrate }) {

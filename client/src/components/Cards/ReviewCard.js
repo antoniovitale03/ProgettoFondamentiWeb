@@ -9,7 +9,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
             <CardContent>
                 <Grid container spacing={2}>
 
-                    <Grid item size={4}>
+                    <Grid size={4}>
                         <p>
                         <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
                             <strong>{review.film.title} </strong></Button>
@@ -25,7 +25,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                         </Button>
                     </Grid>
 
-                    <Grid item size={7} sx={{ display: 'flex', flexDirection: 'column'}}>
+                    <Grid size={7} sx={{ display: 'flex', flexDirection: 'column'}}>
                         <Typography component="p" sx={{ overflowWrap: 'break-word' }}>{review.review}</Typography>
                         <Box sx={{ marginTop: 'auto'}}>
                                 {
@@ -39,7 +39,7 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
                     </Grid>
                     {
                         showRemoveButton &&
-                        <Grid item size={1}>
+                        <Grid size={1}>
                             <Button onClick={ () => onRemove(review.film._id, review.film.title) }>
                                 <ClearIcon />
                             </Button>

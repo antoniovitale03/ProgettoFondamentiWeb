@@ -32,7 +32,7 @@ function Watched(){
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
-            showNotification(<p>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`}>film visti</a></p>, "success");
+            showNotification(<p>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></p>, "success");
             setWatched(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatched(num => num - 1);
         }catch(error){

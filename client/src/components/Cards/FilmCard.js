@@ -1,6 +1,5 @@
 import {Box, Button, Card, CardContent, CardMedia, Grid, Rating} from "@mui/material";
 import {Link} from "react-router-dom";
-import * as React from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ClearIcon from '@mui/icons-material/Clear';
 import MovieIcon from '@mui/icons-material/Movie';

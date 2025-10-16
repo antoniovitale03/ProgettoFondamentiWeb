@@ -4,22 +4,21 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Grid, Stack} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
+import {useNotification} from "../context/notificationContext";
 
 // /films/filmTitle/filmID/cast
 function CastPage(){
     const {filmTitle, filmID} = useParams();
     const [cast, setCast] = useState([]);
+    const {showNotification} = useNotification();
 
 
     useDocumentTitle(`Cast di "${filmTitle}"`);
 
     useEffect( () => {
-        const fetchCast = async () => {
-            const response = await api.get(`http://localhost:5001/api/films/get-cast/${filmID}`);
-            let data = await response.data;
-            setCast(data);
-        }
-        fetchCast();
+        api.get(`http://localhost:5001/api/films/get-cast/${filmID}`)
+            .then((response) => setCast(response.data))
+            .catch((error) => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID]);
 
     return(

@@ -1,53 +1,30 @@
 import {useAuth} from "../context/authContext";
-import {
-    Box,
-    TextField,
-    Button,
-    Avatar,
-    MenuItem,
-    Toolbar,
-    AppBar,
-    ListItemIcon,
-    Divider,
-    Tooltip,
-    Input,
-    InputLabel,
-    IconButton
-} from "@mui/material";
+import {Box, TextField, Button, Avatar, Toolbar, Tooltip, Input, InputLabel, IconButton, AppBar} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import PersonIcon from '@mui/icons-material/Person'
-import ListIcon from '@mui/icons-material/List'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import RateReviewIcon from '@mui/icons-material/RateReview'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import Settings from '@mui/icons-material/Settings'
 import ArchiveIcon from '@mui/icons-material/Archive'
 import BoltIcon from '@mui/icons-material/Bolt';
-import HomeIcon from '@mui/icons-material/Home';
 import {Link} from "react-router-dom"
 import DropDownMenu from "./DropDownMenu";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useNotification} from "../context/notificationContext";
-import * as React from "react";
 import api from "../api";
+import UserMenu from "../components/UserMenu";
 
 
 function Header() {
-    const {isLoggedIn, user, logout} = useAuth();
+    const {isLoggedIn, user} = useAuth();
     const [title, setTitle] = useState("");
-    const [friendUsername, setFriendUsername] = useState(""); //username dell'amico
+    const [friendUsername, setFriendUsername] = useState("");
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAddFriendMenuOpen, setIsAddFriendMenuOpen] = useState(false);
-
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
 
     const handleSearch = async () => {
         try{
-            let filmTitle = title.replaceAll(" ", "-");
-            navigate(`/search/${filmTitle}`);
+            navigate(`/search/${title.replaceAll(" ", "-")}`);
             setTitle("");
         }catch(error){
             showNotification(error.response.data, "error");
@@ -56,22 +33,12 @@ function Header() {
     }
 
     const sendFriendRequest = async () => {
-        try{
-            setIsAddFriendMenuOpen(false);
-            setFriendUsername("");
-            await api.post(`http://localhost:5001/api/user/${friendUsername}/follow`);
-            showNotification(<strong>Hai appena aggiunto <a href={`/${friendUsername}/profile`}>{friendUsername}</a> come amico</strong>, "success");
-        }catch(error){
-            showNotification(error.response.data, "error");
-        }
+        setIsAddFriendMenuOpen(false);
+        setFriendUsername("");
+        api.post(`http://localhost:5001/api/user/${friendUsername}/follow`)
+            .then(() => showNotification(<strong>Hai appena aggiunto <a href={`/${friendUsername}/profile`} style={{ color: 'green' }}>{friendUsername}</a> come amico</strong>, "success"))
+            .catch(error => showNotification(error.response.data, "error"));
     }
-
-    const userMenuLinks = ['/', `/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`, `/${user?.username}/lists`];
-    const userMenuNames = ["Home", "Il mio profilo", "Film visti", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Le mie liste"];
-    const userMenuIcons = [<HomeIcon />, <PersonIcon />, <VisibilityIcon />, <FavoriteIcon />, <RateReviewIcon/>, <VisibilityIcon/>, <ListIcon />];
-
-    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
-    const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
 
     let addAfriendMenu = [
         <Box>
@@ -85,26 +52,9 @@ function Header() {
         ]
 
 
-    let userMenu = [
-        userMenuLinks.map((menuLink, index) =>
-            <MenuItem component={Link} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
-                <ListItemIcon>{userMenuIcons[index]}</ListItemIcon>{userMenuNames[index]}
-            </MenuItem>),
-        <Divider key="divider1"/>,
-        settingsMenuLinks.map((menuLink, index) =>
-            <MenuItem component={Link} to={menuLink} onClick={() => setIsUserMenuOpen(false)}>
-                <ListItemIcon><Settings /></ListItemIcon>{settingsMenuNames[index]}
-            </MenuItem>),
-        <Divider key="divider2" />,
-        <MenuItem component={Button} key={10102} onClick={logout}>
-        Logout
-        </MenuItem>
-    ]
-
-
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`}/></Tooltip>}
-                      menuContent={userMenu} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
+                      menuContent={<UserMenu setIsUserMenuOpen={setIsUserMenuOpen} />} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
         <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
         <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></Button>,
         <Box component="form" onSubmit={handleSearch}>
@@ -126,7 +76,7 @@ function Header() {
         <Button variant="contained" color="success" href="/login"> Login </Button>,
         <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
         <IconButton component={Link} to={"/"}>
-            <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="logo" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="" style={{ height: '50px', width: 'auto' }}/>
         </IconButton>
     ]
 

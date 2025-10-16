@@ -4,22 +4,19 @@ import {Box, List} from "@mui/material";
 import {useParams} from "react-router-dom";
 import ActivityElement from "./ActivityElement";
 import useDocumentTitle from "./hooks/useDocumentTitle"
+import {useNotification} from "../context/notificationContext";
 
 function ActivityPage(){
-
+    const {showNotification} = useNotification()
     const [activity, setActivity] = useState(null);
     const {username} = useParams();
     useDocumentTitle(`Attività di ${username}`)
 
     useEffect(() => {
-        const fetchActivity = async () => {
-            const response = await api.get(`http://localhost:5001/api/user/${username}/get-activity`);
-            let activity = await response.data;
-            setActivity(activity);
-        }
-        fetchActivity();
+        api.get(`http://localhost:5001/api/user/${username}/get-activity`)
+            .then( (response) => setActivity(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [username])
-
 
 
     return(

@@ -16,17 +16,12 @@ function UpcomingFilms() {
 
 
     useEffect( () => {
-        const fetchUpComingFilms = async () => {
-            try{
-                const response = await api.get(`http://localhost:5001/api/films/home/get-upcoming-films/page/${currentPage}`);
-                let data = response.data;
-                setFilms(data.results);
-                setTotalPages(data.total_pages);
-            }catch(error){
-                showNotification("Errore nel caricamento dei film", "error");
-            }
-        }
-        fetchUpComingFilms();
+        api.get(`http://localhost:5001/api/films/home/get-upcoming-films/page/${currentPage}`)
+            .then(response => {
+                setFilms(response.data.results);
+                setTotalPages(response.data.total_pages);
+            })
+        .catch(error => showNotification(error.response.data, "error"));
     }, [currentPage, showNotification]);
 
     const handlePageChange = (event, value) => {

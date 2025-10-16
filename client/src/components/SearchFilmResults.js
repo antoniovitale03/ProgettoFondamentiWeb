@@ -24,23 +24,16 @@ function SearchFilmResults() {
     });
 
     useEffect( () => {
-        const fetchSearchResults = async () => {
-            try{
-                const params = new URLSearchParams();
-                if (filters.genre !== "") params.append("genre", filters.genre)
-                if (filters.decade !== "") params.append("decade", filters.decade)
-                if (filters.minRating !== 0) params.append("minRating", filters.minRating)
-                if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate)
-                if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity)
-                const response = await api.get(`http://localhost:5001/api/films/get-search-results/${filmTitle}?${params.toString()}`);
-                let films = await response.data;
-                setFilms(films);
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
-        }
-        fetchSearchResults();
-    }, [filmTitle, filters, showNotification]) // eseguo l'effetto ogni volta che cambia la query di ricerca
+        const params = new URLSearchParams();
+        if (filters.genre !== "") params.append("genre", filters.genre)
+        if (filters.decade !== "") params.append("decade", filters.decade)
+        if (filters.minRating !== 0) params.append("minRating", filters.minRating)
+        if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate)
+        if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity)
+        api.get(`http://localhost:5001/api/films/get-search-results/${filmTitle}?${params.toString()}`)
+            .then(response => setFilms(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
+    }, [filmTitle, filters, showNotification])
 
     return(
         <Box marginBottom={10}>

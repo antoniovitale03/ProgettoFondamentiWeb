@@ -270,14 +270,14 @@ function FilmButtons({ film }) {
             <Tooltip title={buttons.watched === 0 ? "Aggiungi ai film visti" : "Rimuovi dai film visti"}>
                 <IconButton onClick={buttons.watched === 0 ? addToWatched : removeFromWatched}>
                     {buttons.watched === 0 ?
-                        <AddCircleOutlineIcon className="icon"/>:
-                        <RemoveCircleOutlineIcon className="icon remove-icon"/>
+                        <AddCircleOutlineIcon className="icon" />:
+                        <RemoveCircleOutlineIcon className="icon remove-icon" />
                     }
                 </IconButton>
             </Tooltip>
 
             <Tooltip title="Aggiungi o rimuovi dalla lista">
-                <DropDownMenu buttonContent={<Tooltip title="Aggiungi o rimuovi da una o più liste"><IconButton><FormatListBulletedAddIcon className="icon"/></IconButton> </Tooltip>}
+                <DropDownMenu buttonContent={<FormatListBulletedAddIcon className="icon"/>}
                               menuContent={listsMenu} isMenuOpen={isListsMenuOpen} setIsMenuOpen={setIsListsMenuOpen} />
             </Tooltip>
         </Box>

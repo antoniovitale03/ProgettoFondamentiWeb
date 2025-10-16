@@ -25,23 +25,18 @@ function FilmsByYear(){
 
     //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
-        const fetchFilmsByYear = async () => {
-            try{
-                const params = new URLSearchParams();
-                params.append("page", filters.page);
-                if(filters.genre !== "") params.append("genre", filters.genre);
-                if(filters.minRating !== 0) params.append("minRating", filters.minRating);
-                if(filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-                if(filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-                const response = await api.get(`http://localhost:5001/api/films/get-films/${year}?${params.toString()}`);
-                let data = response.data;
-                setFilms(data.films);
-                setTotalPages(data.totalPages);
-            }catch(error){
-                showNotification("Errore nel caricamento dei film", "error");
-            }
-        }
-        fetchFilmsByYear();
+        const params = new URLSearchParams();
+        params.append("page", filters.page);
+        if(filters.genre !== "") params.append("genre", filters.genre);
+        if(filters.minRating !== 0) params.append("minRating", filters.minRating);
+        if(filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
+        if(filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
+        api.get(`http://localhost:5001/api/films/get-films/${year}?${params.toString()}`)
+            .then(response => {
+                setFilms(response.data.films);
+                setTotalPages(response.data.totalPages);
+            })
+            .catch(error => showNotification(error.response.data, "error"));
     }, [filters, year, showNotification]);
 
 

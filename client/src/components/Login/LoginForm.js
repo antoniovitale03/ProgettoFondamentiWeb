@@ -20,9 +20,7 @@ function LoginForm({  setStep, email, setEmail }) {
             const response = await api.post('http://localhost:5001/api/auth/login', { email, password });
             const user = await response.data; //data contiene i dati dell'utente + accessToken (che verranno salvati nella
             // variabile di stato user e nella memoria locale del browser)
-
             setUser(user);
-
         } catch (error) {
             showNotification(error.response.data, "error")
             setEmail("");

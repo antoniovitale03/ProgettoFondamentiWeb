@@ -15,18 +15,11 @@ function Home(){
     const [films, setFilms] = useState(null);
 
     useEffect(() => {
-        const homePageFilmInfo = async () => {
-            try{
-                const param = new URLSearchParams();
-                if(user) param.append("userID", user.id)
-                const response = await api.get(`http://localhost:5001/api/films/home/get-home-page-films?${param.toString()}`);
-                let films = await response.data;
-                setFilms(films);
-            }catch(error){
-                showNotification("Errore nel caricamento dei film", "error")
-            }
-        }
-        homePageFilmInfo();
+        const param = new URLSearchParams();
+        if(user) param.append("userID", user.id);
+        api.get(`http://localhost:5001/api/films/home/get-home-page-films?${param.toString()}`)
+            .then(response => setFilms(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [user, showNotification])
 
     return (

@@ -26,7 +26,7 @@ function Lists(){
             setIsAddListMenuOpen(false);
             setListName("");
             await api.post(`http://localhost:5001/api/films/lists/create-list/${listName}`);
-            showNotification(<p>Lista <a href={`/${user.username}/${listName}/list`}>{listName}</a> creata</p>, "success");
+            showNotification(<p>Lista <a href={`/${user.username}/${listName}/list`} style={{ color: 'green' }}>{listName}</a> creata</p>, "success");
             showNotification(`Lista "${listName}" creata`);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -35,16 +35,9 @@ function Lists(){
     }
 
     useEffect(() => {
-        const getLists = async () => {
-            try{
-                const response = await api.get(`http://localhost:5001/api/films/lists/get-lists/${username}`);
-                const lists = await response.data;
-                setLists(lists);
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
-        }
-        getLists();
+        api.get(`http://localhost:5001/api/films/lists/get-lists/${username}`)
+            .then(response => setLists(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [username, showNotification]);
 
     const menuContent = [

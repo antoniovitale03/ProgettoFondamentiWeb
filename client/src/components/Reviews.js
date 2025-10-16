@@ -58,7 +58,7 @@ function Reviews(){
     const removeReview = async (filmID, reviewTitle) => {
         try {
             await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
-            showNotification(<p>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`}>recensioni</a></p>, "success");
+            showNotification(<p>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></p>, "success");
             setReviews(currentReviews =>
                 currentReviews.filter(review => review.film._id !== filmID)
             );

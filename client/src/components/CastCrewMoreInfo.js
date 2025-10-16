@@ -16,7 +16,7 @@ import * as React from "react";
 function CastCrewMoreInfo({ film }) {
 
     let detailsMenuItems = (
-        <div>
+        <Box>
             <MenuItem>
                 <h4>Original language: </h4>
                 <p>{film?.details.original_language}</p>
@@ -41,7 +41,7 @@ function CastCrewMoreInfo({ film }) {
                 <h4>Budget: </h4>
                 <p>{film?.details.budget}</p>
             </MenuItem>
-        </div>
+        </Box>
     )
 
     return (

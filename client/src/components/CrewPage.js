@@ -4,6 +4,7 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Box, Grid} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
+import {useNotification} from "../context/notificationContext";
 
 // /films/filmTitle/filmID/crew
 function CrewPage(){
@@ -12,14 +13,12 @@ function CrewPage(){
     const [crew, setCrew] = useState([]);
 
     useDocumentTitle(`Crew di "${filmTitle}"`);
+    const {showNotification} = useNotification();
 
     useEffect( () => {
-        const fetchCrew = async () => {
-            const response = await api.get(`http://localhost:5001/api/films/get-crew/${filmID}`);
-            let data = await response.data;
-            setCrew(data);
-        }
-        fetchCrew();
+        api.get(`http://localhost:5001/api/films/get-crew/${filmID}`)
+            .then(response => setCrew(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID])
 
     return(

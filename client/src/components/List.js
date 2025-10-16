@@ -18,12 +18,9 @@ function List(){
     useDocumentTitle(`Lista "${listName}" di ${username}`)
 
     useEffect( () => {
-        const getList = async () => {
-            const response = await api.get(`http://localhost:5001/api/films/lists/get-list/${username}/${listName}`);
-            const data = await response.data;
-            setList(data);
-        }
-        getList();
+        api.get(`http://localhost:5001/api/films/lists/get-list/${username}/${listName}`)
+            .then(response => setList(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
         }, [username, listName])
 
     const removeFromList = async (filmID, filmTitle) => {

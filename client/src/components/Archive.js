@@ -57,45 +57,44 @@ function Archive(){
     };
 
     return(
-                <Stack spacing={7}>
+        <Stack spacing={7}>
 
-                    <Typography variant="h4" component="h1">
-                        Esplora l'Archivio
-                    </Typography>
+            <Typography variant="h4" component="h1">
+                Esplora l'Archivio
+            </Typography>
 
-                    {archive.length > 0 &&
-                        <Pagination
-                            count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                            page={filters.page}
-                            onChange={handlePageChange}
-                            color="primary"
-                            size="large"
-                        />
-                    }
+            {archive.length > 0 &&
+                <Pagination
+                    count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                    page={filters.page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="large"
+                />
+            }
 
+            <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
 
-                    <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
+            <p>{archive.length * totalPages} film trovati</p>
 
-                    <p>{archive.length * totalPages} film trovati</p>
-
-                    <Grid container spacing={2}>
-                        {archive.map(film => (
-                            <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
-                                <FilmCard film={film} />
-                            </Grid>
-                        ))}
+            <Grid container spacing={2}>
+                    {archive.map(film => (
+                    <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
+                        <FilmCard film={film} />
                     </Grid>
+                    ))}
+            </Grid>
 
-                        {archive.length > 0 &&
-                            <Pagination
-                                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                                page={filters.page}
-                                onChange={handlePageChange}
-                                color="primary"
-                                size="large"
-                            />
-                        }
-                </Stack>
+            {archive.length > 0 &&
+                <Pagination
+                    count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
+                    page={filters.page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="large"
+                />
+            }
+        </Stack>
     )
 }
 

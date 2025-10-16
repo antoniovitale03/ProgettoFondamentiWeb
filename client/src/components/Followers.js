@@ -14,15 +14,9 @@ function Followers() {
     const [followers, setFollowers] = useState([]);
 
     useEffect( () => {
-        const fetchFollowers = async () => {
-            try{
-                const response = await api.get(`http://localhost:5001/api/user/${username}/get-followers`);
-                setFollowers(response.data);
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
-        }
-        fetchFollowers();
+        api.get(`http://localhost:5001/api/user/${username}/get-followers`)
+            .then(response => setFollowers(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     },[username, showNotification]);
 
     return(

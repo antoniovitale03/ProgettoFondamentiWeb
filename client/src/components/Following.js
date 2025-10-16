@@ -19,22 +19,16 @@ function Following() {
     const [following, setFollowing] = useState([]);
 
     useEffect( () => {
-             const fetchFollowing = async () => {
-                 try{
-                     const response = await api.get(`http://localhost:5001/api/user/${username}/get-following`);
-                     setFollowing(response.data);
-                 }catch(error){
-                     showNotification(error.response.data, "error");
-                 }
-             }
-             fetchFollowing();
+        api.get(`http://localhost:5001/api/user/${username}/get-following`)
+            .then(response => setFollowing(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
          }, [username, showNotification]);
 
 
     const unfollow = async (userId, username) => {
         try{
             await api.delete(`http://localhost:5001/api/user/${userId}/unfollow`);
-            showNotification(<p>Hai rimosso <a href={`/${username}/profile`}>{username}</a> dai seguiti</p>, "success");
+            showNotification(<p>Hai rimosso <a href={`/${username}/profile`} style={{ color: 'green' }}>{username}</a> dai seguiti</p>, "success");
             setFollowing(currentFollowing =>
                 currentFollowing.filter(user => user.username !== username)
             );

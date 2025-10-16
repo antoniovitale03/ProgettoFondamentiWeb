@@ -9,74 +9,63 @@ function DirectorPage() {
     let { directorName } = useParams();
     let { directorID } = useParams();
 
-    const [directorPersonalInfo, setDirectorPersonalInfo] = useState([]);
-    const [directorCast, setDirectorCast] = useState([]);
-    const [directorCrew, setDirectorCrew] = useState([]);
+    const [director, setDirector] = useState(null);
     const {showNotification} = useNotification();
 
 
     useDocumentTitle(directorName.replaceAll("-", " "));
 
     useEffect(() => {
-        async function fetchDirector() {
-            try{
-                const response = await api.get(`http://localhost:5001/api/films/get-director-info/${directorID}`);
-                const director = response.data;
-                setDirectorPersonalInfo(director.personalInfo);
-                setDirectorCast(director.cast);
-                setDirectorCrew(director.crew);
-            }catch(error){
-                showNotification(error.response.data, "error");
-            }
-        }
-        fetchDirector();
+        api.get(`http://localhost:5001/api/films/get-director-info/${directorID}`)
+            .then(response => setDirector(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
     }, [directorName, directorID]);
 
-
+if(director){
     return(
         <Box>
-            <Typography sx={{fontSize:{xs:"25px", md:"2.2vw"}, margin:"20px", fontWeight:"bold"}}>{directorPersonalInfo.name}</Typography>
+            <Typography sx={{fontSize:{xs:"25px", md:"2.2vw"}, margin:"20px", fontWeight:"bold"}}>{director.personalInfo.name}</Typography>
             <Grid container spacing={1} alignItems="flex-start" >
-                <Grid xs={12} sm={6} md={4} >
-                    <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={directorPersonalInfo.profile_image} alt="Immagine del direttore"/>
+                <Grid size={{ xs:12, sm:6, md:4 }} >
+                    <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={director.personalInfo.profile_image} alt="Immagine del direttore"/>
                 </Grid>
-                <Grid xs={12} sm={6} md={8} size={8}>
-                    {directorPersonalInfo.birthday ? <p style={{fontSize: "clamp(15px,1vw,20px)"}}>Data di nascita: {directorPersonalInfo.birthday}</p> : null}
-                    {directorPersonalInfo.place_of_birth ? <p style={{fontSize: "clamp(15px,1vw,20px)"}}>Luogo di nascita: {directorPersonalInfo.place_of_birth}</p> : null}
-                    <p style ={{flexWrap:"wrap", fontSize:"clamp(15px,1vw,20px)"}}>Biografia: {directorPersonalInfo.biography}</p>
+                <Grid size={{ xs:12, sm:6, md:8 }}>
+                    {director.personalInfo.birthday && <p style={{fontSize: "clamp(15px,1vw,20px)"}}>Data di nascita: {director.personalInfo.birthday}</p> }
+                    {director.personalInfo.place_of_birth && <p style={{fontSize: "clamp(15px,1vw,20px)"}}>Luogo di nascita: {director.personalInfo.place_of_birth}</p>}
+                    <p style ={{flexWrap:"wrap", fontSize:"clamp(15px,1vw,20px)"}}>Biografia: {director.personalInfo.biography}</p>
                 </Grid>
             </Grid>
 
 
 
-            {directorCast.length !== 0 ?
+            {director.cast.length !== 0 ?
                 <div>
-                    <h1>Lista dei film in cui {directorPersonalInfo.name} ha performato come attore/attrice ({directorCast.length})</h1>
+                    <h1>Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</h1>
                     <Grid container spacing={2}>
-                        { directorCast.map(film =>
-                            <Grid key={film._id} size={2} xs={12} sm={6} md={4} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}} >
+                        { director.cast.map(film =>
+                            <Grid key={film._id} size={{ xs:12, sm:6, md:4 }} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}} >
                                 <FilmCard film={film} sx={{height:"100%"}} />
                             </Grid>)
                         }
                     </Grid>
                 </div>
-                : <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>{directorPersonalInfo.name} non ha performato in nessun film come attore/attrice</Typography>
+                : <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>{director.personalInfo.name} non ha performato in nessun film come attore/attrice</Typography>
             }
 
-            {directorCrew.length !== 0 ?
+            {director.crew.length !== 0 &&
                 <Box marginBottom={10}>
-                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {directorPersonalInfo.name} ha svolto un ruolo tecnico ({directorCrew.length})</Typography>
+                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {director.personalInfo.name} ha svolto un ruolo tecnico ({director.crew.length})</Typography>
                     <Grid container spacing={2}>
-                        { directorCrew.map((film) =>
-                            <Grid key={film._id} size={2} xs={12} sm={6} md={4} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}}>
+                        { director.crew.map((film) =>
+                            <Grid key={film._id} size={{ xs:12, sm:6, md:4 }} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}}>
                                 <FilmCard film={film} sx={{height:"100%"}} />
                             </Grid>)
                         }
                     </Grid>
-                </Box> : null
+                </Box>
             }
         </Box>
-    )
+    )}
 }
 
 export default DirectorPage;

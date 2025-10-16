@@ -9,7 +9,6 @@ import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import ReviewCard from "./Cards/ReviewCard";
 import {Link} from "react-router-dom";
-import * as React from "react";
 import {useParams} from "react-router-dom";
 
 function Profile(){
@@ -26,19 +25,18 @@ function Profile(){
 
 
     useEffect( () => {
-        const fetchUser = async () => {
-            const response = await api.get(`http://localhost:5001/api/user/${username}/get-profile-info`);
-            const profile = await response.data;
-            setProfile(profile);
-            setFavoritesFilms(profile.favorites);
-        }
-        fetchUser();
+        api.get(`http://localhost:5001/api/user/${username}/get-profile-info`)
+            .then(response => {
+                setProfile(response.data);
+                setFavoritesFilms(profile.favorites);
+            })
+        .catch(error => showNotification(error.response.data, "error"));
     }, [username])
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(<p>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`}>preferiti</a> </p>, "success");
+            showNotification(<p>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a> </p>, "success");
             setFavoritesFilms(currentFilms =>
                 currentFilms.filter(film => film._id !== filmID));
         }catch(error){

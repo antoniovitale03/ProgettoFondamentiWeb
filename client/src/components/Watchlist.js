@@ -59,7 +59,7 @@ function Watchlist(){
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
-            showNotification(<p>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`}>watchlist</a></p>, "success");
+            showNotification(<p>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></p>, "success");
             setWatchlist(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatchlist(num => num - 1);
         }catch(error){

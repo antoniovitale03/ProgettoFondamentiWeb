@@ -3,8 +3,6 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
 import {Box,Button,Grid,Rating,Tooltip,Typography, Chip, Stack}from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
-
-import * as React from "react";
 import api from "../../api";
 import FilmProviders from "./FilmProviders";
 import CastCrewMoreInfo from "../CastCrewMoreInfo";
@@ -60,7 +58,7 @@ function FilmPage(){
             <Grid container spacing={4}>
                 <Grid size={{xs: 12, sm: 6, md: 4, lg:3}}>
 
-                    <img className="locandina" src={film?.poster_path} alt="Locandina del film" />
+                    <img className="locandina" src={film?.poster_path} alt="" />
                     {/* Bottoni per gestire il film */}
                     <FilmButtons film={film} />
 
@@ -85,11 +83,11 @@ function FilmPage(){
                 </Grid>
 
                 {/* colonna di destra */}
-                <Grid xs={12} sm={8} size={8}>
+                <Grid size={{ xs: 12, sm: 8}}>
                     <p className="testo">{film.tagline}</p> {/* //slogan film */}
                     <p className="testo">{film.overview}</p> {/* //trama */}
                     <Stack className="stack" direction="row" spacing={1}>
-                        {film?.trailerLink &&
+                        {film.trailerLink &&
                         <Button sx={{padding:"0"}} component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
                             <Tooltip title="Trailer">
                                 <YouTubeIcon sx={{display:"flex", color:"red",fontSize:{xs:"20px", md:"2vw"}, padding: 0}}/>
@@ -99,7 +97,6 @@ function FilmPage(){
                     {film?.genres.map( genre =>
                         <Chip sx={{fontSize:"clamp(13px,1.2vw,25px)"}} label={genre.name} />) }
                     </Stack>
-
 
                     <CastCrewMoreInfo film={film} />
 
