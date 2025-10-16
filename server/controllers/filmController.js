@@ -27,13 +27,13 @@ async function getFilmDirector(filmID) {
 //vede se il film si trova in watchlist, nei film piaciuti, se è stato recensito, aggiutno tra i preferiti o tra i film visti
 function getFilmStatus(user, filmID){
     return {
-        isInWatchlist: user.watchlist.includes(filmID),
-        isLiked: user.liked.includes(filmID),
-        isReviewed: user.reviews.some( review => review.film === filmID ),
-        isFavorite: user.favorites.includes(filmID),
-        isWatched: user.watched.includes(filmID),
-        listsNames: user.lists.map( list => {
-        return { listName: list.name, isInList: list.films.includes(filmID) }}
+        isInWatchlist: user.watchlist.includes(filmID) === true ? 1 : 0,
+        isLiked: user.liked.includes(filmID) === true ? 1 : 0,
+        isReviewed: user.reviews.some( review => review.film === filmID ) === true ? 1 : 0,
+        isFavorite: user.favorites.includes(filmID) === true ? 1 : 0,
+        isWatched: user.watched.includes(filmID) === true ? 1 : 0,
+        lists: user.lists.map( list => {
+        return { name: list.name, isInList: list.films.includes(filmID) }}
         )
     }
 }

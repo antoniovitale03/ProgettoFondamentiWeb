@@ -72,10 +72,10 @@ function FilmPage(){
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
                         </Box>
                     }
-                    {film.userRating &&
+                    {film.userRating !== 0 &&
                         <Box className="valutazione">
                             <p className="rating">Il mio rating: </p>
-                            <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
+                            <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"}, alignItems:"center"}} name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
                         </Box>
                     }
 
