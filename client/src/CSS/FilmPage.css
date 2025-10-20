@@ -1,16 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Prosto+One&family=Vast+Shadow&display=swap');
+
+.titolo_film{
+    text-align: center;
+    font-family: "Prosto+One", cursive;
+    font-size: 2.2vw;
+    margin: 0;
+}
+
+.link{
+    display: inline-flex; /*l'elemento si riduce nel suo contenitore */
+    align-items: center;
+    font-size: 2.0vw;
+    font-weight: bold;
+    color: #a4c3b2ff;
+    margin-left: 10px;
+    text-decoration: none;
+}
+.link:hover{
+    transition-duration: 0.4s;
+    text-decoration: underline;
+}
+#film_simili{
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #a4c3b2ff;
+}
+
 .locandina{
-    display: block;
-    object-fit: contain;
+    display: flex;
     height: auto;
     width: 100%;
+    object-fit: contain;
+    border: 3px solid black;
+    box-sizing: border-box; /*include il padding e il bordo all'interno della larghezza e altezza specificata */
 }
 @media (max-width: 600px){
     .locandina{
-        display: block;
+        display: flex;
+        object-fit: contain;
         height: auto;
-        max-width: 100%;
+        width: 100%;
+        border: 3px solid black;
+        box-sizing: border-box;
     }
-
 }
 
 
@@ -51,11 +83,9 @@
     }
 }
 
-
-
 .stack{
     align-items: center;
-    margin: 5px;
+    margin: 20px;
 }
 @media (max-width: 600px){
     .stack{

@@ -1,7 +1,7 @@
 import {useParams, Link} from 'react-router-dom';
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Box,Button,Grid,Rating,Tooltip,Typography, Chip, Stack}from "@mui/material";
+import {Box,Button,Grid,Rating,Tooltip, Chip, Stack,Typography}from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import api from "../../api";
 import FilmProviders from "./FilmProviders";
@@ -41,18 +41,18 @@ function FilmPage(){
 
     return (
         <Box>
-            <Typography variant="h4" sx={{ textAlign: "center" }}>
-                {film?.title}
-                <Button component={Link} to={`/films/${film.release_year}`}>( {film.release_year} )</Button>
-                <Typography component="p" style={{margin:"0",fontSize:"clamp(18px,1.5vw,25px)"}}>Diretto da
-                    <Button component={Link} to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
-                        <strong>{film?.director.name}</strong>
-                    </Button>
-                </Typography>
-            </Typography>
-            <Typography component="p">Durata: {film.duration}</Typography>
+            <p className="titolo_film"> {film?.title}
+                <Link className="link" id="link_anno" to={`/films/${film.release_year}`}>( {film.release_year} )</Link>
+                <p className="titolo_film"> Diretto da
+                    <Link className="link" to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
+                           {film?.director.name}
+                    </Link>
+                </p>
+            </p>
+            <p className="testo">Durata: {film.duration}</p>
+
             <Grid container spacing={4}>
-                <Grid size={{xs: 12, sm: 6, md: 4, lg:3}}>
+                <Grid xs={12} sm={6} md={4} lg={3} size={3}>
 
                     <img className="locandina" src={film?.poster_path} alt="" />
                     {/* Bottoni per gestire il film */}
@@ -86,21 +86,22 @@ function FilmPage(){
                         {film.trailerLink &&
                         <Button sx={{padding:"0"}} component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
                             <Tooltip title="Trailer">
-                                <YouTubeIcon sx={{display:"flex", color:"red",fontSize:{xs:"20px", md:"2vw"}, padding: 0}}/>
+                                <YouTubeIcon sx={{display:"flex", color:"#cad2c5",fontSize:{xs:"20px", md:"2vw"}, margin:"5px"}}/>
                             </Tooltip>
                         </Button>
                     }
                     {film?.genres.map( genre =>
-                        <Chip sx={{fontSize:"clamp(13px,1.2vw,25px)"}} label={genre.name} />) }
+                        <Chip sx={{fontSize:{xs:"13px", md:"1.2vw", color:"#cad2c5",backgroundColor: "#52796f",border:"1px solid black"}}} label={genre.name} />) }
                     </Stack>
 
                     <CastCrewMoreInfo film={film} />
 
-                    <Button sx={{margin:"15px",border: "1px solid black", fontSize:"13px"}} component={Link} to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
-                      🎬 Film simili a "{film.title}"
-                    </Button>
+                    🎬<Link className="link" id="film_simili" to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
+                       Film simili a "{film.title}"</Link>
 
+                    <Box>
                     <FilmCollection collection={film.collection} />
+                    </Box>
 
                     </Grid>
                 </Grid>

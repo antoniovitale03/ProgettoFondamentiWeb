@@ -240,10 +240,11 @@ function FilmButtons({ film }) {
                 <IconButton onClick={buttons.liked === 0 ? addToLiked : removeFromLiked}>
                     {buttons.liked === 0 ?
                         <ThumbUpOffAltIcon className="icon" /> :
-                        <ThumbUpIcon className="icon time-icon" />
-                    }
-                </IconButton>
-            </Tooltip>
+
+                            <ThumbUpIcon className="icon" id="thumb-icon" />
+                        }
+                    </IconButton>
+                </Tooltip>
 
             {buttons.review === 0 ?
                 <DropDownMenu buttonContent={<Tooltip title="Aggiungi una recensione"><ReviewsOutlinedIcon className="icon" /></Tooltip>}
@@ -259,16 +260,17 @@ function FilmButtons({ film }) {
                 <IconButton onClick={buttons.favorite === 0 ? addToFavorites : removeFromFavorites}>
                     {buttons.favorite === 0 ?
                         <FavoriteBorderIcon className="icon"/>:
-                        <FavoriteIcon className="icon favorite-icon"/>
+                        <FavoriteIcon className="icon" id="favorite-icon" />
                     }
                 </IconButton>
             </Tooltip>
 
-            <Tooltip title={buttons.watched === 0 ? "Aggiungi ai film visti" : "Rimuovi dai film visti"}>
-                <IconButton onClick={buttons.watched === 0 ? addToWatched : removeFromWatched}>
-                    {buttons.watched === 0 ?
-                        <AddCircleOutlineIcon className="icon" />:
-                        <RemoveCircleOutlineIcon className="icon remove-icon" />
+
+            <Tooltip title={watchedButton === 1 ? "Aggiungi ai film visti" : "Rimuovi dai film visti"}>
+                <IconButton onClick={watchedButton === 1 ? addToWatched : removeFromWatched}>
+                    {watchedButton === 1 ?
+                        <AddCircleOutlineIcon className="icon"/>:
+                        <RemoveCircleOutlineIcon className="icon" id="remove-icon" />
                     }
                 </IconButton>
             </Tooltip>

@@ -16,8 +16,8 @@ import FilmDetailsMenu from "./FilmDetailsMenu";
 function CastCrewMoreInfo({ film }) {
 
     return (
-        <Box>
-            <Accordion sx={{width:{xs:"200px", md:"35vw"} }}>
+        <Box sx={{marginBottom:"20px"}}>
+            <Accordion sx={{width:{xs:"200px", md:"35vw"},backgroundColor:"#52796f",border:"1px solid black" }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}> {/*parte visibile e cliccabile */}
                     <Typography sx={{fontSize:{xs:"12px", md:"1vw"}}}>Cast</Typography>
                 </AccordionSummary>
@@ -38,14 +38,14 @@ function CastCrewMoreInfo({ film }) {
                         }
                     </ImageList>
                     <div>
-                        <NavLink style={{textDecoration:"none", color:"blue"}} to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/cast`}>
+                        <NavLink style={{color:"black"}} to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/cast`}>
                             Mostra altri...
                         </NavLink>
                     </div>
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{width:{xs:"200px", md:"35vw"} }}>
+            <Accordion sx={{width:{xs:"200px", md:"35vw"},backgroundColor:"#52796f", border:"1px solid black" }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                     <Typography sx={{fontSize:{xs:"12px", md:"1vw"}}}>Crew</Typography>
                 </AccordionSummary>
@@ -65,13 +65,13 @@ function CastCrewMoreInfo({ film }) {
                         )
                         }
                     </ImageList>
-                    <NavLink style={{textDecoration:"none", color:"blue"}} to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/crew`}>
+                    <NavLink style={{color:"black"}} to={`/film/${film.title.replaceAll(" ", "-")}/${film.id}/crew`}>
                         Mostra altri...
                     </NavLink>
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={{width:{xs:"200px", md:"35vw"}}}>
+            <Accordion sx={{width:{xs:"200px", md:"35vw"},backgroundColor:"#52796f",border:"1px solid black"}}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                     <Typography sx={{fontSize:{xs:"12px", md:"1vw"}}}>Altre info</Typography>
                 </AccordionSummary>

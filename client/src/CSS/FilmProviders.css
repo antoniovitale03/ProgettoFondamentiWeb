@@ -1,15 +1,16 @@
-.box{
-    display: flex;
+.box_providers{
+    display: block;
+    align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 1vw;
 }
 
 .img{
-    width: 5vw;
+    width: 6vw;
     height: auto;
     object-fit: contain;
-    border: 1px solid black;
+    border: 2px solid black;
+    margin: 3px;
 }
 
 .text{

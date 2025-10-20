@@ -1,48 +1,44 @@
-import {Box, Tooltip, Typography} from "@mui/material";
-import '../../CSS/FilmPage.css';
+import {Box, Tooltip} from "@mui/material";
+import * as React from "react";
+import '../../CSS/FilmProviders.css';
 
 function FilmProviders({ rent, buy, flatrate }) {
     return(
         <Box>
         {rent &&
-            <Box>
-                <Typography component="p" className="text">Noleggia</Typography>
-                <Box className="box">
-                    { rent.map( film =>
+            <Box className="box_providers">
+                <p className="text">Noleggia</p>
+                { rent.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img className="img" src={film.logo_path} alt=""/>
+                                <img className="img" src={film.logo_path} alt=""/>
                         </Tooltip>
-                    )
-                    }
-                </Box>
+                )
+                }
             </Box>
         }
 
         { flatrate &&
-            <Box>
-                <Typography  component="p" className="text">Guarda in streaming</Typography>
-                <Box className="box">
-                    { flatrate.map( film =>
-                        <Tooltip title={film.provider_name}>
+
+            <Box className="box_providers">
+                <p className="text">Guarda in streaming</p>
+                { flatrate.map( film =>
+                    <Tooltip title={film.provider_name}>
                             <img className="img" src={film.logo_path} alt=""/>
-                        </Tooltip>
-                    )
-                    }
-                </Box>
+                    </Tooltip>
+                )
+                }
             </Box>
         }
 
         { buy &&
-            <Box>
-                <Typography  component="p" className="text">Acquista</Typography>
-                <Box className="box">
+            <Box className="box_providers">
+                <p className="text">Acquista</p>
                     { buy.map( film =>
                         <Tooltip title={film.provider_name}>
                             <img className="img" src={film.logo_path} alt=""/>
                         </Tooltip>
                     )
                     }
-                </Box>
             </Box>
         }
         </Box>

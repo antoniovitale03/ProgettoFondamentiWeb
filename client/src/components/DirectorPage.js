@@ -29,18 +29,31 @@ if(director){
                 <Grid size={{ xs:12, sm:6, md:4 }} >
                     <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={director.personalInfo.profile_image} alt="Immagine del direttore"/>
                 </Grid>
+<<<<<<< Updated upstream
                 <Grid size={{ xs:12, sm:6, md:8 }}>
                     {director.personalInfo.birthday && <Typography component="p" style={{fontSize: "clamp(15px,1vw,20px)"}}>Data di nascita: {director.personalInfo.birthday}</Typography> }
                     {director.personalInfo.place_of_birth && <Typography component="p" style={{fontSize: "clamp(15px,1vw,20px)"}}>Luogo di nascita: {director.personalInfo.place_of_birth}</Typography>}
                     <Typography component="p" style={{flexWrap:"wrap", fontSize:"clamp(15px,1vw,20px)"}}>Biografia: {director.personalInfo.biography}</Typography>
+=======
+                <Grid xs={12} sm={6} md={8} size={8}>
+                    {directorPersonalInfo.birthday ? <p style={{fontSize:{xs:"15px", md:"2vw"}}}>Data di nascita: {directorPersonalInfo.birthday}</p> : null}
+                    {directorPersonalInfo.place_of_birth ? <p style={{fontSize:{xs:"15px", md:"2vw"}}}>Luogo di nascita: {directorPersonalInfo.place_of_birth}</p> : null}
+                    <p style ={{flexWrap:"wrap", fontSize:{xs:"15px", md:"2vw"}}}>Biografia: {directorPersonalInfo.biography}</p>
+>>>>>>> Stashed changes
                 </Grid>
             </Grid>
 
 
 
+<<<<<<< Updated upstream
             {director.cast.length !== 0 ?
                 <Box>
                     <Typography component="h1">Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</Typography>
+=======
+            {directorCast.length !== 0 ?
+                <div>
+                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {directorPersonalInfo.name} ha performato come attore/attrice ({directorCast.length})</Typography>
+>>>>>>> Stashed changes
                     <Grid container spacing={2}>
                         { director.cast.map(film =>
                             <Grid key={film._id} size={{ xs:12, sm:6, md:4 }} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}} >

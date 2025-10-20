@@ -1,34 +1,33 @@
 .box-button{
     display: flex;
+    align-items: center;
     max-width: 100%;
     height: auto;
     flex-wrap: wrap;
     padding: 2px;
-    border: 1px solid darkgreen;
+    border: 3px solid black;
+    background-color: #52796f;
     justify-content: space-around;
 }
 
 .icon{
     font-size: 1.8vw;
     padding: 1px;
-    color: black;
+    color: #cad2c5;
 }
 @media (max-width: 900px) {
     .box-button .icon{
         font-size: 13px;
-        color: black;
+        color: #cad2c5;
     }
 }
 
-.time-icon{
-    color: violet;
+#thumb-icon{
+    color: dodgerblue;
 }
-.thumb-icon{
-    color: blue;
+#favorite-icon{
+    color: darkred;
 }
-.favorite-icon{
-    color: red;
-}
-.remove-icon{
-    color: green;
+#remove-icon{
+    color: coral;
 }

@@ -1,0 +1,35 @@
+.box_testo{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+.link_card{
+    display: block;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #344e41;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.link_card:hover{
+    overflow: visible;
+    white-space: normal;
+    z-index: 5; /* si vede sopra altri elementi */
+}
+
+
+/* CSS immagine CardMedia */
+.card_media{
+    display: flex;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid black;
+    cursor: pointer;
+}
