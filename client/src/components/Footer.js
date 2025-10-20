@@ -8,13 +8,14 @@ import {Link} from "react-router-dom";
 
 
 function Footer() {
+
     return (
         <AppBar position="static" sx= {{ backgroundColor:"#52796f" }} >
-            <Toolbar sx={{ width: "50%" }}>
+            <Toolbar sx={{ width: "100%" }}>
                 <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
-                    <Button component={Link} to="/about">About</Button>
-                    <Button component={Link} to="/contact">Contact</Button>
-                    <Button component={Link} to="/help">Help</Button>
+                    <Button sx={{color:"#354f52"}} component={Link} to="/about">About</Button>
+                    <Button sx={{color:"#354f52"}} component={Link} to="/contact">Contact</Button>
+                    <Button sx={{color:"#354f52"}} component={Link} to="/help">Help</Button>
                     <IconButton component={Link} to="https://github.com/antoniovitale03/ProgettoFondamentiWeb" target="_blank" rel="noreferrer">
                         <GitHubIcon />
                     </IconButton>
@@ -32,7 +33,7 @@ function Footer() {
                     </IconButton>
                 </Box>
             </Toolbar>
-            <Typography component="p">© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</Typography>
+            <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>
         </AppBar>
 
     )

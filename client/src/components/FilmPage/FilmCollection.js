@@ -3,6 +3,7 @@ import {Box, Grid, Typography} from "@mui/material";
 
 function FilmCollection({ collection }){
     return(
+        collection &&
                 <Box>
                     <Typography sx={{fontSize:{xs:"12px", md:"1.5vw"},margin:"5px"}}>La saga completa</Typography>
                     <Grid container spacing={2}>
@@ -11,6 +12,7 @@ function FilmCollection({ collection }){
                                 <FilmCard film={film} />
                             </Grid>
                         )}
+
                     </Grid>
                 </Box>
     )

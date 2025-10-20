@@ -1,5 +1,6 @@
 
 const User = require('../models/User');
+const {getReviews} = require("./reviewsController");
 
 //funzione che calcola l'url delle immagini
 function getImageUrl(baseUrl, size, imagePath){
@@ -102,6 +103,11 @@ async function getCastCrewPreview(filmID){
     return {cast: cast, crew: crew}
 }
 
+async function getUserReviews(filmID){
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/reviews?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+    const reviews = await response.json();
+    return reviews;
+}
 //le richieste sono paginate (prendo solo la prima pagina massimo 20 film da mostrare nel carosello).
 
 
@@ -325,7 +331,6 @@ exports.getFilmsByYear = async (req, res) => {
 //questa funzione serve per trovare un film conoscendo il suo ID di tmdb e il suo titolo, restituendo tutte le informazioni che
 //dovranno essere mostrate nella filmPage
 
-
 exports.getCast = async (req, res) => {
     const filmID = parseInt(req.params.filmID);
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
@@ -365,6 +370,10 @@ exports.getFilm = async (req, res) => {
 
     //trovo il link Youtube del trailer
     const trailerLink = await getFilmTrailer(filmID);
+
+    //trovo le recensioni più popolari del film
+    const reviews = await getUserReviews(filmID);
+    console.log(reviews);
 
     //calcolo la durata del film in ore + minuti (film.runtime restituisce la durata in minuti)
     const hours = Math.floor(film.runtime / 60);
