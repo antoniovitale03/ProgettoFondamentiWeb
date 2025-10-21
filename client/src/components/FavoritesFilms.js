@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import useDocumentTitle from "./hooks/useDocumentTitle"
 import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
@@ -37,7 +37,9 @@ function FavoritesFilms(){
         <Box>
             {films.length > 0 ?
                 <Box>
-                {user.username === username ? <h1>I tuoi {films.length} film preferiti</h1> : <h1>{username} ha {films.length} film preferiti</h1>}
+                {user.username === username ?
+                    <Typography component="h1" variant="strong">I tuoi {films.length} film preferiti</Typography>
+                    : <Typography component="h1" variant="strong">{username} ha {films.length} film preferiti</Typography>}
                     <Grid container spacing={2}>
                         { films.map(film =>
                             <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
@@ -47,7 +49,10 @@ function FavoritesFilms(){
                     </Grid>
                 </Box>:
                 <Box>
-                    {user.username === username ? <h1>Non hai ancora aggiunto nessun film ai tuoi preferiti</h1> : <h1>{username} non ha ancora aggiunto nessun film ai suoi preferiti</h1>}
+                    {user.username === username ?
+                        <Typography component="h1" variant="strong">Non hai ancora aggiunto nessun film ai tuoi preferiti</Typography>
+                        : <Typography component="h1" variant="strong">{username} non ha ancora aggiunto nessun film ai suoi preferiti</Typography>
+                    }
                 </Box>
             }
         </Box>

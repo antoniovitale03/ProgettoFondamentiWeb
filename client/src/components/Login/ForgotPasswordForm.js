@@ -6,7 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import sleep from "../hooks/useSleep";
 
-function ForgotPasswordForm({ setStep, email, setEmail }) {
+function ForgotPasswordForm({ setStep, email }) {
 
     useDocumentTitle("Hai dimenticato la tua password?");
     const {showNotification} = useNotification();
@@ -36,7 +36,7 @@ function ForgotPasswordForm({ setStep, email, setEmail }) {
             <Stack spacing={5}>
                 <FormControl>
                     <InputLabel htmlFor="email">Email</InputLabel>
-                    <Input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    <Input type="email" id="email" value={email} required />
                 </FormControl>
 
                 <FormControl>

@@ -61,8 +61,8 @@ function Watchlist(){
             { numWatchlist !== 0 ?
                 <Stack spacing={7}>
                     { user.username === username ?
-                        <Typography component="h1">Vuoi guardare {numWatchlist} film </Typography>
-                        : <Typography component="h1">{username} vuole guardare {numWatchlist} film</Typography>
+                        <Typography component="h1" variant="strong">Vuoi guardare {numWatchlist} film </Typography>
+                        : <Typography component="h1" variant="strong">{username} vuole guardare {numWatchlist} film</Typography>
                     }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false}/>
@@ -79,8 +79,8 @@ function Watchlist(){
                 </Stack> :
                 <Box>
                     { user.username === username ?
-                        <Typography component="h1">La tua watchlist è vuota. Aggiungi qualche film!</Typography> :
-                        <Typography component="h1">{username} non ha ancora aggiunto nessun film alla watchlist</Typography>
+                        <Typography component="h1" variant="strong">La tua watchlist è vuota. Aggiungi qualche film!</Typography> :
+                        <Typography component="h1" variant="strong">{username} non ha ancora aggiunto nessun film alla watchlist</Typography>
                     }
                 </Box>
 

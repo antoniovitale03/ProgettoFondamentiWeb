@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-
 async function sendMail(username, email) {
 
     //codice di verifica casuale a 6 cifre
@@ -28,7 +27,7 @@ async function sendMail(username, email) {
     return code
 }
 
-exports.registerdata = async (req, res) => {
+exports.registerData = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
@@ -48,7 +47,14 @@ exports.registerdata = async (req, res) => {
         //salvo username email code in pending_user
         const pendingUser = await PendingUser.findOneAndUpdate(
             { email },
-            { username, email, hashedPassword, verificationCode, expiresAt },
+            {
+                $set: {
+                    username: username,
+                    hashedPassword: hashedPassword,
+                    verificationCode: verificationCode,
+                    expiresAt: expiresAt,
+                }
+                },
             { upsert: true, new: true }
         );
         await pendingUser.save();
@@ -62,7 +68,7 @@ exports.registerdata = async (req, res) => {
 
 exports.registrationVerify = async (req, res) => {
     try{
-        const { email, code } = req.body;
+        const { email, verificationCode } = req.body;
 
         const pendingUser = await PendingUser.findOne({ email });
         if(!pendingUser) return res.status(400).json('Utente non trovato.');
@@ -72,8 +78,7 @@ exports.registrationVerify = async (req, res) => {
             return res.status(400).json('Codice scaduto.');
         }
 
-        console.log(pendingUser.verificationCode);
-        if (pendingUser.verificationCode !== code) {
+        if (pendingUser.verificationCode !== verificationCode) {
             return res.status(400).json('Codice di verifica errato.');
         }
 
@@ -151,12 +156,68 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.forgotPassword = async (req, res) => {
+    try{
+        const { email } = req.body;
+        const user = await User.findOne({ email: email });
+        if(!user){
+            return res.status(404).json("utente non esistente");
+        }
+        const code = await sendMail(user.username, email);
+        const expiresAt = new Date(Date.now() + 60 * 1000); // scade in 1 minuto
+        //creo un utente temporaneo solo con le info essenziali per questa fase
+        const pendingUser = await PendingUser.findOneAndUpdate(
+            { email },
+            { $set: { verificationCode: code, expiresAt: expiresAt  } },
+            { upsert: true, new: true }
+        );
+        await pendingUser.save();
+        res.status(200).json("Email inviata");
+    }catch(error){
+        res.status(500).json('Errore del server.');
+    }
+}
+
 exports.loginVerify = async (req, res) => {
-    const { verificationCode } = req.body;
-    if(verificationCode !== code) {
+    const { email, verificationCode } = req.body;
+    const pendingUser = await PendingUser.findOne({ email });
+    if(!pendingUser) return res.status(400).json('Utente non trovato.');
+
+    if (pendingUser.expiresAt < new Date()) {
+        await PendingUser.deleteOne({ email });
+        return res.status(400).json('Codice scaduto.');
+    }
+
+    if(pendingUser.verificationCode !== verificationCode) {
         return res.status(400).json("Codice di verifica non corretto.");
     }else{
+        await PendingUser.deleteOne({ email });
         return res.status(200).json("Codice di verifica corretto");
+    }
+}
+
+exports.setNewPassword = async (req, res) => {
+    try{
+        const {email, newPassword, confirmNewPassword} = req.body;
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json("L' utente non esiste");
+        }
+
+        //dopodichè controllo che la nuova password e la sua conferma siano uguali
+        if (newPassword !== confirmNewPassword) {
+            return res.status(400).json( 'Le password non corrispondono.');
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json('Password aggiornata con successo.');
+
+    }catch(error){
+        res.status(500).json('Errore del server.');
     }
 }
 
@@ -180,72 +241,6 @@ exports.refresh = async (req, res) => {
     res.json(newAccessToken); //token aggiornato
 }
 
-exports.forgotPassword = async (req, res) => {
-    try{
-        const { email } = req.body;
-        const user = await User.findOne({ email: email });
-        const username = user.username;
-        await sendMail(username, email, code);
-        res.status(200).json("Email inviata");
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
-}
-
-exports.setNewPassword = async (req, res) => {
-    try{
-        const {email, newPassword, confirmNewPassword} = req.body;
-        const user = await User.findOne({ email: email });
-        if (!user) {
-            return res.status(400).json("L' utente non esiste");
-        }
-
-        //dopodichè controllo che la nuova password e la sua conferma siano uguali
-        if (newPassword !== confirmNewPassword) {
-             return res.status(400).json( 'Le password non corrispondono.');
-         }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-         user.password = hashedPassword;
-         await user.save();
-
-         res.status(200).json('Password aggiornata con successo.');
-
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
-}
-
-exports.modifyPassword = async (req, res) => {
-    const {oldPassword, newPassword, confirmNewPassword} = req.body;
-    const userID = req.user.id;
-
-    //prima controllo che lo username esista
-    const user = await User.findById(userID)
-    if (!user) {
-        return res.status(400).json("L'utente non esiste")
-        }
-
-    //poi controllo che la "vecchia password" corrisponda a quella dell'utente
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch){
-          return res.status(400).json("La vecchia password non è corretta. ")
-        }
-
-    //dopodichè controllo che la nuova password e la sua conferma siano uguali
-    if (newPassword !== confirmNewPassword) {
-        return res.status(400).json( 'Le password non corrispondono.');
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-    user.password = hashedPassword;
-    await user.save();
-
-    res.status(200).json('Password aggiornata con successo.');
-}
 
 exports.logout = async (req, res) => {
     //devo invalidare il refreshToken eliminandolo dal DB e dal browser

@@ -21,7 +21,7 @@ function Followers() {
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto' }}>
-            <Typography component="h1">Followers di {username}</Typography>
+            <Typography component="h1" variant="strong">Followers di {username}</Typography>
             {
                 followers.map( user => <UserCard user={user} />)
             }

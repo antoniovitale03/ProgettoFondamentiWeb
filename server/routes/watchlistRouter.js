@@ -6,6 +6,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
 // /api/films/watchlist
 router.post("/add-to-watchlist", authMiddleware.verifyJWT, watchlistController.addToWatchlist)
 router.delete("/remove-from-watchlist/:filmID", authMiddleware.verifyJWT, watchlistController.removeFromWatchlist)
-router.get("/get-watchlist/:username", authMiddleware.verifyJWT, watchlistController.getWatchlist)
+router.get("/get-watchlist/:username", watchlistController.getWatchlist)
 
 module.exports = router;

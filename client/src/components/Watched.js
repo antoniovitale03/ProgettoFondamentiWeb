@@ -62,7 +62,8 @@ function Watched(){
         <Box >
             { numWatched !== 0 ?
                 <Stack spacing={7}>
-                    { user.username === username ? <Typography component="h1">Hai visto {numWatched} film </Typography> : <Typography component="h1">{username} ha visto {numWatched} film</Typography> }
+                    { user.username === username ? <Typography component="h1" variant="strong">Hai visto {numWatched} film </Typography>
+                        : <Typography component="h1" variant="strong">{username} ha visto {numWatched} film</Typography> }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={true} />
 
@@ -80,8 +81,8 @@ function Watched(){
                 </Stack> :
                 <Box>
                     { user.username === username ?
-                        <Typography component="h1">Non hai ancora visto nessun film</Typography> :
-                        <Typography component="h1">{username} non ha ancora visto nessun film</Typography>
+                        <Typography component="h1" variant="strong">Non hai ancora visto nessun film</Typography> :
+                        <Typography component="h1" variant="strong">{username} non ha ancora visto nessun film</Typography>
                     }
                 </Box>
             }

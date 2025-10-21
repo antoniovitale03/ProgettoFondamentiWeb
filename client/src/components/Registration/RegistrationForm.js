@@ -36,7 +36,7 @@ function RegistrationForm({ email, setEmail, setStep }) {
 
     return (
         <Box>
-            <form onSubmit={handleSubmit}>
+            <Box component="form" onSubmit={handleSubmit}>
 
                     <Typography component="h2">Registrazione</Typography>
                     <FormControl>
@@ -58,7 +58,7 @@ function RegistrationForm({ email, setEmail, setStep }) {
                         <Button loading variant="contained" loadingPosition="end">Verifica in corso</Button>
                 }
 
-            </form>
+            </Box>
             <Typography component="p" className="registration-login-link">Hai già un account? Clicca <Link to="/login" style={{ color: 'white' }}>qui</Link> per loggarti. </Typography>
         </Box>
 

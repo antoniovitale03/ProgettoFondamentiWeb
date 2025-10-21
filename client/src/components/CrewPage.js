@@ -23,7 +23,7 @@ function CrewPage(){
 
     return(
         <Box marginBottom={10}>
-            <Typography component="h1">Crew di "{filmTitle}" ({crew?.length} membri)</Typography>
+            <Typography component="h1" variant="strong">Crew di "{filmTitle}" ({crew?.length} membri)</Typography>
             <Grid container spacing={2} marginBottom={10}>
                 {
                     crew?.map(crewMember =>

@@ -53,7 +53,7 @@ function Lists(){
     return (
         lists.length > 0 ?
             <Box>
-                { user.username === username ? <Typography component="h1">Le tue liste</Typography> : <Typography component="h1">Liste di {username}</Typography> }
+                { user.username === username ? <Typography component="h1" variant="strong">Le tue liste</Typography> : <Typography component="h1">Liste di {username}</Typography> }
                 { user.username === username && <DropDownMenu buttonContent="Crea una nuova lista" menuContent={menuContent} isMenuOpen={isAddListMenuOpen} setIsMenuOpen={setIsAddListMenuOpen} /> }
 
                 {

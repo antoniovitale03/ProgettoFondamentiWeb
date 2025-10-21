@@ -20,10 +20,10 @@ function RegistrationPage() {
 
     useDocumentTitle("Registrazione");
 
-    const handleVerify = async (code) => {
+    const handleVerify = async (verificationCode) => {
         try{
             await api.post('http://localhost:5001/api/auth/registration/verify', {
-                email, code
+                email, verificationCode
             });
             showNotification('Registrazione avvenuta con successo! Ora verrai reindirizzato alla pagina di login', "success");
             await sleep(2500);

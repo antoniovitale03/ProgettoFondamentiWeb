@@ -63,8 +63,8 @@ function Reviews(){
             {numReviews !== 0 ?
                 <Stack spacing={7}>
                     { user.username === username ?
-                        <Typography component="h1">Hai recensito {numReviews} film </Typography>
-                        : <Typography component="h1">{username} ha recensito {numReviews} film</Typography>
+                        <Typography component="h1" variant="strong">Hai recensito {numReviews} film </Typography>
+                        : <Typography component="h1" variant="strong">{username} ha recensito {numReviews} film</Typography>
                     }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
@@ -81,8 +81,8 @@ function Reviews(){
                 </Stack> :
                 <Box>
                     {user.username === username ?
-                        <Typography component="h1">Non hai ancora recensito nessun film</Typography>
-                        : <Typography component="h1">{username} non ha ancora recensito nessun film</Typography>
+                        <Typography component="h1" variant="strong">Non hai ancora recensito nessun film</Typography>
+                        : <Typography component="h1" variant="strong">{username} non ha ancora recensito nessun film</Typography>
                     }
                 </Box>
             }

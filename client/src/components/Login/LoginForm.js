@@ -44,7 +44,7 @@ function LoginForm({  setStep, email, setEmail }) {
 
     return(
         <Box>
-            <form onSubmit={handleLogin}>
+            <Box component="form" onSubmit={handleLogin}>
 
                 <Typography component="h2">Login</Typography>
 
@@ -55,11 +55,11 @@ function LoginForm({  setStep, email, setEmail }) {
 
                 <FormControl>
                      <InputLabel htmlFor="password">Password</InputLabel>
-                     <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
+                     <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </FormControl>
 
                 <Button variant="contained" type="submit">Accedi</Button>
-            </form>
+            </Box>
 
             <Box className="forgot-password-container">
                 <Button className="link-style-button" onClick={handleForgotPassword} sx={{ color: "white" }} disabled={email === ""}>

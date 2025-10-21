@@ -21,7 +21,7 @@ function LoginPage() {
 
     const handleVerify = async (verificationCode) => {
         try{
-            await api.post('http://localhost:5001/api/auth/login/verify', { verificationCode });
+            await api.post('http://localhost:5001/api/auth/login/verify', { email, verificationCode });
             showNotification('Codice corretto! Ora verrai reindirizzato alla pagina di reimpostazione della password', "success");
             await sleep(3000);
             setStep(3);
@@ -29,7 +29,6 @@ function LoginPage() {
             throw error.response.data;
         }
     }
-
 
     useDocumentTitle("Login");
 
@@ -39,7 +38,7 @@ function LoginPage() {
                 {
                     step === 1 ? <LoginForm setStep={setStep} email={email} setEmail={setEmail} /> :
                         step === 2 ? <VerificationForm onVerify={handleVerify} /> :
-                            step === 3 ? <ForgotPasswordForm setStep={setStep} email={email} setEmail={setEmail} /> : null
+                            step === 3 ? <ForgotPasswordForm setStep={setStep} email={email} /> : null
                 }
             </Box>
         </Box>

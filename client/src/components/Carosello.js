@@ -22,13 +22,12 @@ function Carosello({ films, title, link }){
 
     return(
     <Box className="carosello">
-        <Typography component="p">
-            <strong style={{fontSize:"50px", color:"#cad2c5"}}>
+        <Typography component="p" variant="strong" sx={{ fontSize:"50px", color:"#cad2c5" }}>
                 {title}
-            </strong>
-            {link && <Button component={Link} to={link} sx={{ color:"#cad2c5"}}>
-                <InfoOutlineIcon /> sfoglia tutti
-            </Button>
+            {link &&
+                <Button component={Link} to={link} sx={{ color:"#cad2c5"}}>
+                    <InfoOutlineIcon /> sfoglia tutti
+                </Button>
             }
         </Typography>
 

@@ -2,7 +2,9 @@ const express = require('express');    // Il framework per costruire il server e
 const cookieParser = require('cookie-parser');
 const cors = require('cors');          // Il meccanismo che permette al server in ascolto su 5001 di poter accettare richieste dalla porta 3000, cioè dal client React
 require('dotenv').config();      //legge il file `.env`, e permette di accedere alle variabili al suo interno inizializzando un processo in Node.js attraverso `process.env.nome_variabile`
-const connectdb = require("./controllers/connectDBController")
+const mongoose = require("mongoose");
+const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSW}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`;
+
 const authRouter = require('./routes/authRouter');
 const filmRouter = require('./routes/filmRouter');
 const userRouter = require('./routes/userRouter');
@@ -31,8 +33,9 @@ app.use('/api/user', userRouter) // gestione dell'utente (rimozione accout, modi
 app.use('/api/auth', authRouter)  //gestione dell'autenticazione
 app.use('/api/films', filmRouter)  //gestione dei film
 
-connectdb();
-
+mongoose.connect(MONGO_URI)
+        .then(() => console.log('MongoDB connesso con successo!'))
+        .catch(err => console.error('Errore di connessione a MongoDB:', err));
 
 app.listen(PORT, () => {
     console.log(`Server in esecuzione sulla porta ${PORT}`);

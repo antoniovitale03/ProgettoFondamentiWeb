@@ -1,7 +1,7 @@
 body{
     background-color: #354f52;
-
 }
+
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Prosto+One&family=Vast+Shadow&display=swap');
 
 #titolohome1{
@@ -25,7 +25,7 @@ body{
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 17vw;
     height: 45vh;
-    object-fit: "fill";
+    object-fit: fill;
     border-radius:30px;
 
 }
