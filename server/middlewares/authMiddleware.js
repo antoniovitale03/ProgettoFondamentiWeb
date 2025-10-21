@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 
 exports.verifyJWT = async (req, res, next) => {
     // 1. Legge l'accessToken dall'header della richiesta
-    const authHeader = req.headers.authorization || req.headers.Authorization;
+    const authHeader = req.headers.Authorization;
     if (!authHeader?.startsWith('Bearer ')) {
         return res.sendStatus(401); // Unauthorized
     }

@@ -17,7 +17,7 @@ function Watched(){
     const {showNotification} = useNotification();
 
     const [numWatched, setNumWatched] = useState([]);
-    const [watched, setWatched] = useState([]);
+    const [films, setFilms] = useState([]);
 
     const [filters, setFilters] = useState({
         genre: "",
@@ -34,7 +34,7 @@ function Watched(){
         try{
             await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
             showNotification(<strong>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></strong>, "success");
-            setWatched(currentFilms => currentFilms.filter(film => film.id !== filmID));
+            setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatched(num => num - 1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -45,14 +45,14 @@ function Watched(){
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: "", isLiked: null})){
             api.get(`http://localhost:5001/api/films/watched/get-watched/${username}`)
                 .then(response => {
-                    setWatched(response.data);
+                    setFilms(response.data);
                     setNumWatched(response.data.length);
                 })
                 .catch(error => showNotification(error.response.data, "error"));
         }else{
             const params = GetParams(filters);
             api.get(`http://localhost:5001/api/films/watched/get-watched/${username}?${params.toString()}`)
-            .then(response => setWatched(response.data))
+            .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
         }
     }, [filters, username, showNotification]);
@@ -66,10 +66,10 @@ function Watched(){
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={true} />
 
-                    <Typography component="p">{watched.length} film trovati</Typography>
+                    <Typography component="p">{films.length} film trovati</Typography>
 
                     <Grid container spacing={2}>
-                        { watched.map(film =>
+                        { films.map(film =>
                             <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatched}/>
                             </Grid>

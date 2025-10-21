@@ -1,6 +1,5 @@
 import {Link} from "react-router-dom";
-import {Box, Button, Card, CardContent, CardMedia, Grid, Rating, Typography} from "@mui/material";
-import * as React from "react";
+import {Box, Button, Card, CardContent, CardMedia, Grid, IconButton, Rating, Typography} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 
 function ReviewCard({ review, showRemoveButton, onRemove }){
@@ -9,40 +8,43 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
             <CardContent>
                 <Grid container spacing={2}>
 
-                    <Grid size={4}>
-                        <Typography component="p">
-                        <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
-                            <strong>{review.film.title} </strong></Button>
-                        {
-                            review.film.release_year &&
-                            <Button component={Link} to={`/films/${review.film.release_year}`}>
-                                <strong>     ({review.film.release_year})</strong>
+                    {/* Sezione di sinistra: Locandina + titolo + anno */}
+                    <Grid size={4} sx={{ alignItems: 'center' }}>
+                            <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
+                                <strong>{review.film.title} </strong></Button>
+                            {
+                                review.film.release_year &&
+                                <Button component={Link} to={`/films/${review.film.release_year}`} sx={{ display: 'inline' }}>
+                                    <strong>     ({review.film.release_year})</strong>
+                                </Button>
+                            }
+                            <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
+                                <CardMedia component="img" image={review.film.poster_path} />
                             </Button>
-                        }
-                        </Typography>
-                        <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
-                            <CardMedia component="img" image={review.film.poster_path} alt="Locandina film"/>
-                        </Button>
+
                     </Grid>
 
+                    {/* Sezione centrale: testo recensione + voto + data recensione */}
                     <Grid size={7} sx={{ display: 'flex', flexDirection: 'column'}}>
-                        <Typography component="p" sx={{ overflowWrap: 'break-word' }}>{review.review}</Typography>
-                        <Box sx={{ marginTop: 'auto'}}>
+                        <Typography component="strong" sx={{ overflowWrap: 'break-word' }}>
+                            {review.review}
+                        </Typography>
                                 {
                                     review.rating !== 0 ?
-                                        <Typography component="p">Il tuo voto: {<Rating name="rating" value={review.rating} readOnly/> }</Typography>
-                                        : <Typography component="p">Nessun voto per questa recensione</Typography>
+                                        <Typography component="strong" sx={{ marginTop: "auto", display: "block" }}>
+                                            <Rating value={review.rating} readOnly/>
+                                        </Typography>
+                                        : <Typography component="strong" sx={{ marginTop: "auto", display: "block" }}>Nessun voto per questa recensione</Typography>
                                 }
-                            <Typography component="p">Data della recensione: {review.review_date}</Typography>
-                        </Box>
+                            <Typography component="strong" sx={{ display: "block" }}>Data della recensione: {review.review_date}</Typography>
 
                     </Grid>
                     {
                         showRemoveButton &&
                         <Grid size={1}>
-                            <Button onClick={ () => onRemove(review.film._id, review.film.title) }>
+                            <IconButton onClick={ () => onRemove(review.film._id, review.film.title) }>
                                 <ClearIcon />
-                            </Button>
+                            </IconButton>
                         </Grid>
                     }
                 </Grid>

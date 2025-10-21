@@ -5,7 +5,7 @@ function CrewMemberCard({ crewMember }){
             <Card sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent>
                     <Typography component="p">{crewMember.name}   ( {crewMember.department} )</Typography>
-                    <CardMedia component="img" image={crewMember.profile_path} alt="Member crew image"/>
+                    <CardMedia component="img" image={crewMember.profile_path} />
                 </CardContent>
             </Card>
     )

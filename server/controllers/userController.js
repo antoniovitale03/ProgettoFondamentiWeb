@@ -182,7 +182,7 @@ exports.getActivity = async (req, res) => {
             populate: { path: "user" }
         });
     user.activity = user.activity.filter( action => timeAgo(action.date) !== null ) //filtro per tutte le attività fino ad un mese fa
-    let activity = user.activity.map( action => {return{...action.toObject(), timeAgo: timeAgo(action.date)} });
+    let activity = user.activity.map( action => { return{...action.toObject(), timeAgo: timeAgo(action.date)} });
     res.status(200).json(activity.reverse());
 
 }
