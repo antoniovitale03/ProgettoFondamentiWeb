@@ -34,8 +34,8 @@ function LoginPage() {
     useDocumentTitle("Login");
 
     return (
-        <Box className="sfondologin">
-            <Box className="form-container">
+        <Box className="sfondo">
+            <Box className="page-container">
                 {
                     step === 1 ? <LoginForm setStep={setStep} email={email} setEmail={setEmail} /> :
                         step === 2 ? <VerificationForm onVerify={handleVerify} /> :

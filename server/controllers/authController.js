@@ -1,13 +1,15 @@
 const User = require('../models/User');
+const PendingUser = require('../models/PendingUser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
-//codice di verifica casuale a 6 cifre
-const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-async function sendMail(username, email, code) {
 
+async function sendMail(username, email) {
+
+    //codice di verifica casuale a 6 cifre
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
     //attivo la password per le app nell'account google per poter inviare mail da av715... con nodemailer
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -23,28 +25,35 @@ async function sendMail(username, email, code) {
         text: `Ciao ${username}, grazie per esserti registrato! Il codice di verifica è: ${code}`,
         html: `<p>Ciao ${username}, grazie per esserti registrato!</p><p>Il tuo codice di verifica è: <strong>${code}</strong></p>`
     });
+    return code
 }
 
 exports.registerdata = async (req, res) => {
     try {
-        const { username, email } = req.body;
+        const { username, email, password } = req.body;
 
         //controllo email esistente
-        const existingEmail = await User.findOne({ email });
-        if (existingEmail) {
-            return res.status(400).json("Email già in uso.");
-        }
+        if (await User.findOne({ email })) return res.status(400).json("Email già in uso.");
 
         //controllo username esistente
-        const existingUsername = await User.findOne({ username });
-        if (existingUsername) {
-            return res.status(400).json('Username già in uso.');
-        }
+        if (await User.findOne({ username })) return res.status(400).json('Username già in uso.');
 
         //se l'email e l'username non esistono ancora, invia alla mail il codice di verifica
-        await sendMail(username, email, code);
+        const verificationCode = await sendMail(username, email);
 
-        res.status(201).json('Utente registrato con successo!');
+        const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
+        const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
+        const expiresAt = new Date(Date.now() + 60 * 1000); // scade in 1 minuto
+
+        //salvo username email code in pending_user
+        const pendingUser = await PendingUser.findOneAndUpdate(
+            { email },
+            { username, email, hashedPassword, verificationCode, expiresAt },
+            { upsert: true, new: true }
+        );
+        await pendingUser.save();
+
+        res.status(201).json('Utente salvato momentaneamente. Controlla la tua email per il codice di verifica.');
 
     } catch (error) {
         return res.status(500).json('Errore del server.');
@@ -53,19 +62,32 @@ exports.registerdata = async (req, res) => {
 
 exports.registrationVerify = async (req, res) => {
     try{
-        const { username, email, password, verificationCode } = req.body;
+        const { email, code } = req.body;
 
-        //controlla se il codice inserito dall'utente(verificationCode) corrisponde a quello inviato via mail(code)
-        if (verificationCode !== code) { //codice errato
+        const pendingUser = await PendingUser.findOne({ email });
+        if(!pendingUser) return res.status(400).json('Utente non trovato.');
+
+        if (pendingUser.expiresAt < new Date()) {
+            await PendingUser.deleteOne({ email });
+            return res.status(400).json('Codice scaduto.');
+        }
+
+        console.log(pendingUser.verificationCode);
+        if (pendingUser.verificationCode !== code) {
             return res.status(400).json('Codice di verifica errato.');
         }
 
-        //se il codice di verifica è corretto, puoi salvare l'utente nel DB
-        //eseguo hash with salt della password
-        const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
-        const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
-        const newUser = new User({ username, email, password: hashedPassword });
+        // Salvo permanentemente
+        const newUser = new User({
+            username: pendingUser.username,
+            email: pendingUser.email,
+            password: pendingUser.hashedPassword
+        });
         await newUser.save();
+
+        // Rimuovo l'utente temporaneo
+        await PendingUser.deleteOne({ email });
+
         res.status(200).json("Codice di verifica corretto. Ora sarai reindirizzato alla pagina di login.")
         }
     catch(error){

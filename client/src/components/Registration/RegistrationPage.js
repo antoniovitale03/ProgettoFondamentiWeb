@@ -13,7 +13,7 @@ function RegistrationPage() {
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
-    const [registrationData, setRegistrationData] = useState(null);
+    const [email, setEmail] = useState('');
 
     // Stato per controllare lo stato di registrazione (1 = inserimento dati, 2 = codice di verifica)
     const [step, setStep] = useState(1);
@@ -23,10 +23,7 @@ function RegistrationPage() {
     const handleVerify = async (code) => {
         try{
             await api.post('http://localhost:5001/api/auth/registration/verify', {
-                username: registrationData.username,
-                email: registrationData.email,
-                password: registrationData.password,
-                verificationCode: code
+                email, code
             });
             showNotification('Registrazione avvenuta con successo! Ora verrai reindirizzato alla pagina di login', "success");
             await sleep(2500);
@@ -39,13 +36,16 @@ function RegistrationPage() {
 
 //il form cambia in base al valore di step (1 o 2)
     return (
-            <Box className="form-container">
+        <Box className="sfondo">
+            <Box className="page-container">
                 {
                     step === 1 ?
-                        <RegistrationForm setRegistrationData={setRegistrationData} setStep={setStep} />
+                        <RegistrationForm email={email} setEmail={setEmail} setStep={setStep} />
                         : <VerificationForm onVerify={handleVerify} />
                 }
             </Box>
+        </Box>
+
     )
 }
 
