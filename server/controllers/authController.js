@@ -42,7 +42,7 @@ exports.registerData = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
         const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
-        const expiresAt = new Date(Date.now() + 60 * 1000); // scade in 1 minuto
+        const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 1 minuto
 
         //salvo username email code in pending_user
         const pendingUser = await PendingUser.findOneAndUpdate(
@@ -164,7 +164,7 @@ exports.forgotPassword = async (req, res) => {
             return res.status(404).json("utente non esistente");
         }
         const code = await sendMail(user.username, email);
-        const expiresAt = new Date(Date.now() + 60 * 1000); // scade in 1 minuto
+        const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 300s (5min)
         //creo un utente temporaneo solo con le info essenziali per questa fase
         const pendingUser = await PendingUser.findOneAndUpdate(
             { email },
