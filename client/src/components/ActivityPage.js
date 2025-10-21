@@ -18,19 +18,17 @@ function ActivityPage(){
             .catch(error => showNotification(error.response.data, "error"));
     }, [username])
 
-
     return(
         activity ?
             <Box>
-                <Typography component="h1">Attività di {username}</Typography>
+                <Typography component="h1" variant="strong">Attività di {username}</Typography>
                 <List sx={{ width: '90%' }}>
                     {activity?.map(activity =>
                         <Activity activity={activity} key={activity.id}/>
                     )}
                 </List>
             </Box>
-
-                : <h1>Ancora nessun'attività per {username}</h1>
+                : <Typography component="h1" variant="strong">Ancora nessun'attività per {username}</Typography>
     )
 }
 export default ActivityPage;

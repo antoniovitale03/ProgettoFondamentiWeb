@@ -1,6 +1,6 @@
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Grid, Stack, Typography} from "@mui/material";
 import ReviewCard from "./Cards/ReviewCard";
 import SearchFilters from "./SearchFilters";
 import {useNotification} from "../context/notificationContext";
@@ -61,10 +61,10 @@ function Reviews(){
     return (
         <Box>
             {numReviews !== 0 ?
-                <Box>
+                <Stack spacing={7}>
                     { user.username === username ?
-                        <Typography component="h1">Hai recensito {numReviews} film </Typography>
-                        : <Typography component="h1">{username} ha recensito {numReviews} film</Typography>
+                        <Typography component="h1" variant="strong">Hai recensito {numReviews} film </Typography>
+                        : <Typography component="h1" variant="strong">{username} ha recensito {numReviews} film</Typography>
                     }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
@@ -78,11 +78,11 @@ function Reviews(){
                             </Grid>
                         )}
                     </Grid>
-                </Box> :
+                </Stack> :
                 <Box>
                     {user.username === username ?
-                        <Typography component="h1">Non hai ancora recensito nessun film</Typography>
-                        : <Typography component="h1">{username} non ha ancora recensito nessun film</Typography>
+                        <Typography component="h1" variant="strong">Non hai ancora recensito nessun film</Typography>
+                        : <Typography component="h1" variant="strong">{username} non ha ancora recensito nessun film</Typography>
                     }
                 </Box>
             }

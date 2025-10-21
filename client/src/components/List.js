@@ -35,7 +35,7 @@ function List(){
 
     return(
         <Stack spacing={7}>
-            <Typography componenet="h1">Lista "{listName}" di {username}</Typography>
+            <Typography component="h1">Lista "{listName}" di {username}</Typography>
             <Typography componenet="p">{list.length} film</Typography>
 
             <Grid container spacing={2}>

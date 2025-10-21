@@ -11,6 +11,7 @@ import CastCrewMoreInfo from "./CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
 import FilmButtons from "./FilmButtons";
 import '../../CSS/FilmPage.css';
+import {useNotification} from "../../context/notificationContext";
 
 // /film/filmTitle/filmID
 function FilmPage(){
@@ -21,6 +22,8 @@ function FilmPage(){
     filmTitle = filmTitle.replaceAll("-", " ");
     useDocumentTitle(filmTitle);
 
+    const {showNotification} = useNotification();
+
 
     const [film, setFilm] = useState(null);
 
@@ -28,15 +31,10 @@ function FilmPage(){
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
-        async function fetchFilm(){
-            if (filmTitle && filmID) {
-                const response = await api.get(`http://localhost:5001/api/films/get-film/${filmID}`);
-                const film = await response.data;
-                setFilm(film);
-            }
-        }
-        fetchFilm();
-    }, [filmTitle, filmID])
+        api.get(`http://localhost:5001/api/films/get-film/${filmID}`)
+            .then( response => setFilm(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
+    }, [filmTitle, filmID, showNotification])
 
 
     if(!film){
@@ -112,9 +110,6 @@ function FilmPage(){
                 </Grid>
             </Grid>
         </Box>
-
-
-
     )
 }
 

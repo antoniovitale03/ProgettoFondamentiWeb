@@ -22,7 +22,7 @@ function CastPage(){
 
     return(
         <Stack spacing={7} marginBottom={10}>
-            <Typography component="h1">Cast di "{filmTitle}" ( {cast?.length} attori )</Typography>
+            <Typography component="h1" variant="strong">Cast di "{filmTitle}" ( {cast?.length} attori )</Typography>
             <Grid container spacing={2}>
                 {
                     cast?.map(actor =>

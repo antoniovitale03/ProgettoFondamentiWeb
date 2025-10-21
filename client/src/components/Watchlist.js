@@ -17,7 +17,7 @@ function Watchlist(){
 
     useDocumentTitle(`Watchlist di ${username}`);
     const {showNotification} = useNotification();
-    const [watchlist, setWatchlist] = useState([]);
+    const [films, setFilms] = useState([]);
     const [numWatchlist, setNumWatchlist] = useState(0);
 
     const [filters, setFilters] = useState({
@@ -33,14 +33,14 @@ function Watchlist(){
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
             api.get(`http://localhost:5001/api/films/watchlist/get-watchlist/${username}`)
             .then(response => {
-                setWatchlist(response.data);
+                setFilms(response.data);
                 setNumWatchlist(response.data.length);
             })
             .catch(error => showNotification(error.response.data, "error"));
         }else{
             const params = GetParams(filters);
             api.get(`http://localhost:5001/api/films/watchlist/get-watchlist/${username}?${params.toString()}`)
-            .then(response => setWatchlist(response.data))
+            .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
         }
     }, [username, filters, showNotification])
@@ -49,7 +49,7 @@ function Watchlist(){
         try{
             await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
             showNotification(<strong>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success");
-            setWatchlist(currentFilms => currentFilms.filter(film => film.id !== filmID));
+            setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatchlist(num => num - 1);
         }catch(error){
             showNotification(error.response.data, "error");
@@ -61,16 +61,16 @@ function Watchlist(){
             { numWatchlist !== 0 ?
                 <Stack spacing={7}>
                     { user.username === username ?
-                        <Typography component="h1">Vuoi guardare {numWatchlist} film </Typography>
-                        : <Typography component="h1">{username} vuole guardare {numWatchlist} film</Typography>
+                        <Typography component="h1" variant="strong">Vuoi guardare {numWatchlist} film </Typography>
+                        : <Typography component="h1" variant="strong">{username} vuole guardare {numWatchlist} film</Typography>
                     }
 
                     <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false}/>
 
-                    <Typography component="p">{watchlist.length} film trovati</Typography>
+                    <Typography component="p">{films.length} film trovati</Typography>
 
                     <Grid container spacing={2}>
-                        { watchlist?.map(film =>
+                        { films?.map(film =>
                             <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                                 <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromWatchlist}/>
                             </Grid>)
@@ -79,8 +79,8 @@ function Watchlist(){
                 </Stack> :
                 <Box>
                     { user.username === username ?
-                        <Typography component="h1">La tua watchlist è vuota. Aggiungi qualche film!</Typography> :
-                        <Typography component="h1">{username} non ha ancora aggiunto nessun film alla watchlist</Typography>
+                        <Typography component="h1" variant="strong">La tua watchlist è vuota. Aggiungi qualche film!</Typography> :
+                        <Typography component="h1" variant="strong">{username} non ha ancora aggiunto nessun film alla watchlist</Typography>
                     }
                 </Box>
 

@@ -10,7 +10,7 @@ function ActorCard ( {actor} ){
                         ({actor.character})
                     </Typography>
                     <Button component={Link} to={`/actor/${actor.name.replaceAll(" ", "-")}/${actor.id}`}>
-                        <CardMedia component="img" image={actor.profile_path} alt="Actor image"/>
+                        <CardMedia component="img" image={actor.profile_path} />
                     </Button>
                 </CardContent>
             </Card>

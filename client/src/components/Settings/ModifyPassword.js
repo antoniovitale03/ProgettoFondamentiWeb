@@ -15,7 +15,7 @@ function ModifyPassword() {
     const handleModifyPassword = async (event) => {
         event.preventDefault();
         try{
-            await api.post('http://localhost:5001/api/auth/modify-password', {
+            await api.post('http://localhost:5001/api/user/modify-password', {
                 oldPassword, newPassword, confirmNewPassword
             })
             showNotification("Password aggiornata correttamente", "success");

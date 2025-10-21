@@ -1,23 +1,23 @@
 const express = require('express');
-const router = express.Router(); // Ottieni un router da Express
-const authMiddleware = require('../middlewares/AuthMiddleware');
+const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware');
 const authController = require('../controllers/authController');
 //   /api/auth
 
-router.post("/registration", authController.registerdata); //registrazione dati
+//registrazione
+router.post("/registration", authController.registerData) //registrazione dati
 router.post("/registration/verify", authController.registrationVerify); //verifica codice
 
-router.post("/login", authController.login);
-router.post("/login/verify", authController.loginVerify)
 
-router.post("/refresh", authController.refresh)
+// login
+router.post("/login", authController.login)
 router.post("/forgot-password", authController.forgotPassword)
+router.post("/login/verify", authController.loginVerify)
 router.post("/set-new-password", authController.setNewPassword)
 
-router.post("/modify-password", authMiddleware.verifyJWT, authController.modifyPassword)
+
+router.post("/refresh", authController.refresh)
 
 router.get("/logout", authMiddleware.verifyJWT, authController.logout);
-
-
 
 module.exports = router;

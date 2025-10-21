@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Activity = require("../models/Activity");
 const fs = require("fs");
 const path = require("path");
+const bcrypt = require("bcryptjs");
 
 function timeAgo(past) {
     const now = new Date();
@@ -37,6 +38,36 @@ function timeAgo(past) {
         return `${months}mo`;
     }else return null;
     }
+
+exports.modifyPassword = async (req, res) => {
+    const {oldPassword, newPassword, confirmNewPassword} = req.body;
+    const userID = req.user.id;
+
+    //prima controllo che lo username esista
+    const user = await User.findById(userID)
+    if (!user) {
+        return res.status(400).json("L'utente non esiste")
+    }
+
+    //poi controllo che la "vecchia password" corrisponda a quella dell'utente
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch){
+        return res.status(400).json("La vecchia password non è corretta. ")
+    }
+
+    //dopodichè controllo che la nuova password e la sua conferma siano uguali
+    if (newPassword !== confirmNewPassword) {
+        return res.status(400).json( 'Le password non corrispondono.');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json('Password aggiornata con successo.');
+}
 
 exports.getProfileInfo = async (req, res) => {
     try{
@@ -182,7 +213,7 @@ exports.getActivity = async (req, res) => {
             populate: { path: "user" }
         });
     user.activity = user.activity.filter( action => timeAgo(action.date) !== null ) //filtro per tutte le attività fino ad un mese fa
-    let activity = user.activity.map( action => {return{...action.toObject(), timeAgo: timeAgo(action.date)} });
+    let activity = user.activity.map( action => { return{...action.toObject(), timeAgo: timeAgo(action.date)} });
     res.status(200).json(activity.reverse());
 
 }

@@ -1,6 +1,6 @@
 import {MuiOtpInput} from "mui-one-time-password-input";
 import React, {useState} from "react";
-import {Button, Typography} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import {useNotification} from "../../context/notificationContext";
 
@@ -24,7 +24,7 @@ function VerificationForm({ onVerify }){
     };
 
     return (
-        <form onSubmit={handleVerify}>
+        <Box component="form" onSubmit={handleVerify}>
             <Typography component="h3">Codice di verifica</Typography>
             <MuiOtpInput
                 value={verificationCode}
@@ -44,7 +44,7 @@ function VerificationForm({ onVerify }){
                 }}
             />
             <Button variant="contained" type="submit" endIcon={<SendIcon />} disabled={verificationCode?.length < 6}>{button}</Button>
-        </form>
+        </Box>
     )
 }
 

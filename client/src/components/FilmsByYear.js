@@ -4,7 +4,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import FilmCard from "./Cards/FilmCard";
-import { Grid, Pagination, Stack} from "@mui/material";
+import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import SearchFilters from "./SearchFilters";
 import GetParams from "./hooks/useGetSearchParams";
 
@@ -44,7 +44,7 @@ function FilmsByYear(){
     return(
         <Stack spacing={7} marginBottom={10}>
 
-            <h1>Film usciti nel {year} </h1>
+            <Typography component="h1" variant="strong">Film usciti nel {year} </Typography>
 
             {films.length > 0 &&
                 <Pagination

@@ -1,32 +1,39 @@
-.form-container {
+.sfondo {
+    position: relative;
+    min-height: 100vh;
+    background: url("http://i.imgur.com/Abm0wRq.jpg") center/cover no-repeat;
+    overflow: hidden;
+}
+
+/* livello di sfondo sfocato */
+.sfondo::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* prende tutta l'area del genitore (sfondo login), equivale a top 0, left 0, bottom 0, right 0 */
+    background: inherit;          /* eredita tutto lo sfondo in un’unica proprietà */
+    filter: blur(8px);
+    transform: scale(1.05);
+    z-index: 0;
+}
+
+/* contenitore principale della pagina */
+.page-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    flex-grow: 1; /* per spostare il footer in basso */
     min-height: 100vh;
     position: relative;
     z-index: 1;
 }
 
-.sfondologin::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: inherit;
-    background-size: inherit;
-    background-position: inherit;
-    filter: blur(8px); /* <-- intensità della sfocatura */
-    transform: scale(1.05); /* evita bordi visibili */
-    z-index: 0;
-}
-
-.form-container form {
+.page-container form {
     display: flex;
     flex-direction: column; /* Mette gli elementi in colonna */
-    gap: 1rem; /* Spazio tra i gruppi del form */
-    padding: 2rem;
+    gap: 3rem; /* Spazio tra i gruppi del form */
+    padding: 4rem;
+    margin-bottom: 3.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #a4c3b2ff;
@@ -35,32 +42,14 @@
     width: 100%;
 }
 
-textarea {
-    width: 100%;
-    height: 170px;
-    resize: none;
-}
 
-.form-container h2 {
+.page-container h2 {
     text-align: center;
-    margin-top: 0;
     color:#344e41
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
 
-}
-
-.form-group label {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.form-container button {
+.page-container button {
     margin-top: 2rem;
     padding: 0.75rem;
     border: none;
@@ -73,20 +62,16 @@ textarea {
     transition: background-color 0.2s;
 }
 
-.form-container button:hover {
+.page-container button:hover {
     background-color: black;
-}
-
-.error-message {
-    color: #d93025;
-    text-align: center;
-    margin: 0;
-    padding: 0;
 }
 
 
 .registration-login-link{
     margin-top: 4rem;
+    background-color: #000000;
+    padding:0.5%;
+    color:white;
 }
 
 /*classe creata per gestire l'allineamento a destra */
@@ -96,20 +81,8 @@ textarea {
     border-radius: 20px;
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
     margin-bottom: 3.5rem;
     text-align: left
-}
-
-.forgot-password-link{
-    color: #007bff;
-    font-size: 0.85rem; /*85% più piccolo del testo normale (1rem)*/
-    text-decoration: none; /*rimuovo la sottolineatura*/
-}
-
-/* Aggiunge di nuovo la sottolineatura quando il mouse è sopra */
-.forgot-password-link:hover {
-    text-decoration: underline;
 }
 
 button.link-style-button {
@@ -135,20 +108,4 @@ button.link-style-button:hover {
     text-decoration: underline;
 }
 
-.registration-login-link{
-    background-color: #000000;
-    padding:0.5%;
-    color:white
-}
-.qui{
-    color:white
-}
 
-.sfondologin {
-    position: relative;
-    min-height: 100vh;
-    background-image: url("http://i.imgur.com/Abm0wRq.jpg");
-    background-size: cover;
-    background-position: center;
-    overflow: hidden; /* evita che la sfocatura esca dai bordi */
-}

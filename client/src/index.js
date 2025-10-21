@@ -9,7 +9,7 @@ import {NotificationProvider} from "./context/notificationContext";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-          <BrowserRouter>
+          <BrowserRouter> {/* per gestire la cronologia e la navigazione tra i componenti*/}
               <AuthProvider>
                       <NotificationProvider>
                           <App />

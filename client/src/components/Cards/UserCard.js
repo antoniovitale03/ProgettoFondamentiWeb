@@ -5,9 +5,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ReviewsIcon from "@mui/icons-material/Reviews";
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
-import * as React from "react";
 import BoltIcon from "@mui/icons-material/Bolt";
+
+
 function UserCard({ user, showRemoveButton, onUnfollow }) {
     return(
         <Card sx={{ marginBottom: 10 }}>

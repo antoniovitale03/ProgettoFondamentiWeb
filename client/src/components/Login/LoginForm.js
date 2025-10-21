@@ -2,9 +2,10 @@ import {Box, Button, FormControl, Input, InputLabel, Stack, Typography} from "@m
 import React, {useState} from "react";
 import {useAuth} from "../../context/authContext";
 import {useNotification} from "../../context/notificationContext";
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import api from "../../api";
 import sleep from "../hooks/useSleep";
+import "../../CSS/Form.css"
 
 
 function LoginForm({  setStep, email, setEmail }) {
@@ -43,30 +44,29 @@ function LoginForm({  setStep, email, setEmail }) {
 
     return(
         <Box>
-            <form onSubmit={handleLogin}>
+            <Box component="form" onSubmit={handleLogin}>
+
                 <Typography component="h2">Login</Typography>
-                    <Stack spacing={5}>
 
-                        <FormControl>
-                            <InputLabel htmlFor="email">Email</InputLabel>
-                            <Input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                        </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="email">Email</InputLabel>
+                    <Input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </FormControl>
 
-                        <FormControl>
-                            <InputLabel htmlFor="password">Password</InputLabel>
-                            <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required></Input>
-                        </FormControl>
+                <FormControl>
+                     <InputLabel htmlFor="password">Password</InputLabel>
+                     <Input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                </FormControl>
 
-                    </Stack>
                 <Button variant="contained" type="submit">Accedi</Button>
-            </form>
+            </Box>
 
             <Box className="forgot-password-container">
                 <Button className="link-style-button" onClick={handleForgotPassword} sx={{ color: "white" }} disabled={email === ""}>
                     Hai dimenticato la password?
                 </Button>
             </Box>
-            <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <NavLink to="/registration" className="qui">qui</NavLink> per registrarti. </Typography>
+            <Typography component="p" className="registration-login-link">Se non hai ancora un account, clicca <Link to="/registration" style={{ color: 'white' }}>qui</Link> per registrarti. </Typography>
         </Box>
     )
 }

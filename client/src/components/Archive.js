@@ -62,7 +62,7 @@ function Archive(){
 
             <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
 
-            <p>{archive.length * totalPages} film trovati</p>
+            <Typography component="p">{archive.length * totalPages} film trovati</Typography>
 
             <Grid container spacing={2}>
                     {archive.map(film => (

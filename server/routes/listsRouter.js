@@ -11,5 +11,4 @@ router.get("/get-list/:username/:listName", listsController.getList);
 router.post("/add-to-list/:listName", authMiddleware.verifyJWT, listsController.addToList);
 router.delete("/remove-from-list/:filmID/:listName", authMiddleware.verifyJWT, listsController.removeFromList);
 
-
 module.exports = router;
