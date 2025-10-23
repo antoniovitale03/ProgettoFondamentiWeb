@@ -48,6 +48,7 @@ function Home(){
                 </Box>
         }
         </Box>
-    )
+
+          )
 }
 export default Home;
