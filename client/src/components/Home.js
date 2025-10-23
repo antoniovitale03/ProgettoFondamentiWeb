@@ -15,24 +15,33 @@ function Home(){
     const [films, setFilms] = useState(null);
 
     useEffect(() => {
-        const param = new URLSearchParams();
-        if(user) param.append("userID", user.id);
-        api.get(`http://localhost:5001/api/films/home/get-home-page-films?${param.toString()}`)
-            .then(response => setFilms(response.data))
-            .catch(error => showNotification(error.response.data, "error"));
+        const homePageFilmInfo = async () => {
+            try{
+                const param = new URLSearchParams();
+                if(user) param.append("userID", user.id)
+                const response = await api.get(`http://localhost:5001/api/films/home/get-home-page-films?${param.toString()}`);
+                let films = await response.data;
+                setFilms(films);
+            }catch(error){
+                showNotification("Errore nel caricamento dei film", "error")
+            }
+        }
+        homePageFilmInfo();
     }, [user, showNotification])
 
     return (
         <Box>
             <Box>
-                {user ? <Typography component="h6" >Benvenuto nella home, {user.username}!</Typography>
-                : <Typography component="h1" id="titolo1"> Nome del sito</Typography>
-                }
-                <Typography component="h2" id="sottotitolo">slogan del sito</Typography>
+                <h1 id="titolo1"> Nome del sito</h1>
+                
+                <h2 id="sottotitolo">slogan del sito</h2>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px'}}>
                 <Card sx={{borderRadius:"60px"}} className="card">
-                    <CardMedia component="img" image="http://i.imgur.com/Abm0wRq.jpg" />
+                    <CardMedia
+                        component="img"
+                        image="http://i.imgur.com/Abm0wRq.jpg"
+                    />
                 </Card>
             </Box>
 

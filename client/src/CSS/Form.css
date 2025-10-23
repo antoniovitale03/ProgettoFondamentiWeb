@@ -98,7 +98,8 @@ textarea {
     justify-content: center;
     margin-top: 2rem;
     margin-bottom: 3.5rem;
-    text-align: left
+    text-align: left;
+    
 }
 
 .forgot-password-link{
@@ -120,10 +121,11 @@ button.link-style-button {
     margin-top: 10px;
 
     /* Applica l'aspetto di un link */
-    color: white; /* Nero */
+    color: white; 
     text-decoration: none;
     font-family: inherit;
     font-size: 0.85rem; /* Più piccolo */
+    
 
     /* Comportamento interattivo */
     cursor: pointer;
@@ -143,6 +145,7 @@ button.link-style-button:hover {
 .qui{
     color:white
 }
+
 
 .sfondologin {
     position: relative;
