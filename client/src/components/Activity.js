@@ -2,7 +2,7 @@ import {Avatar, ListItem, ListItemIcon, Rating, Typography} from "@mui/material"
 import {Link} from "react-router-dom";
 
 function Activity({ activity }){
-    if (activity.action === "ADD_TO_WATCHLIST") {
+    if (activity.action === "ADD_TO_WATCHLIST" && activity.user) {
         return (
             <ListItem key={activity._id}>
                 <Typography component="p" sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -18,7 +18,7 @@ function Activity({ activity }){
             </ListItem>
         )
     }
-    if (activity.action === "ADD_TO_FAVORITES") {
+    if (activity.action === "ADD_TO_FAVORITES" && activity.user) {
         return(
             <ListItem key={activity._id}>
                 <Typography component="p" sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -33,7 +33,7 @@ function Activity({ activity }){
                 </Typography>
             </ListItem>)
     }
-    if (activity.action === "ADD_REVIEW") {
+    if (activity.action === "ADD_REVIEW" && activity.user) {
         return (
             <ListItem key={activity.id}>
                 <Typography component="p" sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -56,7 +56,7 @@ function Activity({ activity }){
             </ListItem>
         )
     }
-    if (activity.action === "ADD_TO_WATCHED") {
+    if (activity.action === "ADD_TO_WATCHED" && activity.user) {
         return (
             <ListItem key={activity.id}>
                 <Typography component="p" sx={{ display: 'flex', flexDirection: 'row' }}>

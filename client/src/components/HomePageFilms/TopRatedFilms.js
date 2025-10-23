@@ -18,8 +18,8 @@ function TopRatedFilms() {
     useEffect( () => {
         api.get(`http://localhost:5001/api/films/home/get-top-rated-films/page/${page}`)
             .then(response => {
-                setFilms(response.data.results);
-                setTotalPages(response.data.total_pages);
+                setFilms(response.data.films);
+                setTotalPages(response.data.totalPages);
             })
             .catch(error => showNotification(error.response.data, "error"));
     }, [page, showNotification])
@@ -33,7 +33,7 @@ function TopRatedFilms() {
 
     return(
         <Stack spacing={7}>
-            <Typography component="h1">Film più acclamati</Typography>
+            <Typography component="h1" variant="strong">Film più acclamati</Typography>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB

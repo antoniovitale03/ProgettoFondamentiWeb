@@ -28,6 +28,16 @@ function Watchlist(){
         sortByPopularity: "",
     });
 
+    const removeFromWatchlist = async (filmID, filmTitle) => {
+        try{
+            await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
+            showNotification(<strong>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success");
+            setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
+            setNumWatchlist(num => num - 1);
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
+    }
 
     useEffect(() => {
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
@@ -45,16 +55,7 @@ function Watchlist(){
         }
     }, [username, filters, showNotification])
 
-    const removeFromWatchlist = async (filmID, filmTitle) => {
-        try{
-            await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
-            showNotification(<strong>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success");
-            setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
-            setNumWatchlist(num => num - 1);
-        }catch(error){
-            showNotification(error.response.data, "error");
-        }
-    }
+
 
     return(
         <Box>

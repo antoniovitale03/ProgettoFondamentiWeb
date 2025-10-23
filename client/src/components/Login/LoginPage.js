@@ -10,7 +10,7 @@ import {useNotification} from "../../context/notificationContext";
 import sleep from "../hooks/useSleep";
 
 function LoginPage() {
-
+    useDocumentTitle("Login");
     const {showNotification} = useNotification();
 
     //gestisco questa variabile di stato nel componente padre
@@ -30,7 +30,6 @@ function LoginPage() {
         }
     }
 
-    useDocumentTitle("Login");
 
     return (
         <Box className="sfondo">

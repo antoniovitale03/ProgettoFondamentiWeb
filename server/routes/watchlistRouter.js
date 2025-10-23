@@ -1,11 +1,11 @@
+const router = require("express").Router();
+
 const watchlistController = require("../controllers/watchlistController");
-const express = require("express");
-const router = express.Router();
-const authMiddleware = require("../middlewares/authMiddleware");
+const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 
 // /api/films/watchlist
-router.post("/add-to-watchlist", authMiddleware.verifyJWT, watchlistController.addToWatchlist)
-router.delete("/remove-from-watchlist/:filmID", authMiddleware.verifyJWT, watchlistController.removeFromWatchlist)
+router.post("/add-to-watchlist", verifyJWT, watchlistController.addToWatchlist)
+router.delete("/remove-from-watchlist/:filmID", verifyJWT, watchlistController.removeFromWatchlist)
 router.get("/get-watchlist/:username", watchlistController.getWatchlist)
 
 module.exports = router;

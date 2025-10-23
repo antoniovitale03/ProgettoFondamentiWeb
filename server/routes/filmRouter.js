@@ -1,5 +1,4 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 
 const filmController = require("../controllers/filmController");
 const watchlistRouter = require("../routes/watchlistRouter");
@@ -10,7 +9,7 @@ const watchedRouter = require("../routes/watchedRouter");
 const homeRouter = require("../routes/homeRouter");
 const listsRouter = require("../routes/listsRouter");
 
-const authMiddleware = require("../middlewares/authMiddleware");
+const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 
 // /api/films
 
@@ -25,7 +24,7 @@ router.get("/get-crew/:filmID", filmController.getCrew);
 router.get("/get-all-genres", filmController.getAllGenres)
 router.get("/get-archive", filmController.getArchiveFilms)
 router.get("/get-search-results/:filmTitle", filmController.getFilmsFromSearch )
-router.get("/get-film/:filmID", authMiddleware.verifyJWT, filmController.getFilm)
+router.get("/get-film/:filmID", verifyJWT, filmController.getFilm)
 router.get("/get-films/:year", filmController.getFilmsByYear)
 
 router.get("/get-actor-info/:actorID", filmController.getActorInfo)

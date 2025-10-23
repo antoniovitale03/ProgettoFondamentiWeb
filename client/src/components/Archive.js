@@ -12,6 +12,7 @@ function Archive(){
     const {showNotification} = useNotification();
 
     const [archive, setArchive] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
 
     const [filters, setFilters] = useState({
         page: 1,
@@ -22,7 +23,10 @@ function Archive(){
         sortByDate: ""
     });
 
-    const [totalPages, setTotalPages] = useState(0);
+    const handlePageChange = (event, value) => {
+        setFilters({...filters, page: value});
+        window.scrollTo(0, 0);
+    };
 
     //effetto che ricerca i film ogni volta che i filtri cambiano o viene cambia la pagina di ricerca dei film
     useEffect(() => {
@@ -38,10 +42,6 @@ function Archive(){
             });
     }, [filters, showNotification]);
 
-    const handlePageChange = (event, value) => {
-        setFilters({...filters, page: value});
-        window.scrollTo(0, 0);
-    };
 
     return(
         <Stack spacing={7}>

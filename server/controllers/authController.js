@@ -42,7 +42,7 @@ exports.registerData = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
         const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
-        const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 1 minuto
+        const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 5 minuti
 
         //salvo username email code in pending_user
         const pendingUser = await PendingUser.findOneAndUpdate(
@@ -59,7 +59,7 @@ exports.registerData = async (req, res) => {
         );
         await pendingUser.save();
 
-        res.status(201).json('Utente salvato momentaneamente. Controlla la tua email per il codice di verifica.');
+        res.status(200).json('Utente salvato momentaneamente. Controlla la tua email per il codice di verifica.');
 
     } catch (error) {
         return res.status(500).json('Errore del server.');
@@ -240,7 +240,6 @@ exports.refresh = async (req, res) => {
     );
     res.json(newAccessToken); //token aggiornato
 }
-
 
 exports.logout = async (req, res) => {
     //devo invalidare il refreshToken eliminandolo dal DB e dal browser

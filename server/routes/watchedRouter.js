@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
+const router = require("express").Router();
 
-const authMiddleware = require("../middlewares/authMiddleware");
+const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 const watchedController = require("../controllers/watchedController");
 
-router.post("/add-to-watched", authMiddleware.verifyJWT, watchedController.addToWatched)
-router.delete("/remove-from-watched/:filmID", authMiddleware.verifyJWT, watchedController.removeFromWatched)
-router.get("/get-watched/:username", authMiddleware.verifyJWT, watchedController.getWatched)
+router.post("/add-to-watched", verifyJWT, watchedController.addToWatched)
+router.delete("/remove-from-watched/:filmID", verifyJWT, watchedController.removeFromWatched)
+router.get("/get-watched/:username", verifyJWT, watchedController.getWatched)
 
 module.exports = router;

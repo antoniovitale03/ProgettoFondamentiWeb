@@ -1,11 +1,10 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 
 const likedController = require("../controllers/likedController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 
 // /api/films/liked
-router.post("/add-to-liked", authMiddleware.verifyJWT, likedController.addToLiked)
-router.delete("/remove-from-liked/:filmID", authMiddleware.verifyJWT, likedController.removeFromLiked)
+router.post("/add-to-liked", verifyJWT, likedController.addToLiked)
+router.delete("/remove-from-liked/:filmID", verifyJWT, likedController.removeFromLiked)
 
 module.exports = router;

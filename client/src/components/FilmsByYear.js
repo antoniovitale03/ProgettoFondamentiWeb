@@ -24,6 +24,11 @@ function FilmsByYear(){
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0); // Per il numero totale di pagine
 
+    const handlePageChange = (event, value) => {
+        setFilters({...filters, page: value});
+        window.scrollTo(0, 0);
+    };
+
     //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
         const params = GetParams(filters);
@@ -35,11 +40,6 @@ function FilmsByYear(){
             .catch(error => showNotification(error.response.data, "error"));
     }, [filters, year, showNotification]);
 
-
-    const handlePageChange = (event, value) => {
-        setFilters({...filters, page: value});
-        window.scrollTo(0, 0);
-    };
 
     return(
         <Stack spacing={7} marginBottom={10}>

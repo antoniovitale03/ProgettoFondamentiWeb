@@ -42,22 +42,6 @@ function FilmButtons({ film }) {
     //rating in quinti
     const [reviewRating, setReviewRating] = useState(0);
 
-
-    useEffect(() => {
-        //renderizzo i bottoni in base allo stato attuale del film (ogni volta che carico un film)
-        if(film){
-            setButtons({
-                watchlist: film.status.isInWatchlist,
-                liked: film.status.isLiked,
-                review: film.status.isReviewed,
-                favorite: film.status.isFavorite,
-                watched: film.status.isWatched,
-                lists: film.status.lists,
-            });
-        }
-    }, [film])
-
-
     const addToWatchlist = async (event) => {
         event.preventDefault();
         try{
@@ -226,6 +210,23 @@ function FilmButtons({ film }) {
             </MenuItem>
         )
     ]
+
+    useEffect(() => {
+        //renderizzo i bottoni in base allo stato attuale del film (ogni volta che carico un film)
+        if(film){
+            setButtons({
+                watchlist: film.status.isInWatchlist,
+                liked: film.status.isLiked,
+                review: film.status.isReviewed,
+                favorite: film.status.isFavorite,
+                watched: film.status.isWatched,
+                lists: film.status.lists,
+            });
+        }
+    }, [film])
+
+
+
 
     return(
         <Box className="box-button">

@@ -79,12 +79,9 @@ exports.getWatched = async (req, res) => {
 
     //per ogni film visto controllo se è stato anche piaciuto e il suo rating (di default mostro dal più recente)
     let watchedFilms = user.watched.reverse().map( watchedFilm => {
-        let isLiked = user.liked.some( likedFilmId => likedFilmId === watchedFilm._id);//controllo se il film è anche piaciuto
-        //uso some perchè mi serve il valore booleano (find restituisce l'elemento)
-
         let review = user.reviews.find( review => review.filmID === watchedFilm._id); // trovo la recensione (se esiste)
         return {...watchedFilm.toObject(),
-            isLiked: isLiked,
+            isLiked: user.liked.some( likedFilmId => likedFilmId === watchedFilm._id),//controllo se il film è anche piaciuto
             rating: review !== undefined ? review.rating : null,
         }
     })

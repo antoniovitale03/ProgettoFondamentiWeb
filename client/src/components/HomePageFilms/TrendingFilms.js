@@ -18,8 +18,8 @@ function TrendingFilms() {
     useEffect( () => {
         api.get(`http://localhost:5001/api/films/home/get-trending-films/page/${page}`)
             .then(response => {
-                setFilms(response.data.results);
-                setTotalPages(response.data.total_pages);
+                setFilms(response.data.films);
+                setTotalPages(response.data.totalPages);
             })
         .catch(error => showNotification(error.response.data, "error"));
     }, [page, showNotification]);
@@ -31,7 +31,7 @@ function TrendingFilms() {
 
     return(
         <Stack spacing={7}>
-            <Typography component="h1">Film in tendenza questa settimana</Typography>
+            <Typography component="h1" variant="strong">Film in tendenza questa settimana</Typography>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB

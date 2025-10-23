@@ -17,7 +17,7 @@ function DirectorPage() {
         api.get(`http://localhost:5001/api/films/get-director-info/${directorID}`)
             .then(response => setDirector(response.data))
             .catch(error => showNotification(error.response.data, "error"));
-    }, [directorName, directorID]);
+    }, [directorName, directorID, showNotification]);
 
 if(director){
     return(

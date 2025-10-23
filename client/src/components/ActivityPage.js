@@ -16,7 +16,7 @@ function ActivityPage(){
         api.get(`http://localhost:5001/api/user/${username}/get-activity`)
             .then( (response) => setActivity(response.data))
             .catch(error => showNotification(error.response.data, "error"));
-    }, [username])
+    }, [username, showNotification])
 
     return(
         activity ?

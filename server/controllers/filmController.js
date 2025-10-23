@@ -1,6 +1,16 @@
 
 const User = require('../models/User');
-const {getReviews} = require("./reviewsController");
+
+function formatData(arrayFilm){
+    return arrayFilm.map(film => {
+        return {
+            _id: film.id,
+            title: film.title,
+            release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
+            poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
+        }
+    });
+}
 
 //funzione che calcola l'url delle immagini
 function getImageUrl(baseUrl, size, imagePath){
@@ -103,11 +113,9 @@ async function getCastCrewPreview(filmID){
     return {cast: cast, crew: crew}
 }
 
-async function getUserReviews(filmID){
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/reviews?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
-    const reviews = await response.json();
-    return reviews;
-}
+//async function getUserReviews(filmID){
+    //const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/reviews?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+    //return await response.json();
 //le richieste sono paginate (prendo solo la prima pagina massimo 20 film da mostrare nel carosello).
 
 
@@ -116,15 +124,7 @@ exports.getSimilarFilms = async (req, res) => {
     const {page, filmID} = req.query;
     const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`);
     let data = await response.json();
-    let films = data.results;
-
-    films = films.map( film => {
-        return {...film,
-            _id: film.id,
-            release_year: new Date(film.release_date).getFullYear(),
-            poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-    }})
-    res.status(200).json({films: films, totalPages: data.total_pages});
+    res.status(200).json({films: formatData(data.results), totalPages: data.total_pages});
 }
 
 exports.getAllGenres = async (req, res) => {
@@ -221,14 +221,7 @@ exports.getArchiveFilms = async (req, res) => {
         const response = await fetch(url);
         let data = await response.json();
 
-        let films = data.results.map(film => {
-            return {
-                _id: film.id,
-                title: film.title,
-                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-            }
-        })
+        let films = formatData(data.results);
 
         if(sortByDate){
             if(sortByDate === "Dal più recente"){
@@ -271,14 +264,7 @@ exports.getFilmsByYear = async (req, res) => {
         const response = await fetch(url);
         let data = await response.json();
 
-        let films = data.results.map( film => {
-            return {
-                release_date: film.release_date,
-                _id: film.id,
-                title: film.title,
-                poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-            }}
-        )
+        let films = formatData(data.results);
 
         if(sortByDate){
             if(sortByDate === "Dal più recente"){
@@ -347,8 +333,8 @@ exports.getFilm = async (req, res) => {
     const trailerLink = await getFilmTrailer(filmID);
 
     //trovo le recensioni più popolari del film
-    const reviews = await getUserReviews(filmID);
-    console.log(reviews);
+    //const reviews = await getUserReviews(filmID);
+    //console.log(reviews);
 
     //calcolo la durata del film in ore + minuti (film.runtime restituisce la durata in minuti)
     const hours = Math.floor(film.runtime / 60);

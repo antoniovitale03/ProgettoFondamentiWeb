@@ -18,8 +18,8 @@ function UpcomingFilms() {
     useEffect( () => {
         api.get(`http://localhost:5001/api/films/home/get-upcoming-films/page/${page}`)
             .then(response => {
-                setFilms(response.data.results);
-                setTotalPages(response.data.total_pages);
+                setFilms(response.data.films);
+                setTotalPages(response.data.totalPages);
             })
         .catch(error => showNotification(error.response.data, "error"));
     }, [page, showNotification]);
@@ -32,7 +32,7 @@ function UpcomingFilms() {
 
     return(
         <Stack spacing={7}>
-            <Typography component="h1">Film in uscita in Italia</Typography>
+            <Typography component="h1" variant="strong">Film in uscita in Italia</Typography>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
