@@ -31,7 +31,7 @@ function ModifyPassword() {
     return(
         <Box className="page-container">
             <Box className="form-container">
-                <form onSubmit={handleModifyPassword}>
+                <Box component="form" onSubmit={handleModifyPassword}>
                     <Typography component="h1">Modifica la tua password</Typography>
                     <Stack spacing={5}>
                         <FormControl>
@@ -50,7 +50,7 @@ function ModifyPassword() {
                         </FormControl>
                         <Button type="onSubmit">Invia</Button>
                     </Stack>
-                </form>
+                </Box>
             </Box>
         </Box>
     )

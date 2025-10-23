@@ -67,8 +67,8 @@ function ModifyProfile(){
     return(
         <Box className="page-container">
             <Box className="form-container">
-                <form onSubmit={handleSubmit}>
-                    <Typography component="p" style={{ textAlign:"left" }}>Modifica il tuo profilo</Typography>
+                <Box component="form" onSubmit={handleSubmit}>
+                    <Typography component="strong" style={{ textAlign:"left" }}>Modifica il tuo profilo</Typography>
                     <Stack spacing={4}>
                         <FormControl>
                             <InputLabel htmlFor="username">Username</InputLabel>
@@ -100,7 +100,7 @@ function ModifyProfile(){
                         </FormControl>
                         <Button type="submit" variant="contained" color="primary">Salva le modifiche</Button>
                     </Stack>
-                </form>
+                </Box>
             </Box>
         </Box>
     )

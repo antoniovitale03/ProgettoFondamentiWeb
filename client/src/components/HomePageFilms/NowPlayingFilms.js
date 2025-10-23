@@ -10,22 +10,22 @@ function NowPlayingFilms() {
 
     const {showNotification} = useNotification();
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [page, setPage] = useState(1);
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
 
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/home/get-now-playing-films/page/${currentPage}`)
+        api.get(`http://localhost:5001/api/films/home/get-now-playing-films/page/${page}`)
             .then(response => {
                 setFilms(response.data.films);
                 setTotalPages(response.data.totalPages);
             })
             .catch(error => showNotification(error.response.data, "error"));
-    }, [currentPage, showNotification]);
+    }, [page, showNotification]);
 
     const handlePageChange = (event, value) => {
-        setCurrentPage(value);
+        setPage(value);
         window.scrollTo(0, 0);
     };
 
@@ -34,8 +34,8 @@ function NowPlayingFilms() {
             <Typography component="h1">Film attualmente al cinema</Typography>
 
             <Pagination
-                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                page={currentPage}
+                count={totalPages > 500 ? 500 : totalPages}
+                page={page}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"
@@ -50,8 +50,8 @@ function NowPlayingFilms() {
             </Grid>
 
             <Pagination
-                count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                page={currentPage}
+                count={totalPages > 500 ? 500 : totalPages}
+                page={page}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"

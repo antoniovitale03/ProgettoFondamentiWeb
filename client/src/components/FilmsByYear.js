@@ -58,7 +58,7 @@ function FilmsByYear(){
 
             <SearchFilters filters={filters} setFilters={setFilters} decadeFilter={false} isLikedFilter={false} />
 
-            <p>{films.length * totalPages} film trovati</p>
+            <Typography component="p">{films.length * totalPages} film trovati</Typography>
 
 
             <Grid container spacing={2}>

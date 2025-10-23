@@ -46,7 +46,7 @@ function Archive(){
     return(
         <Stack spacing={7}>
 
-            <Typography variant="h4" component="h1">
+            <Typography component="h1" variant="h4" >
                 Esplora l'Archivio
             </Typography>
 

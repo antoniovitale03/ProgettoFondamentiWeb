@@ -61,7 +61,8 @@ if (actor){
                             </Grid>
                         )}
                     </Grid>
-                </Box> : <Typography sx={{fontSize:{xs:"15px", md:"1,5vw"}, margin:"20px", fontWeight:"bold"}}>{actor.personalInfo.name} non ha svolto in nessun film un ruolo tecnico</Typography>
+                </Box>
+                : <Typography sx={{fontSize:{xs:"15px", md:"1,5vw"}, margin:"20px", fontWeight:"bold"}}>{actor.personalInfo.name} non ha svolto in nessun film un ruolo tecnico</Typography>
             }
         </Box>
 

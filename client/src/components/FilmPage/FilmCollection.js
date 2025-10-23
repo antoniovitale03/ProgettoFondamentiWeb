@@ -12,7 +12,6 @@ function FilmCollection({ collection }){
                                 <FilmCard film={film} />
                             </Grid>
                         )}
-
                     </Grid>
                 </Box>
     )

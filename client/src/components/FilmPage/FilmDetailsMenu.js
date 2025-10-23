@@ -1,31 +1,31 @@
-import {Box, MenuItem} from "@mui/material";
+import {Box, MenuItem, Typography} from "@mui/material";
 
 function FilmDetails({ film }) {
     return (
         <Box>
             <MenuItem>
-                <h4>Original language: </h4>
-                <p>{film?.details.original_language}</p>
+                <Typography component="h4">Original language: </Typography>
+                <Typography component="p">{film?.details.original_language}</Typography>
             </MenuItem>
             <MenuItem>
-                <h4>Original country: </h4>
-                <p>{film?.details.origin_country?.[0]}</p>
+                <Typography component="h4">Original country: </Typography>
+                <Typography component="p">{film?.details.origin_country?.[0]}</Typography>
             </MenuItem>
             <MenuItem sx={{flexWrap:"wrap"}}>
-                <h4 style={{margin:"0"}}>Spoken languages: </h4>
-                { film?.details.spoken_languages?.map( (language) => <p> {language} </p>) }
+                <Typography component="h4" style={{margin:"0"}}>Spoken languages: </Typography>
+                { film?.details.spoken_languages?.map( (language) => <Typography component="p"> {language} </Typography>) }
             </MenuItem>
             <MenuItem sx={{flexWrap:"wrap"}}>
-                <h4 style={{margin:"0"}}>Production Companies: </h4>
-                { film?.details.production_companies?.map( e => <p style={{margin:"0"}}> {e.name}({e.country}), </p>) }
+                <Typography component="h4" style={{margin:"0"}}>Production Companies: </Typography>
+                { film?.details.production_companies?.map( e => <Typography component="p" style={{margin:"0"}}> {e.name}({e.country}), </Typography>) }
             </MenuItem>
             <MenuItem>
-                <h4>Revenue: </h4>
-                <p>{film?.details.revenue}</p>
+                <Typography component="h4">Revenue: </Typography>
+                <Typography component="p">{film?.details.revenue}</Typography>
             </MenuItem>
             <MenuItem>
-                <h4>Budget: </h4>
-                <p>{film?.details.budget}</p>
+                <Typography component="h4">Budget: </Typography>
+                <Typography component="p">{film?.details.budget}</Typography>
             </MenuItem>
         </Box>
     )

@@ -32,17 +32,15 @@ function DeleteAccount() {
     return (
         <Box className="page-container">
             <Box className="form-container">
-                <form onSubmit={handleDeleteAccount}>
+                <Box component="form" onSubmit={handleDeleteAccount}>
                     <Typography component="h2">Elimina il tuo account</Typography>
-                    <Typography component="p">Per confermare l'eliminazione del tuo account, inserisci la tua mail</Typography>
+                    <Typography component="strong">Per confermare l'eliminazione del tuo account, inserisci la tua mail</Typography>
                     <FormControl>
                         <InputLabel htmlFor="email">Email</InputLabel>
                         <Input type="email" id="email" value={confirmEmail} placeholder="es. mario.rossi@gmail.com" onChange={(e) => setConfirmEmail(e.target.value)} required/>
                     </FormControl>
                     <Button type="submit">Conferma</Button>
-                </form>
-                <p></p>
-                <p></p>
+                </Box>
                 <Typography component="p">Se non desideri più eliminare il tuo account, clicca <NavLink to="/">qui</NavLink> per tornare alla home</Typography>
             </Box>
         </Box>

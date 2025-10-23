@@ -1,10 +1,11 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
-import {Grid, Pagination, Stack} from "@mui/material";
+import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import {useNotification} from "../../context/notificationContext";
 import FilmCard from "../Cards/FilmCard";
 import SearchFilters from "../SearchFilters";
+import api from "../../api";
 
 function SimilarFilms(){
 
@@ -12,51 +13,38 @@ function SimilarFilms(){
     const {filmTitle, filmID} = useParams();
     useDocumentTitle(`Film simili a ${filmTitle}`);
 
-    const [similarFilms, setSimilarFilms] = useState([]);
+    const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
 
-    const [filters, setFilters] = useState({
-        page: 1,
-        genre: "",
-        decade: "",
-        minRating: 0,
-        sortByPopularity: "",
-        sortByDate: ""
-    });
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         const params = new URLSearchParams();
-        params.append("page", filters.page);
-        if (filters.genre !== "") params.append("genre", filters.genre);
-        if (filters.decade !== "") params.append("decade", filters.decade);
-        if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-        if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-        if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-        fetch(`http://localhost:5001/api/films/get-similar-films/${filmID}?${params.toString()}`)
-            .then(response => response.json())
+        params.append("filmID", filmID);
+        params.append("page", page);
+        api.get(`http://localhost:5001/api/films/get-similar-films?${params.toString()}`)
+            .then(response => response.data)
             .then(data => {
-                setSimilarFilms(data.films);
+                setFilms(data.films);
                 setTotalPages(data.totalPages);
             })
             .catch(() => showNotification("Errore nel caricamento dei film simili", "error"));
-    }, [filmTitle, filmID, filters, showNotification])
+    }, [filmTitle, filmID, page, showNotification])
 
     const handlePageChange = (event, value) => {
-        setFilters({...filters, page: value});
+        setPage(value);
         window.scrollTo(0, 0);
     }
 
     return(
         <Stack spacing={7} marginBottom={10}>
-            <h1> Film simili a "{filmTitle.replaceAll("-", " ")}" </h1>
-
-            <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
+            <Typography component="h1"> Film simili a "{filmTitle.replaceAll("-", " ")}" </Typography>
 
             {
-                similarFilms.length > 0 &&
+                films.length > 0 &&
                 <Pagination
                     count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                    page={filters.page}
+                    page={page}
                     onChange={handlePageChange}
                     color="primary"
                     size="large"
@@ -64,26 +52,28 @@ function SimilarFilms(){
             }
 
             {
-                similarFilms.length > 0 ?
-                <p>{similarFilms.length * totalPages} film trovati</p>:
-                <p>Nessun film trovato</p>
+                films.length > 0 ?
+                <Typography component="p">{films.length * totalPages} film trovati</Typography>:
+                    <Typography component="p">Nessun film trovato</Typography>
             }
 
 
-            <Grid container spacing={2}>
-                { similarFilms.length > 0 &&
-                    similarFilms.map( film =>
+            {
+                films.length > 0 &&
+                <Grid container spacing={2}>
+                    {films.map( film =>
                     <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
                         <FilmCard film={film} />
-                    </Grid>)
-                }
-            </Grid>
+                    </Grid>)}
+                </Grid>
+
+            }
 
             {
-                similarFilms.length > 0 &&
+                films.length > 0 &&
                 <Pagination
                     count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                    page={filters.page}
+                    page={page}
                     onChange={handlePageChange}
                     color="primary"
                     size="large"

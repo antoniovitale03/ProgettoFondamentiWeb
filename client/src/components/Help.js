@@ -23,12 +23,13 @@ function Help(){
             setError(error.message);
         }
     }
+
     return(
         <Box classname="page-container">
             <Box className="form-container">
                 <Typography component="h5">Contattaci per avere supporto</Typography>
                 {error && <Typography component="p" className="error-message">{error}</Typography>}
-                <form onSubmit={handleSubmit}>
+                <Box component="form" onSubmit={handleSubmit}>
                     <Stack spacing={5}>
                         <FormControl>
                             <InputLabel htmlFor="email">Email</InputLabel>
@@ -47,7 +48,7 @@ function Help(){
                     </Stack>
 
                     <Button type="submit">Invia</Button>
-                </form>
+                </Box>
                 {successMessage && <Typography variant="p" className="success-message">{successMessage}</Typography>}
             </Box>
         </Box>

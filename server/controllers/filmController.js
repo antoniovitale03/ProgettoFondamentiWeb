@@ -113,9 +113,8 @@ async function getUserReviews(filmID){
 
 //ottieni i film simili ad uno specifico film (con un certo ID)
 exports.getSimilarFilms = async (req, res) => {
-    const {filmID} = req.params;
-    const {page, genre, decade, minRating, sortByDate, sortByPopularity} = req.query;
-    const response = await  fetch(`https://api.themoviedb.org/3/movie/${filmID}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`);
+    const {page, filmID} = req.query;
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${page}`);
     let data = await response.json();
     let films = data.results;
 
@@ -125,30 +124,6 @@ exports.getSimilarFilms = async (req, res) => {
             release_year: new Date(film.release_date).getFullYear(),
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
     }})
-
-    if (genre){
-        films = films.filter( film => film.genre_ids.some(g => g === parseInt(genre) ));
-    }
-    if(decade){
-        films = films.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 );
-    }
-    if(minRating){
-        films = films.filter( film => (film.vote_average)/2 >= parseInt(minRating)); // il rating di default nell'api è in decimi
-    }
-    if(sortByPopularity){
-        if(sortByPopularity === "Dal più popolare"){
-            films = films.sort((a,b) => b.popularity - a.popularity); //descrescente
-        }else{
-            films = films.sort((a,b) => a.popularity - b.popularity);
-        }
-    }
-    if(sortByDate){
-        if(sortByDate === "Dal più recente"){
-            films = films.sort((a,b) => b.release_year - a.release_year);
-        }else{// dal meno recente
-            films = films.sort((a,b) => a.release_year - b.release_year);
-        }
-    }
     res.status(200).json({films: films, totalPages: data.total_pages});
 }
 

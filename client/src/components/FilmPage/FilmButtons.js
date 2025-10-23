@@ -119,7 +119,8 @@ function FilmButtons({ film }) {
         }
     }
 
-    const reviewMenuItems = (<Box>
+    const reviewMenuItems = (
+        <Box>
             <TextField id="outlined-multiline-flexible" multiline rows={7} sx= {{ width: '350px' }} label="Scrivi la recensione" value={review} onChange={(e) => setReview(e.target.value)} />
             <Rating name="review-rating" value={reviewRating} onChange={(event, rating) => setReviewRating(rating)} precision={0.5} />
             <IconButton onClick={() => addReview(film, review, reviewRating)}>

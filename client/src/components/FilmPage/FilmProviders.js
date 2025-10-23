@@ -1,4 +1,4 @@
-import {Box, Tooltip} from "@mui/material";
+import {Box, Tooltip, Typography, Image} from "@mui/material";
 import * as React from "react";
 import '../../CSS/FilmProviders.css';
 
@@ -7,7 +7,7 @@ function FilmProviders({ rent, buy, flatrate }) {
         <Box>
         {rent &&
             <Box className="box_providers">
-                <p className="text">Noleggia</p>
+                <Typography  component="p" className="text">Noleggia</Typography>
                 { rent.map( film =>
                         <Tooltip title={film.provider_name}>
                                 <img className="img" src={film.logo_path} alt=""/>
@@ -20,7 +20,7 @@ function FilmProviders({ rent, buy, flatrate }) {
         { flatrate &&
 
             <Box className="box_providers">
-                <p className="text">Guarda in streaming</p>
+                <Typography component="p" className="text">Guarda in streaming</Typography>
                 { flatrate.map( film =>
                     <Tooltip title={film.provider_name}>
                             <img className="img" src={film.logo_path} alt=""/>
@@ -32,7 +32,7 @@ function FilmProviders({ rent, buy, flatrate }) {
 
         { buy &&
             <Box className="box_providers">
-                <p className="text">Acquista</p>
+                <Typography component="p" className="text">Acquista</Typography>
                     { buy.map( film =>
                         <Tooltip title={film.provider_name}>
                             <img className="img" src={film.logo_path} alt=""/>

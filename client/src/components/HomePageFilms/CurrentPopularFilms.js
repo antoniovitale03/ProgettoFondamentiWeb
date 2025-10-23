@@ -4,7 +4,6 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useNotification} from "../../context/notificationContext"
 import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
-import SearchFilters from "../SearchFilters";
 
 function CurrentPopularFilms() {
     useDocumentTitle("Film più popolari del momento");
@@ -14,33 +13,19 @@ function CurrentPopularFilms() {
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
 
-    const [filters, setFilters] = useState({
-        page: 1,
-        genre: "",
-        decade: "",
-        minRating: 0,
-        sortByDate: "",
-        sortByPopularity: "",
-    });
+    const [page, setPage] = useState(1);
 
     useEffect( () => {
-        const params = new URLSearchParams();
-        params.append("page", filters.page);
-        if(filters.genre !== "") params.append("genre", filters.genre);
-        if (filters.decade !== "") params.append("decade", filters.decade);
-        if (filters.minRating !== 0) params.append("minRating", filters.minRating);
-        if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
-        if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-        api.get(`http://localhost:5001/api/films/home/get-current-popular-films?${params.toString()}`)
+        api.get(`http://localhost:5001/api/films/home/get-current-popular-films/page/${page}`)
             .then(response => {
                 setFilms(response.data.films);
                 setTotalPages(response.data.totalPages);
             })
             .catch(error => showNotification(error.response.data, "error"));
-    }, [filters, showNotification]);
+    }, [page, showNotification]);
 
     const handlePageChange = (event, value) => {
-        setFilters({...filters, page: value});
+        setPage(value);
         window.scrollTo(0, 0);
     }
 
@@ -48,12 +33,10 @@ function CurrentPopularFilms() {
         <Stack spacing={7}>
             <Typography component="h1">Film popolari del momento</Typography>
 
-            <SearchFilters filters={filters} setFilters={setFilters} isLikedFilter={false} />
-
             {films.length > 0 &&
                 <Pagination
                     count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                    page={filters.page}
+                    page={page}
                     onChange={handlePageChange}
                     color="primary"
                     size="large"
@@ -74,7 +57,7 @@ function CurrentPopularFilms() {
             {films.length > 0 &&
                 <Pagination
                     count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                    page={filters.page}
+                    page={page}
                     onChange={handlePageChange}
                     color="primary"
                     size="large"

@@ -12,20 +12,20 @@ function TrendingFilms() {
 
     const [films, setFilms] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [page, setPage] = useState(1);
 
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/home/get-trending-films/page/${currentPage}`)
+        api.get(`http://localhost:5001/api/films/home/get-trending-films/page/${page}`)
             .then(response => {
                 setFilms(response.data.results);
                 setTotalPages(response.data.total_pages);
             })
         .catch(error => showNotification(error.response.data, "error"));
-    }, [currentPage, showNotification]);
+    }, [page, showNotification]);
 
     const handlePageChange = (event, value) => {
-        setCurrentPage(value);
+        setPage(value);
         window.scrollTo(0, 0);
     }
 
@@ -35,7 +35,7 @@ function TrendingFilms() {
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                page={currentPage}
+                page={page}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"
@@ -51,7 +51,7 @@ function TrendingFilms() {
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages} // Limite di TMDB
-                page={currentPage}
+                page={page}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"

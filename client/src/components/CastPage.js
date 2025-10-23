@@ -27,7 +27,7 @@ function CastPage(){
                 {
                     cast?.map(actor =>
                     <Grid key={actor.id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
-                        <ActorCard actor={actor}/>
+                        <ActorCard actor={actor} />
                     </Grid>
                 )}
             </Grid>

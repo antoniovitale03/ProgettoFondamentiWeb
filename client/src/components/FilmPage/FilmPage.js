@@ -1,7 +1,7 @@
 import {useParams, Link} from 'react-router-dom';
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
-import {Box,Button,Grid,Rating,Tooltip, Chip, Stack}from "@mui/material";
+import {Box, Button, Grid, Rating, Tooltip, Chip, Stack, Typography} from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import * as React from "react";
@@ -45,15 +45,15 @@ function FilmPage(){
 
     return (
         <Box>
-            <p className="titolo_film"> {film?.title}
+            <Typography component="p" className="titolo_film"> {film?.title}
                 <Link className="link" id="link_anno" to={`/films/${film.release_year}`}>( {film.release_year} )</Link>
-                <p className="titolo_film"> Diretto da
+                <Typography component="p" className="titolo_film"> Diretto da
                     <Link className="link" to={`/director/${film.director.name.replaceAll(" ", "-")}/${film.director.id}`}>
                         {film?.director.name}
                     </Link>
-                </p>
-            </p>
-            <p className="testo">Durata: {film.duration}</p>
+                </Typography>
+            </Typography>
+            <Typography component="p" className="testo">Durata: {film.duration}</Typography>
             <Grid container spacing={4}>
                 <Grid xs={12} sm={6} md={4} lg={3} size={3}>
 
@@ -65,13 +65,13 @@ function FilmPage(){
                     { /* Rating */ }
                     {film.avgRating &&
                         <Box className="valutazione">
-                            <p className="rating">Rating medio:  {film.avgRating}</p>
+                            <Typography component="p" className="rating">Rating medio:  {film.avgRating}</Typography>
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
                         </Box>
                     }
                     {film.userRating &&
                         <Box className="valutazione">
-                            <p className="rating">Il mio rating: </p>
+                            <Typography component="p" className="rating">Il mio rating: </Typography>
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
                         </Box>
                     }
@@ -83,8 +83,8 @@ function FilmPage(){
 
                 {/* colonna di destra */}
                 <Grid xs={12} sm={8} size={8}>
-                    <p className="testo">{film.tagline}</p> {/* //slogan film */}
-                    <p className="testo">{film.overview}</p> {/* //trama */}
+                    <Typography component="p" className="testo">{film.tagline}</Typography> {/* //slogan film */}
+                    <Typography component="p" className="testo">{film.overview}</Typography> {/* //trama */}
                     <Stack className="stack" direction="row" spacing={1}>
                         {film?.trailerLink &&
                             <Button sx={{padding:"0"}} component={Link} to={film.trailerLink} target="_blank" rel="noreferrer">
