@@ -14,7 +14,6 @@ import List from "./List";
 import ModifyProfile from "./Settings/ModifyProfile";
 import ModifyPassword from "./Settings/ModifyPassword";
 import DeleteAccount from "./Settings/DeleteAccount";
-import ModifyAvatar from "./Settings/ModifyAvatar";
 import Archive from "./Archive";
 import ActivityPage from "./ActivityPage";
 import SearchFilmResults from "./SearchFilmResults";
