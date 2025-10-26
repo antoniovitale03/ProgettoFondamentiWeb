@@ -1,5 +1,5 @@
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Box, Grid, Pagination, Stack, Typography} from "@mui/material";
+import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
