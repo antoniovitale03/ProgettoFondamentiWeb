@@ -18,7 +18,7 @@ function CastPage(){
         api.get(`http://localhost:5001/api/films/get-cast/${filmID}`)
             .then(response => setCast(response.data))
             .catch(error => showNotification(error.response.data, "error"));
-    }, [filmTitle, filmID]);
+    }, [filmTitle, filmID, showNotification]);
 
     return(
         <Stack spacing={7} marginBottom={10}>

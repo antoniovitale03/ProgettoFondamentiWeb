@@ -24,15 +24,6 @@ function Profile(){
     const [favoritesFilms, setFavoritesFilms] = useState(null);
 
 
-    useEffect( () => {
-        api.get(`http://localhost:5001/api/user/${username}/get-profile-info`)
-            .then(response => {
-                setProfile(response.data);
-                setFavoritesFilms(response.data.favorites);
-            })
-        .catch(error => showNotification(error.response.data, "error"));
-    }, [username])
-
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
@@ -43,6 +34,16 @@ function Profile(){
             showNotification(error.response.data, "error");
         }
     }
+
+    useEffect( () => {
+        api.get(`http://localhost:5001/api/user/${username}/get-profile-info`)
+            .then(response => {
+                setProfile(response.data);
+                setFavoritesFilms(response.data.favorites);
+            })
+        .catch(error => showNotification(error.response.data, "error"));
+    }, [username, showNotification])
+
 
     if(profile){
         return (

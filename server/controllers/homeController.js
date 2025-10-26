@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-
 //funzione che calcola l'url delle immagini
 function getImageUrl(baseUrl, size, imagePath){
     if(imagePath){
@@ -35,15 +34,7 @@ exports.getHomePageFilms = async (req, res) => {
             var similarFilms = user.watched.sort(() => 0.5 - Math.random()).slice(0,4).map( async (film) => {
                 const response = await fetch(`https://api.themoviedb.org/3/movie/${film.id}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=1`);
                 const data = await response.json();
-                data.results = data.results.map( film => {
-                    return {
-                        _id: film.id,
-                        title: film.title,
-                        release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                        poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                    }
-                })
-                return data.results.slice(0,5);
+                return formatData(data.results).slice(0,5)
             })
             similarFilms = await Promise.all(similarFilms);
             similarFilms = similarFilms.flat();
@@ -64,14 +55,7 @@ exports.getHomePageFilms = async (req, res) => {
         let data = responses.map(response => response.json());
         data = await Promise.all(data);
         data.forEach(film => {
-            film.results = film.results.map( film => {
-                return {
-                    _id: film.id,
-                    title: film.title,
-                    release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
-                    poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-                }
-            })
+            film.results = formatData(film.results);
         });
 
         //le informazioni mostrate nei caroselli fanno riferimento solo alla prima pagina
@@ -84,30 +68,17 @@ exports.getHomePageFilms = async (req, res) => {
             similarFilms: similarFilms,
         }
         res.status(200).json(homePageFilms);
-    }catch(error){
-        res.status(500).json("Errore interno del server");
-    }
+    }catch(error){ res.status(500).json("Errore interno del server"); }
 }
 
 //funzioni utilizzate per mostrare i film più nel dettaglio nella singola componente, in base al numero di pagina
 exports.getCurrentPopularFilms = async (req, res) => {
-    try{
     const {pageNumber} = req.params;
-    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
-    const data = await response.json();
-    let films = data.results;
-
-    films = films.map( film => {
-        return {...film,
-            _id: film.id,
-            release_year: new Date(film.release_date).getFullYear(),
-            poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-        }})
-
-    res.status(200).json({films: films, totalPages: data.total_pages});
-    }catch(error){
-        res.status(500).json("Errore interno del server");
-    }
+    try{
+        const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
+        const data = await response.json();
+        res.status(200).json({ films: formatData(data.results), totalPages: data.total_pages });
+    }catch(error){ res.status(500).json("Errore interno del server"); }
 }
 
 exports.getUpcomingFilms = async (req, res) => {
@@ -115,11 +86,8 @@ exports.getUpcomingFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=${pageNumber}`);
         let data = await response.json();
-        data.results = formatData(data.results);
-        res.status(200).json(data);
-    }catch(error){
-        res.status(500).json("Errore interno del server");
-    }
+        res.status(200).json({ films: formatData(data.results), totalPages: data.total_pages });
+    }catch(error){ res.status(500).json("Errore interno del server");}
 }
 
 exports.getTopRatedFilms = async (req, res) => {
@@ -127,11 +95,8 @@ exports.getTopRatedFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY_TMDB}&language=it-IT&page=${pageNumber}`);
         let data = await response.json();
-        data.results = formatData(data.results);
-        res.status(200).json(data);
-    }catch(error){
-        res.status(500).json("Errore interno del server");
-    }
+        res.status(200).json({ films: formatData(data.results), totalPages: data.total_pages });
+    }catch(error){ res.status(500).json("Errore interno del server"); }
 }
 
 exports.getNowPlayingFilms = async (req, res) => {
@@ -139,11 +104,8 @@ exports.getNowPlayingFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=${pageNumber}`);
         let data = await response.json();
-        data.results = formatData(data.results);
-        res.status(200).json(data);
-    }catch(error){
-        res.status(500).json("Errore interno del server");
-    }
+        res.status(200).json({ films: formatData(data.results), totalPages: data.total_pages });
+    }catch(error){ res.status(500).json("Errore interno del server"); }
 
 }
 
@@ -152,9 +114,6 @@ exports.getTrendingFilms = async (req, res) => {
     try{
         const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
         let data = await response.json();
-        data.results = formatData(data.results);
-        res.status(200).json(data);
-    }catch(error){
-        res.status(500).json("Errore interno del server");
-    }
+        res.status(200).json({ films: formatData(data.results), totalPages: data.total_pages });
+    }catch(error){ res.status(500).json("Errore interno del server"); }
 }

@@ -21,7 +21,7 @@ function ActorPage() {
         api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`)
             .then((response) => setActor(response.data))
             .catch(error => showNotification(error.response.data, "error"));
-    }, [actorName, actorID]);
+    }, [actorName, actorID, showNotification]);
 
 if (actor){
     return(

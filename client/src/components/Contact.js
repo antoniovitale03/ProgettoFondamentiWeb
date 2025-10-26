@@ -7,8 +7,7 @@ function Contact () {
     const imageUrl = "https://wallpapercave.com/wp/wp14805291.jpg";
     const imageUrl2 = "https://i.pinimg.com/736x/18/a2/4a/18a24a79e8b643580595a0b84fbac547.jpg";
     return (
-        <>
-        
+        <Box>
         <Card className="immaginecontatti">
             <CardMedia
                         component="img"
@@ -41,7 +40,7 @@ function Contact () {
                 </Box>
 
         </Box>
-        </>
+        </Box>
     )
 }
 

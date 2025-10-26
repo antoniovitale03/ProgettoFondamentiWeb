@@ -14,12 +14,6 @@ function FavoritesFilms(){
     const {username} = useParams();
     useDocumentTitle(`Film preferiti di ${username}`);
 
-    useEffect(() => {
-        api.get(`http://localhost:5001/api/films/favorites/get-favorites/${username}`)
-            .then(response => setFilms(response.data))
-            .catch(error => showNotification(error.response.data, "error"));
-    }, [username, showNotification]);
-
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
@@ -31,6 +25,12 @@ function FavoritesFilms(){
             showNotification(error.response.data, "error");
         }
     }
+
+    useEffect(() => {
+        api.get(`http://localhost:5001/api/films/favorites/get-favorites/${username}`)
+            .then(response => setFilms(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
+    }, [username, showNotification]);
 
 
     return(

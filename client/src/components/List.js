@@ -17,12 +17,6 @@ function List(){
     const [list, setList] = useState([]);
     useDocumentTitle(`Lista "${listName}" di ${username}`)
 
-    useEffect( () => {
-        api.get(`http://localhost:5001/api/films/lists/get-list/${username}/${listName}`)
-            .then(response => setList(response.data))
-            .catch(error => showNotification(error.response.data, "error"));
-        }, [username, listName])
-
     const removeFromList = async (filmID, filmTitle) => {
         try{
             await api.delete(`http://localhost:5001/api/films/lists/remove-from-list/${filmID}/${listName}`);
@@ -32,6 +26,14 @@ function List(){
             showNotification(error.response.data, "error");
         }
     }
+
+    useEffect( () => {
+        api.get(`http://localhost:5001/api/films/lists/get-list/${username}/${listName}`)
+            .then(response => setList(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
+        }, [username, listName, showNotification]);
+
+
 
     return(
         <Stack spacing={7}>

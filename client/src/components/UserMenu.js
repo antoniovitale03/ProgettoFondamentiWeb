@@ -16,8 +16,8 @@ function UserMenu({ setIsUserMenuOpen }) {
     const userMenuNames = ["Home", "Il mio profilo", "Film visti", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Le mie liste"];
     const userMenuIcons = [<HomeIcon />, <PersonIcon />, <VisibilityIcon />, <FavoriteIcon />, <RateReviewIcon/>, <WatchLaterIcon />, <ListIcon />];
 
-    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Modifica il mio avatar", "Elimina il tuo account"]
-    const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/modify-avatar", "/settings/delete-account"]
+    const settingsMenuNames = ["Modifica il mio profilo", "Modifica la mia password", "Elimina il tuo account"]
+    const settingsMenuLinks = ["/settings/modify-profile", "/settings/modify-password", "/settings/delete-account"]
     return(
         <Box>
             {

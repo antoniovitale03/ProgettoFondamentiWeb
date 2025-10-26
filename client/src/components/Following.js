@@ -18,12 +18,6 @@ function Following() {
 
     const [following, setFollowing] = useState([]);
 
-    useEffect( () => {
-        api.get(`http://localhost:5001/api/user/${username}/get-following`)
-            .then(response => setFollowing(response.data))
-            .catch(error => showNotification(error.response.data, "error"));
-         }, [username, showNotification]);
-
 
     const unfollow = async (userId, username) => {
         try{
@@ -36,6 +30,14 @@ function Following() {
             showNotification(error.response.data, "error");
         }
     }
+
+    useEffect( () => {
+        api.get(`http://localhost:5001/api/user/${username}/get-following`)
+            .then(response => setFollowing(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
+         }, [username, showNotification]);
+
+
 
     return(
         <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto',  }}>

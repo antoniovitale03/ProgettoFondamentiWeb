@@ -19,7 +19,7 @@ function CrewPage(){
         api.get(`http://localhost:5001/api/films/get-crew/${filmID}`)
             .then(response => setCrew(response.data))
             .catch(error => showNotification(error.response.data, "error"));
-    }, [filmTitle, filmID])
+    }, [filmTitle, filmID, showNotification])
 
     return(
         <Box marginBottom={10}>

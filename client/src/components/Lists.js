@@ -34,12 +34,6 @@ function Lists(){
         }
     }
 
-    useEffect(() => {
-        api.get(`http://localhost:5001/api/films/lists/get-lists/${username}`)
-            .then(response => setLists(response.data))
-            .catch(error => showNotification(error.response.data, "error"));
-    }, [username, showNotification]);
-
     const menuContent = [
         <Box>
             <InputLabel>Nome della lista</InputLabel>
@@ -49,6 +43,14 @@ function Lists(){
             </IconButton>
         </Box>
     ]
+
+    useEffect(() => {
+        api.get(`http://localhost:5001/api/films/lists/get-lists/${username}`)
+            .then(response => setLists(response.data))
+            .catch(error => showNotification(error.response.data, "error"));
+    }, [username, showNotification]);
+
+
 
     return (
         lists.length > 0 ?

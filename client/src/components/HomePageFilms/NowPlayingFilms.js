@@ -31,7 +31,7 @@ function NowPlayingFilms() {
 
     return(
         <Stack spacing={7}>
-            <Typography component="h1">Film attualmente al cinema</Typography>
+            <Typography component="h1" variant="strong">Film attualmente al cinema</Typography>
 
             <Pagination
                 count={totalPages > 500 ? 500 : totalPages}

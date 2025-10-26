@@ -31,7 +31,7 @@ function CurrentPopularFilms() {
 
     return(
         <Stack spacing={7}>
-            <Typography component="h1">Film popolari del momento</Typography>
+            <Typography component="h1" variant="strong">Film popolari del momento</Typography>
 
             {films.length > 0 &&
                 <Pagination

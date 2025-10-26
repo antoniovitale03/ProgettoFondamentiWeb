@@ -54,7 +54,6 @@ function MainContent() {
                     <Route path="/settings/modify-profile" element={ <ModifyProfile />} />
                     <Route path="/settings/modify-password" element={ <ModifyPassword />} />
                     <Route path="/settings/delete-account" element={<DeleteAccount />} />
-                    <Route path="/settings/modify-avatar" element={<ModifyAvatar />} />
 
                     <Route path="/archive" element={<Archive />} />
                     <Route path="/:username/activity" element={<ActivityPage />} />

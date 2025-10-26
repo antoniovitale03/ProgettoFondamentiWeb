@@ -29,6 +29,20 @@ function Reviews(){
         sortByPopularity: ""
     });
 
+
+    const removeReview = async (filmID, reviewTitle) => {
+        try {
+            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
+            showNotification(<strong>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
+            setReviews(currentReviews =>
+                currentReviews.filter(review => review.film._id !== filmID)
+            );
+            setNumReviews(num => num - 1);
+        }catch(error){
+            showNotification(error.response.data, "error");
+        }
+    }
+
     useEffect(() => {
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
             api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`)
@@ -45,18 +59,6 @@ function Reviews(){
         }
     }, [username, filters, showNotification]);
 
-    const removeReview = async (filmID, reviewTitle) => {
-        try {
-            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
-            showNotification(<strong>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
-            setReviews(currentReviews =>
-                currentReviews.filter(review => review.film._id !== filmID)
-            );
-            setNumReviews(num => num - 1);
-        }catch(error){
-            showNotification(error.response.data, "error");
-        }
-    }
 
     return (
         <Box>
@@ -73,7 +75,7 @@ function Reviews(){
 
                     <Grid container spacing={2}>
                         { reviews.map(review =>
-                            <Grid item key={review.filmID} size={6}>
+                            <Grid key={review.filmID} size={6}>
                                 <ReviewCard review={review} showRemoveButton={user.username === username} onRemove={removeReview} />
                             </Grid>
                         )}

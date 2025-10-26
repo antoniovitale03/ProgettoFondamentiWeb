@@ -1,4 +1,4 @@
-import {Button, FormControl, Input, InputLabel, Stack, Typography} from "@mui/material";
+import {Box, Button, FormControl, Input, InputLabel, Stack, Typography} from "@mui/material";
 import React, {useState} from "react";
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
@@ -31,7 +31,7 @@ function ForgotPasswordForm({ setStep, email }) {
     }
 
     return(
-        <form onSubmit={handleSetNewPassword}>
+        <Box component="form" onSubmit={handleSetNewPassword}>
             <Typography component="h2">Imposta la nuova password</Typography>
             <Stack spacing={5}>
                 <FormControl>
@@ -50,7 +50,7 @@ function ForgotPasswordForm({ setStep, email }) {
                 </FormControl>
                 <Button variant="contained" type="submit" endIcon={<SendIcon />}>Invia</Button>
             </Stack>
-        </form>
+        </Box>
     )
 }
 

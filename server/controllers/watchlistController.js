@@ -9,13 +9,9 @@ exports.addToWatchlist = async (req, res) => {
         let { film } = req.body;
         const user = await User.findById(userID);
 
-        //il server verifica se il film esiste già nella collezione films verificando l'id, se non esiste lo crea.
-        // questo garantisce di avere sempre una sola copia dei dati di ogni film.
-        //findOneandUpdate(filter, update, options)
         await Film.findOneAndUpdate(
             { _id: film.id }, // Condizione di ricerca
-            //se non esiste crea un nuovo oggetto film nella collezione films:
-            { $set: {
+            { $setOnInsert: {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
@@ -28,8 +24,7 @@ exports.addToWatchlist = async (req, res) => {
             }
         );
 
-        //aggiungo l'azione alle attività
-        const newActivity = new Activity({
+        const newActivity = await Activity.create({
             user: userID,
             filmID: film.id,
             filmTitle: film.title,
@@ -37,10 +32,6 @@ exports.addToWatchlist = async (req, res) => {
             date: Date.now()
         })
 
-        await newActivity.save();
-
-        //per aggiungere l'id del film all'array watchlist dell'utente, uso $addToSet che
-        // aggiunge un elemento a un array SOLO SE non è già presente (evitare duplicati)
         await User.findByIdAndUpdate(
             userID,
             { $addToSet: { watchlist: film.id, activity: newActivity._id }
@@ -50,30 +41,20 @@ exports.addToWatchlist = async (req, res) => {
         //aggiorno simultaneamente tutti gli utenti con _id contenuti nella lista user.following
         await User.updateMany(
             {_id: {$in: user.following}},
-            {$addToSet: { activity: newActivity._id }}
+            { $addToSet: { activity: newActivity._id }}
         )
 
         res.status(200).json(`"${film.title}" aggiunto alla watchlist!`);
-    }catch(error){
-        res.status(500).json("Errore interno del server." );
-    }
+    }catch(error){ res.status(500).json("Errore interno del server") }
 }
 
 exports.removeFromWatchlist = async (req, res) => {
     try{
         const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
-
-        const user = await User.findById(userID);
-        user.watchlist = user.watchlist.filter(id => id !== filmID);
-
-        await user.save();
+        await User.findByIdAndUpdate(userID, { $pull: {watchlist: filmID} });
         res.status(200).json("Film eliminato dalla watchlist");
-
-    }catch(error){
-        res.status(500).json("Errore interno del server." );
-    }
-
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getWatchlist = async (req, res) => {
@@ -82,36 +63,17 @@ exports.getWatchlist = async (req, res) => {
         const { genre, decade, minRating, sortByDate, sortByPopularity } = req.query;
 
         let user = await User.findOne({ username: username }).populate('watchlist');
-        if (!user) {
-            return res.status(404).json("Utente non trovato.");
-        }
+        if (!user) return res.status(404).json("Utente non trovato.");
 
         let watchlist = user.watchlist.reverse();
 
-        //Una volta che ottengo tutti i film visti, posso filtrare i risultati in base ai parametri
-        if(genre){
-            watchlist = watchlist.filter(film => film.genres.some(g => g.id === parseInt(genre)) )
-        }
+        let filteredFilms = watchlist
+            .filter( film => !genre || film.genres.some(g.id === parseInt(genre)))
+            .filter( film => !decade || film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
+            .filter( film => !minRating || film.rating >= parseInt(minRating) )
 
-        if(decade){
-            watchlist = watchlist.filter( film => film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
-        }
-
-        if(sortByDate){
-            watchlist = sortByDate === "Dal meno recente" ? watchlist.reverse() : watchlist
-        }
-
-        if (sortByPopularity){
-            watchlist = watchlist.sort((a,b) => b.popularity - a.popularity);
-        }
-
-        if(minRating){
-            watchlist = watchlist.filter( film => film.rating >= parseInt(minRating))
-        }
-
-        res.status(200).json(watchlist);
-
-    }catch(error){
-        res.status(500).json("Errore interno del server.")
-    }
+        if(sortByDate) filteredFilms = sortByDate === "Dal meno recente" ? filteredFilms.reverse() : filteredFilms;
+        if (sortByPopularity) filteredFilms = filteredFilms.sort((a,b) => b.popularity - a.popularity);
+        res.status(200).json(filteredFilms);
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
