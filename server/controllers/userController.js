@@ -40,33 +40,24 @@ function timeAgo(past) {
     }
 
 exports.modifyPassword = async (req, res) => {
-    const {oldPassword, newPassword, confirmNewPassword} = req.body;
-    const userID = req.user.id;
+    try{
+        const {oldPassword, newPassword, confirmNewPassword} = req.body;
+        const user = await User.findById(req.user.id);
 
-    //prima controllo che lo username esista
-    const user = await User.findById(userID)
-    if (!user) {
-        return res.status(400).json("L'utente non esiste")
-    }
+        //controllo che la "vecchia password" corrisponda a quella dell'utente
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) return res.status(400).json("La vecchia password non è corretta. ")
 
-    //poi controllo che la "vecchia password" corrisponda a quella dell'utente
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch){
-        return res.status(400).json("La vecchia password non è corretta. ")
-    }
+        //dopodichè controllo che la nuova password e la sua conferma siano uguali
+        if (newPassword !== confirmNewPassword) return res.status(400).json( 'Le password non corrispondono.');
 
-    //dopodichè controllo che la nuova password e la sua conferma siano uguali
-    if (newPassword !== confirmNewPassword) {
-        return res.status(400).json( 'Le password non corrispondono.');
-    }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        await User.findByIdAndUpdate(req.user.id, { password: hashedPassword });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+        res.status(200).json('Password aggiornata con successo.');
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 
-    user.password = hashedPassword;
-    await user.save();
-
-    res.status(200).json('Password aggiornata con successo.');
 }
 
 exports.getProfileInfo = async (req, res) => {
@@ -85,21 +76,24 @@ exports.getProfileInfo = async (req, res) => {
         }
         res.status(200).json(profile);
 
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getFollowing = async (req, res) => {
-    const username = req.params.username;
-    const user = await User.findOne({ username: username }).populate('following');
-    res.status(200).json(user.following);
+    try{
+        const username = req.params.username;
+        const user = await User.findOne({ username: username }).populate('following');
+        res.status(200).json(user.following);
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getFollowers = async (req, res) => {
-    const username = req.params.username;
-    const user = await User.findOne({username: username}).populate('followers');
-    res.status(200).json(user.followers);
+    try{
+        const username = req.params.username;
+        const user = await User.findOne({username: username}).populate('followers');
+        res.status(200).json(user.followers);
+    }catch(error){ res.status(500).json("Errore interno del server."); }
+
 }
 
 exports.deleteAccount = async (req, res) => {
@@ -108,17 +102,13 @@ exports.deleteAccount = async (req, res) => {
         let confirmEmail = req.params.confirmEmail;
 
         const user = await User.findById(userID);
-        if (user.email !== confirmEmail) {
-            return res.status(400).json("L'email inserita non corrisponde a quella del tuo account. Riprova.");
-        }
+        if (user.email !== confirmEmail) return res.status(400).json("L'email inserita non corrisponde a quella del tuo account. Riprova.");
 
         //se le email corrispondono, procedo ad eliminare l'account (documento utente nel DB)
         await User.findByIdAndDelete(userID);
 
         res.status(200).json("Account eliminato con successo." );
-    } catch(error){
-        res.status(500).json('Errore del server.');
-    }
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getProfileData = async (req, res) => {
@@ -133,10 +123,8 @@ exports.getProfileData = async (req, res) => {
             biography: user.biography ? user.biography : "",
             country: user.country ? user.country : "",
         }
-        res.json(profileData);
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
+        res.status(200).json(profileData);
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.updateProfile = async (req, res) => {
@@ -159,97 +147,50 @@ exports.updateProfile = async (req, res) => {
             }
         )
         res.status(200).json("Profilo aggiornato.")
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
-
-
-}
-
-exports.uploadAvatar = async (req, res) => {
-
-    const userID = req.user.id;
-
-    // A questo punto, Multer ha GIA' salvato il file per te!
-    if (!req.file) {
-        return res.status(400).send('Nessun file ricevuto.');
-    }
-
-    //la cartella public è da omettere nel percorso perchè già configurata per il delivery di file static
-    // con app.use(express.static("public"))
-    const filePath = `/avatars/${req.file.filename}`;
-
-    //salvo l'indirizzo nel db
-    await User.findByIdAndUpdate(userID, { $set: {avatar_path: filePath} })
-
-    res.status(200).json(filePath);
-}
-
-exports.removeAvatar = async (req, res) => {
-    const userID = req.user.id;
-    const user = await User.findById(userID);
-
-    //procedo a rimuovere fisicamente l'avatar dalla cartella del server
-    const filePath = path.join(__dirname, "..", "public", user.avatar_path); //__dirname è la cartella corrente (controllers)
-    fs.unlink(filePath, (err) => {
-        if (err) {
-            return res.status(400).json("Errore durante l'eliminazione del file dal server.");
-        } else {
-            res.status(200).json("Avatar rimosso.");
-        }
-    });
-
-    //elimino anche nel DB
-    user.avatar_path = null;
-    await user.save();
-
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getActivity = async (req, res) => {
-    const username = req.params.username;
-    //popolo la proprietà activity e per ogni oggetto che ottengo popolo anche la proprietà user
-    const user = await User.findOne({ username: username}).populate({
+    try{
+        const username = req.params.username;
+        //popolo la proprietà activity e per ogni oggetto che ottengo popolo anche la proprietà user
+        const user = await User.findOne({ username: username}).populate({
             path: "activity",
             populate: { path: "user" }
         });
-    user.activity = user.activity.filter( action => timeAgo(action.date) !== null ) //filtro per tutte le attività fino ad un mese fa
-    let activity = user.activity.map( action => { return{...action.toObject(), timeAgo: timeAgo(action.date)} });
-    res.status(200).json(activity.reverse());
 
+        user.activity = user.activity.filter( action => timeAgo(action.date) !== null ) //filtro per tutte le attività fino ad un mese fa
+        let activity = user.activity.map( action => { return{...action.toObject(), timeAgo: timeAgo(action.date)} });
+        res.status(200).json(activity.reverse());
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.follow = async (req, res) => {
     try{
-    const userID = req.user.id;
-    const friendUsername = req.params.friendUsername;
+        const userID = req.user.id;
+        const friendUsername = req.params.friendUsername;
 
-    const user = await User.findById(userID);
-    if(!user){
-        return res.status(404).json("Utente non trovato.");
-    }
+        const user = await User.findById(userID);
+        if(!user) return res.status(404).json("Utente non trovato.");
 
-    const friend = await User.findOne({ username: friendUsername });
+        const friend = await User.findOne({ username: friendUsername });
 
-    //controllo prima che il nome utente esista
-    if(!friend){
-        return res.status(404).json("Nome utente non esistente.");
-    }
-    let friendID = friend._id.toString();
+        //controllo prima che il nome utente esista
+        if(!friend) return res.status(404).json("Nome utente non esistente.");
+        let friendID = friend._id.toString();
 
-    //controllo che l'utente non stia seguendo se stesso
-    if (userID === friendID) return res.status(400).json("Non puoi seguire te stesso.");
+        //controllo che l'utente non stia seguendo se stesso
+        if (userID === friendID) return res.status(400).json("Non puoi seguire te stesso.");
 
-    //controllo che l'utente non stia già seguendo l'amico
-    if(user.following.find(id => id === friendID)) return res.status(404).json(`Segui già "${friendUsername}"`);
+        //controllo che l'utente non stia già seguendo l'amico
+        if(user.following.find(id => id === friendID)) return res.status(404).json(`Segui già "${friendUsername}"`);
 
-    await User.findByIdAndUpdate(userID, { $addToSet: { following: friendID } });
+        await User.findByIdAndUpdate(userID, { $addToSet: { following: friendID } });
 
-    await User.findByIdAndUpdate(friendID, { $addToSet: { followers: userID } });
+        await User.findByIdAndUpdate(friendID, { $addToSet: { followers: userID } });
 
-        return res.status(200).json("Amico aggiunto con successo.");
-    }catch(error){
-        res.status(500).json("Errore interno del server.");
-    }
+        res.status(200).json("Amico aggiunto con successo.");
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.unfollow = async (req, res) => {
@@ -267,7 +208,5 @@ exports.unfollow = async (req, res) => {
         await User.findByIdAndUpdate(userID, { $pull: { activity: { $in: IdsToRemove } }});
 
         res.status(200).json("Rimozione avvenuta correttamente");
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
+    }catch(error){ res.status(500).json("Errore interno del server."); }
 }

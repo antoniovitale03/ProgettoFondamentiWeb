@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
     country: { type: String },
     avatar_path: { type: String },
     refreshToken: { type: String },
-    verificationCode: { type: String },
     watchlist: [{ type: Number, ref: "Film" }],
     liked: [{ type: Number, ref: "Film" }],
     favorites: [{ type: Number, ref: "Film" }],

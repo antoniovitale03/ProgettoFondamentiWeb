@@ -44,8 +44,7 @@ exports.registerData = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
         const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 5 minuti
 
-        //salvo username email code in pending_user
-        const pendingUser = await PendingUser.findOneAndUpdate(
+        await PendingUser.findOneAndUpdate(
             { email },
             {
                 $set: {
@@ -53,18 +52,13 @@ exports.registerData = async (req, res) => {
                     hashedPassword: hashedPassword,
                     verificationCode: verificationCode,
                     expiresAt: expiresAt,
-                }
-                },
-            { upsert: true, new: true }
+                }},
+            { upsert: true }
         );
-        await pendingUser.save();
-
         res.status(200).json('Utente salvato momentaneamente. Controlla la tua email per il codice di verifica.');
 
-    } catch (error) {
-        return res.status(500).json('Errore del server.');
-    }
-};
+    } catch (error) {return res.status(500).json('Errore del server.');}
+}
 
 exports.registrationVerify = async (req, res) => {
     try{
@@ -78,82 +72,60 @@ exports.registrationVerify = async (req, res) => {
             return res.status(400).json('Codice scaduto.');
         }
 
-        if (pendingUser.verificationCode !== verificationCode) {
-            return res.status(400).json('Codice di verifica errato.');
-        }
+        if (pendingUser.verificationCode !== verificationCode) return res.status(400).json('Codice di verifica errato.');
 
-        // Salvo permanentemente
-        const newUser = new User({
+        await User.create({
             username: pendingUser.username,
             email: pendingUser.email,
             password: pendingUser.hashedPassword
         });
-        await newUser.save();
 
-        // Rimuovo l'utente temporaneo
         await PendingUser.deleteOne({ email });
 
         res.status(200).json("Codice di verifica corretto. Ora sarai reindirizzato alla pagina di login.")
         }
-    catch(error){
-        return res.status(500).json('Errore del server.')
-        }
+    catch(error) { return res.status(500).json('Errore del server.'); }
 }
 
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Trova l'utente nel DB tramite il suo username e confronta la password fornita dall'utente con quella hashata nel DB
-
         const user = await User.findOne({ email: email });
-        if (!user) {
-            return res.status(400).json('Credenziali non valide.')
-        }
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch){
-            return res.status(400).json('Credenziali non valide.')
-        }
+        if (!user) return res.status(400).json('Credenziali non valide.')
 
-        //Se l'utente e la password sono validi, crea un accessToken a breve scadenza (es. 15 minuti)
-        //ma prima di tutto si costruisce il payload che contiene i dati dell'utente
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json('Credenziali non valide.')
+
         const payload = {
             user: {
                 id: user._id,
                 username: user.username,
                 email: user.email
-
             }
         };
-        // Creo i due token
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"}) // verrà salvato nella memoria locale del browser
-        const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"}) // verrà salvato nel DB
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"});
+        const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"});
 
-        //salvo il refreshtoken nel DB nel documento utente
-        user.refreshToken = refreshToken;
-        await user.save();
+        await User.findOneAndUpdate({email: email}, {refreshToken: refreshToken });
 
-        //in questo modo il browser potrà inserire il refreshtoken nel cookie solo quando fa richiesta a /api/auth/refresh
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000,// 7 giorni in ms
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni in ms
             path: '/api/auth/refresh'
         })
 
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
         //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)
 
-        // Invia come riposta i dati dell'utente + accessToken (da salvare nel contesto)
         res.status(200).json({
                 id: user._id,
                 username: user.username,
                 email: user.email,
-                accessToken: accessToken //inviamo l'accessToken nella richiesta per poterlo eventualmente salvare nel localStorage del browser
+                accessToken: accessToken
         });
-    } catch (error) {
-        res.status(500).json('Errore del server.');
-    }
+    } catch (error) { res.status(500).json('Errore del server.'); }
 };
 
 exports.forgotPassword = async (req, res) => {
@@ -165,13 +137,11 @@ exports.forgotPassword = async (req, res) => {
         }
         const code = await sendMail(user.username, email);
         const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 300s (5min)
-        //creo un utente temporaneo solo con le info essenziali per questa fase
-        const pendingUser = await PendingUser.findOneAndUpdate(
+        await PendingUser.findOneAndUpdate(
             { email },
             { $set: { verificationCode: code, expiresAt: expiresAt  } },
-            { upsert: true, new: true }
+            { upsert: true }
         );
-        await pendingUser.save();
         res.status(200).json("Email inviata");
     }catch(error){
         res.status(500).json('Errore del server.');
@@ -199,72 +169,51 @@ exports.loginVerify = async (req, res) => {
 exports.setNewPassword = async (req, res) => {
     try{
         const {email, newPassword, confirmNewPassword} = req.body;
-        const user = await User.findOne({ email: email });
-        if (!user) {
-            return res.status(400).json("L' utente non esiste");
-        }
-
-        //dopodichè controllo che la nuova password e la sua conferma siano uguali
-        if (newPassword !== confirmNewPassword) {
-            return res.status(400).json( 'Le password non corrispondono.');
-        }
+        if (newPassword !== confirmNewPassword) return res.status(400).json( 'Le password non corrispondono.');
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        user.password = hashedPassword;
-        await user.save();
+        await User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } });
 
         res.status(200).json('Password aggiornata con successo.');
 
-    }catch(error){
-        res.status(500).json('Errore del server.');
-    }
+    }catch(error){ res.status(500).json('Errore del server.'); }
 }
 
 exports.refresh = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
+    try{
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) return res.status(401).json('Refresh token non esistente. L utente deve loggarsi di nuovo.');
 
-    const user = await User.findOne({ refreshToken });
-    if (!user) return res.status(403).json("Il refresh token non corrisponde a nessun utente")
+        const user = await User.findOne({ refreshToken });
+        if (!user) return res.status(403).json("Il refresh token non corrisponde a nessun utente")
 
+        let payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
+        if (payload.user.id !== user._id.toString()) return res.status(403).json("Errore nella verifica del refreshtoken")
+        payload = { user: payload.user }; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
 
-    let payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    if (payload.user.id !== user._id.toString()) return res.status(403).json("Errore nella verifica del refreshtoken")
-    payload = { user: payload.user }; //elimino i campi iat ed exp generati automaticamente da jwt dopo la verifica
-
-    const newAccessToken = jwt.sign(
-        payload,
-        process.env.JWT_SECRET,
-        { expiresIn: '15m' }
-    );
-    res.json(newAccessToken); //token aggiornato
+        const newAccessToken = jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' }
+        );
+        res.json(newAccessToken);
+    }catch (error) { res.status(500).json('Errore del server.'); }
 }
 
 exports.logout = async (req, res) => {
-    //devo invalidare il refreshToken eliminandolo dal DB e dal browser
-    // il server non gestisce l'access token, per cui il frontend dopo aver
-    // eseguito questa API chiama setUser(null), invalidando di fatto l'access token (che è salvato
-    // nel contesto)
     try {
         const userID = req.user.id;
 
-        await User.findByIdAndUpdate(userID,
-            {$set: {refreshToken: " "}
-            });
+        await User.findByIdAndUpdate(userID,{ $set: { refreshToken: " " } });
 
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000,// 7 giorni in ms
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni in ms
             path: '/api/auth/refresh'
-        })
+        });
 
         res.status(200).json('Logout effettuato con successo.');
-    }
-    catch (error) {
-        res.status(500).json('Errore del server.');
-    }
-
+        }catch (error) { res.status(500).json('Errore del server.'); }
 }
 

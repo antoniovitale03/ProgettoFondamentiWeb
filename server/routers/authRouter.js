@@ -4,9 +4,8 @@ const authController = require('../controllers/authController');
 //   /api/auth
 
 //registrazione
-router.post("/registration", authController.registerData) //registrazione dati
-router.post("/registration/verify", authController.registrationVerify); //verifica codice
-
+router.post("/registration", authController.registerData)
+router.post("/registration/verify", authController.registrationVerify);
 
 // login
 router.post("/login", authController.login)

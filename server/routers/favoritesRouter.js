@@ -1,5 +1,4 @@
 const router = require("express").Router();
-
 const favoritesController = require("../controllers/favoritesController");
 const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 

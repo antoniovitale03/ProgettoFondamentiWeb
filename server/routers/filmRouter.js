@@ -1,13 +1,13 @@
 const router = require("express").Router();
 
 const filmController = require("../controllers/filmController");
-const watchlistRouter = require("../routes/watchlistRouter");
-const favoritesRouter = require("../routes/favoritesRouter");
-const likedRouter = require("../routes/likedRouter");
-const reviewsRouter = require("../routes/reviewsRouter");
-const watchedRouter = require("../routes/watchedRouter");
-const homeRouter = require("../routes/homeRouter");
-const listsRouter = require("../routes/listsRouter");
+const watchlistRouter = require(".//watchlistRouter");
+const favoritesRouter = require(".//favoritesRouter");
+const likedRouter = require(".//likedRouter");
+const reviewsRouter = require(".//reviewsRouter");
+const watchedRouter = require(".//watchedRouter");
+const homeRouter = require(".//homeRouter");
+const listsRouter = require(".//listsRouter");
 
 const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 
@@ -30,12 +30,11 @@ router.get("/get-films/:year", filmController.getFilmsByYear)
 router.get("/get-actor-info/:actorID", filmController.getActorInfo)
 router.get("/get-director-info/:directorID", filmController.getDirectorInfo)
 
-router.use("/lists", listsRouter)
 router.use("/watchlist", watchlistRouter)
 router.use("/liked", likedRouter)
 router.use("/reviews", reviewsRouter)
 router.use("/favorites", favoritesRouter)
 router.use("/watched", watchedRouter)
-
+router.use("/lists", listsRouter)
 
 module.exports = router;
