@@ -1,4 +1,3 @@
-
 const User = require('../models/User');
 
 function formatData(array){
@@ -142,7 +141,6 @@ exports.getFilmsFromSearch = async (req, res) => {
     films = await Promise.all(films);
 
     let filteredFilms = films
-        .filter( film => film.release_year) //prendo tutti i film con una data di uscita
         .filter( film => !genre || film.genre_ids.includes(parseInt(genre)))
         .filter( film => !decade || film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
         .filter( film => !minRating || (film.vote_average)/2 <= parseInt(minRating));
@@ -259,12 +257,7 @@ exports.getFilm = async (req, res) => {
         let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}`);
         let film = await response.json();
 
-        const director = await getFilmDirector(filmID); //oppure film.id
-        const year = film.release_date ? new Date(film.release_date).getFullYear() : null;
-
         const {avgRating, userRating} = getRating(user, film, filmID);
-
-        const trailerLink = await getFilmTrailer(filmID);
 
         //trovo le recensioni più popolari del film (funzionalità futura)
         //const reviews = await getUserReviews(filmID);
@@ -273,8 +266,6 @@ exports.getFilm = async (req, res) => {
         const hours = Math.floor(film.runtime / 60);
         const minutes = film.runtime % 60;
         const duration = `${hours}h ${minutes}m`;
-
-        const status = getFilmStatus(user, filmID);
 
         let filmDetails = {
             production_companies: film.production_companies.map( e => { return {name: e.name, country: e.origin_country}} ),
@@ -286,11 +277,7 @@ exports.getFilm = async (req, res) => {
         }
 
         //trovo la preview del cast e la crew (solo i primi 6 elementi)
-        const obj = await getCastCrewPreview(filmID);
-        let castPreview = obj.cast;
-        let crewPreview = obj.crew;
-
-        const collectionFilms = await getCollectionFilms(film)
+        const preview = await getCastCrewPreview(filmID);
 
         response = await fetch(`https://api.themoviedb.org/3/movie/${film.id}/watch/providers?api_key=${process.env.API_KEY_TMDB}`);
         const data = await response.json();
@@ -310,18 +297,18 @@ exports.getFilm = async (req, res) => {
 
         film = {...film,
             _id: film.id,
-            director: director,
-            release_year: year,
+            director: await getFilmDirector(filmID),
+            release_year: film.release_date ? new Date(film.release_date).getFullYear() : null,
             poster_path: getImageUrl(process.env.baseUrl, "w500", film.poster_path),
-            castPreview: castPreview,
-            crewPreview: crewPreview,
-            trailerLink: trailerLink,
+            castPreview: preview.cast,
+            crewPreview: preview.crew,
+            trailerLink: await getFilmTrailer(filmID),
             avgRating: avgRating,
             userRating: userRating,
             genres: film.genres,
-            status: status,
+            status: getFilmStatus(user, filmID),
             details: filmDetails,
-            collection: collectionFilms,
+            collection: await getCollectionFilms(film),
             rent: rent,
             buy: buy,
             flatrate: flatrate,

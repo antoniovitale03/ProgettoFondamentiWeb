@@ -4,19 +4,27 @@ const Film = require("../models/Film");
 const Activity = require("../models/Activity");
 require("dotenv").config();
 
-async function getFilmDirector(filmID) {
-    const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
-    const credits = await creditsResponse.json();
-    const directorObject = credits.crew.find( (member) => member.job === 'Director');
-    return directorObject ? {name: directorObject.name, id: directorObject.id} : null;
-}
-
 exports.addReview = async (req, res) => {
     try{
         const {film, review, reviewRating} = req.body;
         const userID = req.user.id;
         const user = await User.findById(userID);
         if (!user) return res.status(400).send("Utente non trovato.");
+
+        await Film.findOneAndUpdate(
+            { _id: film.id },
+            {
+                $setOnInsert: {
+                    title: film.title,
+                    release_year: film.release_year,
+                    director: film.director,
+                    poster_path: film.poster_path,
+                    genres: film.genres
+                }},
+            {
+                upsert: true
+            }
+        )
 
         const newReview = await Review.create(
             {
@@ -36,11 +44,6 @@ exports.addReview = async (req, res) => {
             date: Date.now()
         })
 
-        await User.updateMany(
-            {_id: {$in: user.following}},
-            {$addToSet: { activity: newActivity._id }}
-        )
-
         //siccome un film recensito corrisponde ad un film già visto dall'utente, lo inserisco anche nella lista dei film visti
         await User.findByIdAndUpdate(userID, {
             $addToSet: {
@@ -50,23 +53,12 @@ exports.addReview = async (req, res) => {
             }
         });
 
-        //e aggiungo il rating (dovengo aggiungere un'oggetto film devo calcolare il regista)
-        const director = await getFilmDirector(film.id); //oppure film.id
 
-        await Film.findOneAndUpdate(
-            { _id: film.id },
-            {
-                $set: {
-                    title: film.title,
-                    release_year: film.release_year,
-                    director: director,
-                    poster_path: film.poster_path,
-                    genres: film.genres
-                }},
-            {
-                upsert: true
-            }
+        await User.updateMany(
+            {_id: {$in: user.following}},
+            {$addToSet: { activity: newActivity._id }}
         )
+
 
         res.status(200).json(`Recensione di "${film.title}" salvata correttamente!`);
     }catch(error){ res.status(500).json("Errore interno del server."); }
@@ -81,7 +73,7 @@ exports.deleteReview = async (req, res) => {
         const review = await Review.findOne({ film: filmID, user: userID });
         if (review) await User.updateOne(userID, {$pull: { reviews: review._id }} );
 
-        await Review.findOneAndDelete( {_id: review._id} );
+        await Review.findByIdAndDelete(review._id);
         res.status(200).json("Recensione rimossa");
 
     }catch(error){ res.status(500).json("Errore interno del server."); }

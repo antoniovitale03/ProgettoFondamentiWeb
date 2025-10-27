@@ -41,7 +41,7 @@ exports.addToWatched = async (req, res) => {
         })
 
         await User.updateMany(
-            {_id: {$in: user.following}},
+            {_id: {$in: user.followers}},
             {$addToSet: { activity: newActivity._id }}
         )
 
@@ -51,13 +51,9 @@ exports.addToWatched = async (req, res) => {
 
 exports.removeFromWatched = async (req, res) => {
     try{
-        const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
-
-        await User.findByIdAndUpdate(userID, { $pull: { watched: filmID } });
-
+        await User.findByIdAndUpdate(req.user.id, { $pull: { watched: filmID } });
         res.status(200).json("Film rimosso da quelli visti");
-
     }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
@@ -69,10 +65,10 @@ exports.getWatched = async (req, res) => {
         const user = await User.findOne({ username: username }).populate('watched').populate('reviews');
 
         //per ogni film visto controllo se è stato anche piaciuto e il suo rating (di default mostro dal più recente)
-        let watchedFilms = user.watched.reverse().map( watchedFilm => {
-            let review = user.reviews.find( review => review.filmID === watchedFilm._id); // trovo la recensione (se esiste)
-            return {...watchedFilm.toObject(),
-                isLiked: user.liked.some( likedFilmId => likedFilmId === watchedFilm._id),//controllo se il film è anche piaciuto
+        let watchedFilms = user.watched.reverse().map( film => {
+            let review = user.reviews.find( review => review.film === film._id); // trovo la recensione (se esiste)
+            return {...film.toObject(),
+                isLiked: user.liked.some( likedFilmId => likedFilmId === film._id), //controllo se il film è anche piaciuto
                 rating: review !== undefined ? review.rating : null,
             }
         })

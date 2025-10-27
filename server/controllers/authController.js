@@ -31,18 +31,16 @@ exports.registerData = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        //controllo email esistente
         if (await User.findOne({ email })) return res.status(400).json("Email già in uso.");
 
-        //controllo username esistente
         if (await User.findOne({ username })) return res.status(400).json('Username già in uso.');
 
-        //se l'email e l'username non esistono ancora, invia alla mail il codice di verifica
         const verificationCode = await sendMail(username, email);
+        const expiresAt = new Date(Date.now() + 300 * 1000); // il codice ha scadenza di 5 minuti
 
-        const salt = await bcrypt.genSalt(10); // Genera un "sale" per la sicurezza
-        const hashedPassword = await bcrypt.hash(password, salt); // Crea l'hash
-        const expiresAt = new Date(Date.now() + 300 * 1000); // scade in 5 minuti
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
 
         await PendingUser.findOneAndUpdate(
             { email },

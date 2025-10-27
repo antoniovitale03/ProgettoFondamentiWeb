@@ -104,7 +104,6 @@ exports.deleteAccount = async (req, res) => {
         const user = await User.findById(userID);
         if (user.email !== confirmEmail) return res.status(400).json("L'email inserita non corrisponde a quella del tuo account. Riprova.");
 
-        //se le email corrispondono, procedo ad eliminare l'account (documento utente nel DB)
         await User.findByIdAndDelete(userID);
 
         res.status(200).json("Account eliminato con successo." );
@@ -197,16 +196,8 @@ exports.unfollow = async (req, res) => {
     try{
         const userToUnfollowID = req.params.userId;
         const userID = req.user.id; //id dell'utente che ha richiesto l'unfollow
-
         await User.findByIdAndUpdate(userToUnfollowID, {$pull: {follower: userID }} );
-
         await User.findByIdAndUpdate(userID, { $pull: {following: userToUnfollowID} } );
-
-        //rimuovo anche tutte le attività inerenti all'utente unfollowato
-        const activitiesToRemove = await Activity.find({ user: userToUnfollowID });
-        const IdsToRemove = activitiesToRemove.map( activity => activity._id );
-        await User.findByIdAndUpdate(userID, { $pull: { activity: { $in: IdsToRemove } }});
-
         res.status(200).json("Rimozione avvenuta correttamente");
     }catch(error){ res.status(500).json("Errore interno del server."); }
 }

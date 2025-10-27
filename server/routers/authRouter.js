@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 
 //registrazione
 router.post("/registration", authController.registerData)
-router.post("/registration/verify", authController.registrationVerify);
+router.post("/registration/verify", authController.registrationVerify)
 
 // login
 router.post("/login", authController.login)

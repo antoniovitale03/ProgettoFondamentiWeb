@@ -30,9 +30,8 @@ exports.addToLiked = async (req, res) => {
 
 exports.removeFromLiked = async (req, res) => {
     try{
-        const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
-        await User.findByIdAndUpdate(userID, { $pull: { liked: filmID } });
+        await User.findByIdAndUpdate(req.user.id, { $pull: { liked: filmID } });
     }catch(error){ res.status(500).json("Errore interno del server."); }
     res.status(200).json("Film rimosso dai piaciuti");
 }

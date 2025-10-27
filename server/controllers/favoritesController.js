@@ -36,21 +36,21 @@ exports.addToFavorites = async (req, res) => {
             date: Date.now()
         });
 
-        await User.updateMany( {_id: {$in: user.following}}, {$addToSet: { activity: newActivity._id }});
-
         await User.findByIdAndUpdate(
             userID,
             { $addToSet: { favorites: film.id, activity: newActivity._id } }
         )
+
+        await User.updateMany( {_id: {$in: user.followers}}, {$addToSet: { activity: newActivity._id }});
+
         res.status(200).json(`"${film.title}" aggiunto alla lista dei favoriti!`);
     }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.removeFromFavorites = async (req, res) => {
     try{
-        const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
-        await User.findByIdAndUpdate(userID, { $pull: { favorites: filmID } });
+        await User.findByIdAndUpdate(req.user.id, { $pull: { favorites: filmID } });
         res.status(200).json("Film rimosso dai preferiti");
     }catch(error){ res.status(500).json("Errore interno del server."); }
 

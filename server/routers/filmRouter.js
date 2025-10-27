@@ -15,7 +15,6 @@ const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 
 router.use("/home", homeRouter)
 
-//non inserisco questo percorso in homeRouter perchè viene usato per msotrare i film simili a partire dalla pagina dei film
 router.get("/get-similar-films", filmController.getSimilarFilms)
 
 router.get("/get-cast/:filmID", filmController.getCast);

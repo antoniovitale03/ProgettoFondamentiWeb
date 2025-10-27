@@ -37,10 +37,10 @@ exports.addToWatchlist = async (req, res) => {
             { $addToSet: { watchlist: film.id, activity: newActivity._id }
             })
 
-        //l'attività va aggiunta anche a tutti gli amici che seguo
+        //l'attività va aggiunta anche a tutti gli amici che mi seguono
         //aggiorno simultaneamente tutti gli utenti con _id contenuti nella lista user.following
         await User.updateMany(
-            {_id: {$in: user.following}},
+            {_id: {$in: user.followers}},
             { $addToSet: { activity: newActivity._id }}
         )
 
@@ -50,9 +50,8 @@ exports.addToWatchlist = async (req, res) => {
 
 exports.removeFromWatchlist = async (req, res) => {
     try{
-        const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
-        await User.findByIdAndUpdate(userID, { $pull: {watchlist: filmID} });
+        await User.findByIdAndUpdate(req.user.id, { $pull: {watchlist: filmID} });
         res.status(200).json("Film eliminato dalla watchlist");
     }catch(error){ res.status(500).json("Errore interno del server."); }
 }

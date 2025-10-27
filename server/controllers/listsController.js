@@ -7,7 +7,6 @@ exports.createList = async (req, res) => {
         const userID = req.user.id;
         const listName = req.params.listName;
 
-        //controllo che non esista già una lista con lo stesso nome
         let list = await List.findOne({ name: listName, userID: userID });
         if(list) return res.status(200).json("Hai già una lista con questo nome");
 
@@ -22,7 +21,7 @@ exports.getLists = async (req, res) => {
     try{
         const username = req.params.username;
         const user = await User.findOne({ username: username }).populate({path: 'lists', populate: {path: 'films'}});
-        res.status(200).json(user.lists);
+        res.status(200).json(user.lists.reverse());
     }catch(error){ res.status(500).json("Errore interno del server."); }
 
 }
@@ -48,7 +47,7 @@ exports.addToList = async (req, res) => {
 
         await Film.findOneAndUpdate(
             { _id: film.id },
-            { $set: {
+            { $setOnInsert: {
                     title: film.title,
                     release_year: film.release_year,
                     director: film.director,
@@ -63,18 +62,14 @@ exports.addToList = async (req, res) => {
         await List.findOneAndUpdate({ name: listName, userID: userID }, { $addToSet: { films: film.id } });
         res.status(200).json(`Film aggiunto alla lista ${listName}`);
     }catch(error){ res.status(500).json("Errore interno del server."); }
-
-
 }
 
 exports.removeFromList = async (req, res) => {
     try{
-        const userID = req.user.id;
         const filmID = parseInt(req.params.filmID);
         const listName = req.params.listName;
-        const user = await User.findById(userID);
-        if(!user) return res.status(404).json("Utente non trovato.");
-        await List.findOneAndUpdate({ name: listName, userID: userID }, { $pull: { films: filmID } });
+        if(!await User.findById(req.user.id)) return res.status(404).json("Utente non trovato.");
+        await List.findOneAndUpdate({ name: listName, userID: req.user.id }, { $pull: { films: filmID } });
         res.status(200).json(`Film rimosso dalla lista ${listName}`);
     }catch(error){ res.status(500).json("Errore interno del server."); }
 
