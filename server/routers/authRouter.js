@@ -13,7 +13,6 @@ router.post("/forgot-password", authController.forgotPassword)
 router.post("/login/verify", authController.loginVerify)
 router.post("/set-new-password", authController.setNewPassword)
 
-
 router.post("/refresh", authController.refresh)
 
 router.get("/logout", verifyJWT, authController.logout);

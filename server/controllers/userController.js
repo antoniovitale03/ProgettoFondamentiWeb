@@ -1,7 +1,4 @@
 const User = require("../models/User");
-const Activity = require("../models/Activity");
-const fs = require("fs");
-const path = require("path");
 const bcrypt = require("bcryptjs");
 
 function timeAgo(past) {
@@ -65,7 +62,6 @@ exports.getProfileInfo = async (req, res) => {
         const username = req.params.username;
         const user = await User.findOne({ username: username }).populate('favorites').populate('watched').populate({path: 'reviews', populate: {path: 'film'}});
         const profile = {
-            avatar_path: user.avatar_path,
             country: user.country,
             biography: user.biography,
             followers: user.followers.length,
@@ -81,16 +77,14 @@ exports.getProfileInfo = async (req, res) => {
 
 exports.getFollowing = async (req, res) => {
     try{
-        const username = req.params.username;
-        const user = await User.findOne({ username: username }).populate('following');
+        const user = await User.findOne({ username: req.params.username }).populate('following');
         res.status(200).json(user.following);
     }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getFollowers = async (req, res) => {
     try{
-        const username = req.params.username;
-        const user = await User.findOne({username: username}).populate('followers');
+        const user = await User.findOne({username: req.params.username}).populate('followers');
         res.status(200).json(user.followers);
     }catch(error){ res.status(500).json("Errore interno del server."); }
 
@@ -98,22 +92,17 @@ exports.getFollowers = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
     try{
-        const userID = req.user.id;
         let confirmEmail = req.params.confirmEmail;
-
-        const user = await User.findById(userID);
+        const user = await User.findById(req.user.id);
         if (user.email !== confirmEmail) return res.status(400).json("L'email inserita non corrisponde a quella del tuo account. Riprova.");
-
-        await User.findByIdAndDelete(userID);
-
+        await User.findByIdAndDelete(req.user.id);
         res.status(200).json("Account eliminato con successo." );
     }catch(error){ res.status(500).json("Errore interno del server."); }
 }
 
 exports.getProfileData = async (req, res) => {
     try{
-        const userID = req.user.id;
-        const user = await User.findById(userID);
+        const user = await User.findById(req.user.id);
         let profileData = {
             username: user.username ? user.username : "",
             email: user.email ? user.email : "",
@@ -128,10 +117,9 @@ exports.getProfileData = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try{
-        const userID = req.user.id;
         const profileData = req.body;
 
-        await User.findByIdAndUpdate(userID,
+        await User.findByIdAndUpdate(req.user.id,
             { $set: {
                     username: profileData.username,
                     email: profileData.email,
@@ -152,7 +140,6 @@ exports.updateProfile = async (req, res) => {
 exports.getActivity = async (req, res) => {
     try{
         const username = req.params.username;
-        //popolo la proprietà activity e per ogni oggetto che ottengo popolo anche la proprietà user
         const user = await User.findOne({ username: username}).populate({
             path: "activity",
             populate: { path: "user" }
@@ -169,9 +156,6 @@ exports.follow = async (req, res) => {
         const userID = req.user.id;
         const friendUsername = req.params.friendUsername;
 
-        const user = await User.findById(userID);
-        if(!user) return res.status(404).json("Utente non trovato.");
-
         const friend = await User.findOne({ username: friendUsername });
 
         //controllo prima che il nome utente esista
@@ -182,6 +166,7 @@ exports.follow = async (req, res) => {
         if (userID === friendID) return res.status(400).json("Non puoi seguire te stesso.");
 
         //controllo che l'utente non stia già seguendo l'amico
+        const user = await User.findById(userID);
         if(user.following.find(id => id === friendID)) return res.status(404).json(`Segui già "${friendUsername}"`);
 
         await User.findByIdAndUpdate(userID, { $addToSet: { following: friendID } });

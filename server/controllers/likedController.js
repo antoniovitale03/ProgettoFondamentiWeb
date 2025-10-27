@@ -3,7 +3,6 @@ const User = require("../models/User");
 
 exports.addToLiked = async (req, res) => {
     try{
-        const userID = req.user.id;
         let { film } = req.body;
 
         await Film.findOneAndUpdate(
@@ -22,7 +21,7 @@ exports.addToLiked = async (req, res) => {
                 upsert: true
             });
 
-        await User.findByIdAndUpdate(userID, { $addToSet: { liked: film.id } });
+        await User.findByIdAndUpdate(req.user.id, { $addToSet: { liked: film.id } });
 
         res.status(200).json({ message: `"${film.title}" aggiunto alla lista dei film piaciuti!`  });
     }catch(error){ res.status(500).json("Errore interno del server."); }

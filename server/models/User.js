@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     surname: { type: String },
     biography: { type: String },
     country: { type: String },
-    avatar_path: { type: String },
     refreshToken: { type: String },
     watchlist: [{ type: Number, ref: "Film" }],
     liked: [{ type: Number, ref: "Film" }],
