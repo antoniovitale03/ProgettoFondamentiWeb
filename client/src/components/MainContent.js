@@ -32,6 +32,8 @@ import SimilarFilms from "./FilmPage/SimilarFilms";
 import About from "./About";
 import Contact from "./Contact";
 import Help from "./Help";
+import LoginPage from "./Login/LoginPage";
+import RegistrationPage from "./Registration/RegistrationPage";
 //*Il main Content occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
 function MainContent() {
     const { isLoggedIn } = useAuth();
@@ -85,6 +87,8 @@ function MainContent() {
         <Container style={{ flexGrow: 1, maxWidth:'90%', marginTop: '50px', marginBottom: 50 }}>
                 <Routes>
                     <Route path="/" element={<Home/>} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/registration" elemenet={ < RegistrationPage />} />
                     <Route path="/archive" element={<Archive />} />
                     <Route path="about" element={<About />} />
                     <Route path="contact" element={<Contact/>} />
