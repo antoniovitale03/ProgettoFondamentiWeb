@@ -25,7 +25,7 @@ function Home(){
     return (
         <Box>
             <Box>
-                <h1 id="titolo1"> Nome del sito</h1>
+                <h1 id="titolo1"> CineSync</h1>
                 
                 <h2 id="sottotitolo">slogan del sito</h2>
             </Box>

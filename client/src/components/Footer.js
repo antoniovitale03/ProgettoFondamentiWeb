@@ -33,7 +33,7 @@ function Footer() {
                     </IconButton>
                 </Box>
             </Toolbar>
-            <p>© "nome progetto " {new Date().getFullYear()} Limited. All rights reserved.</p>
+            <p>© "CineSync" {new Date().getFullYear()} Limited. All rights reserved.</p>
         </AppBar>
 
     )
