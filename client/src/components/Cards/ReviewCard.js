@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Box, Button, Card, CardContent, CardMedia, Grid, IconButton, Rating, Typography} from "@mui/material";
+import {Button, Card, CardContent, CardMedia, Grid, IconButton, Rating, Typography} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 
 function ReviewCard({ review, showRemoveButton, onRemove }){

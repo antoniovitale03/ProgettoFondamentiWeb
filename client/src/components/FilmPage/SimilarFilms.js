@@ -4,7 +4,6 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import {useNotification} from "../../context/notificationContext";
 import FilmCard from "../Cards/FilmCard";
-import SearchFilters from "../SearchFilters";
 import api from "../../api";
 
 function SimilarFilms(){

@@ -5,7 +5,7 @@ import {
     Box,
     ImageList,
     ImageListItem,
-    ImageListItemBar, MenuItem,
+    ImageListItemBar,
     Typography
 } from "@mui/material";
 import {Link} from "react-router-dom";

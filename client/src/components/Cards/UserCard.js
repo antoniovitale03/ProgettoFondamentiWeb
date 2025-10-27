@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Card, CardContent, Grid, IconButton, Tooltip, Typography} from "@mui/material";
+import {Avatar, Button, Card, CardContent, Grid, IconButton, Tooltip, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import VisibilityIcon from '@mui/icons-material/Visibility';

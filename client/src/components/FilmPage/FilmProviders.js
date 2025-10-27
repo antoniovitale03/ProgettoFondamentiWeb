@@ -1,4 +1,4 @@
-import {Box, Tooltip, Typography, Image} from "@mui/material";
+import {Box, Tooltip, Typography} from "@mui/material";
 import * as React from "react";
 import '../../CSS/FilmProviders.css';
 
