@@ -8,6 +8,7 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
+import {Link} from "react-router-dom";
 import UserMenu from "../components/UserMenu";
 
 
@@ -52,8 +53,8 @@ function Header() {
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar/></Tooltip>}
                       menuContent={<UserMenu setIsUserMenuOpen={setIsUserMenuOpen} />} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
-        <IconButton href={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></IconButton>,
-        <IconButton href="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></IconButton>,
+        <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
+        <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></Button>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
             <Button variant="contained" onClick={handleSearch}>
@@ -61,17 +62,17 @@ function Header() {
             </Button>
         </Box>,
         <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
-        <IconButton href="/">
+        <Button component={Link} to="/">
             <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" style={{ height: '50px', width: 'auto' }}/>
-        </IconButton>
+        </Button>
     ]
     
     let notLoggedDefaultHeaderItems = [
         <IconButton href="/archive">
             <ArchiveIcon />
         </IconButton>,
-        <Button variant="contained" color="success" href="/login"> Login </Button>,
-        <Button variant="contained" color="success" href="/registration"> Crea un Account</Button>,
+        <Button component={Link} variant="contained" color="success" to="/login"> Login </Button>,
+        <Button component={Link} variant="contained" color="success" to="/registration"> Crea un Account</Button>,
         <IconButton href="/">
             <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="" style={{ height: '50px', width: 'auto' }}/>
         </IconButton>

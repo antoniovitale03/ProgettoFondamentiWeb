@@ -88,10 +88,10 @@ function MainContent() {
                 <Routes>
                     <Route path="/" element={<Home/>} />
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/registration" elemenet={ < RegistrationPage />} />
+                    <Route path="/registration" element={ < RegistrationPage />} />
                     <Route path="/archive" element={<Archive />} />
-                    <Route path="about" element={<About />} />
-                    <Route path="contact" element={<Contact/>} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact/>} />
 
                     { /* informazioni dei film mostrati nella homePage */}
                     <Route path="/films/current-popular-films" element={<CurrentPopularFilms />} />
