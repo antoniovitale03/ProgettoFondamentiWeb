@@ -32,7 +32,7 @@ function Watched(){
 
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
-            await api.delete(`http://localhost:5001/api/films/watched/remove-from-watched/${filmID}`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/films/watched/remove-from-watched/${filmID}`);
             showNotification(<strong>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></strong>, "success");
             setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatched(num => num - 1);
@@ -43,7 +43,7 @@ function Watched(){
 
     useEffect(() => {
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: "", isLiked: null})){
-            api.get(`http://localhost:5001/api/films/watched/get-watched/${username}`)
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/watched/get-watched/${username}`)
                 .then(response => {
                     setFilms(response.data);
                     setNumWatched(response.data.length);
@@ -51,7 +51,7 @@ function Watched(){
                 .catch(error => showNotification(error.response.data, "error"));
         }else{
             const params = GetParams(filters);
-            api.get(`http://localhost:5001/api/films/watched/get-watched/${username}?${params.toString()}`)
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/watched/get-watched/${username}?${params.toString()}`)
             .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
         }

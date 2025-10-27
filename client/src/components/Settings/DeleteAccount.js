@@ -18,7 +18,7 @@ function DeleteAccount() {
     const handleDeleteAccount = async (event) => {
         event.preventDefault();
         try {
-            await api.delete(`http://localhost:5001/api/user/delete-account/${confirmEmail}`)
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/user/delete-account/${confirmEmail}`)
             showNotification("Eliminazione dell'account avvenuta correttamente!", "success");
             await sleep(2000);
             logout();

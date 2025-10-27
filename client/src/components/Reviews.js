@@ -32,7 +32,7 @@ function Reviews(){
 
     const removeReview = async (filmID, reviewTitle) => {
         try {
-            await api.delete(`http://localhost:5001/api/films/reviews/delete-review/${filmID}`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/films/reviews/delete-review/${filmID}`);
             showNotification(<strong>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
             setReviews(currentReviews =>
                 currentReviews.filter(review => review.film._id !== filmID)
@@ -45,7 +45,7 @@ function Reviews(){
 
     useEffect(() => {
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
-            api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}`)
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/reviews/get-reviews/${username}`)
                 .then(response => {
                     setReviews(response.data);
                     setNumReviews(response.data.length);
@@ -53,7 +53,7 @@ function Reviews(){
                 .catch(error => showNotification(error.response.data, "error"));
         }else{
             const params = GetParams(filters);
-            api.get(`http://localhost:5001/api/films/reviews/get-reviews/${username}?${params.toString()}`)
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/reviews/get-reviews/${username}?${params.toString()}`)
                 .then(response => setReviews(response.data))
                 .catch(error => showNotification(error.response.data, "error"));
         }

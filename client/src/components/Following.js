@@ -21,7 +21,7 @@ function Following() {
 
     const unfollow = async (userId, username) => {
         try{
-            await api.delete(`http://localhost:5001/api/user/${userId}/unfollow`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/user/${userId}/unfollow`);
             showNotification(<strong>Hai rimosso <a href={`/${username}/profile`} style={{ color: 'green' }}>{username}</a> dai seguiti</strong>, "success");
             setFollowing(currentFollowing =>
                 currentFollowing.filter(user => user.username !== username)
@@ -32,7 +32,7 @@ function Following() {
     }
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/user/${username}/get-following`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/user/${username}/get-following`)
             .then(response => setFollowing(response.data))
             .catch(error => showNotification(error.response.data, "error"));
          }, [username, showNotification]);

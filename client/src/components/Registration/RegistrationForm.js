@@ -18,7 +18,7 @@ function RegistrationForm({ email, setEmail, setStep }) {
         event.preventDefault();
         setButton("Verifica in corso...");
         try{
-            await api.post('http://localhost:5001/api/auth/registration', { username, email, password });
+            await api.post(`${process.env.REACT_APP_SERVER}/api/auth/registration`, { username, email, password });
             // Se la chiamata ha successo, mostra il messaggio di successo e passa al secondo step
             showNotification("Abbiamo inviato un codice di verifica alla tua mail (scade tra 1 minuto)", "success");
             await sleep(2000);

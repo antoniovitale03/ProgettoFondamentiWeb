@@ -14,7 +14,7 @@ function Followers() {
     const [followers, setFollowers] = useState([]);
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/user/${username}/get-followers`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/user/${username}/get-followers`)
             .then(response => setFollowers(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     },[username, showNotification]);

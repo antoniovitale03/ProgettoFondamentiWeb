@@ -34,7 +34,7 @@ function Header() {
     const sendFriendRequest = () => {
         setIsAddFriendMenuOpen(false);
         setFriendUsername("");
-        api.post(`http://localhost:5001/api/user/${friendUsername}/follow`)
+        api.post(`${process.env.REACT_APP_SERVER}/api/user/${friendUsername}/follow`)
             .then(() => showNotification(<strong>Hai appena aggiunto <a href={`/${friendUsername}/profile`} style={{ color: 'green' }}>{friendUsername}</a> come amico</strong>, "success"))
             .catch(error => showNotification(error.response.data, "error"));
     }
@@ -50,7 +50,7 @@ function Header() {
         ]
 
     let headerItems = [
-        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar src={`http://localhost:5001${user?.avatar_path}`}/></Tooltip>}
+        <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar/></Tooltip>}
                       menuContent={<UserMenu setIsUserMenuOpen={setIsUserMenuOpen} />} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
         <IconButton href={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></IconButton>,
         <IconButton href="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></IconButton>,

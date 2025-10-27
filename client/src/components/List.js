@@ -19,7 +19,7 @@ function List(){
 
     const removeFromList = async (filmID, filmTitle) => {
         try{
-            await api.delete(`http://localhost:5001/api/films/lists/remove-from-list/${filmID}/${listName}`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/films/lists/remove-from-list/${filmID}/${listName}`);
             showNotification(<strong>"{filmTitle}" rimosso da "{listName}"</strong>)
             setList( currentList => currentList.filter( film => film._id !== filmID) );
         }catch(error){
@@ -28,7 +28,7 @@ function List(){
     }
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/lists/get-list/${username}/${listName}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/lists/get-list/${username}/${listName}`)
             .then(response => setList(response.data))
             .catch(error => showNotification(error.response.data, "error"));
         }, [username, listName, showNotification]);

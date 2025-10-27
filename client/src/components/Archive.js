@@ -31,7 +31,7 @@ function Archive(){
     //effetto che ricerca i film ogni volta che i filtri cambiano o viene cambia la pagina di ricerca dei film
     useEffect(() => {
         const params = GetParams(filters);
-        api.get(`http://localhost:5001/api/films/get-archive?${params.toString()}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-archive?${params.toString()}`)
             .then(response => {
                 setArchive(response.data.films);
                 setTotalPages(response.data.totalPages);

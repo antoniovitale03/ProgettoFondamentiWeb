@@ -30,7 +30,7 @@ function Watchlist(){
 
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
-            await api.delete(`http://localhost:5001/api/films/watchlist/remove-from-watchlist/${filmID}`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/films/watchlist/remove-from-watchlist/${filmID}`);
             showNotification(<strong>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success");
             setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatchlist(num => num - 1);
@@ -41,7 +41,7 @@ function Watchlist(){
 
     useEffect(() => {
         if( _.isEqual(filters, {genre: "", decade: "", minRating: 0, sortByDate: "", sortByPopularity: ""})){
-            api.get(`http://localhost:5001/api/films/watchlist/get-watchlist/${username}`)
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/watchlist/get-watchlist/${username}`)
             .then(response => {
                 setFilms(response.data);
                 setNumWatchlist(response.data.length);
@@ -49,7 +49,7 @@ function Watchlist(){
             .catch(error => showNotification(error.response.data, "error"));
         }else{
             const params = GetParams(filters);
-            api.get(`http://localhost:5001/api/films/watchlist/get-watchlist/${username}?${params.toString()}`)
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/watchlist/get-watchlist/${username}?${params.toString()}`)
             .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
         }

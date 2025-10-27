@@ -16,7 +16,7 @@ function CurrentPopularFilms() {
     const [page, setPage] = useState(1);
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/home/get-current-popular-films/page/${page}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/home/get-current-popular-films/page/${page}`)
             .then(response => {
                 setFilms(response.data.films);
                 setTotalPages(response.data.totalPages);

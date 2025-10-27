@@ -16,7 +16,7 @@ function CrewPage(){
     const {showNotification} = useNotification();
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/get-crew/${filmID}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-crew/${filmID}`)
             .then(response => setCrew(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID, showNotification])

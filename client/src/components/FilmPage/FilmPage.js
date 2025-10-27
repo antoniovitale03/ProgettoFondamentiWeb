@@ -31,7 +31,7 @@ function FilmPage(){
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/get-film/${filmID}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-film/${filmID}`)
             .then( response => setFilm(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID, showNotification])

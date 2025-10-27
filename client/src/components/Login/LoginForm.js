@@ -18,7 +18,7 @@ function LoginForm({  setStep, email, setEmail }) {
     const handleLogin = async (event) => {
         event.preventDefault();
         try{
-            const response = await api.post('http://localhost:5001/api/auth/login', { email, password });
+            const response = await api.post(`${process.env.REACT_APP_SERVER}/api/auth/login`, { email, password });
             const user = await response.data; //data contiene i dati dell'utente + accessToken (che verranno salvati nella
             // variabile di stato user e nella memoria locale del browser)
             setUser(user);
@@ -33,7 +33,7 @@ function LoginForm({  setStep, email, setEmail }) {
         event.preventDefault();
         try {
             //invio la mail con il codice di verifica
-            await api.post("http://localhost:5001/api/auth/forgot-password", { email });
+            await api.post(`${process.env.REACT_APP_SERVER}/api/auth/forgot-password`, { email });
             showNotification("Abbiamo inviato un codice di verifica alla tua mail", "success");
             setStep(2);
             await sleep(1500);

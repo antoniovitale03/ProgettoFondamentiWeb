@@ -12,7 +12,7 @@ function Activity({ activity }){
                     <Typography style={{ marginRight: 10 }}>da</Typography>
                     <Typography component={Link} to={`/${activity.user.username}/profile`} style={{ color: 'green', marginRight: 10}}>{activity.user.username}</Typography>
                     <ListItemIcon>
-                        <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
+                        <Avatar style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                     </ListItemIcon> {activity.timeAgo}
                 </Typography>
             </ListItem>
@@ -28,7 +28,7 @@ function Activity({ activity }){
                     <Typography style={{ marginRight: 10 }}>da</Typography>
                     <Typography component={Link} to={`/${activity.user.username}/profile`} style={{ color: 'green', marginRight: 10}}>{activity.user.username}</Typography>
                     <ListItemIcon>
-                        <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
+                        <Avatar style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                     </ListItemIcon> {activity.timeAgo}
                 </Typography>
             </ListItem>)
@@ -43,7 +43,7 @@ function Activity({ activity }){
                     <Typography style={{ marginRight: 10 }}>da</Typography>
                     <Typography component={Link} to={`/${activity.user.username}/profile`} style={{ color: 'green', marginRight: 10}}>{activity.user.username}</Typography>
                     <ListItemIcon>
-                        <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
+                        <Avatar style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                     </ListItemIcon>
                     {activity.rating &&
                         <>
@@ -66,7 +66,7 @@ function Activity({ activity }){
                     <Typography style={{ marginRight: 10 }}>da</Typography>
                     <Typography component={Link} to={`/${activity.user.username}/profile`} style={{ color: 'green', marginRight: 10}}>{activity.user.username}</Typography>
                     <ListItemIcon>
-                        <Avatar src={`http://localhost:5001/${activity.user.avatar_path}`} style={{width: "20px", height: "20px", borderRadius: "50%"}} />
+                        <Avatar style={{width: "20px", height: "20px", borderRadius: "50%"}} />
                     </ListItemIcon>
                     {activity.timeAgo}
                 </Typography>

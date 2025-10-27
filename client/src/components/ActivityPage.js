@@ -13,7 +13,7 @@ function ActivityPage(){
     useDocumentTitle(`Attività di ${username}`);
 
     useEffect(() => {
-        api.get(`http://localhost:5001/api/user/${username}/get-activity`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/user/${username}/get-activity`)
             .then( (response) => setActivity(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [username, showNotification])

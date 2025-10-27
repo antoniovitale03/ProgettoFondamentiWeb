@@ -14,7 +14,7 @@ function DirectorPage() {
     useDocumentTitle(directorName.replaceAll("-", " "));
 
     useEffect(() => {
-        api.get(`http://localhost:5001/api/films/get-director-info/${directorID}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-director-info/${directorID}`)
             .then(response => setDirector(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [directorName, directorID, showNotification]);

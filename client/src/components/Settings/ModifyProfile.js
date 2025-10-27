@@ -23,7 +23,7 @@ function ModifyProfile(){
     useEffect(() => {
         async function fetchProfileData(){
             try{
-                const response = await api.get("http://localhost:5001/api/user/get-profile-data");
+                const response = await api.get(`${process.env.REACT_APP_SERVER}/api/user/get-profile-data`);
                 let profileData = response.data;
                 setProfileData(profileData);
             }catch(error){
@@ -46,7 +46,7 @@ function ModifyProfile(){
     const handleSubmit = async (event) => {
         try{
             event.preventDefault();
-            await api.post("http://localhost:5001/api/user/update-profile", profileData);
+            await api.post(`${process.env.REACT_APP_SERVER}/api/user/update-profile`, profileData);
             let newUser = {...user,
                 username: profileData.username,
                 name: profileData.name,

@@ -22,7 +22,7 @@ function RegistrationPage() {
 
     const handleVerify = async (verificationCode) => {
         try{
-            await api.post('http://localhost:5001/api/auth/registration/verify', {
+            await api.post(`${process.env.REACT_APP_SERVER}/api/auth/registration/verify`, {
                 email, verificationCode
             });
             showNotification('Registrazione avvenuta con successo! Ora verrai reindirizzato alla pagina di login', "success");

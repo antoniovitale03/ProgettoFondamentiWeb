@@ -16,7 +16,7 @@ function FavoritesFilms(){
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
-            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/films/favorites/remove-from-favorites/${filmID}`);
             showNotification(<strong><a href={`/film/${filmTitle}/${filmID}`} style={{ color: 'green' }}>{filmTitle}</a> rimosso dai tuoi preferiti</strong>, "success");
             setFilms(currentFilms =>
                 currentFilms.filter(film => film.id !== filmID)
@@ -27,7 +27,7 @@ function FavoritesFilms(){
     }
 
     useEffect(() => {
-        api.get(`http://localhost:5001/api/films/favorites/get-favorites/${username}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/favorites/get-favorites/${username}`)
             .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [username, showNotification]);

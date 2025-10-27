@@ -15,7 +15,7 @@ function CastPage(){
     useDocumentTitle(`Cast di "${filmTitle}"`);
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/get-cast/${filmID}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-cast/${filmID}`)
             .then(response => setCast(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID, showNotification]);

@@ -16,7 +16,7 @@ function TopRatedFilms() {
 
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/films/home/get-top-rated-films/page/${page}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/home/get-top-rated-films/page/${page}`)
             .then(response => {
                 setFilms(response.data.films);
                 setTotalPages(response.data.totalPages);

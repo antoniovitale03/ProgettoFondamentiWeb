@@ -17,7 +17,7 @@ function ForgotPasswordForm({ setStep, email }) {
     const handleSetNewPassword = async (event) => {
         event.preventDefault();
         try{
-            await api.post('http://localhost:5001/api/auth/set-new-password', {
+            await api.post(`${process.env.REACT_APP_SERVER}/api/auth/set-new-password`, {
                 email, newPassword, confirmNewPassword
             })
             showNotification("Password modificata correttamente! Ora verrai reindirizzato alla pagina di login", "success")

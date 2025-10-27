@@ -26,7 +26,7 @@ function Profile(){
 
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
-            await api.delete(`http://localhost:5001/api/films/favorites/remove-from-favorites/${filmID}`);
+            await api.delete(`${process.env.REACT_APP_SERVER}/api/films/favorites/remove-from-favorites/${filmID}`);
             showNotification(<strong>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a> </strong>, "success");
             setFavoritesFilms(currentFilms =>
                 currentFilms.filter(film => film._id !== filmID));
@@ -36,7 +36,7 @@ function Profile(){
     }
 
     useEffect( () => {
-        api.get(`http://localhost:5001/api/user/${username}/get-profile-info`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/user/${username}/get-profile-info`)
             .then(response => {
                 setProfile(response.data);
                 setFavoritesFilms(response.data.favorites);
@@ -50,7 +50,7 @@ function Profile(){
             <Box>
                 {user.username === username ? <Typography component="h1">Il tuo profilo</Typography> : <Typography component="h1">Profilo di {username}</Typography>}
                 {
-                    profile.avatar_path ? <Avatar src={`http://localhost:5001/${profile.avatar_path}`} sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
+                    profile.avatar_path ? <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
                         : <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
                 }
 

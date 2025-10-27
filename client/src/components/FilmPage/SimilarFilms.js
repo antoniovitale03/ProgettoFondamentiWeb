@@ -21,7 +21,7 @@ function SimilarFilms(){
         const params = new URLSearchParams();
         params.append("filmID", filmID);
         params.append("page", page);
-        api.get(`http://localhost:5001/api/films/get-similar-films?${params.toString()}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-similar-films?${params.toString()}`)
             .then(response => response.data)
             .then(data => {
                 setFilms(data.films);

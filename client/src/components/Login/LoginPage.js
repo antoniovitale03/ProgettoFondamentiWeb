@@ -21,7 +21,7 @@ function LoginPage() {
 
     const handleVerify = async (verificationCode) => {
         try{
-            await api.post('http://localhost:5001/api/auth/login/verify', { email, verificationCode });
+            await api.post(`${process.env.REACT_APP_SERVER}/api/auth/login/verify`, { email, verificationCode });
             showNotification('Codice corretto! Ora verrai reindirizzato alla pagina di reimpostazione della password', "success");
             await sleep(3000);
             setStep(3);

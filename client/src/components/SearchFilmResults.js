@@ -26,7 +26,7 @@ function SearchFilmResults() {
 
     useEffect( () => {
         const params = GetParams(filters);
-        api.get(`http://localhost:5001/api/films/get-search-results/${filmTitle}?${params.toString()}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-search-results/${filmTitle}?${params.toString()}`)
             .then(response => setFilms(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filters, showNotification])

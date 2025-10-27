@@ -18,7 +18,7 @@ function ActorPage() {
 
     //Effetto per trovare tutte le info dell'attore conoscendone l'id
     useEffect(() => {
-        api.get(`http://localhost:5001/api/films/get-actor-info/${actorID}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-actor-info/${actorID}`)
             .then((response) => setActor(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [actorName, actorID, showNotification]);

@@ -32,7 +32,7 @@ function FilmsByYear(){
     //attivo l'effetto ogni volta che cambio pagina
     useEffect( () => {
         const params = GetParams(filters);
-        api.get(`http://localhost:5001/api/films/get-films/${year}?${params.toString()}`)
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-films/${year}?${params.toString()}`)
             .then(response => {
                 setFilms(response.data.films);
                 setTotalPages(response.data.totalPages);

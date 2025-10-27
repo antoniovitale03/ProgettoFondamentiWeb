@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
     const navigate = useNavigate();
     // Funzione per pulire lo stato e localStorage al logout
     const logout = async () => {
-            await api.get('http://localhost:5001/api/auth/logout');
+            await api.get(`${process.env.REACT_APP_SERVER}/api/auth/logout`);
             setUser(null);
             navigate("/");
     };

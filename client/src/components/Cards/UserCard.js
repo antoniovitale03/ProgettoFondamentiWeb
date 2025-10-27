@@ -15,7 +15,7 @@ function UserCard({ user, showRemoveButton, onUnfollow }) {
                 <Grid container spacing={2} >
                     <Grid size={2}>
                         <Button component={Link} to={`/${user.username}/profile`}>
-                            <Avatar src={`http://localhost:5001/${user.avatar_path}`} />
+                            <Avatar />
                         </Button>
                     </Grid>
 

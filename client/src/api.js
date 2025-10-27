@@ -1,7 +1,7 @@
 //uso axios per interecettare una risposta 401 Unauthorized (token scaduto) per refreshare il token
 import axios from "axios";
 const api = axios.create({
-    baseURL: "https://cinesyncapp.netflixy.app",
+    baseURL: "http://localhost:3000",
     withCredentials: true //ogni richiesta fatta con axios includerà automaticamente i cookie (utile per inviare il refresh-token tramite i cookie)
 })
 
@@ -17,7 +17,7 @@ api.interceptors.response.use(
 
             try {
                 // Nel cookie della richiesta è gia presente il refresh token
-                const response = await api.post('http://localhost:5001/api/auth/refresh');
+                const response = await api.post(`${process.env.REACT_APP_SERVER}/api/auth/refresh`);
                 const accessToken = response.data;
 
                 //aggiorno l'accessToken nel localStorage
