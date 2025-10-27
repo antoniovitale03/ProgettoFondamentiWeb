@@ -27,7 +27,7 @@ function Home(){
             <Box>
                 <h1 id="titolo1"> CineSync</h1>
                 
-                <h2 id="sottotitolo">slogan del sito</h2>
+                <h2 id="sottotitolo">"Dove ogni film trova la sua voce"</h2>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px'}}>
                 <Card sx={{borderRadius:"60px"}} className="card">
