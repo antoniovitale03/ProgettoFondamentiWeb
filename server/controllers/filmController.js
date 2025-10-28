@@ -30,22 +30,6 @@ async function getFilmDirector(filmID) {
 
     return directorObject ? {name: directorObject.name, id: directorObject.id} : null;
 }
-
-
-function getFilmStatus(user, filmID){
-    return {
-        isInWatchlist: user.watchlist.includes(filmID) === true ? 1 : 0,
-        isLiked: user.liked.includes(filmID) === true ? 1 : 0,
-        isReviewed: user.reviews.some( review => review.film === filmID ) === true ? 1 : 0,
-        isFavorite: user.favorites.includes(filmID) === true ? 1 : 0,
-        isWatched: user.watched.includes(filmID) === true ? 1 : 0,
-        lists: user.lists.map( list => {
-        return { name: list.name, isInList: list.films.includes(filmID) }}
-        )
-    }
-}
-
-
 async function getFilmTrailer(filmID) {
     const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/videos?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
     let data = await response.json();
@@ -54,15 +38,6 @@ async function getFilmTrailer(filmID) {
         let key = youtubeTrailerObj.key;
         return `https://www.youtube.com/watch?v=${key}`;
     }else{ return null }
-}
-
-function getRating(user, film, filmID){
-    let avgRating = (film.vote_average)/2; //rating in quinti
-    avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;  //lo blocco ad una cifra decimale (se è 0 lo setto a null)
-
-    let review = user.reviews.find( review => review.film === filmID);
-    let userRating = review !== undefined ? review.rating : null;
-    return {avgRating, userRating};
 }
 
 async function getCollectionFilms(film){
@@ -251,13 +226,12 @@ exports.getCrew = async (req, res) => {
 exports.getFilm = async (req, res) => {
     try{
         const filmID = parseInt(req.params.filmID);
-        const userID = req.user.id;
-        let user = await User.findById(userID).populate('reviews').populate('lists');
 
         let response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}?api_key=${process.env.API_KEY_TMDB}`);
         let film = await response.json();
 
-        const {avgRating, userRating} = getRating(user, film, filmID);
+        let avgRating = (film.vote_average)/2; //rating in quinti
+        avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;
 
         //trovo le recensioni più popolari del film (funzionalità futura)
         //const reviews = await getUserReviews(filmID);
@@ -304,9 +278,7 @@ exports.getFilm = async (req, res) => {
             crewPreview: preview.crew,
             trailerLink: await getFilmTrailer(filmID),
             avgRating: avgRating,
-            userRating: userRating,
             genres: film.genres,
-            status: getFilmStatus(user, filmID),
             details: filmDetails,
             collection: await getCollectionFilms(film),
             rent: rent,
@@ -316,6 +288,33 @@ exports.getFilm = async (req, res) => {
         }
         res.status(200).json(film);
     }catch(error){ res.status(500).json("Errore nel caricamento della pagina del film") }
+}
+
+exports.getUserRating = async (req, res) => {
+    try{
+        const filmID = parseInt(req.params.filmID);
+        const user = await User.findById(req.user.id).populate("reviews");
+        let review = user.reviews.find( review => review.user === req.user.id && review.film === filmID);
+        res.status(200).json(review !== undefined ? review.rating : null);
+    }catch(error){ res.status(500).json("Errore nel caricamento del rating") }
+}
+
+exports.getStatus = async (req, res) => {
+    try{
+        const filmID = parseInt(req.params.filmID);
+        const user = await User.findById(req.user.id).populate("reviews").populate("lists");
+        const status = {
+            isInWatchlist: user.watchlist.includes(filmID) === true ? 1 : 0,
+            isLiked: user.liked.includes(filmID) === true ? 1 : 0,
+            isReviewed: user.reviews.some( review => review.user === req.user.id && review.film === filmID ) === true ? 1 : 0,
+            isFavorite: user.favorites.includes(filmID) === true ? 1 : 0,
+            isWatched: user.watched.includes(filmID) === true ? 1 : 0,
+            lists: user.lists.map( list => {
+                return { name: list.name, isInList: list.films.includes(filmID) }}
+            )
+        }
+        res.status(200).json(status);
+    }catch(error){ res.status(500).json("Errore nel caricamento dello status") }
 }
 
 exports.getActorInfo = async (req, res) => {

@@ -8,6 +8,7 @@ const reviewsRouter = require(".//reviewsRouter");
 const watchedRouter = require(".//watchedRouter");
 const homeRouter = require(".//homeRouter");
 const listsRouter = require(".//listsRouter");
+const {verify} = require("jsonwebtoken");
 
 const verifyJWT = require("../middlewares/authMiddleware").verifyJWT;
 
@@ -23,7 +24,9 @@ router.get("/get-crew/:filmID", filmController.getCrew);
 router.get("/get-all-genres", filmController.getAllGenres)
 router.get("/get-archive", filmController.getArchiveFilms)
 router.get("/get-search-results/:filmTitle", filmController.getFilmsFromSearch )
-router.get("/get-film/:filmID", verifyJWT, filmController.getFilm)
+router.get("/get-film/:filmID", filmController.getFilm)
+router.get("/get-film-user-rating/:filmID", verifyJWT, filmController.getUserRating)
+router.get("/get-film-status/:filmID", verifyJWT, filmController.getStatus)
 router.get("/get-films/:year", filmController.getFilmsByYear)
 
 router.get("/get-actor-info/:actorID", filmController.getActorInfo)

@@ -1,7 +1,7 @@
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useParams} from "react-router-dom";
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Grid, Stack, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useNotification} from "../context/notificationContext";
 import api from "../api";
@@ -32,9 +32,8 @@ function SearchFilmResults() {
     }, [filmTitle, filters, showNotification])
 
     return(
-        <Box marginBottom={10}>
-            {films ?
-                <Box>
+        films ?
+                <Stack spacing={7} marginBottom={10}>
                     <Typography component="h1">Risultati di ricerca per "<strong>{filmTitle}</strong>"</Typography>
 
                     <Typography component="p">{films.length} film trovati</Typography>
@@ -48,10 +47,8 @@ function SearchFilmResults() {
                             </Grid>
                         )}
                     </Grid>
-                </Box>
+                </Stack>
                 : <Typography component="h1">Caricamento dei risultati...</Typography>
-            }
-        </Box>
     )
 }
 export default SearchFilmResults;

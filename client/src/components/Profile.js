@@ -68,7 +68,7 @@ function Profile(){
                 {
                     favoritesFilms &&
                     <Box>
-                        <h1>Film preferiti</h1>
+                        <Typography component="h1" variant="strong">Film preferiti</Typography>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             {
                                 favoritesFilms.map((film) =>
@@ -84,7 +84,7 @@ function Profile(){
                 {
                     profile.latestWatched &&
                     <Box>
-                        <Typography component="h1">Ultimi film visti
+                        <Typography component="h1" variant="strong">Ultimi film visti
                         <Button component={Link} to={`/${username}/watched`}> <InfoIcon /> Più dettagli </Button>
                         </Typography>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
@@ -101,7 +101,7 @@ function Profile(){
                 {
                     profile.latestReviews &&
                     <Box>
-                        <Typography component="h1">Ultime recensioni
+                        <Typography component="h1" variant="strong">Ultime recensioni
                         <Button component={Link} to={`/${username}/reviews`}><InfoIcon /> Più dettagli</Button>
                         </Typography>
                         <Grid container spacing={2}>

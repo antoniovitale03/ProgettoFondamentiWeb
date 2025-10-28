@@ -73,6 +73,12 @@ function Header() {
         </Button>,
         <Button component={Link} variant="contained" color="success" to="/login"> Login </Button>,
         <Button component={Link} variant="contained" color="success" to="/registration"> Crea un Account</Button>,
+        <Box component="form" onSubmit={handleSearch}>
+            <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
+            <Button variant="contained" onClick={handleSearch}>
+                <SearchIcon />
+            </Button>
+        </Box>,
         <Button component={Link} to="/">
             <Avatar src={logo} alt="" style={{ height: '50px', width: 'auto' }}/>
         </Button>

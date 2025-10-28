@@ -25,8 +25,8 @@ function FilmButtons({ film }) {
 
     const {showNotification} = useNotification();
     const {user} = useAuth();
-    //tutti i bottoni hanno stato 1 (in watchlist, ...) o stato 0 (non in watchlist, ...)
 
+    //tutti i bottoni hanno stato 1 (in watchlist, ...) o stato 0 (non in watchlist, ...)
     const [buttons, setButtons] = useState({
         watchlist: 1,
         liked: 1,
@@ -53,7 +53,6 @@ function FilmButtons({ film }) {
             showNotification(error.response.data, "error");
         }
     }
-
 
     const removeFromWatchlist = async (event) => {
         event.preventDefault();
@@ -214,16 +213,16 @@ function FilmButtons({ film }) {
 
     useEffect(() => {
         //renderizzo i bottoni in base allo stato attuale del film (ogni volta che carico un film)
-        if(film){
-            setButtons({
-                watchlist: film.status.isInWatchlist,
-                liked: film.status.isLiked,
-                review: film.status.isReviewed,
-                favorite: film.status.isFavorite,
-                watched: film.status.isWatched,
-                lists: film.status.lists,
-            });
-        }
+        api.get(`${process.env.REACT_APP_SERVER}/api/films/get-film-status/${film._id}`)
+            .then( response => setButtons({
+                watchlist: response.data.isInWatchlist,
+                liked: response.data.isLiked,
+                review: response.data.isReviewed,
+                favorite: response.data.isFavorite,
+                watched: response.data.isWatched,
+                lists: response.data.lists,
+            }))
+            .catch( error => showNotification(error.response.data, "error"));
     }, [film])
 
 

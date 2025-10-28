@@ -46,7 +46,7 @@ function Home(){
                 <Carosello  films={films.topRatedFilms} title="Film più acclamati dalla critica  🌟" link={"/films/top-rated-films"}/>
                 <Carosello films={films.nowPlayingFilms} title="Film attualmente al cinema  🍿" link={"/films/now-playing-films"} />
                 <Carosello films={films.trendingFilms} title="Film in tendenza questa settimana  🔥" link={"/films/trending-films"}/>
-                { films.similarFilms && <Carosello films={films.similarFilms} title="Film simili a quelli che hai già visto ↪️" />}
+                { films.similarFilms?.length > 0 && <Carosello films={films.similarFilms} title="Film simili a quelli che hai già visto ↪️" />}
                 </Box>
         }
         </Box>

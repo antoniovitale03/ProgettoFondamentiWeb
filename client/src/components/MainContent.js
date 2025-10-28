@@ -1,4 +1,3 @@
-import {useAuth} from "../context/authContext";
 import {Container} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import Home from "./Home";
@@ -36,9 +35,7 @@ import LoginPage from "./Login/LoginPage";
 import RegistrationPage from "./Registration/RegistrationPage";
 //*Il main Content occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
 function MainContent() {
-    const { isLoggedIn } = useAuth();
-    if (isLoggedIn) {
-        return (
+    return (
             <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: 50 }}>
                 <Routes>
                     <Route path="/" element={<Home/>} />
@@ -83,25 +80,6 @@ function MainContent() {
                 </Routes>
             </Container>
         )
-    }else return(
-        <Container style={{ flexGrow: 1, maxWidth:'90%', marginTop: '50px', marginBottom: 50 }}>
-                <Routes>
-                    <Route path="/" element={<Home/>} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/registration" element={ < RegistrationPage />} />
-                    <Route path="/archive" element={<Archive />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact/>} />
-
-                    { /* informazioni dei film mostrati nella homePage */}
-                    <Route path="/films/current-popular-films" element={<CurrentPopularFilms />} />
-                    <Route path="/films/upcoming-films" element={<UpcomingFilms />} />
-                    <Route path="/films/top-rated-films" element={<TopRatedFilms />} />
-                    <Route path="/films/now-playing-films" element={<NowPlayingFilms />} />
-                    <Route path="/films/trending-films" element={<TrendingFilms />} />
-                </Routes>
-        </Container>
-    )
 }
 
 export default MainContent;

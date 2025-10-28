@@ -3,6 +3,7 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import {useEffect, useState} from "react";
 import {Box, Button, Grid, Rating, Tooltip, Chip, Stack} from "@mui/material";
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import {useAuth} from "../../context/authContext";
 
 import * as React from "react";
 import api from "../../api";
@@ -23,18 +24,28 @@ function FilmPage(){
     useDocumentTitle(filmTitle);
 
     const {showNotification} = useNotification();
+    const {isLoggedIn} = useAuth();
 
 
     const [film, setFilm] = useState(null);
+    const [userRating, setUserRating] = useState(null);
+    const [status, setStatus] = useState(null);
 
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
-    //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film
+    //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film.
     useEffect( () => {
         api.get(`${process.env.REACT_APP_SERVER}/api/films/get-film/${filmID}`)
             .then( response => setFilm(response.data))
             .catch(error => showNotification(error.response.data, "error"));
     }, [filmTitle, filmID, showNotification])
 
+    useEffect( () => {
+        if(isLoggedIn){
+            api.get(`${process.env.REACT_APP_SERVER}/api/films/get-film-user-rating/${filmID}`)
+                .then(response => setUserRating(response.data))
+                .catch(error => showNotification(error.response.data, "error"));
+        }
+    }, [filmTitle, filmID, showNotification])
 
     if(!film){
         return(
@@ -57,9 +68,9 @@ function FilmPage(){
                 <Grid xs={12} sm={6} md={4} lg={3} size={3}>
 
                     <img className="locandina" src={film?.poster_path} alt="Locandina del film" />
-                    {/* Bottoni per gestire il film */}
-                    <FilmButtons film={film} />
 
+                    {/* Bottoni per gestire il film */}
+                    { isLoggedIn && <FilmButtons film={film} /> }
 
                     { /* Rating */ }
                     {film.avgRating &&
@@ -68,10 +79,10 @@ function FilmPage(){
                             <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.avgRating} precision={0.5} readOnly /> {/* //rating in quinti */}
                         </Box>
                     }
-                    {film.userRating &&
+                    {userRating &&
                         <Box className="valutazione">
                             <p className="rating">Il mio rating: </p>
-                            <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={film.userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
+                            <Rating sx={{fontSize:{xs:"12px", md:"1.5vw"},alignItems:"center"}} name="rating" value={userRating} precision={0.5} readOnly /> {/* // il mio rating in quinti */}
                         </Box>
                     }
 
