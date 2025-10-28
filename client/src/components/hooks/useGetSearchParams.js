@@ -6,7 +6,7 @@ function GetParams(filters){
     if (filters.minRating !== 0) params.append("minRating", filters.minRating);
     if (filters.sortByDate !== "") params.append("sortByDate", filters.sortByDate);
     if (filters.sortByPopularity !== "") params.append("sortByPopularity", filters.sortByPopularity);
-    if (filters.isLiked !== null) params.append("isLiked", filters.isLiked); //parametro iniziale = false
+    if (filters.isLiked) params.append("isLiked", filters.isLiked); //parametro iniziale = false
     return params;
 }
 export default GetParams;

@@ -67,7 +67,7 @@ exports.getWatchlist = async (req, res) => {
         let watchlist = user.watchlist.reverse();
 
         let filteredFilms = watchlist
-            .filter( film => !genre || film.genres.some(g.id === parseInt(genre)))
+            .filter( film => !genre || film.genres.some(g => g.id === parseInt(genre)))
             .filter( film => !decade || film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
             .filter( film => !minRating || film.rating >= parseInt(minRating) )
 
