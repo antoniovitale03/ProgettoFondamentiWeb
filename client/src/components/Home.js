@@ -33,7 +33,7 @@ function Home(){
                 <Card sx={{borderRadius:"60px"}} className="card">
                     <CardMedia
                         component="img"
-                        image="http://i.imgur.com/Abm0wRq.jpg"
+                        image="https://i.imgur.com/Abm0wRq.jpg"
                     />
                 </Card>
             </Box>
