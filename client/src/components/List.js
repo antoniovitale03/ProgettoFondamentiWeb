@@ -20,7 +20,7 @@ function List(){
     const removeFromList = async (filmID, filmTitle) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/lists/remove-from-list/${filmID}/${listName}`);
-            showNotification(<strong>"{filmTitle}" rimosso da "{listName}"</strong>)
+            showNotification(<strong>"{filmTitle}" rimosso dalla lista "{listName}"</strong>)
             setList( currentList => currentList.filter( film => film._id !== filmID) );
         }catch(error){
             showNotification(error.response.data, "error");
