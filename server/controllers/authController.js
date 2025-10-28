@@ -102,6 +102,7 @@ exports.login = async (req, res) => {
                 email: user.email
             }
         };
+
         const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "15m"});
         const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"});
 
@@ -112,7 +113,7 @@ exports.login = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni in ms
             path: '/api/auth/refresh'
-        })
+        });
 
         //uso http o https in base al contesto. Nel contesto di sviluppo (locale), NODE_ENV = "development" quindi secure:false (HTTP), mentre
         //nel contesto di produzione (online), NODE_ENV = "production" quindi secure:true (HTTPS)

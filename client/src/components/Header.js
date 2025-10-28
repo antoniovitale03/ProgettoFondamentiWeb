@@ -10,7 +10,7 @@ import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Link} from "react-router-dom";
 import UserMenu from "../components/UserMenu";
-
+import logo from "../assets/images/logo.png"
 
 function Header() {
     const {isLoggedIn, user} = useAuth();
@@ -63,7 +63,7 @@ function Header() {
         </Box>,
         <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
         <Button component={Link} to="/">
-            <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
     
@@ -74,7 +74,7 @@ function Header() {
         <Button component={Link} variant="contained" color="success" to="/login"> Login </Button>,
         <Button component={Link} variant="contained" color="success" to="/registration"> Crea un Account</Button>,
         <Button component={Link} to="/">
-            <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} alt="" style={{ height: '50px', width: 'auto' }}/>
         </Button>
     ]
 
