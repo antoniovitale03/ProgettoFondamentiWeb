@@ -29,7 +29,6 @@ function FilmPage(){
 
     const [film, setFilm] = useState(null);
     const [userRating, setUserRating] = useState(null);
-    const [status, setStatus] = useState(null);
 
     // Effetto per recuperare l'oggetto film dai parametri dell'url (filmTitle e filmID), viene recuperato ogni volta
     //che filmTitle e filmID cambiano, cioè quando l'utente carica la pagina di un altro film.
@@ -45,7 +44,7 @@ function FilmPage(){
                 .then(response => setUserRating(response.data))
                 .catch(error => showNotification(error.response.data, "error"));
         }
-    }, [filmTitle, filmID, showNotification])
+    }, [filmTitle, filmID, showNotification, isLoggedIn])
 
     if(!film){
         return(
