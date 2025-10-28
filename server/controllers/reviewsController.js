@@ -25,10 +25,10 @@ exports.addReview = async (req, res) => {
                 upsert: true
             }
         )
-
         const newReview = await Review.create(
             {
                 film: film.id,
+                user: userID,
                 review: review,
                 rating: reviewRating,
                 review_date: new Date().toLocaleDateString("it-IT", {year: 'numeric', month: 'long', day: 'numeric'})
@@ -53,9 +53,8 @@ exports.addReview = async (req, res) => {
             }
         });
 
-
         await User.updateMany(
-            {_id: {$in: user.following}},
+            {_id: {$in: user.followers}},
             {$addToSet: { activity: newActivity._id }}
         )
 
@@ -71,7 +70,8 @@ exports.deleteReview = async (req, res) => {
         const filmID = parseInt(req.params.filmID);
 
         const review = await Review.findOne({ film: filmID, user: userID });
-        if (review) await User.updateOne(userID, {$pull: { reviews: review._id }} );
+
+        if (review) await User.findByIdAndUpdate(userID, {$pull: { reviews: review._id }} );
 
         await Review.findByIdAndDelete(review._id);
         res.status(200).json("Recensione rimossa");
