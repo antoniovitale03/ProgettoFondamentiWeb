@@ -6,6 +6,7 @@ import {useNotification} from "../context/notificationContext";
 import {useParams} from "react-router-dom";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useAuth} from "../context/authContext";
+import {Link} from "react-router-dom";
 
 function Following() {
 
@@ -22,7 +23,7 @@ function Following() {
     const unfollow = async (userId, username) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/user/${userId}/unfollow`);
-            showNotification(<strong>Hai rimosso <a href={`/${username}/profile`} style={{ color: 'green' }}>{username}</a> dai seguiti</strong>, "success");
+            showNotification(<strong>Hai rimosso <Link to={`/${username}/profile`} style={{ color: 'green' }}>{username}</Link> dai seguiti</strong>, "success");
             setFollowing(currentFollowing =>
                 currentFollowing.filter(user => user.username !== username)
             );

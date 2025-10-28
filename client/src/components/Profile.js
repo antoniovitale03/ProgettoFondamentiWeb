@@ -23,11 +23,10 @@ function Profile(){
 
     const [favoritesFilms, setFavoritesFilms] = useState(null);
 
-
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(<strong>${filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a> </strong>, "success");
+            showNotification(<strong>${filmTitle} è stato rimosso dai tuoi <Link to={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</Link> </strong>, "success");
             setFavoritesFilms(currentFilms =>
                 currentFilms.filter(film => film._id !== filmID));
         }catch(error){

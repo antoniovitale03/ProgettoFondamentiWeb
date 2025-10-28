@@ -8,6 +8,7 @@ import api from "../api";
 import {useAuth} from "../context/authContext";
 import {useNotification} from "../context/notificationContext";
 import Carosello from "./Carosello";
+import {Link} from "react-router-dom";
 
 function Lists(){
 
@@ -26,7 +27,7 @@ function Lists(){
             setIsAddListMenuOpen(false);
             setListName("");
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/lists/create-list/${listName}`);
-            showNotification(<strong>Lista <a href={`/${user.username}/${listName}/list`} style={{ color: 'green' }}>{listName}</a> creata</strong>, "success");
+            showNotification(<strong>Lista <Link to={`/${user.username}/${listName}/list`} style={{ color: 'green' }}>{listName}</Link> creata</strong>, "success");
             showNotification(`Lista "${listName}" creata`);
         }catch(error){
             showNotification(error.response.data, "error");

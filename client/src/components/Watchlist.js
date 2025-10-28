@@ -9,6 +9,7 @@ import {useAuth} from "../context/authContext";
 import _ from "lodash";
 import SearchFilters from "./SearchFilters"; //per la deep comparison
 import GetParams from "./hooks/useGetSearchParams"
+import {Link} from "react-router-dom";
 
 function Watchlist(){
 
@@ -31,7 +32,7 @@ function Watchlist(){
     const removeFromWatchlist = async (filmID, filmTitle) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/watchlist/remove-from-watchlist/${filmID}`);
-            showNotification(<strong>"{filmTitle}" è stato rimosso dalla tua <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success");
+            showNotification(<strong>"{filmTitle}" è stato rimosso dalla tua <Link to={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</Link></strong>, "success");
             setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatchlist(num => num - 1);
         }catch(error){

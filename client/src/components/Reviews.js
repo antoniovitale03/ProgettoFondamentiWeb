@@ -9,6 +9,7 @@ import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
 import _ from "lodash";
 import GetParams from "./hooks/useGetSearchParams";
+import {Link} from "react-router-dom";
 
 function Reviews(){
 
@@ -33,7 +34,7 @@ function Reviews(){
     const removeReview = async (filmID, reviewTitle) => {
         try {
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/reviews/delete-review/${filmID}`);
-            showNotification(<strong>Hai rimosso {reviewTitle} dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
+            showNotification(<strong>Hai rimosso {reviewTitle} dalle tue <Link to={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</Link></strong>, "success");
             setReviews(currentReviews =>
                 currentReviews.filter(review => review.film._id !== filmID)
             );

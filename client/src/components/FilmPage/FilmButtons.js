@@ -19,6 +19,7 @@ import "../../CSS/FilmButton.css"
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from '@mui/icons-material/Remove';
 import {useAuth} from "../../context/authContext"
+import {Link} from "react-router-dom";
 
 function FilmButtons({ film }) {
 
@@ -46,7 +47,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/watchlist/add-to-watchlist`, { film });
-            showNotification(<strong>"{film.title}" è stato aggiunto alla <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success");
+            showNotification(<strong>"{film.title}" è stato aggiunto alla <Link to={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</Link></strong>, "success");
             setButtons({...buttons, watchlist: 1});
         }catch(error){
             showNotification(error.response.data, "error");
@@ -58,7 +59,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/watchlist/remove-from-watchlist/${film.id}`);
-            showNotification(<strong>"{film.title}" è stato rimosso dalla <a href={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</a></strong>, "success")
+            showNotification(<strong>"{film.title}" è stato rimosso dalla <Link to={`/${user.username}/watchlist`} style={{ color: 'green' }}>watchlist</Link></strong>, "success")
             setButtons({...buttons, watchlist: 0});
         }catch(error){
             showNotification(error.response.data, "error");
@@ -94,7 +95,7 @@ function FilmButtons({ film }) {
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/reviews/add-review`, {
                 film, review, reviewRating
             });
-            showNotification(<strong>Hai aggiunto "{film.title}" alle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
+            showNotification(<strong>Hai aggiunto "{film.title}" alle tue <Link to={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</Link></strong>, "success");
             setButtons({...buttons, review: 1});
             setReviewRating(0);
             setReview("");
@@ -118,7 +119,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/reviews/delete-review/${film.id}`);
-            showNotification(<strong>Hai rimosso "{film.title}" dalle tue <a href={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</a></strong>, "success");
+            showNotification(<strong>Hai rimosso "{film.title}" dalle tue <Link to={`/${user.username}/reviews`} style={{ color: 'green' }}>recensioni</Link></strong>, "success");
             setButtons({...buttons, review: 0});
         }catch(error){
             showNotification(error.response.data, "error");
@@ -129,7 +130,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/favorites/add-to-favorites`, { film });
-            showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a></strong>, "success")
+            showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <Link to={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</Link></strong>, "success")
             setButtons({...buttons, favorite: 1});
         }catch(error){
             showNotification(error.response.data, "error");
@@ -140,7 +141,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/favorites/remove-from-favorites/${film.id}`);
-            showNotification(<strong>"{film.title}" è stato rimosso dai tuoi <a href={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</a></strong>, "success")
+            showNotification(<strong>"{film.title}" è stato rimosso dai tuoi <Link to={`/${user.username}/favorites`} style={{ color: 'green' }}>preferiti</Link></strong>, "success")
             setButtons({...buttons, favorite: 0});
         }catch(error){
             showNotification(error.response.data, "error");
@@ -152,7 +153,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/watched/add-to-watched`, { film });
-            showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></strong>, "success")
+            showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <Link to={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</Link></strong>, "success")
             setButtons({...buttons, watched: 1, watchlist: 0});
             //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
         }catch(error){
@@ -164,7 +165,7 @@ function FilmButtons({ film }) {
         event.preventDefault();
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/watched/remove-from-watched/${film.id}`);
-            showNotification(<strong>"{film.title}" è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></strong>, "success")
+            showNotification(<strong>"{film.title}" è stato rimosso dai tuoi <Link to={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</Link></strong>, "success")
             setButtons({...buttons, watched: 0});
         }catch(error){
             showNotification(error.response.data, "error");
@@ -175,7 +176,7 @@ function FilmButtons({ film }) {
     const addToList = async (list) => {
         try{
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/lists/add-to-list/${list.name}`, {film});
-            showNotification(<strong>"{film.title}" aggiunto alla lista <a href={`/${user.username}/${list.name}/list`} style={{ color: 'green' }}>{list.name}</a></strong>, "success")
+            showNotification(<strong>"{film.title}" aggiunto alla lista <Link to={`/${user.username}/${list.name}/list`} style={{ color: 'green' }}>{list.name}</Link></strong>, "success")
             setIsListsMenuOpen(false);
             setButtons({...buttons, lists: buttons.lists.map(l => l.name === list.name ? {...l, isInList: !l.isInList} : l)});
         }catch(error){
@@ -186,7 +187,7 @@ function FilmButtons({ film }) {
     const removeFromList = async (list) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/lists/remove-from-list/${film._id}/${list.name}`);
-            showNotification(<strong>"{film.title}" rimosso da <a href={`/${user.username}/${list.name}/list`} style={{ color: 'green' }}>"{list.name}"</a></strong>, "success")
+            showNotification(<strong>"{film.title}" rimosso da <Link to={`/${user.username}/${list.name}/list`} style={{ color: 'green' }}>"{list.name}"</Link></strong>, "success")
             setIsListsMenuOpen(false);
             setButtons({...buttons, lists: buttons.lists.map(l => l.name === list.name ? {...l, isInList: !l.isInList} : l)});
         }catch(error){

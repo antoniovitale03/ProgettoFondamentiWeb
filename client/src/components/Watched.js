@@ -9,6 +9,7 @@ import {useParams} from "react-router-dom";
 import SearchFilters from "./SearchFilters";
 import _ from "lodash"; //per la deep comparison
 import GetParams from "./hooks/useGetSearchParams";
+import {Link} from "react-router-dom";
 
 function Watched(){
 
@@ -33,7 +34,7 @@ function Watched(){
     const removeFromWatched = async (filmID, filmTitle) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/watched/remove-from-watched/${filmID}`);
-            showNotification(<strong>{filmTitle} è stato rimosso dai tuoi <a href={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</a></strong>, "success");
+            showNotification(<strong>{filmTitle} è stato rimosso dai tuoi <Link to={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</Link></strong>, "success");
             setFilms(currentFilms => currentFilms.filter(film => film.id !== filmID));
             setNumWatched(num => num - 1);
         }catch(error){

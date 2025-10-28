@@ -10,7 +10,7 @@ import {useNotification} from "../context/notificationContext";
 import api from "../api";
 import {Link} from "react-router-dom";
 import UserMenu from "../components/UserMenu";
-import logo from "../assets/images/logo.png"
+import logo from "../assets/images/logo.png";
 
 function Header() {
     const {isLoggedIn, user} = useAuth();
@@ -36,7 +36,7 @@ function Header() {
         setIsAddFriendMenuOpen(false);
         setFriendUsername("");
         api.post(`${process.env.REACT_APP_SERVER}/api/user/${friendUsername}/follow`)
-            .then(() => showNotification(<strong>Hai appena aggiunto <a href={`/${friendUsername}/profile`} style={{ color: 'green' }}>{friendUsername}</a> come amico</strong>, "success"))
+            .then(() => showNotification(<strong>Hai appena aggiunto <Link to={`/${friendUsername}/profile`} style={{ color: 'green' }}>{friendUsername}</Link> come amico</strong>, "success"))
             .catch(error => showNotification(error.response.data, "error"));
     }
 

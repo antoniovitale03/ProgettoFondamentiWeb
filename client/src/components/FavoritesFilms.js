@@ -6,6 +6,7 @@ import {Box, Grid, Typography} from "@mui/material";
 import useDocumentTitle from "./hooks/useDocumentTitle"
 import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
+import {Link} from "react-router-dom";
 
 function FavoritesFilms(){
     const [films, setFilms] = useState([]);
@@ -17,7 +18,7 @@ function FavoritesFilms(){
     const removeFromFavorites = async (filmID, filmTitle) => {
         try{
             await api.delete(`${process.env.REACT_APP_SERVER}/api/films/favorites/remove-from-favorites/${filmID}`);
-            showNotification(<strong><a href={`/film/${filmTitle}/${filmID}`} style={{ color: 'green' }}>{filmTitle}</a> rimosso dai tuoi preferiti</strong>, "success");
+            showNotification(<strong><Link to={`/film/${filmTitle}/${filmID}`} style={{ color: 'green' }}>{filmTitle}</Link> rimosso dai tuoi preferiti</strong>, "success");
             setFilms(currentFilms =>
                 currentFilms.filter(film => film.id !== filmID)
             );
