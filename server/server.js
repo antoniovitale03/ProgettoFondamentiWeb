@@ -4,18 +4,15 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-
 const authRouter = require('./routers/authRouter');
 const filmRouter = require('./routers/filmRouter');
 const userRouter = require('./routers/userRouter');
-
 
 const PORT = process.env.PORT;
 const CLIENT_URL = process.env.CLIENT_URL;
 const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSW}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`;
 
 const app = express();
-
 
 app.use(cors({
     origin: CLIENT_URL,
