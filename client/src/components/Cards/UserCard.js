@@ -21,7 +21,7 @@ function UserCard({ user, showRemoveButton, onUnfollow }) {
 
                 <Grid size={3}>
                     <Typography component="p">
-                    <Typography component="a" href={`/${user.username}/profile`}>
+                    <Typography component={Link} to={`/${user.username}/profile`}>
                         {user.username}</Typography>
                     </Typography>
                     <Button component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>

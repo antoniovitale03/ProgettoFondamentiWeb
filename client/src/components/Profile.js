@@ -64,7 +64,7 @@ function Profile(){
                 <Button component={Link} to={`/${username}/followers`} disabled={profile.followers === 0}>{profile.followers} Followers </Button>
                 <Button component={Link} to={`/${username}/following`} disabled={profile.following === 0}>{profile.following} Following </Button>
 
-                {user.username === username && <Button href="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
+                {user.username === username && <Button component={Link} to="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
 
                 {
                     favoritesFilms &&

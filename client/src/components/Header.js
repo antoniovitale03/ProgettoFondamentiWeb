@@ -68,14 +68,14 @@ function Header() {
     ]
     
     let notLoggedDefaultHeaderItems = [
-        <IconButton href="/archive">
+        <Button component={Link} to="/archive">
             <ArchiveIcon />
-        </IconButton>,
+        </Button>,
         <Button component={Link} variant="contained" color="success" to="/login"> Login </Button>,
         <Button component={Link} variant="contained" color="success" to="/registration"> Crea un Account</Button>,
-        <IconButton href="/">
+        <Button component={Link} to="/">
             <Avatar src="https://storage.freeicon.com/free-film-icon-Op4bXIvv6I6p" alt="" style={{ height: '50px', width: 'auto' }}/>
-        </IconButton>
+        </Button>
     ]
 
     return (
