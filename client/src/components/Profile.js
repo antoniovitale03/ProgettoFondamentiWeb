@@ -73,7 +73,7 @@ function Profile(){
                             {
                                 favoritesFilms.map((film) =>
                                     <Grid key={film._id} size={{xs: 12, sm: 6, md: 4, lg:3}}>
-                                        <FilmCard film={film} showRemoveButton={true} onRemove={removeFromFavorites}/>
+                                        <FilmCard film={film} showRemoveButton={user.username === username} onRemove={removeFromFavorites}/>
                                     </Grid>)
                             }
                         </Grid>
