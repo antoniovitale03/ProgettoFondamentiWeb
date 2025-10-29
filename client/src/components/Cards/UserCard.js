@@ -32,7 +32,7 @@ function UserCard({ user, showRemoveButton, onUnfollow }) {
                     </Button>
                 </Grid>
 
-                <Grid size={6} sx={{display:"flex",justifyContent:"space-between"}}>
+                <Grid size={7} sx={{display:"flex",justifyContent:"space-between"}}>
                     <Tooltip title={`Watchlist di ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/watchlist`}>
                             <WatchLaterIcon sx={{color:"#344e41"}}/>
@@ -62,19 +62,16 @@ function UserCard({ user, showRemoveButton, onUnfollow }) {
                             <BoltIcon sx={{color:"#344e41"}} />
                         </IconButton>
                     </Tooltip>
-                </Grid>
 
-
-                {
-                    showRemoveButton &&
-                    <Grid size={3}>
+                    {
+                        showRemoveButton &&
                         <Tooltip title={`Rimuovi ${user.username} dai seguiti`}>
                             <Button onClick={ () => onUnfollow(user._id, user.username) }>
-                                <CloseIcon />
+                                <CloseIcon sx={{color:"#344e41"}} />
                             </Button>
                         </Tooltip>
-                    </Grid>
-                }
+                    }
+                </Grid>
                 </Grid>
 
             </CardContent>

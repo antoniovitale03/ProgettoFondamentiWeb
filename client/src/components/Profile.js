@@ -101,8 +101,8 @@ function Profile(){
                 {
                     profile.latestReviews &&
                     <Box>
-                        <Typography component="h1" variant="strong">Ultime recensioni
-                        <Button component={Link} to={`/${username}/reviews`}><InfoIcon /> Più dettagli</Button>
+                        <Typography component="h1" variant="strong" sx={{color:"#cad2c5"}}>Ultime recensioni
+                        <Button component={Link} to={`/${username}/reviews`} sx={{color:"#cad2c5"}}><InfoIcon sx={{color:"#cad2c5"}} /> Più dettagli</Button>
                         </Typography>
                         <Grid container spacing={2}>
                             { profile.latestReviews.map(review =>

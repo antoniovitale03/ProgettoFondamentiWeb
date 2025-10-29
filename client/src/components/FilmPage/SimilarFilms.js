@@ -37,7 +37,7 @@ function SimilarFilms(){
 
     return(
         <Stack spacing={7} marginBottom={10}>
-            <Typography component="h1"> Film simili a "{filmTitle.replaceAll("-", " ")}" </Typography>
+            <Typography component="h1" variant="strong"> Film simili a "{filmTitle.replaceAll("-", " ")}" </Typography>
 
             {
                 films.length > 0 &&

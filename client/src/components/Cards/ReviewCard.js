@@ -4,17 +4,17 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 function ReviewCard({ review, showRemoveButton, onRemove }){
     return(
-        <Card style={{ marginBottom: 10, height: '100%', width: '100%' }}>
+        <Card style={{ marginBottom: 10, height: '100%', width: '100%',backgroundColor:"#a4c3b2ff" }}>
             <CardContent>
                 <Grid container spacing={2}>
 
                     {/* Sezione di sinistra: Locandina + titolo + anno */}
                     <Grid size={4} sx={{ alignItems: 'center' }}>
-                            <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
+                            <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`} sx={{color:"#344e41"}}>
                                 <strong>{review.film.title} </strong></Button>
                             {
                                 review.film.release_year &&
-                                <Button component={Link} to={`/films/${review.film.release_year}`} sx={{ display: 'inline' }}>
+                                <Button component={Link} to={`/films/${review.film.release_year}`} sx={{ display: 'inline', color:"#344e41" }}>
                                     <strong>     ({review.film.release_year})</strong>
                                 </Button>
                             }
