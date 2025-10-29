@@ -1,5 +1,5 @@
 import {useAuth} from "../context/authContext";
-import {Box, TextField, Button, Avatar, Toolbar, Tooltip, Input, InputLabel, IconButton, AppBar} from "@mui/material";
+import {Box, Typography, TextField, Button, Avatar, Toolbar, Tooltip, Input, InputLabel, IconButton, AppBar} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import ArchiveIcon from '@mui/icons-material/Archive'
 import BoltIcon from '@mui/icons-material/Bolt';
@@ -45,7 +45,7 @@ function Header() {
             <InputLabel>Username</InputLabel>
             <Input type="string" value={friendUsername} onChange={(event) => setFriendUsername(event.target.value)}/>
             <IconButton variant="contained" onClick={sendFriendRequest}>
-                <SearchIcon />
+                <SearchIcon/>
             </IconButton>
         </Box>
         ]
@@ -53,15 +53,15 @@ function Header() {
     let headerItems = [
         <DropDownMenu buttonContent={<Tooltip title={user?.username}><Avatar/></Tooltip>}
                       menuContent={<UserMenu setIsUserMenuOpen={setIsUserMenuOpen} />} isMenuOpen={isUserMenuOpen} setIsMenuOpen={setIsUserMenuOpen} />,
-        <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon/></Tooltip></Button>,
-        <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon/></Tooltip></Button>,
+        <Button component={Link} to={`/${user?.username}/activity`}><Tooltip title="Attività"><BoltIcon sx={{color:"#354f52"}}/></Tooltip></Button>,
+        <Button component={Link} to="/archive"><Tooltip title="Archivio film"><ArchiveIcon sx={{color:"#354f52"}}/></Tooltip></Button>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
-            <Button variant="contained" onClick={handleSearch}>
-                <SearchIcon />
+            <Button sx={{backgroundColor:"#354f52",marginTop:"8px"}} variant="contained" onClick={handleSearch}>
+                <SearchIcon/>
             </Button>
         </Box>,
-        <DropDownMenu buttonContent="Aggiungi un amico" menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
+        <DropDownMenu buttonContent={<Typography component="p" sx={{color:"#354f52", marginTop:"5px"}}>Aggiungi un amico </Typography>} menuContent={addAfriendMenu} isMenuOpen={isAddFriendMenuOpen} setIsMenuOpen={setIsAddFriendMenuOpen} />,
         <Button component={Link} to="/">
             <Avatar src={logo} style={{ height: '50px', width: 'auto' }}/>
         </Button>
@@ -69,13 +69,13 @@ function Header() {
     
     let notLoggedDefaultHeaderItems = [
         <Button component={Link} to="/archive">
-            <ArchiveIcon />
+            <ArchiveIcon sx={{color:"#354f52"}} />
         </Button>,
         <Button component={Link} variant="contained" color="success" to="/login"> Login </Button>,
         <Button component={Link} variant="contained" color="success" to="/registration"> Crea un Account</Button>,
         <Box component="form" onSubmit={handleSearch}>
             <TextField type="search" id="outlined-basic" label="Cerca un film..." variant="outlined" value={title} onChange={ (e) => setTitle(e.target.value) } />
-            <Button variant="contained" onClick={handleSearch}>
+            <Button sx={{backgroundColor:"#354f52",marginTop:"8px"}} variant="contained" onClick={handleSearch}>
                 <SearchIcon />
             </Button>
         </Box>,

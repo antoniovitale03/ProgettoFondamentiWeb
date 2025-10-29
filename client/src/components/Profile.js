@@ -47,10 +47,10 @@ function Profile(){
     if(profile){
         return (
             <Box>
-                {user.username === username ? <Typography component="h1">Il tuo profilo</Typography> : <Typography component="h1">Profilo di {username}</Typography>}
+                {user.username === username ? <Typography component="h1" sx={{textAlign:"center",color:"#cad2c5", fontSize:"20px"}}>Il tuo profilo</Typography> : <Typography component="h1">Profilo di {username}</Typography>}
                 {
-                    profile.avatar_path ? <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
-                        : <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: 10 }} />
+                    profile.avatar_path ? <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: "20px" }} />
+                        : <Avatar sx={{ width: 150, height: 150, borderRadius: "50%", marginBottom: "20px" }} />
                 }
 
                 {profile.biography && <Typography component="p">{profile.biography}</Typography>}
@@ -60,15 +60,15 @@ function Profile(){
                     </Typography>
                 }
 
-                <Button component={Link} to={`/${username}/followers`} disabled={profile.followers === 0}>{profile.followers} Followers </Button>
-                <Button component={Link} to={`/${username}/following`} disabled={profile.following === 0}>{profile.following} Following </Button>
+                <Button sx={{color:"#cad2c5"}} component={Link} to={`/${username}/followers`} disabled={profile.followers === 0}>{profile.followers} Followers </Button>
+                <Button sx={{color:"#cad2c5"}} component={Link} to={`/${username}/following`} disabled={profile.following === 0}>{profile.following} Following </Button>
 
-                {user.username === username && <Button component={Link} to="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
+                {user.username === username && <Button sx={{backgroundColor:"#52796f"}} component={Link} to="/settings/modify-profile" variant="contained">Modifica il mio profilo</Button> }
 
                 {
                     favoritesFilms &&
                     <Box>
-                        <Typography component="h1" variant="strong">Film preferiti</Typography>
+                        <Typography component="h1" variant="strong" sx={{color:"#cad2c5",margin:"20px 0 20px 0"}}>Film preferiti</Typography>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             {
                                 favoritesFilms.map((film) =>
@@ -84,8 +84,8 @@ function Profile(){
                 {
                     profile.latestWatched &&
                     <Box>
-                        <Typography component="h1" variant="strong">Ultimi film visti
-                        <Button component={Link} to={`/${username}/watched`}> <InfoIcon /> Più dettagli </Button>
+                        <Typography component="h1" variant="strong" sx={{color:"#cad2c5",margin:"20px 0 20px 0"}}>Ultimi film visti
+                        <Button  sx={{color:"#cad2c5"}} component={Link} to={`/${username}/watched`}> <InfoIcon sx={{color:"#cad2c5"}} /> Più dettagli </Button>
                         </Typography>
                         <Grid container spacing={2} sx={{ marginBottom: 3 }}>
                             { profile.latestWatched.map((film) =>

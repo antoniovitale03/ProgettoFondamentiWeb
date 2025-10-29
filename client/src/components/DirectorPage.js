@@ -28,8 +28,8 @@ if(director){
                     <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={director.personalInfo.profile_image} alt="Immagine del direttore"/>
                 </Grid>
                 <Grid xs={12} sm={6} md={8} size={8}>
-                    {director.personalInfo.birthday && <Typography component="p" style={{fontSize:{xs:"15px", md:"2vw"}}}>Data di nascita: {director.personalInfo.birthday}</Typography> }
-                    {director.personalInfo.place_of_birth && <Typography component="p" style={{fontSize:{xs:"15px", md:"2vw"}}}>Luogo di nascita: {director.personalInfo.place_of_birth}</Typography> }
+                    {director.personalInfo.birthday && <Typography component="p" sx={{fontSize:"20px", marginBottom:"20px"}}>Data di nascita: {director.personalInfo.birthday}</Typography> }
+                    {director.personalInfo.place_of_birth && <Typography component="p" sx={{fontSize:"20px", marginBottom:"20px"}}>Luogo di nascita: {director.personalInfo.place_of_birth}</Typography> }
                     <Typography component="p" style ={{flexWrap:"wrap", fontSize:{xs:"15px", md:"2vw"}}}>Biografia: {director.personalInfo.biography}</Typography>
                 </Grid>
             </Grid>
@@ -37,7 +37,7 @@ if(director){
 
             {director.cast.length !== 0 ?
                 <Box>
-                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</Typography>
+                    <Typography sx={{fontSize:"2vw", margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</Typography>
                     <Grid container spacing={2}>
                         { director.cast.map(film =>
                             <Grid key={film._id} size={2} xs={12} sm={6} md={4} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}} >
@@ -46,7 +46,7 @@ if(director){
                         }
                     </Grid>
                 </Box>
-                : <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>{director.personalInfo.name} non ha performato in nessun film come attore/attrice</Typography>
+                : <Typography sx={{fontSize:"2vw", margin:"20px", fontWeight:"bold"}}>{director.personalInfo.name} non ha performato in nessun film come attore/attrice</Typography>
             }
 
             {director.crew.length !== 0 &&

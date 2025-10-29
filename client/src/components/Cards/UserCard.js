@@ -10,56 +10,56 @@ import BoltIcon from "@mui/icons-material/Bolt";
 
 function UserCard({ user, showRemoveButton, onUnfollow }) {
     return(
-        <Card sx={{ marginBottom: 10 }}>
+        <Card sx={{backgroundColor:"#a4c3b2ff", margin:"30px",alignItems:"center", justifyContent:"center"}}>
             <CardContent>
-                <Grid container spacing={2} >
+                <Grid container spacing={2}  >
                     <Grid size={2}>
                         <Button component={Link} to={`/${user.username}/profile`}>
-                            <Avatar />
+                            <Avatar sx={{display:"flex", justifyContent:"center"}} />
                         </Button>
                     </Grid>
 
                 <Grid size={3}>
                     <Typography component="p">
-                    <Typography component={Link} to={`/${user.username}/profile`}>
-                        {user.username}</Typography>
+                    <Link className="link_card" to={`/${user.username}/profile`}>
+                        {user.username}</Link>
                     </Typography>
-                    <Button component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>
+                    <Button sx={{color:"#344e41"}} component={Link} to={`/${user.username}/followers`} disabled={user.followers.length === 0}>
                         {user.followers.length} Followers
                     </Button>
-                    <Button component={Link} to={`/${user.username}/following`} disabled={user.following.length === 0}>
+                    <Button  sx={{color:"#344e41"}} component={Link} to={`/${user.username}/following`} disabled={user.following.length === 0}>
                         {user.following.length} Following
                     </Button>
                 </Grid>
 
-                <Grid size={4}>
+                <Grid size={6} sx={{display:"flex",justifyContent:"space-between"}}>
                     <Tooltip title={`Watchlist di ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/watchlist`}>
-                            <WatchLaterIcon />
+                            <WatchLaterIcon sx={{color:"#344e41"}}/>
                         </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Film visti da ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/watched`}>
-                            <VisibilityIcon />
+                            <VisibilityIcon sx={{color:"#344e41"}} />
                         </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Recensioni di ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/reviews`}>
-                            <ReviewsIcon />
+                            <ReviewsIcon sx={{color:"#344e41"}} />
                         </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Film preferiti di ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/favorites`}>
-                            <FavoriteIcon />
+                            <FavoriteIcon sx={{color:"#344e41"}} />
                         </IconButton>
                     </Tooltip>
 
                     <Tooltip title={`Attività di ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/activity`}>
-                            <BoltIcon />
+                            <BoltIcon sx={{color:"#344e41"}} />
                         </IconButton>
                     </Tooltip>
                 </Grid>
