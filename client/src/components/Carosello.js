@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Box, Button, Card, CardContent, CardMedia, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
@@ -10,8 +10,18 @@ function Carosello({ films, title, link }){
 
     //abbiamo bisogno di uno stato che tenga conto dell'indice
     const [indice, setIndice] = useState(0);
-    //numero di immagini visibili a schermo
-    const immvisibili = 5;
+
+    // numero di immagini visibili a schermo   
+    const [immvisibili, setImmvisibili] = useState(window.innerWidth <= 1500 ? 4 : 5);
+
+    useEffect(() => {
+    const handleResize = () => {
+        setImmvisibili(window.innerWidth <= 1500 ? 4 : 5);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const navigate = useNavigate();
     //ora inseriamo le funzioni per poter cambiare immagine
