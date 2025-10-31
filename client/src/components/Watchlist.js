@@ -7,7 +7,7 @@ import {Box, Grid, Stack, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
 import _ from "lodash";
-import SearchFilters from "./SearchFilters"; //per la deep comparison
+import SearchFilters from "./SearchFilters";
 import GetParams from "./hooks/useGetSearchParams"
 import {Link} from "react-router-dom";
 

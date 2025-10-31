@@ -26,15 +26,13 @@ function formatData(arrayFilm){
 exports.getHomePageFilms = async (req, res) => {
     try{
         let {userID} = req.query;
-        if(userID){ //la richiesta è stata fatta da un utente loggato
-            //trovo i film simili a quelli già visti
+        if(userID){
             let user = await User.findById(userID).populate("watched");
-            //ottengo i film visti per poter prendere 4 film casuali visti e per ognuno raccomandare 5 film (questo vale solo per il carosello, che
-            //ha un numero limitato di 20 film in modo che ad ogni caricamento mostro film raccomandati diversi)
+            //prendo 4 film casuali visti e per ognuno raccomando 5 film (per un totale di 20 nel carosello)
             var similarFilms = user.watched.sort(() => 0.5 - Math.random()).slice(0,4).map( async (film) => {
                 const response = await fetch(`https://api.themoviedb.org/3/movie/${film.id}/similar?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=1`);
                 const data = await response.json();
-                return formatData(data.results).slice(0,5)
+                return formatData(data.results).slice(0,5);
             })
             similarFilms = await Promise.all(similarFilms);
             similarFilms = similarFilms.flat();
@@ -42,38 +40,30 @@ exports.getHomePageFilms = async (req, res) => {
             similarFilms = null;
         }
 
-        const urls = [
-            `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=1`,
-            `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=1`,
-            `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=1`,
-            `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=1`,
-            `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY_TMDB}&language=en-EN`
-        ];
-        let responses = urls.map(url => fetch(url));
-        responses = await Promise.all(responses);
+        let fetchPopular = fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=1`);
+        let fetchUpcoming = fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=1`);
+        let fetchTopRated = fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=1`);
+        let fetchNowPlaying = fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=1`);
+        let fetchTrending = fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+        const responses = await Promise.all([fetchPopular, fetchUpcoming, fetchTopRated,fetchNowPlaying, fetchTrending]);
 
-        let data = responses.map(response => response.json());
-        data = await Promise.all(data);
-        data.forEach(film => {
-            film.results = formatData(film.results);
-        });
+        let data = await Promise.all(responses.map(response => response.json()));
+        data = data.map(film => formatData(film.results));
 
-        //le informazioni mostrate nei caroselli fanno riferimento solo alla prima pagina
         const homePageFilms = {
-            currentPopularFilms: data[0].results,
-            upcomingFilms: data[1].results,
-            topRatedFilms: data[2].results,
-            nowPlayingFilms: data[3].results,
-            trendingFilms: data[4].results,
-            similarFilms: similarFilms,
+            currentPopularFilms: data[0],
+            upcomingFilms: data[1],
+            topRatedFilms: data[2],
+            nowPlayingFilms: data[3],
+            trendingFilms: data[4],
+            similarFilms: similarFilms
         }
         res.status(200).json(homePageFilms);
     }catch(error){ res.status(500).json("Errore interno del server"); }
 }
 
-//funzioni utilizzate per mostrare i film più nel dettaglio nella singola componente, in base al numero di pagina
 exports.getCurrentPopularFilms = async (req, res) => {
-    const {pageNumber} = req.params;
+    const pageNumber = req.params.pageNumber;
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
         const data = await response.json();
@@ -82,7 +72,7 @@ exports.getCurrentPopularFilms = async (req, res) => {
 }
 
 exports.getUpcomingFilms = async (req, res) => {
-    const {pageNumber} = req.params;
+    const pageNumber = req.params.pageNumber;
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=${pageNumber}`);
         let data = await response.json();
@@ -91,7 +81,7 @@ exports.getUpcomingFilms = async (req, res) => {
 }
 
 exports.getTopRatedFilms = async (req, res) => {
-    const {pageNumber} = req.params;
+    const pageNumber = req.params.pageNumber;
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY_TMDB}&language=it-IT&page=${pageNumber}`);
         let data = await response.json();
@@ -100,7 +90,7 @@ exports.getTopRatedFilms = async (req, res) => {
 }
 
 exports.getNowPlayingFilms = async (req, res) => {
-    const {pageNumber} = req.params;
+    const pageNumber = req.params.pageNumber;
     try{
         const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.API_KEY_TMDB}&language=en-EN&region=IT&page=${pageNumber}`);
         let data = await response.json();
@@ -110,7 +100,7 @@ exports.getNowPlayingFilms = async (req, res) => {
 }
 
 exports.getTrendingFilms = async (req, res) => {
-    const {pageNumber} = req.params;
+    const pageNumber = req.params.pageNumber;
     try{
         const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY_TMDB}&language=en-EN&page=${pageNumber}`);
         let data = await response.json();
