@@ -4,7 +4,7 @@ import "../../CSS/Form.css"
 import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import {useAuth} from "../../context/authContext";
-function ModifyProfile(){
+export default function ModifyProfile(){
 
     const {showNotification} = useNotification();
     const {user, setUser} = useAuth();
@@ -105,4 +105,3 @@ function ModifyProfile(){
         </Box>
     )
 }
-export default ModifyProfile;

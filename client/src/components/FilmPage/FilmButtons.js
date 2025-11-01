@@ -21,7 +21,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import {useAuth} from "../../context/authContext"
 import {Link} from "react-router-dom";
 
-function FilmButtons({ film }) {
+export default function FilmButtons({ film }) {
 
     const {showNotification} = useNotification();
     const {user} = useAuth();
@@ -282,5 +282,3 @@ function FilmButtons({ film }) {
         </Box>
     )
 }
-
-export default FilmButtons;

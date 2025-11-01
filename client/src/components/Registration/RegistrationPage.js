@@ -9,7 +9,7 @@ import sleep from "../hooks/useSleep";
 import RegistrationForm from "./RegistrationForm";
 import VerificationForm from "./VerificationForm";
 
-function RegistrationPage() {
+export default function RegistrationPage() {
 
     const navigate = useNavigate();
     const {showNotification} = useNotification();
@@ -48,10 +48,3 @@ function RegistrationPage() {
 
     )
 }
-
-// (?=.*\d): Deve contenere almeno un numero.
-// (?=.*[a-z]): Deve contenere almeno una lettera minuscola.
-// (?=.*[A-Z]): Deve contenere almeno una lettera maiuscola.
-// (?=.*[!@#$%^&*]): Deve contenere almeno uno di questi caratteri speciali.
-// .{8,}: Deve essere lunga almeno 8 caratteri.
-export default RegistrationPage;

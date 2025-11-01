@@ -6,7 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import sleep from "../hooks/useSleep";
 
-function ForgotPasswordForm({ setStep, email }) {
+export default function ForgotPasswordForm({ setStep, email }) {
 
     useDocumentTitle("Hai dimenticato la tua password?");
     const {showNotification} = useNotification();
@@ -53,5 +53,3 @@ function ForgotPasswordForm({ setStep, email }) {
         </Box>
     )
 }
-
-export default ForgotPasswordForm;

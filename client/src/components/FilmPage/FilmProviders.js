@@ -2,7 +2,7 @@ import {Box, Tooltip, Typography} from "@mui/material";
 import * as React from "react";
 import '../../CSS/FilmProviders.css';
 
-function FilmProviders({ rent, buy, flatrate }) {
+export default function FilmProviders({ rent, buy, flatrate }) {
     return(
         <Box>
         {rent &&
@@ -44,5 +44,3 @@ function FilmProviders({ rent, buy, flatrate }) {
         </Box>
     )
 }
-
-export default FilmProviders;

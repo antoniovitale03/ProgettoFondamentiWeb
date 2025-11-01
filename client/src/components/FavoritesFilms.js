@@ -8,7 +8,7 @@ import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
 import {Link} from "react-router-dom";
 
-function FavoritesFilms(){
+export default function FavoritesFilms(){
     const [films, setFilms] = useState([]);
     const {showNotification} = useNotification();
     const {user} = useAuth();
@@ -59,4 +59,3 @@ function FavoritesFilms(){
         </Box>
     )
 }
-export default FavoritesFilms;

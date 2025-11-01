@@ -7,7 +7,7 @@ import ForgotPasswordForm from "./components/Login/ForgotPasswordForm";
 import {useEffect} from "react";
 // la componente principale App gestisce solo il routing per il percorso protetto dell'app (accessibile solo dopo il login)
 //per gestire il login uso localStorage in modo da salvare lo stato di login anche dopo aver chiuso il browser
-function App() {
+export default function App() {
     const {isLoggedIn, logout} = useAuth() // Leggo lo stato di login dal contesto
 
     //Effetto per verificare se il token è scaduto, nel caso si procede al logout
@@ -29,5 +29,3 @@ function App() {
         </Routes>
     )
 }
-
-export default App;

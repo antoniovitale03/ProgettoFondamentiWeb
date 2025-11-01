@@ -3,7 +3,7 @@ import {useState} from "react";
 import "../CSS/Form.css"
 import {Box, FormControl, InputLabel, Stack, Typography, TextField, Input, Button} from "@mui/material";
 import useDocumentTitle from "./hooks/useDocumentTitle";
-function Help(){
+export default function Help(){
     const [email, setEmail] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -54,5 +54,3 @@ function Help(){
         </Box>
     )
 }
-
-export default Help;

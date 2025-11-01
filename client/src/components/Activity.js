@@ -1,7 +1,7 @@
 import {Avatar, ListItem, ListItemIcon, Rating, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 
-function Activity({ activity }){
+export default function Activity({ activity }){
     if (activity.action === "ADD_TO_WATCHLIST" && activity.user) {
         return (
             <ListItem key={activity._id}>
@@ -74,5 +74,3 @@ function Activity({ activity }){
         )
     }
 }
-
-export default Activity;

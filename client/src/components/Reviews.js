@@ -11,7 +11,7 @@ import _ from "lodash";
 import GetParams from "./hooks/useGetSearchParams";
 import {Link} from "react-router-dom";
 
-function Reviews(){
+export default function Reviews(){
 
     const {user} = useAuth();
     const {username} = useParams();
@@ -92,5 +92,3 @@ function Reviews(){
         </Box>
     )
 }
-
-export default Reviews;

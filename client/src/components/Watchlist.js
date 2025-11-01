@@ -11,7 +11,7 @@ import SearchFilters from "./SearchFilters";
 import GetParams from "./hooks/useGetSearchParams"
 import {Link} from "react-router-dom";
 
-function Watchlist(){
+export default function Watchlist(){
 
     const {user} = useAuth();
     const {username} = useParams();
@@ -85,9 +85,7 @@ function Watchlist(){
                         <Typography component="h1" variant="strong">{username} non ha ancora aggiunto nessun film alla watchlist</Typography>
                     }
                 </Box>
-
             }
         </Box>
     )
 }
-export default Watchlist;

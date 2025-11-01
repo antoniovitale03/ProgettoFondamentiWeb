@@ -9,7 +9,7 @@ import api from "../../api"
 import {useNotification} from "../../context/notificationContext";
 import sleep from "../hooks/useSleep";
 
-function LoginPage() {
+export default function LoginPage() {
     useDocumentTitle("Login");
     const {showNotification} = useNotification();
 
@@ -43,5 +43,3 @@ function LoginPage() {
         </Box>
     )
 }
-
-export default LoginPage;

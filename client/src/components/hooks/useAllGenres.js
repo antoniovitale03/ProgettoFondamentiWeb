@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import api from "../../api";
 
-function useAllGenres() {
+export default function useAllGenres() {
 
     const [genres, setGenres] = useState(null);
     useEffect(() => {
@@ -11,5 +11,3 @@ function useAllGenres() {
         }, [])
     return genres;
 }
-
-export default useAllGenres;

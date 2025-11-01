@@ -6,7 +6,7 @@ import Activity from "./Activity";
 import useDocumentTitle from "./hooks/useDocumentTitle"
 import {useNotification} from "../context/notificationContext";
 
-function ActivityPage(){
+export default function ActivityPage(){
     const {showNotification} = useNotification();
     const [activity, setActivity] = useState(null);
     const {username} = useParams();
@@ -31,4 +31,3 @@ function ActivityPage(){
                 : <Typography component="h1" variant="strong">Ancora nessun'attività per {username}</Typography>
     )
 }
-export default ActivityPage;

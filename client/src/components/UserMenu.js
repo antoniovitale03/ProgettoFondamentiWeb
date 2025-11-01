@@ -10,7 +10,7 @@ import Settings from '@mui/icons-material/Settings';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 
 import {Link} from "react-router-dom";
-function UserMenu({ setIsUserMenuOpen }) {
+export default function UserMenu({ setIsUserMenuOpen }) {
     const {user, logout} = useAuth();
     const userMenuLinks = ['/', `/${user?.username}/profile`, `/${user?.username}/watched`, `/${user?.username}/favorites`, `/${user?.username}/reviews`, `/${user?.username}/watchlist`, `/${user?.username}/lists`];
     const userMenuNames = ["Home", "Il mio profilo", "Film visti", "I miei preferiti", "Le mie recensioni", "Film da guardare", "Le mie liste"];
@@ -40,4 +40,3 @@ function UserMenu({ setIsUserMenuOpen }) {
         </Box>
     )
 }
-export default UserMenu;

@@ -1,6 +1,6 @@
 import {Card, CardContent, CardMedia, Typography} from "@mui/material";
 
-function CrewMemberCard({ crewMember }){
+export default function CrewMemberCard({ crewMember }){
     return(
             <Card sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent>
@@ -10,5 +10,3 @@ function CrewMemberCard({ crewMember }){
             </Card>
     )
 }
-
-export default CrewMemberCard;

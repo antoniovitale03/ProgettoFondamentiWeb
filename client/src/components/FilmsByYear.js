@@ -8,7 +8,7 @@ import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import SearchFilters from "./SearchFilters";
 import GetParams from "./hooks/useGetSearchParams";
 
-function FilmsByYear(){
+export default function FilmsByYear(){
     let {year} = useParams();
     useDocumentTitle(`Film usciti nel ${year}`);
 
@@ -83,4 +83,3 @@ function FilmsByYear(){
         </Stack>
     )
 }
-export default FilmsByYear;

@@ -15,7 +15,7 @@ import '../../CSS/FilmPage.css';
 import {useNotification} from "../../context/notificationContext";
 
 // /film/filmTitle/filmID
-function FilmPage(){
+export default function FilmPage(){
 
     let {filmTitle, filmID } = useParams(); // uso useParams per prelevare il titolo del film e il suo id direttamente dall'url
     //N.B.: se il titolo ha dei trattini, vanno rimpiazzati con gli spazi per poterlo cercare successivamente e mostrarlo nella pagina
@@ -121,5 +121,3 @@ function FilmPage(){
         </Box>
     )
 }
-
-export default FilmPage;

@@ -7,7 +7,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 
 // /films/filmTitle/filmID/cast
-function CastPage(){
+export default function CastPage(){
     const {filmTitle, filmID} = useParams();
     const [cast, setCast] = useState([]);
     const {showNotification} = useNotification();
@@ -34,5 +34,3 @@ function CastPage(){
         </Stack>
         )
 }
-
-export default CastPage;

@@ -7,7 +7,7 @@ import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import sleep from "../hooks/useSleep";
 
-function DeleteAccount() {
+export default function DeleteAccount() {
 
     const [confirmEmail, setConfirmEmail] = useState("");
     const {showNotification} = useNotification();
@@ -47,5 +47,3 @@ function DeleteAccount() {
 
     )
 }
-
-export default DeleteAccount;

@@ -5,7 +5,7 @@ import {useNotification} from "../../context/notificationContext"
 import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
-function UpcomingFilms() {
+export default function UpcomingFilms() {
     useDocumentTitle("Film in uscita in Italia");
 
     const {showNotification} = useNotification();
@@ -61,5 +61,3 @@ function UpcomingFilms() {
         </Stack>
     )
 }
-
-export default UpcomingFilms;

@@ -1,7 +1,7 @@
 import FilmCard from "../Cards/FilmCard";
 import {Box, Grid, Typography} from "@mui/material";
 
-function FilmCollection({ collection }){
+export default function FilmCollection({ collection }){
     return(
         <Box>
             <Typography sx={{fontSize:{xs:"12px", md:"1.5vw"},margin:"5px"}}>La saga completa</Typography>
@@ -15,5 +15,3 @@ function FilmCollection({ collection }){
         </Box>
     )
 }
-
-export default FilmCollection;

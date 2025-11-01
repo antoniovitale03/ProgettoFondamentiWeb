@@ -12,7 +12,7 @@ import {
 import useDecades from "./hooks/useDecades";
 import useAllGenres from "./hooks/useAllGenres";
 
-function SearchFilters({filters, setFilters, decadeFilter, isLikedFilter}){
+export default function SearchFilters({filters, setFilters, decadeFilter, isLikedFilter}){
 
     const genres = useAllGenres();
     const decades = useDecades();
@@ -86,5 +86,3 @@ function SearchFilters({filters, setFilters, decadeFilter, isLikedFilter}){
         </Box>
     )
 }
-
-export default SearchFilters;

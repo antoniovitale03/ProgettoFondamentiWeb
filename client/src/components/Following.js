@@ -8,7 +8,7 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useAuth} from "../context/authContext";
 import {Link} from "react-router-dom";
 
-function Following() {
+export default function Following() {
 
     const {username} = useParams();
     const {showNotification} = useNotification();
@@ -50,5 +50,3 @@ function Following() {
         </Box>
     )
 }
-
-export default Following;

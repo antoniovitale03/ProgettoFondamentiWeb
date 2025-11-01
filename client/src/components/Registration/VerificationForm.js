@@ -4,7 +4,7 @@ import {Box, Button, Typography} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import {useNotification} from "../../context/notificationContext";
 
-function VerificationForm({ onVerify }){
+export default function VerificationForm({ onVerify }){
 
     const {showNotification} = useNotification();
 
@@ -47,5 +47,3 @@ function VerificationForm({ onVerify }){
         </Box>
     )
 }
-
-export default VerificationForm;

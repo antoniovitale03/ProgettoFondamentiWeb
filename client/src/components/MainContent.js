@@ -34,7 +34,7 @@ import Help from "./Help";
 import LoginPage from "./Login/LoginPage";
 import RegistrationPage from "./Registration/RegistrationPage";
 //*Il main Content occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
-function MainContent() {
+export default function MainContent() {
     return (
             <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: 50 }}>
                 <Routes>
@@ -81,5 +81,3 @@ function MainContent() {
             </Container>
         )
 }
-
-export default MainContent;

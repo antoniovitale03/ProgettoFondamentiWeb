@@ -1,6 +1,6 @@
 import {Box, MenuItem, Typography} from "@mui/material";
 
-function FilmDetails({ film }) {
+export default function FilmDetails({ film }) {
     return (
         <Box>
             <MenuItem>
@@ -30,5 +30,3 @@ function FilmDetails({ film }) {
         </Box>
     )
 }
-
-export default FilmDetails;

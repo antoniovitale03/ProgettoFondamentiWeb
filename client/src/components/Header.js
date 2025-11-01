@@ -12,7 +12,7 @@ import {Link} from "react-router-dom";
 import UserMenu from "../components/UserMenu";
 import logo from "../assets/images/logo.png";
 
-function Header() {
+export default function Header() {
     const {isLoggedIn, user} = useAuth();
     const [title, setTitle] = useState("");
     const [friendUsername, setFriendUsername] = useState("");
@@ -97,5 +97,3 @@ function Header() {
         </AppBar>
     )
 }
-
-export default Header;

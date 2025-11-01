@@ -11,7 +11,7 @@ import ReviewCard from "./Cards/ReviewCard";
 import {Link} from "react-router-dom";
 import {useParams} from "react-router-dom";
 
-function Profile(){
+export default function Profile(){
     const {user} = useAuth();
     const {username} = useParams();
 
@@ -118,7 +118,4 @@ function Profile(){
             </Box>
         )
     }
-
 }
-
-export default Profile;

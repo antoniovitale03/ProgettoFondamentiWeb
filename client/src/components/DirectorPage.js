@@ -5,7 +5,7 @@ import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Box, Grid, Typography} from "@mui/material";
-function DirectorPage() {
+export default function DirectorPage() {
     let { directorName, directorID } = useParams();
 
     const [director, setDirector] = useState(null);
@@ -65,5 +65,3 @@ if(director){
     )
 }
 }
-
-export default DirectorPage;

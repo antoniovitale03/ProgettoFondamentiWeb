@@ -1,6 +1,6 @@
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Typography, Box, Grid} from "@mui/material";
-function About() {
+export default function About() {
     useDocumentTitle("About")
     return (
         <Box>
@@ -36,5 +36,3 @@ function About() {
         </Box>
     )
 }
-
-export default About;

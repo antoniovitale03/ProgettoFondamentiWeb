@@ -11,7 +11,7 @@ import _ from "lodash"; //per la deep comparison
 import GetParams from "./hooks/useGetSearchParams";
 import {Link} from "react-router-dom";
 
-function Watched(){
+export default function Watched(){
 
     const {user} = useAuth();
     const {username} = useParams();
@@ -90,5 +90,3 @@ function Watched(){
         </Box>
     )
 }
-
-export default Watched;

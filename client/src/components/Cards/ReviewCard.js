@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import {Button, Card, CardContent, CardMedia, Grid, IconButton, Rating, Typography} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 
-function ReviewCard({ review, showRemoveButton, onRemove }){
+export default function ReviewCard({ review, showRemoveButton, onRemove }){
     return(
         <Card style={{ marginBottom: 10, height: '100%', width: '100%',backgroundColor:"#a4c3b2ff" }}>
             <CardContent>
@@ -52,5 +52,3 @@ function ReviewCard({ review, showRemoveButton, onRemove }){
         </Card>
     )
 }
-
-export default ReviewCard;

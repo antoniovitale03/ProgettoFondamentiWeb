@@ -7,7 +7,7 @@ import useDocumentTitle from "./hooks/useDocumentTitle";
 import {useNotification} from "../context/notificationContext";
 import {useAuth} from "../context/authContext";
 
-function List(){
+export default function List(){
 
     let {username, listName} = useParams();
     const {user} = useAuth();
@@ -53,5 +53,3 @@ function List(){
         </Stack>
     )
 }
-
-export default List;

@@ -10,7 +10,7 @@ import {useNotification} from "../context/notificationContext";
 import Carosello from "./Carosello";
 import {Link} from "react-router-dom";
 
-function Lists(){
+export default function Lists(){
 
     const {username} = useParams();
     const {user} = useAuth();
@@ -76,5 +76,3 @@ function Lists(){
 
     )
 }
-
-export default Lists;

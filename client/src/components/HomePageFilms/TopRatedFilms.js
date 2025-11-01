@@ -5,7 +5,7 @@ import {useNotification} from "../../context/notificationContext"
 import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
-function TopRatedFilms() {
+export default function TopRatedFilms() {
     useDocumentTitle("Film più acclamati");
 
     const {showNotification} = useNotification();
@@ -62,5 +62,3 @@ function TopRatedFilms() {
         </Stack>
     )
 }
-
-export default TopRatedFilms;

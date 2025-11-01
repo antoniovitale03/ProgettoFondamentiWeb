@@ -5,7 +5,7 @@ import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 import {Box, Grid, Typography} from "@mui/material";
-function ActorPage() {
+export default function ActorPage() {
     let { actorName } = useParams();
     actorName = actorName.replaceAll("-", " ");
 
@@ -68,5 +68,3 @@ if (actor){
 
     )}
 }
-
-export default ActorPage;

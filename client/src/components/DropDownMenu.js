@@ -1,5 +1,5 @@
 import {Box, Button, Menu} from '@mui/material';
-function DropDownMenu({ buttonContent, menuContent, isMenuOpen, setIsMenuOpen } ) {
+export default function DropDownMenu({ buttonContent, menuContent, isMenuOpen, setIsMenuOpen } ) {
     return (
         <Box>
             <Button onClick={(event) => setIsMenuOpen(event.currentTarget)}>
@@ -11,5 +11,3 @@ function DropDownMenu({ buttonContent, menuContent, isMenuOpen, setIsMenuOpen } 
         </Box>
     );
 }
-
-export default DropDownMenu;

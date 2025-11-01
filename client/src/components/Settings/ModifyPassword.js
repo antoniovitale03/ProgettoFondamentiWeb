@@ -4,7 +4,7 @@ import api from "../../api";
 import {useNotification} from "../../context/notificationContext";
 import {useNavigate} from "react-router-dom";
 
-function ModifyPassword() {
+export default function ModifyPassword() {
     const navigate = useNavigate();
     const {showNotification} = useNotification();
     const [oldPassword, setOldPassword] = useState("");
@@ -55,4 +55,3 @@ function ModifyPassword() {
         </Box>
     )
 }
-export default ModifyPassword;

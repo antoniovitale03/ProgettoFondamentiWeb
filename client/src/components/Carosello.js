@@ -6,7 +6,7 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 
-function Carosello({ films, title, link }){
+export default function Carosello({ films, title, link }){
 
     //abbiamo bisogno di uno stato che tenga conto dell'indice
     const [indice, setIndice] = useState(0);
@@ -74,4 +74,3 @@ function Carosello({ films, title, link }){
     </Box>
     );
 }
-export default Carosello;

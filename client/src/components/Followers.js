@@ -5,7 +5,7 @@ import api from "../api";
 import {Box, Typography} from "@mui/material";
 import UserCard from "./Cards/UserCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
-function Followers() {
+export default function Followers() {
 
     const {showNotification} = useNotification();
     const {username} = useParams();
@@ -28,5 +28,3 @@ function Followers() {
         </Box>
     )
 }
-
-export default Followers;

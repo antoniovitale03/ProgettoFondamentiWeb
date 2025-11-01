@@ -6,7 +6,7 @@ import {useNotification} from "../../context/notificationContext";
 import FilmCard from "../Cards/FilmCard";
 import api from "../../api";
 
-function SimilarFilms(){
+export default function SimilarFilms(){
 
     const {showNotification} = useNotification();
     const {filmTitle, filmID} = useParams();
@@ -81,5 +81,3 @@ function SimilarFilms(){
         </Stack>
     )
 }
-
-export default SimilarFilms;

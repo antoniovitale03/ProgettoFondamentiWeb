@@ -5,7 +5,7 @@ import {Box, Button, FormControl, Input, InputLabel, Typography} from "@mui/mate
 import {Link} from "react-router-dom";
 import sleep from "../hooks/useSleep";
 
-function RegistrationForm({ email, setEmail, setStep }) {
+export default function RegistrationForm({ email, setEmail, setStep }) {
 
     const {showNotification} = useNotification();
 
@@ -64,5 +64,3 @@ function RegistrationForm({ email, setEmail, setStep }) {
 
     )
 }
-
-export default RegistrationForm;

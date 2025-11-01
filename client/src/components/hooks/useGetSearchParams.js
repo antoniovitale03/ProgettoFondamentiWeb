@@ -1,4 +1,4 @@
-function GetParams(filters){
+export default function GetParams(filters){
     const params = new URLSearchParams();
     if (filters.page) params.append("page", filters.page);
     if (filters.genre !== "") params.append("genre", filters.genre);
@@ -9,4 +9,3 @@ function GetParams(filters){
     if (filters.isLiked) params.append("isLiked", filters.isLiked); //parametro iniziale = false
     return params;
 }
-export default GetParams;

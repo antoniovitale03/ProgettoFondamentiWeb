@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
 
-function Home(){
+export default function Home(){
     useDocumentTitle("Home")
     const {user} = useAuth();
     const {showNotification} = useNotification()
@@ -53,4 +53,3 @@ function Home(){
 
           )
 }
-export default Home;

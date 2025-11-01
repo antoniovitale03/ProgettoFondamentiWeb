@@ -7,7 +7,7 @@ import FilmCard from "./Cards/FilmCard";
 import SearchFilters from "./SearchFilters";
 import GetParams from "./hooks/useGetSearchParams";
 
-function Archive(){
+export default function Archive(){
     useDocumentTitle("Archive");
     const {showNotification} = useNotification();
 
@@ -84,5 +84,3 @@ function Archive(){
         </Stack>
     )
 }
-
-export default Archive;

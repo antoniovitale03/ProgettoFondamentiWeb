@@ -6,7 +6,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import {useNavigate} from 'react-router-dom';
 import "../../CSS/FilmCard.css"
 
-function FilmCard({ film, showRemoveButton, onRemove }){
+export default function FilmCard({ film, showRemoveButton, onRemove }){
 
     const navigate = useNavigate();
 
@@ -60,4 +60,3 @@ function FilmCard({ film, showRemoveButton, onRemove }){
         </Card>
     )
 }
-export default FilmCard;

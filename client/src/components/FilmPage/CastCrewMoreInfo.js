@@ -13,7 +13,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {NavLink} from "react-router-dom";
 import FilmDetailsMenu from "./FilmDetailsMenu";
 
-function CastCrewMoreInfo({ film }) {
+export default function CastCrewMoreInfo({ film }) {
 
     return (
         <Box sx={{marginBottom:"20px"}}>
@@ -82,5 +82,3 @@ function CastCrewMoreInfo({ film }) {
         </Box>
     )
 }
-
-export default CastCrewMoreInfo;

@@ -5,7 +5,7 @@ import {useNotification} from "../../context/notificationContext"
 import {Grid, Pagination, Stack, Typography} from "@mui/material";
 import FilmCard from "../Cards/FilmCard";
 
-function NowPlayingFilms() {
+export default function NowPlayingFilms() {
     useDocumentTitle("Film attualmente al cinema");
 
     const {showNotification} = useNotification();
@@ -60,5 +60,3 @@ function NowPlayingFilms() {
         </Stack>
     )
 }
-
-export default NowPlayingFilms;

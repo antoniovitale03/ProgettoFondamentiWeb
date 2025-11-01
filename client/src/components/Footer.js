@@ -7,8 +7,7 @@ import XIcon from '@mui/icons-material/X';
 import {Link} from "react-router-dom";
 
 
-function Footer() {
-
+export default function Footer() {
     return (
         <AppBar position="static" sx= {{ backgroundColor:"#52796f" }} >
             <Toolbar sx={{ width: "100%" }}>
@@ -38,5 +37,3 @@ function Footer() {
 
     )
 }
-
-export default Footer;

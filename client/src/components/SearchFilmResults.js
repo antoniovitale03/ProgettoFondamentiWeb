@@ -8,7 +8,7 @@ import api from "../api";
 import SearchFilters from "./SearchFilters";
 import GetParams from "./hooks/useGetSearchParams";
 //questo componente serve a mostrare i risultati di ricerca di un film
-function SearchFilmResults() {
+export default function SearchFilmResults() {
 
     let {filmTitle} = useParams();
     filmTitle = filmTitle.replaceAll("-", " ");
@@ -51,4 +51,3 @@ function SearchFilmResults() {
                 : <Typography component="h1">Caricamento dei risultati...</Typography>
     )
 }
-export default SearchFilmResults;

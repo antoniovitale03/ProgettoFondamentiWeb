@@ -8,7 +8,7 @@ import sleep from "../hooks/useSleep";
 import "../../CSS/Form.css"
 
 
-function LoginForm({  setStep, email, setEmail }) {
+export default function LoginForm({  setStep, email, setEmail }) {
 
     const {setUser} = useAuth();
     const {showNotification} = useNotification();
@@ -70,5 +70,3 @@ function LoginForm({  setStep, email, setEmail }) {
         </Box>
     )
 }
-
-export default LoginForm;

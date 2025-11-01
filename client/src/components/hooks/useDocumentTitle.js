@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 
-function useDocumentTitle(newTitle){
+export default function useDocumentTitle(newTitle){
     useEffect(() => {
         document.title = newTitle;
 
@@ -10,5 +10,3 @@ function useDocumentTitle(newTitle){
         };
     });
 }
-
-export default useDocumentTitle;

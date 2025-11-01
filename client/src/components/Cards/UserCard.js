@@ -8,7 +8,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import BoltIcon from "@mui/icons-material/Bolt";
 
 
-function UserCard({ user, showRemoveButton, onUnfollow }) {
+export default function UserCard({ user, showRemoveButton, onUnfollow }) {
     return(
         <Card sx={{backgroundColor:"#a4c3b2ff", margin:"30px",alignItems:"center", justifyContent:"center"}}>
             <CardContent>
@@ -78,5 +78,3 @@ function UserCard({ user, showRemoveButton, onUnfollow }) {
         </Card>
     )
 }
-
-export default UserCard;
