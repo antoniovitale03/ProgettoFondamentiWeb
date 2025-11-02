@@ -157,12 +157,10 @@ exports.loginVerify = async (req, res) => {
         return res.status(400).json('Codice scaduto.');
     }
 
-    if(pendingUser.verificationCode !== verificationCode) {
-        return res.status(400).json("Codice di verifica non corretto.");
-    }else{
-        await PendingUser.deleteOne({ email });
-        return res.status(200).json("Codice di verifica corretto");
-    }
+    if(pendingUser.verificationCode !== verificationCode) return res.status(400).json("Codice di verifica non corretto.");
+
+    await PendingUser.deleteOne({ email });
+    res.status(200).json("Codice di verifica corretto");
 }
 
 exports.setNewPassword = async (req, res) => {

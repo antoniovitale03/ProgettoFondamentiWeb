@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
+import "../CSS/home.css";
 
 export default function Carosello({ films, title, link }){
 
@@ -31,7 +32,7 @@ export default function Carosello({ films, title, link }){
     const precedente = () => setIndice(i => Math.max(i - 1, 0));
 
     return(
-    <Box className="carosello">
+    <Box sx={{ minWidth: "90vw" }}>
         <Typography component="p" variant="strong" sx={{ fontSize:"50px", color:"#cad2c5" }}>
                 {title}
             {link &&
@@ -41,21 +42,18 @@ export default function Carosello({ films, title, link }){
             }
         </Typography>
 
-        <Box sx={{textAlign: "center", display: "flex", overflow: "hidden", gap: 2, justifyContent: "center", whiteSpace: "nowrap",
-            textOverflow:"ellipsis", alignContent:"center", marginTop:"2"
-        }}>
+        <Box className="box-carosello">
             {films.slice(indice, indice + immvisibili).map((film, index) => (
                 <Card style={{ justifyContent:"center", borderRadius: "50px",
                     alignItems:"center", overflow:"hidden"}} key={index} sx={{backgroundColor:"#a4c3b2ff"}}>
                     <CardContent className="riquadro">
-                        <Button sx={{color:"#344e41", fontSize:"20px", fontWeight:"bold" }} component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
+                        <Button sx={{color:"#344e41", fontSize:"20px", fontWeight:"bold", textOverflow: "ellipsis" }} component={Link} to={`/film/${film.title.replaceAll(" ", "-")}/${film._id}`}>
                             <strong>{film.title}</strong>
                         </Button>
                         <Button component={Link} to={`/films/${film.release_year}`} sx={{color:"#344e41", fontSize:"20px"}} >
                                 <strong>({film.release_year})</strong>
                         </Button>
-
-                        <CardMedia component="img" image={film.poster_path} className="box"
+                        <CardMedia component="img" image={film.poster_path} className="carosello-image"
                             onClick={() => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}                        />
                 </CardContent>
             </Card>

@@ -48,7 +48,7 @@ exports.getHomePageFilms = async (req, res) => {
         const responses = await Promise.all([fetchPopular, fetchUpcoming, fetchTopRated,fetchNowPlaying, fetchTrending]);
 
         let data = await Promise.all(responses.map(response => response.json()));
-        data = data.map(film => formatData(film.results));
+        data = data.map(response => formatData(response.results));
 
         const homePageFilms = {
             currentPopularFilms: data[0],

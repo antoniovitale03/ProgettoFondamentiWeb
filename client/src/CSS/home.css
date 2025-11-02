@@ -14,44 +14,51 @@ body{
 }
 
 .card{
-    max-width:max-content;
+    max-width: max-content;
     max-height: 50%;
     width: 100%;
     height: 60%;
+    border-radius: 60px;
 }
 
+.box-carosello{
+    text-align: center;
+    display: flex;
+    overflow: hidden;
+    gap: 16px;
+    justify-content: center;
+    white-space: nowrap;
+    text-overflow-ellipsis: auto;
+    align-content: center;
+    margin-top: 16px;
+}
 
-.box {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.carosello-image {
+    transition: transform 0.3s ease;
     width: 17vw;
     height: 45vh;
-    object-fit: fill;
     border-radius:30px;
-
 }
 
-.box:hover {
+.carosello-image:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
 title{
     font-size: 50;
     font-family: 'Prosto One';
 }
+
 #titolo1{
     text-align: center;
     color: #cad2c5;
     font-size: 50px;
     font-family: 'Prosto One';
 }
+
 .riquadro{
     width:15vw;
     text-overflow:"ellipsis"
-}
-.carosello{
-    width: 90vw;
-    min-width: 90vw;
 }
 
 p{

@@ -25,11 +25,10 @@ function getImageUrl(baseUrl, size, imagePath){
 async function getFilmDirector(filmID) {
     const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/credits?api_key=${process.env.API_KEY_TMDB}`);
     const credits = await creditsResponse.json();
-
     const directorObject = credits.crew.find( (member) => member.job === 'Director');
-
     return directorObject ? {name: directorObject.name, id: directorObject.id} : null;
 }
+
 async function getFilmTrailer(filmID) {
     const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/videos?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
     let data = await response.json();
@@ -100,8 +99,7 @@ exports.getFilmsFromSearch = async (req, res) => {
     const {genre, decade, minRating, sortByDate, sortByPopularity} = req.query;
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY_TMDB}&query=${filmTitle}`);
     const data = await response.json();
-    let films = data.results;
-    films = films.map(async (film) => {  //array di Promise
+    let films = data.results.map(async (film) => {  //array di Promise
         const release_year = film.release_date ? new Date(film.release_date).getFullYear() : null;
         let director = await getFilmDirector(film.id);
         delete film.release_date;
@@ -120,11 +118,11 @@ exports.getFilmsFromSearch = async (req, res) => {
         .filter( film => !decade || film.release_year >= parseInt(decade) && film.release_year <= parseInt(decade) + 9 )
         .filter( film => !minRating || (film.vote_average)/2 <= parseInt(minRating));
 
-    if(sortByDate === "Dal più recente") filteredFilms = filteredFilms.sort((a,b) => b.release_year - a.release_year);
-    if(sortByDate === "Dal meno recente") filteredFilms = filteredFilms.sort((a,b) => a.release_year - b.release_year);
+    if(sortByDate === "Dal più recente") filteredFilms = filteredFilms.sort((a,b) => a.release_year < b.release_year ? 1 : -1);
+    if(sortByDate === "Dal meno recente") filteredFilms = filteredFilms.sort((a,b) => a.release_year < b.release_year ? -1 : 1);
 
-    if (sortByPopularity === "Dal più popolare") filteredFilms = filteredFilms.sort((a,b) => b.popularity - a.popularity);
-    if (sortByPopularity === "Dal meno popolare") filteredFilms = filteredFilms.sort((a,b) => a.popularity - b.popularity);
+    if (sortByPopularity === "Dal più popolare") filteredFilms = filteredFilms.sort((a,b) => a.popularity < b.popularity ? 1 : -1);
+    if (sortByPopularity === "Dal meno popolare") filteredFilms = filteredFilms.sort((a,b) => a.popularity < b.popularity ? -1 : 1);
 
     res.status(200).json(filteredFilms);
 }
@@ -152,8 +150,8 @@ exports.getArchiveFilms = async (req, res) => {
 
         let films = formatData(data.results);
 
-        if(sortByDate === "Dal più recente") films = films.sort((a,b) => b.release_year - a.release_year);
-        if(sortByDate === "Dal meno recente") films = films.sort((a,b) => a.release_year - b.release_year);
+        if(sortByDate === "Dal più recente") films = films.sort((a,b) => a.release_year < b.release_year ? 1 : -1);
+        if(sortByDate === "Dal meno recente") films = films.sort((a,b) => a.release_year < b.release_year ? -1 : 1);
 
         res.status(200).json({ films: films, totalPages: data.total_pages });
     }catch(error){
@@ -179,18 +177,10 @@ exports.getFilmsByYear = async (req, res) => {
         let films = formatData(data.results);
 
         if(sortByDate === "Dal più recente"){
-            films = films.sort((a,b) => {
-                const dateA = new Date(a.release_date);
-                const dateB = new Date(b.release_date);
-                return dateB - dateA;
-            })
+            films = films.sort((a,b) => new Date(a.release_date) < new Date(b.release_date) ? 1 : -1);
         }
         if (sortByDate === "Dal meno recente"){
-            films = films.sort((a,b) => {
-                const dateA = new Date(a.release_date);
-                const dateB = new Date(b.release_date);
-                return dateA - dateB
-            })
+            films = films.sort((a,b) => new Date(a.release_date) < new Date(b.release_date) ? -1 : 1);
         }
 
         data = { films: films, totalPages: data.total_pages }
@@ -464,9 +454,9 @@ exports.getDirectorInfo = async (req, res) => {
                 delete acc[filmID].job;
             }
             return acc;
-        }, {}); // L'oggetto vuoto {} è il valore iniziale dell'accumulatore
+        }, {}); // {} è il valore iniziale dell'accumulatore
 
-        directorCrew = Object.values(directorCrew); //trasformo tra un oggetto che contiene altri oggetti in un array di oggetti
+        directorCrew = Object.values(directorCrew); //trasformo un oggetto che contiene altri oggetti in un array di oggetti
         res.status(200).json({personalInfo: directorPersonalInfo, cast: directorCast, crew: directorCrew});
 
     }catch(error){ res.status(500).json("Errore interno del server."); }

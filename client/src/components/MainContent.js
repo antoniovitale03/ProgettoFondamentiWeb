@@ -36,7 +36,7 @@ import RegistrationPage from "./Registration/RegistrationPage";
 //*Il main Content occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
 export default function MainContent() {
     return (
-            <Container style={{ flexGrow: 1, maxWidth: '90%', marginTop: '50px', marginBottom: 50 }}>
+            <Container style={{ flexGrow: 1, maxWidth: '90vw', marginTop: '5vw', marginBottom: 50 }}>
                 <Routes>
                     <Route path="/" element={<Home/>} />
                     <Route path="/:username/profile" element={<Profile />} />

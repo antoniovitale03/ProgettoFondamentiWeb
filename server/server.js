@@ -14,12 +14,16 @@ const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_P
 
 const app = express();
 
+//il server può accettare richieste HTTP (che possono includere cookie) da un'origine specifica
 app.use(cors({
     origin: CLIENT_URL,
     credentials: true
 }));
 
-app.use(express.json({ limit: '50mb' }));
+//il server può leggere e interpretare i dati in JSON che riceve dal front end (ad esempio con req.body)
+app.use(express.json({limit: '50mb'}));
+
+//il server può leggere i dati inviati tramite cookie (ad esempio con req.cookies.refreshtoken)
 app.use(cookieParser());
 
 

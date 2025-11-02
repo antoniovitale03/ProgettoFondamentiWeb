@@ -58,7 +58,6 @@ exports.addReview = async (req, res) => {
             {$addToSet: { activity: newActivity._id }}
         )
 
-
         res.status(200).json(`Recensione di "${film.title}" salvata correttamente!`);
     }catch(error){ res.status(500).json("Errore interno del server."); }
 
