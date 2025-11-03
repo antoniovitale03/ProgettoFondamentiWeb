@@ -62,7 +62,7 @@ export default function LoginForm({  setStep, email, setEmail }) {
             </Box>
 
             <Box className="forgot-password-container">
-                <Button className="link-style-button" onClick={handleForgotPassword} sx={{ color: "white" }} disabled={email === ""}>
+                <Button className="link-style-button" onClick={handleForgotPassword} disabled={email === ""}>
                     Hai dimenticato la password?
                 </Button>
             </Box>

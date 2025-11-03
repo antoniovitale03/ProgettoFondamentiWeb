@@ -1,5 +1,5 @@
 import LoginPage from "./components/Login/LoginPage";
-import Panel from "./components/Panel";
+import Layout from "./components/Layout";
 import {Navigate, Route, Routes} from "react-router-dom";
 import RegistrationPage from "./components/Registration/RegistrationPage"
 import {useAuth} from "./context/authContext";
@@ -25,7 +25,7 @@ export default function App() {
             <Route path="/registration" element={!isLoggedIn ? <RegistrationPage /> : <Navigate to="/" />} />
             <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-            <Route path="/*" element={<Panel /> } />
+            <Route path="/*" element={<Layout /> } />
         </Routes>
     )
 }

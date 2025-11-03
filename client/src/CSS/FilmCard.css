@@ -20,9 +20,7 @@
 .link_card:hover{
     overflow: visible;
     white-space: normal;
-    z-index: 5; /* si vede sopra altri elementi */
 }
-
 
 /* CSS immagine CardMedia */
 .card_media{
