@@ -4,11 +4,14 @@ body{
 
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Prosto+One&family=Vast+Shadow&display=swap');
 
-#titolohome1{
+#titolo{
     text-align: center;
+    color: #cad2c5;
+    font-size: 50px;
+    font-family: 'Prosto One';
 }
 
-#sottotitolo{
+#slogan{
     text-align: center;
     font-family: 'Prosto One';
 }
@@ -22,14 +25,10 @@ body{
 }
 
 .box-carosello{
-    text-align: center;
     display: flex;
-    overflow: hidden;
-    gap: 16px;
+    flex-direction: row;
     justify-content: center;
-    white-space: nowrap;
-    text-overflow-ellipsis: auto;
-    align-content: center;
+    gap: 16px;
     margin-top: 16px;
 }
 
@@ -44,24 +43,4 @@ body{
     transform: scale(1.05);
 }
 
-title{
-    font-size: 50;
-    font-family: 'Prosto One';
-}
-
-#titolo1{
-    text-align: center;
-    color: #cad2c5;
-    font-size: 50px;
-    font-family: 'Prosto One';
-}
-
-.riquadro{
-    width:15vw;
-    text-overflow:"ellipsis"
-}
-
-p{
-    color: #cad2c5
-}
 

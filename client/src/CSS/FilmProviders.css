@@ -5,8 +5,8 @@
     flex-wrap: wrap;
 }
 
-.img{
-    width: 6vw;
+.provider-image{
+    width: 3vw;
     height: auto;
     object-fit: contain;
     border: 2px solid black;

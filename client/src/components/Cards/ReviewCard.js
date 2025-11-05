@@ -1,8 +1,11 @@
-import {Link} from "react-router-dom";
-import {Button, Card, CardContent, CardMedia, Grid, IconButton, Rating, Typography} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
+import {Box, Card, CardContent, CardMedia, Grid, IconButton, Rating, Typography} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
+import "../../CSS/FilmCard.css";
 
 export default function ReviewCard({ review, showRemoveButton, onRemove }){
+    const navigate = useNavigate();
+
     return(
         <Card style={{ marginBottom: 10, height: '100%', width: '100%',backgroundColor:"#a4c3b2ff" }}>
             <CardContent>
@@ -10,17 +13,18 @@ export default function ReviewCard({ review, showRemoveButton, onRemove }){
 
                     {/* Sezione di sinistra: Locandina + titolo + anno */}
                     <Grid size={4} sx={{ alignItems: 'center' }}>
-                            <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`} sx={{color:"#344e41"}}>
-                                <strong>{review.film.title} </strong></Button>
+                        <Box className="box_testo">
+                            <Link className="link_card" to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
+                                <strong>{review.film.title}</strong>
+                            </Link>
                             {
                                 review.film.release_year &&
-                                <Button component={Link} to={`/films/${review.film.release_year}`} sx={{ display: 'inline', color:"#344e41" }}>
-                                    <strong>     ({review.film.release_year})</strong>
-                                </Button>
+                                <Link className="link_card" to={`/films/${review.film.release_year}`}>
+                                    <strong>({review.film.release_year})</strong>
+                                </Link>
                             }
-                            <Button component={Link} to={`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`}>
-                                <CardMedia component="img" image={review.film.poster_path} />
-                            </Button>
+                        </Box>
+                        <CardMedia component="img" image={review.film.poster_path} className="card_media" onClick={ () => navigate(`/film/${review.film.title.replaceAll(" ", "-")}/${review.film._id}`) }/>
 
                     </Grid>
 

@@ -10,7 +10,7 @@ export default function FilmProviders({ rent, buy, flatrate }) {
                 <Typography  component="p" className="text">Noleggia</Typography>
                 { rent.map( film =>
                         <Tooltip title={film.provider_name}>
-                                <img className="img" src={film.logo_path} alt=""/>
+                                <img className="provider-image" src={film.logo_path} alt=""/>
                         </Tooltip>
                 )
                 }
@@ -23,7 +23,7 @@ export default function FilmProviders({ rent, buy, flatrate }) {
                 <Typography component="p" className="text">Guarda in streaming</Typography>
                 { flatrate.map( film =>
                     <Tooltip title={film.provider_name}>
-                            <img className="img" src={film.logo_path} alt=""/>
+                            <img className="provider-image" src={film.logo_path} alt=""/>
                     </Tooltip>
                 )
                 }
@@ -35,7 +35,7 @@ export default function FilmProviders({ rent, buy, flatrate }) {
                 <Typography component="p" className="text">Acquista</Typography>
                     { buy.map( film =>
                         <Tooltip title={film.provider_name}>
-                            <img className="img" src={film.logo_path} alt=""/>
+                            <img className="provider-image" src={film.logo_path} alt=""/>
                         </Tooltip>
                     )
                     }

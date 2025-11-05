@@ -11,6 +11,7 @@ import FilmProviders from "./FilmProviders";
 import CastCrewMoreInfo from "./CastCrewMoreInfo";
 import FilmCollection from "./FilmCollection";
 import FilmButtons from "./FilmButtons";
+import PopularReviews from "./PopularReviews";
 import '../../CSS/FilmPage.css';
 import {useNotification} from "../../context/notificationContext";
 
@@ -63,8 +64,9 @@ export default function FilmPage(){
                 </p>
             </p>
             <p className="testo">Durata: {film.duration}</p>
-            <Grid container spacing={4}>
-                <Grid xs={12} sm={6} md={4} lg={3} size={3}>
+            <Grid container spacing={6}>
+                {/* colonna di sinistra */}
+                <Grid size={4}>
 
                     <img className="locandina" src={film?.poster_path} alt="Locandina del film" />
 
@@ -91,7 +93,7 @@ export default function FilmPage(){
                 </Grid>
 
                 {/* colonna di destra */}
-                <Grid xs={12} sm={8} size={8}>
+                <Grid size={8}>
                     <p className="testo">{film.tagline}</p> {/* //slogan film */}
                     <p className="testo">{film.overview}</p> {/* //trama */}
                     <Stack className="stack" direction="row" spacing={1}>
@@ -106,18 +108,16 @@ export default function FilmPage(){
                             <Chip sx={{fontSize:{xs:"13px", md:"1.2vw", color:"#cad2c5",backgroundColor: "#52796f",border:"1px solid black"}}} label={genre.name} />) }
                     </Stack>
 
-
                     <CastCrewMoreInfo film={film} />
 
                     🎬<Link className="link" id="film_simili" to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
                     Film simili a "{film.title}"</Link>
 
-                    <Box>
-                        <FilmCollection collection={film.collection} />
-                    </Box>
+                    {film.collection && <FilmCollection collection={film.collection} />}
 
                 </Grid>
             </Grid>
+            {film.popularReviews && <PopularReviews reviews={film.popularReviews} />  }
         </Box>
     )
 }

@@ -1,7 +1,7 @@
 import CrewMemberCard from './Cards/CrewMemberCard'
 import {useParams} from "react-router-dom";
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Box, Grid, Typography} from "@mui/material";
+import {Grid, Stack, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
@@ -22,7 +22,7 @@ export default function CrewPage(){
     }, [filmTitle, filmID, showNotification])
 
     return(
-        <Box marginBottom={10}>
+        <Stack spacing={7}>
             <Typography component="h1" variant="strong">Crew di "{filmTitle}" ({crew?.length} membri)</Typography>
             <Grid container spacing={2} marginBottom={10}>
                 {
@@ -32,7 +32,7 @@ export default function CrewPage(){
                         </Grid>
                     )}
             </Grid>
-        </Box>
+        </Stack>
 
     )
 }

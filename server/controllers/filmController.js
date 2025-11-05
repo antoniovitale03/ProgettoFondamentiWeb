@@ -73,9 +73,11 @@ async function getCastCrewPreview(filmID){
     return {cast: cast, crew: crew}
 }
 
-//async function getUserReviews(filmID){
-    //const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/reviews?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
-    //return await response.json();
+async function getUserReviews(filmID) {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${filmID}/reviews?api_key=${process.env.API_KEY_TMDB}&language=en-EN`);
+    const data = await response.json();
+    return data.results;
+}
 
 exports.getSimilarFilms = async (req, res) => {
     try{
@@ -223,10 +225,6 @@ exports.getFilm = async (req, res) => {
         let avgRating = (film.vote_average)/2; //rating in quinti
         avgRating = avgRating !== 0 ? Number(avgRating.toFixed(1)) : null;
 
-        //trovo le recensioni più popolari del film (funzionalità futura)
-        //const reviews = await getUserReviews(filmID);
-        //console.log(reviews);
-
         const hours = Math.floor(film.runtime / 60);
         const minutes = film.runtime % 60;
         const duration = `${hours}h ${minutes}m`;
@@ -274,6 +272,7 @@ exports.getFilm = async (req, res) => {
             rent: rent,
             buy: buy,
             flatrate: flatrate,
+            popularReviews: await getUserReviews(filmID),
             duration: duration,
         }
         res.status(200).json(film);

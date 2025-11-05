@@ -10,12 +10,12 @@ import BoltIcon from "@mui/icons-material/Bolt";
 
 export default function UserCard({ user, showRemoveButton, onUnfollow }) {
     return(
-        <Card sx={{backgroundColor:"#a4c3b2ff", margin:"30px",alignItems:"center", justifyContent:"center"}}>
+        <Card sx={{backgroundColor:"#a4c3b2ff", marginTop:"1vw", alignItems:"center", justifyContent:"center", borderRadius: '3%'}}>
             <CardContent>
                 <Grid container spacing={2}  >
                     <Grid size={2}>
                         <Button component={Link} to={`/${user.username}/profile`}>
-                            <Avatar sx={{display:"flex", justifyContent:"center"}} />
+                            <Avatar sx={{ display:"flex", justifyContent:"center" }} />
                         </Button>
                     </Grid>
 
@@ -32,7 +32,7 @@ export default function UserCard({ user, showRemoveButton, onUnfollow }) {
                     </Button>
                 </Grid>
 
-                <Grid size={7} sx={{display:"flex",justifyContent:"space-between"}}>
+                <Grid size={7} sx={{display:"flex", justifyContent:"space-between"}}>
                     <Tooltip title={`Watchlist di ${user.username}`}>
                         <IconButton component={Link} to={`/${user.username}/watchlist`}>
                             <WatchLaterIcon sx={{color:"#344e41"}}/>
@@ -66,14 +66,13 @@ export default function UserCard({ user, showRemoveButton, onUnfollow }) {
                     {
                         showRemoveButton &&
                         <Tooltip title={`Rimuovi ${user.username} dai seguiti`}>
-                            <Button onClick={ () => onUnfollow(user._id, user.username) }>
+                            <IconButton onClick={ () => onUnfollow(user._id, user.username) }>
                                 <CloseIcon sx={{color:"#344e41"}} />
-                            </Button>
+                            </IconButton>
                         </Tooltip>
                     }
                 </Grid>
                 </Grid>
-
             </CardContent>
         </Card>
     )

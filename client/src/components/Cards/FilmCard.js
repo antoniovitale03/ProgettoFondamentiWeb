@@ -35,7 +35,7 @@ export default function FilmCard({ film, showRemoveButton, onRemove }){
                         }
                 </Box>
 
-                <CardMedia className="card_media" component="img" image={film.poster_path} onClick={ () => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}/>
+                <CardMedia className="card_media" component="img" image={film.poster_path} onClick={ () => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)} />
 
                 { film.director &&
 

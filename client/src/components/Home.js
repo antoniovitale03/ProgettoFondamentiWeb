@@ -1,6 +1,6 @@
 import {useAuth} from "../context/authContext"
 import useDocumentTitle from "./hooks/useDocumentTitle";
-import {Box, Card, CardMedia, Container} from "@mui/material";
+import {Box, Card, CardMedia} from "@mui/material";
 import '../CSS/home.css'
 import Carosello from "./Carosello"
 import {useEffect, useState} from "react";
@@ -25,16 +25,13 @@ export default function Home(){
     return (
         <Box>
             <Box>
-                <h1 id="titolo1"> CineSync</h1>
+                <h1 id="titolo"> CineSync</h1>
                 
-                <h2 id="sottotitolo">"Dove ogni film trova la sua voce"</h2>
+                <h2 id="slogan">"Dove ogni film trova la sua voce"</h2>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px'}}>
                 <Card className="card">
-                    <CardMedia
-                        component="img"
-                        image="https://i.imgur.com/Abm0wRq.jpg"
-                    />
+                    <CardMedia component="img" image="https://i.imgur.com/Abm0wRq.jpg" />
                 </Card>
             </Box>
 
