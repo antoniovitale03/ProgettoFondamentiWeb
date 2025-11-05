@@ -31,12 +31,10 @@ import SimilarFilms from "./FilmPage/SimilarFilms";
 import About from "./About";
 import Contact from "./Contact";
 import Help from "./Help";
-import LoginPage from "./Login/LoginPage";
-import RegistrationPage from "./Registration/RegistrationPage";
 //*Il main Content occupa tutto lo spazio verticale vuoto, spingendo il footer verso il basso.*/}
 export default function MainContent() {
     return (
-            <Container style={{ flexGrow: 1, maxWidth: '90vw', marginTop: '5vw', marginBottom: 50 }}>
+            <Container style={{ flexGrow: 1, maxWidth: '90vw', marginTop: '7vw', marginBottom: '5vw' }}>
                 <Routes>
                     <Route path="/" element={<Home/>} />
                     <Route path="/:username/profile" element={<Profile />} />

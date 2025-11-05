@@ -1,4 +1,4 @@
-import {Box, Button, Toolbar, AppBar, IconButton} from "@mui/material";
+import {Button, Toolbar, AppBar, IconButton} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -9,9 +9,8 @@ import {Link} from "react-router-dom";
 
 export default function Footer() {
     return (
-        <AppBar position="static" sx= {{ backgroundColor:"#52796f" }} >
-            <Toolbar sx={{ width: "100%" }}>
-                <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "space-evenly" }}>
+        <AppBar position="static" sx={{ backgroundColor:"#52796f" }} >
+            <Toolbar sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", marginTop: '0.25vw' }}>
                     <Button sx={{color:"#354f52"}} component={Link} to="/about">About</Button>
                     <Button sx={{color:"#354f52"}} component={Link} to="/contact">Contact</Button>
                     <Button sx={{color:"#354f52"}} component={Link} to="/help">Help</Button>
@@ -30,7 +29,6 @@ export default function Footer() {
                     <IconButton component={Link} to="link di X" target="_blank" rel="noreferrer">
                         <XIcon />
                     </IconButton>
-                </Box>
             </Toolbar>
             <p>© "CineSync" {new Date().getFullYear()} Limited. All rights reserved.</p>
         </AppBar>

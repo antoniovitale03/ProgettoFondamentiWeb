@@ -43,7 +43,7 @@ export default function Carosello({ films, title, link }){
         </Typography>
 
         <Box className="box-carosello">
-            {films.slice(indice, indice + immvisibili).map((film, index) => (
+            {films.slice(indice, indice + immvisibili).map((film, index) =>
                 <Card style={{ justifyContent:"center", borderRadius: "50px",
                     alignItems:"center", overflow:"hidden"}} key={index} sx={{backgroundColor:"#a4c3b2ff"}}>
                     <CardContent className="riquadro">
@@ -57,7 +57,7 @@ export default function Carosello({ films, title, link }){
                             onClick={() => navigate(`/film/${film.title.replaceAll(" ", "-")}/${film._id}`)}                        />
                 </CardContent>
             </Card>
-        ))}
+        )}
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

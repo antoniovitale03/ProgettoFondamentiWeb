@@ -85,14 +85,12 @@ export default function Header() {
     ]
 
     return (
-        <AppBar position="sticky" sx= {{ backgroundColor:"#52796f", height:"90px" }} >
-            <Toolbar>
-                <Box sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", marginTop: '0.25%' }}>
+        <AppBar position="fixed" sx= {{ backgroundColor:"#52796f", height:"5vw" }} >
+            <Toolbar sx={{ display: "flex", flexDirection: 'row', justifyContent: "space-evenly", marginTop: '0.7vw' }}>
                     {
                         isLoggedIn ? headerItems.map((headerItem) => headerItem) :
                         notLoggedDefaultHeaderItems.map((headerItem) => headerItem)
                     }
-                </Box>
             </Toolbar>
         </AppBar>
     )
