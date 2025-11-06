@@ -1,5 +1,5 @@
 import {useAuth} from "../../context/authContext";
-import { Avatar, Toolbar, Tooltip, AppBar } from "@mui/material";
+import {Avatar, Toolbar, Tooltip, AppBar, Button} from "@mui/material";
 import ArchiveIcon from '@mui/icons-material/Archive'
 import BoltIcon from '@mui/icons-material/Bolt';
 import {Link} from "react-router-dom";
@@ -24,14 +24,12 @@ export default function Header() {
     ]
     
     let notLoggedHeaderItems = [
-        <Link to="/archive">
-            <ArchiveIcon sx={{color:"#354f52"}} />
-        </Link>,
-        <Link variant="contained" color="success" to="/login"> Login </Link>,
-        <Link variant="contained" color="success" to="/registration"> Crea un Account</Link>,
+        <Button component={Link} variant="contained" color="success" to="/login"> Login </Button>,
+        <Button component={Link} variant="contained" color="success" to="/registration"> Crea un Account</Button>,
+        <Link to="/archive"><Tooltip title="Archivio film"><ArchiveIcon sx={{color:"#354f52"}}/></Tooltip></Link>,
         <SearchFilm />,
         <Link to="/">
-            <Avatar src={logo} alt="" style={{ height: '50px', width: 'auto' }}/>
+            <Avatar src={logo} style={{ height: '50px', width: 'auto' }}/>
         </Link>
     ]
 

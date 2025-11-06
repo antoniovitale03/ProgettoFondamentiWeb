@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import FilmCard from "./Cards/FilmCard";
 import api from "../api";
 import {useNotification} from "../context/notificationContext";
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Grid, Stack, Typography} from "@mui/material";
 import useDocumentTitle from "./hooks/useDocumentTitle"
 import {useParams} from "react-router-dom";
 import {useAuth} from "../context/authContext";
@@ -35,7 +35,7 @@ export default function FavoritesFilms(){
 
 
     return(
-        <Box>
+        <Stack spacing={7}>
             {films.length > 0 ?
                 <Box>
                 {user.username === username ?
@@ -56,6 +56,6 @@ export default function FavoritesFilms(){
                     }
                 </Box>
             }
-        </Box>
+        </Stack>
     )
 }
