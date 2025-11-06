@@ -1,4 +1,4 @@
-import {Button, Toolbar, AppBar, IconButton} from "@mui/material";
+import {Button, Toolbar, AppBar, IconButton, Typography} from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -30,7 +30,9 @@ export default function Footer() {
                         <XIcon />
                     </IconButton>
             </Toolbar>
-            <p>© "CineSync" {new Date().getFullYear()} Limited. All rights reserved.</p>
+            <Typography component="p" sx={{ margin: '1vw 2vw 2vw 2vw' }}>
+                © CineSync {new Date().getFullYear()} Limited. All rights reserved.
+            </Typography>
         </AppBar>
 
     )

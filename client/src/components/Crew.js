@@ -7,7 +7,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 
 // /films/filmTitle/filmID/crew
-export default function CrewPage(){
+export default function Crew(){
     const { filmTitle, filmID } = useParams();
 
     const [crew, setCrew] = useState([]);

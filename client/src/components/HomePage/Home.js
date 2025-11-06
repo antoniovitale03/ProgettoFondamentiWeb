@@ -1,11 +1,11 @@
-import {useAuth} from "../context/authContext"
-import useDocumentTitle from "./hooks/useDocumentTitle";
+import {useAuth} from "../../context/authContext"
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {Box, Card, CardMedia} from "@mui/material";
-import '../CSS/home.css'
-import Carosello from "./Carosello"
+import '../../CSS/home.css'
+import Carosello from "../Carosello"
 import {useEffect, useState} from "react";
-import api from "../api";
-import {useNotification} from "../context/notificationContext";
+import api from "../../api";
+import {useNotification} from "../../context/notificationContext";
 
 export default function Home(){
     useDocumentTitle("Home")

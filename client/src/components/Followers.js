@@ -20,7 +20,7 @@ export default function Followers() {
     },[username, showNotification]);
 
     return(
-        <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto' }}>
+        <Box sx={{ width: '30vw', textAlign: 'center', margin: 'auto' }}>
             <Typography component="h1" variant="strong">Followers di {username}</Typography>
             {
                 followers.map( user => <UserCard user={user} />)

@@ -41,8 +41,8 @@ export default function Following() {
 
 
     return(
-        <Box sx={{ width: '50%', textAlign: 'center', margin: 'auto',  }}>
-            <Typography component="h1" variant="strong">Persone seguite da {username}</Typography>
+        <Box sx={{ width: '30vw', margin: 'auto' }}>
+            <Typography component="h1" variant="strong" sx={{ textAlign: 'center' }}>Persone seguite da {username}</Typography>
             {
                 following.map( user =>
                 <UserCard user={user} showRemoveButton={myUsername === username} onUnfollow={unfollow} />)

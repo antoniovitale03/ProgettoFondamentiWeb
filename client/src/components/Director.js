@@ -5,7 +5,7 @@ import {useNotification} from "../context/notificationContext";
 import FilmCard from "./Cards/FilmCard";
 import useDocumentTitle from "./hooks/useDocumentTitle";
 import {Box, Grid, Typography} from "@mui/material";
-export default function DirectorPage() {
+export default function Director() {
     let { directorName, directorID } = useParams();
 
     const [director, setDirector] = useState(null);
@@ -23,21 +23,20 @@ if(director){
     return(
         <Box>
             <Typography sx={{fontSize:{xs:"25px", md:"2.2vw"}, margin:"20px", fontWeight:"bold"}}>{director.personalInfo.name}</Typography>
-            <Grid container spacing={1} alignItems="flex-start" >
-                <Grid xs={12} sm={6} md={4} >
-                    <img style={{height:"auto", maxWidth:"300px", margin:"20px"}} src={director.personalInfo.profile_image} alt="Immagine del direttore"/>
+            <Grid container spacing={2} >
+                <Grid size={4}>
+                    <img src={director.personalInfo.profile_image} alt="Immagine del direttore"/>
                 </Grid>
-                <Grid xs={12} sm={6} md={8} size={8}>
-                    {director.personalInfo.birthday && <Typography component="p" sx={{fontSize:"20px", marginBottom:"20px"}}>Data di nascita: {director.personalInfo.birthday}</Typography> }
+                <Grid size={8}>
                     {director.personalInfo.place_of_birth && <Typography component="p" sx={{fontSize:"20px", marginBottom:"20px"}}>Luogo di nascita: {director.personalInfo.place_of_birth}</Typography> }
-                    <Typography component="p" style ={{flexWrap:"wrap", fontSize:{xs:"15px", md:"2vw"}}}>Biografia: {director.personalInfo.biography}</Typography>
+                    <Typography component="p" style ={{flexWrap:"wrap", fontSize:{xs:"15px", md:"2vw"}}}>{director.personalInfo.biography}</Typography>
                 </Grid>
             </Grid>
 
 
             {director.cast.length !== 0 ?
                 <Box>
-                    <Typography sx={{fontSize:"2vw", margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</Typography>
+                    <Typography sx={{fontSize:"2vw", margin:"20px", fontWeight:"bold"}}>Film in cui {director.personalInfo.name} ha performato come attore/attrice ({director.cast.length})</Typography>
                     <Grid container spacing={2}>
                         { director.cast.map(film =>
                             <Grid key={film._id} size={2} xs={12} sm={6} md={4} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}} >
@@ -51,7 +50,7 @@ if(director){
 
             {director.crew.length !== 0 &&
                 <Box marginBottom={10}>
-                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Lista dei film in cui {director.personalInfo.name} ha svolto un ruolo tecnico ({director.crew.length})</Typography>
+                    <Typography sx={{fontSize:{xs:"15px", md:"2vw"}, margin:"20px", fontWeight:"bold"}}>Film in cui {director.personalInfo.name} ha svolto un ruolo tecnico ({director.crew.length})</Typography>
                     <Grid container spacing={2}>
                         { director.crew.map((film) =>
                             <Grid key={film._id} size={2} xs={12} sm={6} md={4} sx={{display:"flex",flexDirection:"column",alignSelf:"stretch"}}>

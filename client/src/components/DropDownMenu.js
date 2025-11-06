@@ -11,3 +11,5 @@ export default function DropDownMenu({ buttonContent, menuContent, isMenuOpen, s
         </Box>
     );
 }
+//isMenuOpen al click del bottone diventa l'emento nel dom (come il bottone) che il menu usa come ancora
+//quindi o è null o è un elemento DOM

@@ -7,7 +7,7 @@ export default function ReviewCard({ review, showRemoveButton, onRemove }){
     const navigate = useNavigate();
 
     return(
-        <Card style={{ marginBottom: 10, height: '100%', width: '100%',backgroundColor:"#a4c3b2ff" }}>
+        <Card style={{ marginBottom: 10, backgroundColor:"#a4c3b2ff" }}>
             <CardContent>
                 <Grid container spacing={2}>
 

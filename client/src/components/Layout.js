@@ -1,4 +1,4 @@
-import Header from "./Header";
+import Header from "./Header/Header";
 import Footer from "./Footer";
 import {Box} from "@mui/material";
 import MainContent from "./MainContent";

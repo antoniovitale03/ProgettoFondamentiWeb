@@ -63,7 +63,9 @@ export default function FilmPage(){
                     </Link>
                 </p>
             </p>
-            <p className="testo">Durata: {film.duration}</p>
+            <p className="testo">
+                Durata:<strong>{film.duration}</strong>
+            </p>
             <Grid container spacing={6}>
                 {/* colonna di sinistra */}
                 <Grid size={4}>
@@ -110,8 +112,9 @@ export default function FilmPage(){
 
                     <CastCrewMoreInfo film={film} />
 
-                    🎬<Link className="link" id="film_simili" to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
-                    Film simili a "{film.title}"</Link>
+                    <Link className="link" id="film_simili" to={`/film/${filmTitle.replaceAll(" ", "-")}/${filmID}/similar`}>
+                        🎬Film simili a "{film.title}"
+                    </Link>
 
                     {film.collection && <FilmCollection collection={film.collection} />}
 

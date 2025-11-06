@@ -7,7 +7,7 @@ import api from "../api";
 import {useNotification} from "../context/notificationContext";
 
 // /films/filmTitle/filmID/cast
-export default function CastPage(){
+export default function Cast(){
     const {filmTitle, filmID} = useParams();
     const [cast, setCast] = useState([]);
     const {showNotification} = useNotification();

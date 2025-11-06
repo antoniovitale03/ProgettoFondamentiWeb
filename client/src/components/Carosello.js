@@ -26,11 +26,10 @@ export default function Carosello({ films, title, link }){
     }, []);
 
     const navigate = useNavigate();
-    //ora inseriamo le funzioni per poter cambiare immagine
 
-    const successiva = () => setIndice(i => Math.min(i + 1, films.length - immvisibili));
+    const next = () => setIndice(i => Math.min(i + 1, films.length - immvisibili));
 
-    const precedente = () => setIndice(i => Math.max(i - 1, 0));
+    const previous = () => setIndice(i => Math.max(i - 1, 0));
 
     return(
         <Box>
@@ -43,7 +42,7 @@ export default function Carosello({ films, title, link }){
                 }
             </Typography>
 
-            <Box className="box-carosello">
+            <Box className="carosello">
                 {films.slice(indice, indice + immvisibili).map((film, index) =>
                     <Card sx={{ borderRadius: "50px", backgroundColor:"#a4c3b2ff"}} key={index}>
                         <CardContent>
@@ -65,10 +64,10 @@ export default function Carosello({ films, title, link }){
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <IconButton onClick={precedente} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor: "none" }} disabled={indice === 0 }>
+                <IconButton onClick={previous} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor: "none" }} disabled={indice === 0 }>
                     <ArrowCircleLeftIcon sx={{fontSize:"xxx-large", }} />
                 </IconButton>
-                <IconButton onClick={successiva} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor: "none"}} disabled={indice >= films.length - immvisibili }>
+                <IconButton onClick={next} variant="text" sx={{ ml: 1, color: "#a4c3b2ff", backgroundColor: "none"}} disabled={indice >= films.length - immvisibili }>
                     <ArrowCircleRightIcon sx={{fontSize:"xxx-large"}} />
                 </IconButton>
             </Box>

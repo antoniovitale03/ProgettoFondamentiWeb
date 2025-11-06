@@ -1,6 +1,6 @@
 import {Container} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
-import Home from "./Home";
+import Home from "./HomePage/Home";
 import Profile from "./Profile";
 import Followers from "./Followers";
 import Following from "./Following";
@@ -17,16 +17,16 @@ import Archive from "./Archive";
 import ActivityPage from "./ActivityPage";
 import SearchFilmResults from "./SearchFilmResults";
 import FilmPage from "./FilmPage/FilmPage";
-import CastPage from "./CastPage";
-import CrewPage from "./CrewPage";
+import Cast from "./Cast";
+import Crew from "./Crew";
 import FilmsByYear from "./FilmsByYear";
-import ActorPage from "./ActorPage";
-import DirectorPage from "./DirectorPage";
-import CurrentPopularFilms from "./HomePageFilms/CurrentPopularFilms";
-import UpcomingFilms from "./HomePageFilms/UpcomingFilms";
-import TopRatedFilms from "./HomePageFilms/TopRatedFilms";
-import NowPlayingFilms from "./HomePageFilms/NowPlayingFilms";
-import TrendingFilms from "./HomePageFilms/TrendingFilms";
+import Actor from "./Actor";
+import Director from "./Director";
+import CurrentPopularFilms from "./HomePage/CurrentPopularFilms";
+import UpcomingFilms from "./HomePage/UpcomingFilms";
+import TopRatedFilms from "./HomePage/TopRatedFilms";
+import NowPlayingFilms from "./HomePage/NowPlayingFilms";
+import TrendingFilms from "./HomePage/TrendingFilms";
 import SimilarFilms from "./FilmPage/SimilarFilms";
 import About from "./About";
 import Contact from "./Contact";
@@ -57,11 +57,11 @@ export default function MainContent() {
                     <Route path="/search/:filmTitle" element={<SearchFilmResults />} />
                     <Route path="/film/:filmTitle/:filmID" element={<FilmPage />} />
 
-                    <Route path="/film/:filmTitle/:filmID/cast" element={<CastPage />} />
-                    <Route path="/film/:filmTitle/:filmID/crew" element={<CrewPage />} />
+                    <Route path="/film/:filmTitle/:filmID/cast" element={<Cast />} />
+                    <Route path="/film/:filmTitle/:filmID/crew" element={<Crew />} />
                     <Route path="/films/:year" element={<FilmsByYear />} />
-                    <Route path="/actor/:actorName/:actorID" element={<ActorPage />} />
-                    <Route path="/director/:directorName/:directorID" element={ <DirectorPage />} />
+                    <Route path="/actor/:actorName/:actorID" element={<Actor />} />
+                    <Route path="/director/:directorName/:directorID" element={ <Director />} />
 
                     { /* informazioni dei film mostrati nella homePage */}
                     <Route path="/films/current-popular-films" element={<CurrentPopularFilms />} />

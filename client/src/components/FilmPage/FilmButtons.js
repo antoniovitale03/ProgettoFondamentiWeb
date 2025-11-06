@@ -15,7 +15,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FormatListBulletedAddIcon from '@mui/icons-material/FormatListBulletedAdd';
-import "../../CSS/FilmButton.css"
+import "../../CSS/FilmButtons.css"
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from '@mui/icons-material/Remove';
 import {useAuth} from "../../context/authContext"
@@ -153,8 +153,7 @@ export default function FilmButtons({ film }) {
         try{
             await api.post(`${process.env.REACT_APP_SERVER}/api/films/watched/add-to-watched`, { film });
             showNotification(<strong>"{film.title}" è stato aggiunto ai tuoi <Link to={`/${user.username}/watched`} style={{ color: 'green' }}>film visti</Link></strong>, "success")
-            setButtons({...buttons, watched: 1, watchlist: 0});
-            //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
+            setButtons({...buttons, watched: 1, watchlist: 0}); //se ho visto un film, ovviamente viene eliminato dalla watchlist automaticamente
         }catch(error){
             showNotification(error.response.data, "error");
         }
@@ -223,7 +222,7 @@ export default function FilmButtons({ film }) {
                 lists: response.data.lists,
             }))
             .catch( error => showNotification(error.response.data, "error"));
-    }, [film])
+    }, [film, showNotification])
 
 
 

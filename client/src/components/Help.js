@@ -17,7 +17,6 @@ export default function Help(){
         event.preventDefault();
         setError("");
         try{
-            //await checkEmail(email) controlla se l'email esiste
             setSuccessMessage("Avrai una risposta entro 48 ore.")
         } catch(error){
             setError(error.message);

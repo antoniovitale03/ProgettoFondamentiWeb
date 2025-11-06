@@ -24,7 +24,7 @@ body{
     border-radius: 60px;
 }
 
-.box-carosello{
+.carosello{
     display: flex;
     flex-direction: row;
     justify-content: center;

@@ -7,10 +7,8 @@ export default function ActorCard ( {actor} ){
     return(
             <Card>
                 <CardContent>
-                    <Typography component="p">
-                        <Button component={Link} to={`/actor/${actor.name.replaceAll(" ", "-")}/${actor.id}`}>{actor.name}</Button>
-                        ({actor.character})
-                    </Typography>
+                    <Button component={Link} to={`/actor/${actor.name.replaceAll(" ", "-")}/${actor.id}`}>{actor.name}</Button>
+                    <Typography component="p" sx={{ display: 'inline' }}>({actor.character})</Typography>
                     <CardMedia className="card_media" component="img" image={actor.profile_path} onClick={ () => navigate(`/actor/${actor.name.replaceAll(" ", "-")}/${actor.id}`) } />
                 </CardContent>
             </Card>
