@@ -8,7 +8,8 @@ Dominio del deploy: https://cinesync-front-end.onrender.com/   (piattaforma Rend
 
 ## DOCUMENTAZIONE
 ### FRONTEND
-About: Ha lo scopo di spiegare agli utenti perchè esiste CineSync e a quali utenti è indirizzata. Evidenzia anche le caratteristiche principali del sito.
+#### About: 
+Ha lo scopo di spiegare agli utenti perchè esiste CineSync e a quali utenti è indirizzata. Evidenzia anche le caratteristiche principali del sito.
 Activity: Permette di visualizzare ogni attività recente svolta dall’utente all’interno del sito web. La componente è composta da blocchi if per eseguire un render mirato a seconda del tipo di azione svolta.
 ActivityPage: Inizializza, scarica e visualizza l’intera cronologia delle attività (come recensioni, aggiunto film ai preferiti etc…) dell’utente. 
 ActorPage: Pagina che mostra tutte le informazioni principali relative ad un attore: Data di nascita, Biografia. Inoltre è possibile visualizzare in quali film l’attore ha recitato o in quali film ha svolto un ruolo tecnico.  Tutto ciò è permesso  tramite chiamate all’API la quale recupera tutti i dati relativi a un attore utilizzando il suo ID univoco come parametro di ricerca.
