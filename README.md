@@ -7,7 +7,7 @@ Dominio del deploy: https://cinesync-front-end.onrender.com/   (piattaforma Rend
 
 
 ## DOCUMENTAZIONE
-FRONTEND
+### FRONTEND
 About: Ha lo scopo di spiegare agli utenti perchè esiste CineSync e a quali utenti è indirizzata. Evidenzia anche le caratteristiche principali del sito.
 Activity: Permette di visualizzare ogni attività recente svolta dall’utente all’interno del sito web. La componente è composta da blocchi if per eseguire un render mirato a seconda del tipo di azione svolta.
 ActivityPage: Inizializza, scarica e visualizza l’intera cronologia delle attività (come recensioni, aggiunto film ai preferiti etc…) dell’utente. 
